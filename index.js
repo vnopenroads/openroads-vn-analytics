@@ -4,12 +4,9 @@ var fs = require('fs');
 var request = require('request');
 var extent = require('turf-extent');
 var lineDistance = require('turf-line-distance');
-var linestring = require('turf-linestring');
-var point = require('turf-point');
-var inside = require('turf-inside');
+var clip = require('./lib/clip');
 
-
-var debug = require('debug')('boundaries');
+var debug = require('debug')('or-analytics');
 
 function totalRoadLength(roadFeatures) {
   if ('FeatureCollection' === roadFeatures.type)
@@ -20,35 +17,6 @@ function totalRoadLength(roadFeatures) {
       return lineDistance(feat, 'kilometers');
     })
     .reduce(function(a, b) { return a+b; }, 0);
-}
-
-// clip the given LineString features to the given polygon.
-// returns a new list of LineStrings, possibly longer than the original
-// since a single line might get clipped into multiple lines.
-function clip(lines, polygon) {
-  var result = [];
-  lines.forEach(function (feat) {
-    var coords = feat.geometry.coordinates;
-
-    // array of coordinate pairs of linestring we're building
-    var current = [];
-
-    // scan through the current input linestring, adding clipped
-    // lines to the output as we hit the boundaries of the mask
-    for(var i = 0; i < coords.length; i++) {
-      if(inside(point(coords[i]), polygon)) {
-        current.push(coords[i]);
-      }
-      else {
-        if(current.length > 0) {
-          result.push(linestring(current, feat.properties));
-          current = [];
-        }
-      }
-    }
-  });
-
-  return result;
 }
 
 function getRoadFeatures(endpoint, polygon, cb) {
