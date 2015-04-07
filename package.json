@@ -1,0 +1,19 @@
+{
+  "name": "openroads-analytics",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Anand Thakker <vestibule@anandthakker.net> (http://anandthakker.net/)",
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.55.0",
+    "turf-extent": "^1.0.4",
+    "turf-inside": "^1.1.4",
+    "turf-line-distance": "^1.0.2",
+    "turf-linestring": "^1.0.2",
+    "turf-point": "^2.0.1"
+  }
+}
