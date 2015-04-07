@@ -51,7 +51,7 @@ function next() {
       debug('Municipality:', data.properties.NAME_2,
         'Road length: ', length);
 
-      fs.writeFileSync('temp/' + data.properties.NAME_2 + '.json', JSON.stringify(result));
+      //fs.writeFileSync('temp/' + data.properties.NAME_2 + '.json', JSON.stringify(result));
 
       next();
     }
