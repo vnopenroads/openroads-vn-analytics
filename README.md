@@ -1,12 +1,11 @@
 
 # openroads analytics
 
-Currently just a proof of concept/feasibility of using turf.js to do analytics
-on the client side. Ultimately will be made isomorphic so that we can move to
-running analytics on the server and storing results if necessary.
+Use turf to sum up road lengths, broken down by road condition.  Easy to modify this to other metrics or breakdowns.  Meant to be used with the [admin endpoint](https://github.com/developmentseed/openroads-api/blob/develop/routes/admin.js)
 
-Try it:
+Try it.  With the api running on `localhost:4000`, do:
 
 ```
-DEBUG=or-analytics node index.js [openroads-api-url]/map data/municipality.json
+curl http://localhost:4000/admin/municipality/177:15:213 | node example.js
 ```
+
