@@ -33,7 +33,7 @@ function getRoadFeatures(endpoint, polygon, cb) {
 }
 
 var municipalities = JSON.parse(fs.readFileSync(process.argv[3], 'utf-8'));
-municipalities = municipalities.features;
+municipalities = ('FeatureCollection' === municipalities.type) ? municipalities.features : [municipalities];
 
 var totalLength = 0;
 
