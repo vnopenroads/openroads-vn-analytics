@@ -3,11 +3,16 @@
 var Backbone = require('backbone');
 var $ = require('jquery');
 
+var BaseView = require('./views/base-view.js');
+
 var AppView = require('./views/app.js');
-var DashboardView = require('./views/dashboard.js');
-var MetaView = require('./views/meta.js');
-var ProjectsView = require('./views/projects.js');
-var RoadNetworkView = require('./views/road-network.js');
+
+// Note: eventually some of these can be broken out into their own file
+// (like AppView), but if there's no view logic this is simpler.
+var DashboardView = BaseView.extend({ template: 'dashboard' });
+var MetaView = BaseView.extend({ template: 'meta' });
+var ProjectsView = BaseView.extend({ template: 'projects' });
+var RoadNetworkView = BaseView.extend({ template: 'road-network' });
 
 var AdminRegion = require('./models/admin-region.js');
 
@@ -32,15 +37,33 @@ module.exports = Backbone.Router.extend({
     this.showView(new DashboardView({
       model: region
     }));
-    region.fetch();
   },
-  meta: function (id) { console.log('meta UNIMPLEMENTED', id); },
-  roadNetwork: function (id) { console.log('roadNetwork UNIMPLEMENTED', id); },
-  projects: function (id) { console.log('projects UNIMPLEMENTED', id); },
+
+  meta: function (id) {
+    var region = new AdminRegion({id: id});
+    this.showView(new MetaView({
+      model: region
+    }));
+  },
+
+  roadNetwork: function (id) {
+    var region = new AdminRegion({id: id});
+    this.showView(new RoadNetworkView({
+      model: region
+    }));
+  },
+
+  projects: function (id) {
+    var region = new AdminRegion({id: id});
+    this.showView(new ProjectsView({
+      model: region
+    }));
+  },
 
 
   showView: function(view) {
     this.app.$el.find('#main').html(view.render().el);
+    view.model.fetch();
   }
 });
 

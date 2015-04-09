@@ -1,26 +1,18 @@
 'use strict';
 
-var Backbone = require('backbone');
-var templates = require('../templates.js');
+var BaseView = require('./base-view.js');
 
-module.exports = Backbone.View.extend({
+module.exports = BaseView.extend({
 
-  template: templates.app,
+  template: 'app',
 
   tagName: 'div',
-
-  id: '',
-
-  className: '',
-
+  id: 'analytics',
+  className: 'openroads',
   events: {},
 
   initialize: function () {
   },
-
-  render: function () {
-    this.$el.html(this.template);
-  }
 
 });
 
