@@ -20,7 +20,7 @@ module.exports = Backbone.View.extend({
   },
 
   render: function () {
-    console.log('render', JSON.stringify(this.model.attributes));
+    console.log('render', this.model.attributes);
     this.$el.html(this.template);
     return this;
   }

@@ -1,6 +1,8 @@
 'use strict';
 
 var Backbone = require('backbone');
+var _ = require('underscore');
+var computeStats = require('../lib/stats.js');
 
 module.exports = Backbone.Model.extend({
 
@@ -12,12 +14,13 @@ module.exports = Backbone.Model.extend({
   defaults: {
   },
 
-  validate: function(attrs, options) {
+  parse: function(response, options)  {
+    console.log('parse', response);
+    return _.extend(computeStats(response.roads, response.subregions), {
+      properties: response.roads.properties
+    });
   },
 
-  parse: function(response, options)  {
-    return response;
-  }
-
 });
+
 
