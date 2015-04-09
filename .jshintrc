@@ -17,7 +17,8 @@
   "mocha": true,
   
   "globals": {
-    "server": true
+    "server": true,
+    "Backbone": true
   },
 
   /*
