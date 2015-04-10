@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "beefy app.js:bundle.js --live",
     "bundle": "browserify app.js -o dist/bundle.js",
-    "install": "bundle install --path bundle/cache",
+    "install": "bundle install --path bundle/cache"
   },
   "browserify": {
     "transform": [
