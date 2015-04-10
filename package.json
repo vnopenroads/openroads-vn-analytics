@@ -5,14 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "beefy app.js:bundle.js --live",
-    "bundle": "browserify app.js -o dist/bundle.js",
+    "bundle": "browserify app.js -t browserify-ejs -o dist/bundle.js",
     "install": "bundle install --path bundle/cache"
-  },
-  "browserify": {
-    "transform": [
-      "browserify-ejs"
-    ]
   },
   "author": "Anand Thakker <vestibule@anandthakker.net> (http://anandthakker.net/)",
   "license": "BSD",
@@ -24,7 +18,10 @@
     "gulp": "^3.8.11",
     "gulp-browserify": "^0.5.1",
     "gulp-compass": "^2.0.4",
-    "run-sequence": "^1.0.2"
+    "gulp-sourcemaps": "^1.5.1",
+    "run-sequence": "^1.0.2",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
     "backbone": "^1.1.2",

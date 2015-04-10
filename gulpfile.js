@@ -1,18 +1,30 @@
 var gulp = require('gulp');
-var browserify = require('gulp-browserify');
+var browserify = require('browserify');
 var compass = require('gulp-compass');
 var browserSync = require('browser-sync');
 var runSequence = require('run-sequence');
+var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
+var sourcemaps = require('gulp-sourcemaps');
+var ejs = require('browserify-ejs');
+var gutil = require('gulp-util');
  
 // Basic usage 
 gulp.task('scripts', function() {
+  var b = browserify({
+    entries: './source_assets/scripts/app.js',
+    debug: true,
+    transform: [ ejs ]
+  });
+
   // Single entry point to browserify 
-  return gulp.src('source_assets/scripts/app.js')
-    .pipe(browserify({
-      insertGlobals : true,
-      debug : true
-    }))
-    .pipe(gulp.dest('assets/scripts'))
+  return b.bundle()
+    .pipe(source('app.js'))
+    .pipe(buffer())
+    .pipe(sourcemaps.init({loadMaps: true}))
+    .on('error', gutil.log)
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('assets/scripts'));
 });
 
 gulp.task('compass', function() {
