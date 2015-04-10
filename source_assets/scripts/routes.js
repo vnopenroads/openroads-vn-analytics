@@ -9,10 +9,18 @@ var AppView = require('./views/app.js');
 
 // Note: eventually some of these can be broken out into their own file
 // (like AppView), but if there's no view logic this is simpler.
-var DashboardView = BaseView.extend({ template: 'dashboard' });
-var MetaView = BaseView.extend({ template: 'meta' });
-var ProjectsView = BaseView.extend({ template: 'projects' });
-var RoadNetworkView = BaseView.extend({ template: 'road-network' });
+var DashboardView = BaseView.extend({
+  template: require('./templates/dashboard.html')
+});
+var MetaView = BaseView.extend({
+  template: require('./templates/meta.html')
+});
+var ProjectsView = BaseView.extend({
+  template: require('./templates/projects.html')
+});
+var RoadNetworkView = BaseView.extend({
+  template: require('./templates/road-network.html')
+});
 
 var AdminRegion = require('./models/admin-region.js');
 
@@ -62,8 +70,8 @@ module.exports = Backbone.Router.extend({
 
 
   showView: function(view) {
+    view.model.fetch(); // TODO: only fetch if we don't have it
     this.app.$el.find('#main').html(view.render().el);
-    view.model.fetch();
   }
 });
 

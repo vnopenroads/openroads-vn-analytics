@@ -1,21 +1,21 @@
-<h2>{{properties.NAME_2}}</h2>
+<h2><%= properties.NAME_2 %></h2>
 <table>
-{{#stats}}
+<% stats.forEach(function (row) { %>
   <tr>
-    <td>{{condition}}</td>
-    <td>{{kilometers}} km</td>
+    <td><%= row.condition %></td>
+    <td><%= row.kilometers %> km</td>
   </tr>
-{{/stats}}
+<% }) %>
 </table>
 
-{{#subregions}}
-<h3>{{ properties.NAME_3 }}</h3>
+<% subregions.forEach(function(subregion) { %>
+<h3><%= subregion.properties.NAME_3 %></h3>
 <table>
-{{#stats}}
+<% subregion.stats.forEach(function (row) { %>
   <tr>
-    <td>{{condition}}</td>
-    <td>{{kilometers}} km</td>
+    <td><%= row.condition %></td>
+    <td><%= row.kilometers %> km</td>
   </tr>
-{{/stats}}
+<% }) %>
 </table>
-{{/subregions}}
+<% }) %>

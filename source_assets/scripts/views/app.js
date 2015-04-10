@@ -4,7 +4,7 @@ var BaseView = require('./base-view.js');
 
 module.exports = BaseView.extend({
 
-  template: 'app',
+  template: require('../templates/app.html'),
 
   tagName: 'div',
   id: 'analytics',
