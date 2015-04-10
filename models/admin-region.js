@@ -4,9 +4,12 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 var computeStats = require('../lib/stats.js');
 
+var urlBase = 'http://localhost:4000';
+// var urlBase = 'https://fast-dawn-4805.herokuapp.com';
+
 module.exports = Backbone.Model.extend({
 
-  urlRoot: 'http://localhost:4000/admin/municipality',
+  urlRoot: urlBase + '/admin/municipality',
 
   initialize: function() {
   },
