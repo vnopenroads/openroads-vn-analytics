@@ -1,7 +1,6 @@
 'use strict';
 
 var Backbone = require('backbone');
-var templates = require('../templates.js');
 
 /*
  *
@@ -23,7 +22,11 @@ module.exports = Backbone.View.extend({
   render: function () {
     var model = this.model ? this.model.attributes : {};
     console.log('render', model);
-    this.$el.html(templates.render(this.template, model));
+    try {
+      this.$el.html(this.template(model));
+    } catch (e) {
+      console.error(e);
+    }
     return this;
   }
 
