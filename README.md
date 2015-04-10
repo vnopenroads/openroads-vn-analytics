@@ -1,29 +1,45 @@
-# Developing
+# Openroads Analytics
 
-Clone the repo, then:
+## Development environment
+To set up the development environment for this website, you'll need to install the following on your system:
+
+- [Node and npm](http://nodejs.org/)
+- Ruby and [Bundler](http://bundler.io/), preferably through something like [rvm](https://rvm.io/)
+- Gulp ( $ npm install -g gulp )
+
+After these basic requirements are met, run the following commands in the website's folder:
+```
+$ npm install
+```
+Will also run `bundle install`
+
+### Getting started
 
 ```
-npm install
-npm start
+$ gulp
 ```
+Compiles the compass files, javascripts, and launches the server making the site available at `http://localhost:3000/`
+The system will watch files and execute tasks whenever one of them changes.
+The site will automatically refresh since it is bundled with livereload.
 
-This runs a `beefy` server that watches for changes and rebundles the js.  After starting it up,
-try going to http://localhost:9966/#/analytics/177:15:210
+After starting it up, try going to http://localhost:3000/#/analytics/177:15:210
 
-**NOTE:** Currently the endpoint is hardcoded to `http://localhost:4000/admin/municipality`, so
+> **NOTE:** Currently the endpoint is hardcoded to `http://localhost:4000/admin/municipality`, so
 you'll need to run a local copy of the openroads-api server, or else go into models/admin-region.js and
 change the base url.
 
+### Other commands
+Compile the compass files, javascripts. Use this instead of ```gulp``` if you don't want to watch.
+```
+$ gulp build
+```
+
+The same as `gulp` but without livereloading the website.
+```
+$ gulp no-reload
+```
 
 ## Templates
 
 Templates are [mustache](https://github.com/janl/mustache.js).  See `templates/road-network.html` for
 an example.
-
-
-# Deploying
-
-This isn't entirely done.  The dev server (beefy), automatically generates index.html on each request,
-so we'll actually want to use our own boilerplate one for distribution.  Once we have that, just have
-to bundle up the app with: `npm run bundle`, which will create a single js file in `dist/`.  (We can
-also factor Backbone/jquery out of that bundle and just reference CDN's directly for better caching.)
