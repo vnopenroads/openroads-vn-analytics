@@ -8,10 +8,12 @@ var buffer = require('vinyl-buffer');
 var sourcemaps = require('gulp-sourcemaps');
 var ejs = require('browserify-ejs');
 var gutil = require('gulp-util');
+var jshint = require('gulp-jshint');
+var cp = require('child_process');
  
 // Basic usage 
-gulp.task('scripts', function() {
-  var b = browserify({
+gulp.task('scripts:build', function(done) {
+  /*var b = browserify({
     entries: './source_assets/scripts/app.js',
     debug: true,
     transform: [ ejs ]
@@ -27,7 +29,18 @@ gulp.task('scripts', function() {
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true}))
     .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('assets/scripts'));
+    .pipe(gulp.dest('assets/scripts'));*/
+
+  var args = ['node_modules/browserify/bin/cmd.js', 'source_assets/scripts/app.js', '-d', '-o', 'assets/scripts/app.js', '-t', 'browserify-ejs'];
+
+  return cp.spawn('node', args, {stdio: 'inherit'})
+    .on('close', done);
+});
+
+gulp.task('scripts:lint', function() {
+  return gulp.src('./source_assets/scripts/**/*.js')
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'));
 });
 
 gulp.task('compass', function() {
@@ -49,6 +62,10 @@ gulp.task('browser-sync', function() {
       baseDir: "."
     }
   });
+});
+
+gulp.task('scripts', function(done) {
+  runSequence('scripts:lint', 'scripts:build', done);
 });
 
 // Main build task

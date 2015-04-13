@@ -6,20 +6,16 @@ var $ = require('jquery');
 var BaseView = require('./views/base-view.js');
 
 var AppView = require('./views/app.js');
+var DashboardView = require('./views/dashboard.js');
+var RoadNetworkView = require('./views/road-network.js');
 
 // Note: eventually some of these can be broken out into their own file
 // (like AppView), but if there's no view logic this is simpler.
-var DashboardView = BaseView.extend({
-  template: require('./templates/dashboard.html')
-});
 var MetaView = BaseView.extend({
   template: require('./templates/meta.html')
 });
 var ProjectsView = BaseView.extend({
   template: require('./templates/projects.html')
-});
-var RoadNetworkView = BaseView.extend({
-  template: require('./templates/road-network.html')
 });
 
 var AdminRegion = require('./models/admin-region.js');
