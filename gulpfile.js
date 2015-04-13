@@ -9,10 +9,11 @@ var sourcemaps = require('gulp-sourcemaps');
 var ejs = require('browserify-ejs');
 var gutil = require('gulp-util');
 var jshint = require('gulp-jshint');
+var cp = require('child_process');
  
 // Basic usage 
-gulp.task('scripts:build', function() {
-  var b = browserify({
+gulp.task('scripts:build', function(done) {
+  /*var b = browserify({
     entries: './source_assets/scripts/app.js',
     debug: true,
     transform: [ ejs ]
@@ -25,7 +26,12 @@ gulp.task('scripts:build', function() {
     .pipe(sourcemaps.init({loadMaps: true}))
     .on('error', gutil.log)
     .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('assets/scripts'));
+    .pipe(gulp.dest('assets/scripts'));*/
+
+  var args = ['node_modules/browserify/bin/cmd.js', 'source_assets/scripts/app.js', '-d', '-o', 'assets/scripts/app.js', '-t', 'browserify-ejs'];
+
+  return cp.spawn('node', args, {stdio: 'inherit'})
+    .on('close', done);
 });
 
 gulp.task('scripts:lint', function() {
