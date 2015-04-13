@@ -8,9 +8,10 @@ var buffer = require('vinyl-buffer');
 var sourcemaps = require('gulp-sourcemaps');
 var ejs = require('browserify-ejs');
 var gutil = require('gulp-util');
+var jshint = require('gulp-jshint');
  
 // Basic usage 
-gulp.task('scripts', function() {
+gulp.task('scripts:build', function() {
   var b = browserify({
     entries: './source_assets/scripts/app.js',
     debug: true,
@@ -25,6 +26,12 @@ gulp.task('scripts', function() {
     .on('error', gutil.log)
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('assets/scripts'));
+});
+
+gulp.task('scripts:lint', function() {
+  return gulp.src('./source_assets/scripts/**/*.js')
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'));
 });
 
 gulp.task('compass', function() {
@@ -46,6 +53,10 @@ gulp.task('browser-sync', function() {
       baseDir: "."
     }
   });
+});
+
+gulp.task('scripts', function(done) {
+  runSequence('scripts:lint', 'scripts:build', done);
 });
 
 // Main build task

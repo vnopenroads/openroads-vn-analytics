@@ -17,7 +17,7 @@ module.exports = Backbone.Model.extend({
   defaults: {
   },
 
-  parse: function(response, options)  {
+  parse: function(response /*, options */)  {
     console.log('parse', response);
     return _.extend(computeStats(response.roads, response.subregions), {
       properties: response.roads.properties
