@@ -1,0 +1,9 @@
+<% var _ = require('underscore'); %>
+
+<% _.each(path, function(crumb, i) { %>
+  <% if (i === length-1) { %>
+    <li><a href="<%= crumb.route %>" class="current"><%= crumb.text %></a></li>
+  <% } else { %>
+    <li><a href="<%= crumb.route %>"><%= crumb.text %></a></li>
+  <% } %>
+<% }); %>
