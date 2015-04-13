@@ -9,7 +9,7 @@ var urlBase = config.apiUrl;
 
 module.exports = Backbone.Model.extend({
 
-  urlRoot: urlBase + '/admin/municipality',
+  urlRoot: urlBase + '/admin',
 
   initialize: function() {
   },
@@ -17,7 +17,7 @@ module.exports = Backbone.Model.extend({
   defaults: {
   },
 
-  parse: function(response /*, options */)  {
+  parse: function(response) {
     console.log('parse', response);
     return _.extend(computeStats(response.roads, response.subregions), {
       properties: response.roads.properties
