@@ -19,10 +19,13 @@ gulp.task('scripts', function() {
 
   // Single entry point to browserify 
   return b.bundle()
+    .on('error', function (err) {
+      gutil.log(err.message || err);
+      this.emit('end');
+    })
     .pipe(source('app.js'))
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true}))
-    .on('error', gutil.log)
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('assets/scripts'));
 });
