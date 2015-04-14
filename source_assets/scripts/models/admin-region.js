@@ -2,7 +2,7 @@
 
 var Backbone = require('backbone');
 var _ = require('underscore');
-var computeStats = require('../lib/stats.js');
+var computeStats = require('../lib/stats.js').computeStats;
 var config = require('../config.js');
 
 var urlBase = config.apiUrl;

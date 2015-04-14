@@ -1,15 +1,17 @@
+<% var _ = require('underscore') %>
 <header>
-  <sup><a href="#" class="admin-area">Central Viscayas</a> > <a href="#" class="admin-area">Bohol</a></sup>
-  <h1><%= properties.NAME_2 %></h1>
+  <sup><%- require('./breadcrumbs.html')({ crumbs: crumbs }) %></sup>
+  
+  <% if (crumbs.length) { %>
+    <h1><%- crumbs[crumbs.length-1].name %></h1>
+  <% } else { %>
+    <h1>Philippines</h1>
+  <% } %>
+
   <nav>
-    <form>
-      <input type="search" results=5 placeholder="Region, province, municipality, barangay" name="Search your LGU">
-    </form>
     <ul>
-      <li><a href="#/analytics/<%= id %>" class="<%= activeMenu == 'dashboard' ? 'active' : '' %>">Dashboard</a></li>
-      <li><a href="#" class="<%= activeMenu == 'meta' ? 'active' : '' %>">Meta</a></li>
-      <li><a href="#/analytics/<%= id %>/road-network" class="<%= activeMenu == 'road-network' ? 'active' : '' %>">Road network</a></li>
-      <li><a href="#" class="<%= activeMenu == 'projects' ? 'active' : '' %>">Projects</a></li>
+      <li><a class="<%= active == 'road-network' ? 'active' : '' %>" href="#/analytics/<%= id ? id : '' %>" id="sidebar-road-network">Road Network</a></li>
+      <li><a class="<%= active == 'projects' ? 'active' : '' %>" href="#" id="sidebar-projects">Projects</a></li>
     </ul>
   </nav>
 </header>

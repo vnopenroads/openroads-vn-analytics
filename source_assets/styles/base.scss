@@ -79,6 +79,9 @@ ul, li {
   width: 100%;
 }
 
+#main {
+  position: relative
+}
 
 /* Site header */
 
@@ -132,8 +135,8 @@ ul, li {
   color: inherit;
   display: block;
   font-weight: bold;
-  line-height: 2rem;  
-  position: relative; 
+  line-height: 2rem;
+  position: relative;
 }
 
 
@@ -167,12 +170,6 @@ body.analytics {
 .analytics #content {
   overflow: hidden;
   padding: 1rem;
-}
-
-.analytics article,
-.analytics header,
-.analytics #content {
-  height: 100%;
 }
 
 .analytics nav form,

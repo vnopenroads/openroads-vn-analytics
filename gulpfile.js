@@ -31,7 +31,10 @@ gulp.task('scripts:build', function(done) {
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('assets/scripts'));*/
 
-  var args = ['node_modules/browserify/bin/cmd.js', 'source_assets/scripts/app.js', '-d', '-o', 'assets/scripts/app.js', '-t', 'browserify-ejs'];
+  var args = ['node_modules/.bin/browserify', 'source_assets/scripts/app.js',
+    '-d', '-o', 'assets/scripts/app.js',
+    '-t', 'browserify-ejs',
+    '-t', 'rfolderify'];
 
   return cp.spawn('node', args, {stdio: 'inherit'})
     .on('close', done);

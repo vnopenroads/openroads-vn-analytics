@@ -1,0 +1,46 @@
+<% var _ = require('underscore'); %>
+<% var statsForDisplay = require('../lib/stats.js').statsForDisplay; %>
+<% var adminType = require('../lib/admin-type.js'); %>
+<% var subType = adminType.getNext(id); %>
+<article>
+<%- require('./sidebar.html')({ active: 'road-network', crumbs: crumbs, id: id }) %>
+  <div id="content">
+
+    <h2>Road Condition</h2>
+
+    <% var statsDisplay = statsForDisplay(stats); %>
+    <table>
+    <% _.forEach(statsDisplay, function(stat) { %>
+      <tr>
+        <td><%= stat.display %></td>
+        <td><%= stat.kilometers %> km</td>
+      </tr>
+    <% }); %>
+    </table>
+    <p>A detailed breakdown of the road condition in kilometer mapped for this municipality's barangays</p>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th><%= subType.plural %></th>
+          <% _.forEach(_.pluck(statsDisplay, 'display'), function(disp) { %>
+          <th class="value"><%= disp %></th>
+          <% }); %>
+        </tr>
+      </thead>
+      <tbody>
+        <% subregions.forEach(function(subregion, i) {
+            var id = subregion.id;
+            var name = subregion.name; %>
+        <tr>
+          <td><a href="#/analytics/<%= id %>" class="admin-area"><%= name %></a></td>
+          <% _.forEach(statsForDisplay(subregion.stats), function(stat) { %>
+          <td class="value"><%= stat.kilometers %> km</td>
+          <% }); %>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+  </div>
+</article>
