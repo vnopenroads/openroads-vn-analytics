@@ -30,8 +30,8 @@
       </thead>
       <tbody>
         <% subregions.forEach(function(subregion, i) {
-            var id = subregionMeta[i].id;
-            var name = subregionMeta[i].name; %>
+            var id = subregion.id;
+            var name = subregion.name; %>
         <tr>
           <td><a href="#/analytics/<%= id %>" class="admin-area"><%= name %></a></td>
           <% _.forEach(statsForDisplay(subregion.stats), function(stat) { %>

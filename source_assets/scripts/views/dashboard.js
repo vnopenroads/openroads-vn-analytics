@@ -28,7 +28,6 @@ module.exports = BaseView.extend({
       return this;
     }
 
-    model.subregionMeta = adminListModel.subregions;
     model.crumbs = adminListModel.crumbs;
 
     try {
