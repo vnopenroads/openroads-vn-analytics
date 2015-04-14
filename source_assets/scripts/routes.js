@@ -8,6 +8,7 @@ var AppView = require('./views/app.js');
 var DashboardView = require('./views/dashboard.js');
 var RoadNetworkView = require('./views/road-network.js');
 var AdminListView = require('./views/admin-list.js');
+var BarangayBiew = require('./views/barangay.js');
 
 // Note: eventually some of these can be broken out into their own file
 // (like AppView), but if there's no view logic this is simpler.
@@ -22,11 +23,12 @@ var AdminList = require('./models/admin-list.js');
 var getAdmin = require('./lib/admin-type.js');
 var spinner = require('./lib/spinner.js');
 
+var admin = require('./lib/admin-type.js');
 
 module.exports = Backbone.Router.extend({
   routes: {
     // sub-region pages
-    'analytics': 'dashboard',
+    'analytics(/)': 'dashboard',
     'analytics/:id': 'dashboard',
 
     'analytics/:id/meta': 'meta',
@@ -50,9 +52,17 @@ module.exports = Backbone.Router.extend({
     else {
       region = new AdminList();
     }
-    this.showView(new AdminListView({
-      model: region
-    }));
+
+    if (id && admin.get(id) === 'b') {
+      this.showView(new BarangayBiew({
+        model: region
+      }));
+    }
+    else {
+      this.showView(new AdminListView({
+        model: region
+      }));
+    }
   },
 
   meta: function (id) {

@@ -1,0 +1,12 @@
+<% var _ = require('underscore') %>
+
+<article>
+  <%- require('./sidebar.html')({ active: 'regions', crumbs: crumbs, id: id }) %>
+  <div id="content">
+
+    <h1><%- crumbs[crumbs.length-1].name %></h1>
+
+    viewing a barangay
+
+  </div>
+</article>

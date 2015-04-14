@@ -1,9 +1,9 @@
 <% var _ = require('underscore') %>
 <header>
-  <sup><%- require('./breadcrumbs.html')({ crumbs: crumbs, type: type }) %></sup>
+  <sup><%- require('./breadcrumbs.html')({ crumbs: crumbs }) %></sup>
   <nav>
     <ul>
-      <li><a class="<%= active == 'regions' ? 'active' : '' %>" href="#/areas" id="sidebar-regions">Regions</a></li>
+      <li><a class="<%= active == 'adminAreas' ? 'active' : '' %>" href="#/analytics/<%= id ? id : '' %>" id="sidebar-admin-areas">Administrative Areas</a></li>
       <li><a class="<%= active == 'projects' ? 'active' : '' %>" href="#" id="sidebar-projects">Projects</a></li>
     </ul>
   </nav>

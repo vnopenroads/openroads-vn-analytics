@@ -1,9 +1,17 @@
 <% var _ = require('underscore') %>
 
-<% var length = crumbs.length; _.each(crumbs, function(crumb, i) { %>
-  <% if (i === length-1) { %>
-    <a href="#/analytics/<%= crumb.id %>" class="admin-area current"><%= crumb.name %></a>
-  <% } else { %>
-    <a href="#/analytics/<%= crumb.id %>" class="admin-area"><%= crumb.name %></a>&nbsp;/&nbsp;
-  <% } %>
-<% }); %>
+<% var length = crumbs.length; %>
+<% if (!length) { %>
+  <a href="#/analytics" class="admin-area current">Philippines</a>
+<% } else { %>
+  <a href="#/analytics" class="admin-area">Philippines</a>&nbsp;/&nbsp;
+
+  <% _.each(crumbs, function(crumb, i) { %>
+    <% if (i === length-1) { %>
+      <a href="#/analytics/<%= crumb.id %>" class="admin-area current"><%= crumb.name %></a>
+    <% } else { %>
+      <a href="#/analytics/<%= crumb.id %>" class="admin-area"><%= crumb.name %></a>&nbsp;/&nbsp;
+    <% } %>
+  <% }); %>
+
+<% } %>
