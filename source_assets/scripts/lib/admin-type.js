@@ -1,4 +1,5 @@
 'use strict';
+var _ = require('underscore');
 
 /**
  * For the OpenRoads project we constructed a custom ID of 10 or 11 characters.
@@ -8,6 +9,7 @@
  *  *
  */
 
+// Check that ID to make sure it's valid.
 function verify (id) {
   // All IDs are numerical, so enforce this.
   if (isNaN(parseInt(id, 10))) {
@@ -22,10 +24,24 @@ function verify (id) {
   }
   return true;
 }
+
+// Modulus by these to determine the type of admin area.
 var r = 1000000000;
 var p = 10000000;
 var m = 1000;
 
+var offsets = {
+  10: {
+    r: 0,
+    p: 2,
+    m: 6
+  },
+  11: {
+    r: 1,
+    p: 3,
+    m: 7
+  }
+};
 
 // This function answers the question:
 // what kind of administrative area is this id for?
@@ -47,6 +63,23 @@ module.exports = {
     }
   },
 
+  // Using the full ID, get the ID of the parents.
+  // @type: the parent you're requesting.
+  slice: function(type, id) {
+    // Requesting barangay, just return the id.
+    if (type === 'b') {
+      return id
+    }
+    id = '' + id;
+    var offset = offsets[id.length][type];
+    var parent = _.map(id.split(''), function(letter, i) {
+      if (i > offset)
+        return '0';
+      return letter
+    });
+    return parent.join('');
+  },
+
   full: {
     r: {
       parent: 'The Philippines',
@@ -65,8 +98,8 @@ module.exports = {
     },
     b: {
       parent: 'Municipality',
-      display: 'Baranguay',
-      plural: 'Baranguays'
+      display: 'Barangay',
+      plural: 'Barangays'
     }
   },
 

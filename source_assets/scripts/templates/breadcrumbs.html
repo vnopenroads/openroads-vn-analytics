@@ -1,9 +1,9 @@
-<% var _ = require('underscore'); %>
+<% var _ = require('underscore') %>
 
-<% _.each(path, function(crumb, i) { %>
+<% var length = crumbs.length; _.each(crumbs, function(crumb, i) { %>
   <% if (i === length-1) { %>
-    <li><a href="<%= crumb.route %>" class="current"><%= crumb.text %></a></li>
+    <a href="#/analytics/<%= crumb.id %>" class="admin-area current"><%= crumb.name %></a>
   <% } else { %>
-    <li><a href="<%= crumb.route %>"><%= crumb.text %></a></li>
+    <a href="#/analytics/<%= crumb.id %>" class="admin-area"><%= crumb.name %></a>&nbsp;/&nbsp;
   <% } %>
 <% }); %>

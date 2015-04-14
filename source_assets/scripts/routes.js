@@ -26,10 +26,9 @@ var spinner = require('./lib/spinner.js');
 module.exports = Backbone.Router.extend({
   routes: {
     // sub-region pages
-    'analytics/areas': 'areas',
-    'analytics/areas/:id': 'areas',
-
+    'analytics': 'dashboard',
     'analytics/:id': 'dashboard',
+
     'analytics/:id/meta': 'meta',
     'analytics/:id/road-network': 'roadNetwork',
     'analytics/:id/projects': 'projects'
@@ -41,8 +40,10 @@ module.exports = Backbone.Router.extend({
     $('body').append(this.app.$el);
   },
 
-  areas: function (id) {
+  dashboard: function (id) {
     var region;
+
+    // If there's no id, assume it's the national view.
     if (id) {
       region = new AdminList({id: id});
     }
@@ -50,13 +51,6 @@ module.exports = Backbone.Router.extend({
       region = new AdminList();
     }
     this.showView(new AdminListView({
-      model: region
-    }));
-  },
-
-  dashboard: function (id) {
-    var region = new AdminRegion({id: id});
-    this.showView(new DashboardView({
       model: region
     }));
   },

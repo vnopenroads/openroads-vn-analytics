@@ -1,11 +1,10 @@
+<% var _ = require('underscore') %>
 <header>
-  <sup id="breadcrumbs"></sup>
-  <!-- a href="#" class="admin-area">Central Viscayas</a> > <a href="#" class="admin-area">Bohol</a -->
-  <h1><%= name %></h1>
+  <sup><%- require('./breadcrumbs.html')({ crumbs: crumbs, type: type }) %></sup>
   <nav>
     <ul>
-      <li><a href="#/areas" id="sidebar-regions">Regions</a></li>
-      <li><a href="#" id="sidebar-projects">Projects</a></li>
+      <li><a class="<%= active == 'regions' ? 'active' : '' %>" href="#/areas" id="sidebar-regions">Regions</a></li>
+      <li><a class="<%= active == 'projects' ? 'active' : '' %>" href="#" id="sidebar-projects">Projects</a></li>
     </ul>
   </nav>
 </header>

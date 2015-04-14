@@ -10,28 +10,31 @@ var urlBase = config.apiUrl;
 // In this model we don't do any analysis,
 // so simplilfy it's creation.
 
-var map = {
+var accessors = {
   r: {
     id: 'ID_1_OR',
     name: 'ADM1',
-    crumbs: ['country']
+    crumbs: []
   },
   p: {
     id: 'ID_2_OR',
     name: 'ADM2',
-    crumbs: ['country', 'ADM1', 'ADM2']
+    crumbs: ['COUNTRY']
   },
   m: {
     id: 'ID_3_OR',
     name: 'NAME_3',
-    crumbs: ['NAME_0', 'NAME_2', 'NAME_3']
+    crumbs: ['NAME_0', 'NAME_2']
   },
   b: {
     id: 'ID_4_OR',
     name: 'NAME_4',
-    crumbs: ['NAME_0', 'NAME_2', 'NAME_3', 'NAME_4']
+    crumbs: ['NAME_0', 'NAME_2', 'NAME_3']
   },
 };
+
+var adminNames = ['Region', 'Province', 'Municipality', 'Barangay'];
+var adminAbbrev = ['r', 'p', 'm', 'b'];
 
 module.exports = Backbone.Model.extend({
 
@@ -47,15 +50,21 @@ module.exports = Backbone.Model.extend({
       throw new Error('Not a valid response');
     }
 
-    // Once it's all figured out, use the keys object map
+    // Once it's all figured out, use the keys object accessors
     // to get the right object property names for the data.
     var type = admin.get(id);
-    var keys = map[type];
+    var keys = accessors[type];
 
     // Use the first subregion to create the trail of breadcrumbs
     // TODO again: this is a little hacky but it works if we trust our data.
-    var crumbs = keys.crumbs.map(function(crumb) {
-        return test[crumb]
+    var crumbs = _.map(keys.crumbs, function(crumb, i) {
+      var name = test[crumb] || adminNames[i];
+      return {
+        name: test[crumb],
+
+        // We can use the full ID to figure out what the parent IDs are.
+        id: admin.slice(adminAbbrev[i], id)
+      }
     });
 
     var regions = _.map(response.subregions.features, function(feature) {
