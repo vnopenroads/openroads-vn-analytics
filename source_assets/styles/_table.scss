@@ -1,0 +1,8 @@
+.link-row,
+.link-row > td {
+  cursor: pointer;
+
+  &:hover {
+    background-color: shade($table-row-background, 2.35%); // shade by f9
+  }
+}
