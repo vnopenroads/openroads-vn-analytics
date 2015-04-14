@@ -5,7 +5,6 @@ var $ = require('jquery');
 
 var BaseView = require('./views/base-view.js');
 var AppView = require('./views/app.js');
-var DashboardView = require('./views/dashboard.js');
 var AdminListView = require('./views/admin-list.js');
 var BarangayView = require('./views/barangay.js');
 var MunicipalityView = require('./views/municipality.js');
