@@ -8,12 +8,10 @@ var AppView = require('./views/app.js');
 var AdminListView = require('./views/admin-list.js');
 var BarangayView = require('./views/barangay.js');
 var MunicipalityView = require('./views/municipality.js');
+var ProjectsView = require('./views/projects.js');
 
 var MetaView = BaseView.extend({
   template: require('./templates/meta.html')
-});
-var ProjectsView = BaseView.extend({
-  template: require('./templates/projects.html')
 });
 var AdminRegion = require('./models/admin-region.js');
 var CachedAdminRegion = require('./models/cached-admin-region.js');
@@ -30,7 +28,10 @@ module.exports = Backbone.Router.extend({
     'analytics/:id': 'dashboard',
 
     'analytics/:id/meta': 'meta',
-    'analytics/:id/projects': 'projects'
+    'analytics/:id/road-network': 'roadNetwork',
+
+    // project-specific pages
+    'projects': 'projects'
   },
 
   initialize: function() {
@@ -77,7 +78,14 @@ module.exports = Backbone.Router.extend({
     }));
   },
 
-  projects: function (id) {
+  roadNetwork: function (id) {
+    var region = new AdminRegion({id: id});
+    this.showView(new RoadNetworkView({
+      model: region
+    }));
+  },
+
+  projects: function () {
     var region = new AdminRegion({id: id});
     this.showView(new ProjectsView({
       model: region
