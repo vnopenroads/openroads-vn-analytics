@@ -1,0 +1,25 @@
+<% var _ = require('underscore') %>
+
+<article>
+  <%- require('./sidebar.html')({ active: 'regions', name: type.parent }) %>
+  <div id="content">
+
+    <h1><%- type.plural %></h1>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th><%- type.display %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% subregions.forEach(function(subregion) { %>
+        <tr>
+          <td><a href="#" class="admin-area"><%= subregion.name %></a></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+  </div>
+</article>

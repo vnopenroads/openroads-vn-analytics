@@ -4,10 +4,10 @@ var Backbone = require('backbone');
 var $ = require('jquery');
 
 var BaseView = require('./views/base-view.js');
-
 var AppView = require('./views/app.js');
 var DashboardView = require('./views/dashboard.js');
 var RoadNetworkView = require('./views/road-network.js');
+var RegionListView = require('./views/region-list.js');
 
 // Note: eventually some of these can be broken out into their own file
 // (like AppView), but if there's no view logic this is simpler.
@@ -17,23 +17,42 @@ var MetaView = BaseView.extend({
 var ProjectsView = BaseView.extend({
   template: require('./templates/projects.html')
 });
-
 var AdminRegion = require('./models/admin-region.js');
+var AdminList = require('./models/region-list.js');
+var getAdmin = require('./lib/admin-type.js');
+var spinner = require('./lib/spinner.js');
+
 
 module.exports = Backbone.Router.extend({
   routes: {
-    'analytics/:id':  'dashboard',
+    // sub-region pages
+    'analytics/areas': 'areas',
+    'analytics/areas/:id': 'areas',
+
+    'analytics/:id': 'dashboard',
     'analytics/:id/meta': 'meta',
     'analytics/:id/road-network': 'roadNetwork',
     'analytics/:id/projects': 'projects'
   },
 
   initialize: function() {
-    this.app = new AppView({
-      // options
-    });
+    this.app = new AppView();
     this.app.render();
     $('body').append(this.app.$el);
+    spinner.set('main');
+  },
+
+  areas: function (id) {
+    var region;
+    if (id) {
+      region = new AdminList({id: id});
+    }
+    else {
+      region = new AdminList();
+    }
+    this.showView(new RegionListView({
+      model: region
+    }));
   },
 
   dashboard: function (id) {

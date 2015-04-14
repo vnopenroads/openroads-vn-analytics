@@ -1,15 +1,11 @@
 <header>
-  <sup><a href="#" class="admin-area">Central Viscayas</a> > <a href="#" class="admin-area">Bohol</a></sup>
-  <h1><%= properties.NAME_2 %></h1>
+  <sup id="breadcrumbs"></sup>
+  <!-- a href="#" class="admin-area">Central Viscayas</a> > <a href="#" class="admin-area">Bohol</a -->
+  <h1><%= name %></h1>
   <nav>
-    <form>
-      <input type="search" results=5 placeholder="Region, province, municipality, barangay" name="Search your LGU">
-    </form>
     <ul>
-      <li><a href="#/analytics/<%= id %>" class="<%= activeMenu == 'dashboard' ? 'active' : '' %>">Dashboard</a></li>
-      <li><a href="#" class="<%= activeMenu == 'meta' ? 'active' : '' %>">Meta</a></li>
-      <li><a href="#/analytics/<%= id %>/road-network" class="<%= activeMenu == 'road-network' ? 'active' : '' %>">Road network</a></li>
-      <li><a href="#" class="<%= activeMenu == 'projects' ? 'active' : '' %>">Projects</a></li>
+      <li><a href="#/areas" id="sidebar-regions">Regions</a></li>
+      <li><a href="#" id="sidebar-projects">Projects</a></li>
     </ul>
   </nav>
 </header>
