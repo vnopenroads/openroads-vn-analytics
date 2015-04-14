@@ -1,43 +1,39 @@
 <% var _ = require('underscore'); %>
+<% var statsForDisplay = require('../lib/stats.js').statsForDisplay; %>
 
 <article>
 <%- require('./sidebar.html')({ active: 'road-network', crumbs: crumbs, id: id }) %>
   <div id="content">
 
-    <h1><%- crumbs[crumbs.length-1].name %></h1>
+    <h2>Road Condition</h2>
 
+    <% var statsDisplay = statsForDisplay(stats); %>
     <table>
-    <% stats.forEach(function (row) { %>
+    <% _.forEach(statsDisplay, function(stat) { %>
       <tr>
-        <td><%= row.condition %></td>
-        <td><%= row.kilometers %> km</td>
+        <td><%= stat.display %></td>
+        <td><%= stat.kilometers %> km</td>
       </tr>
-    <% }) %>
+    <% }); %>
     </table>
-
-    <h2>Road condition</h2>
     <p>A detailed breakdown of the road condition in kilometer mapped for this municipality's barangays</p>
 
     <table class="table">
       <thead>
         <tr>
           <th>Barangay</th>
-          <th class="value">Poor</th>
-          <th class="value">Fair</th>
-          <th class="value">Good</th>
-          <th class="value">Excellent</th>
-          <th class="value">No Data</th>
+          <% _.forEach(_.pluck(statsDisplay, 'display'), function(disp) { %>
+          <th class="value"><%= disp %></th>
+          <% }); %>
         </tr>
       </thead>
       <tbody>
         <% subregions.forEach(function(subregion) { %>
         <tr>
           <td><a href="#/analytics/<%= subregion.properties.ID_4_OR %>" class="admin-area"><%= subregion.properties.NAME_4 %></a></td>
-          <td class="value"><% var poor = _.findWhere(subregion.stats, {condition: 'poor'}) %><%= poor ? poor.kilometers : 0 %> km</td>
-          <td class="value"><% var fair = _.findWhere(subregion.stats, {condition: 'fair'}) %><%= fair ? fair.kilometers : 0 %> km</td>
-          <td class="value"><% var good = _.findWhere(subregion.stats, {condition: 'good'}) %><%= good ? good.kilometers : 0 %> km</td>
-          <td class="value"><% var excellent = _.findWhere(subregion.stats, {condition: 'excellent'}) %><%= excellent ? excellent.kilometers : 0 %> km</td>
-          <td class="value"><% var und = _.findWhere(subregion.stats, {condition: 'undefined'}) %><%= und ? und.kilometers : 0 %> km</td>
+          <% _.forEach(statsForDisplay(subregion.stats), function(stat) { %>
+          <td class="value"><%= stat.kilometers %> km</td>
+          <% }); %>
         </tr>
         <% }) %>
       </tbody>

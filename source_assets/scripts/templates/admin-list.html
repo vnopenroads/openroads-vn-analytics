@@ -4,12 +4,6 @@
   <%- require('./sidebar.html')({ id: id, active: 'road-network', type: type, crumbs: crumbs }) %>
   <div id="content">
 
-  <% if (crumbs.length) { %>
-    <h1><%- crumbs[crumbs.length-1].name %>&nbsp;<%- type.plural %></h1>
-  <% } else { %>
-    <h1>Philippines' Regions</h1>
-  <% } %>
-
     <table class="table">
       <thead>
         <tr>

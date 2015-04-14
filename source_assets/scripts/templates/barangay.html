@@ -1,20 +1,19 @@
 <% var _ = require('underscore'); %>
+<% var statsForDisplay = require('../lib/stats.js').statsForDisplay; %>
 
 <article>
 <%- require('./sidebar.html')({ active: 'road-network', crumbs: crumbs, id: id }) %>
   <div id="content">
 
-    <h1><%- crumbs[crumbs.length-1].name %></h1>
-
     <h2>Road Condition</h2>
 
     <table>
-    <% stats.forEach(function (row) { %>
+    <% _.forEach(statsForDisplay(stats), function(stat) { %>
       <tr>
-        <td><%= row.condition %></td>
-        <td><%= row.kilometers %> km</td>
+        <td><%= stat.display %></td>
+        <td><%= stat.kilometers %> km</td>
       </tr>
-    <% }) %>
+    <% }); %>
     </table>
 
   </div>
