@@ -2,11 +2,13 @@
 
 var Backbone = require('backbone');
 var _ = require('underscore');
-var computeStats = require('../lib/stats.js').computeStats;
+var cachedStats = rfolder('../stats/by_condition');
 
 module.exports = Backbone.Model.extend({
 
   constructor: function(adminList) {
+    window.cached = cachedStats;
+    console.log('CACHED!', cachedStats);
     this.adminList = adminList;
     Backbone.Model.call(this, {
       id: adminList.get('id'),
