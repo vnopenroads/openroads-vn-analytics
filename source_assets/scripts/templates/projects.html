@@ -10,15 +10,23 @@
     <h1>Projects</h1>
     <% } %>
 
+    <h4>Click on a project for detailed project information.</h4>
+
     <table class="table">
       <thead>
         <tr>
-          <th></th>
+          <% _.each(columns, function(column) { %>
+          <th><%- column %></th>
+          <% }) %>
         </tr>
       </thead>
       <tbody>
-        <% projects.forEach(function(project) { %>
-        <tr>
+        <% _.each(projects, function(project) { %>
+        <tr class="link-row" data-id="<%- project.id %>">
+        <% _.each(project.rows, function(row) { %>
+
+        <td><%- row %></td>
+        <% }) %>
         </tr>
         <% }) %>
       </tbody>

@@ -9,6 +9,7 @@ var AdminListView = require('./views/admin-list.js');
 var BarangayView = require('./views/barangay.js');
 var MunicipalityView = require('./views/municipality.js');
 var ProjectsView = require('./views/projects.js');
+var ProjectView = require('./views/project.js');
 
 var MetaView = BaseView.extend({
   template: require('./templates/meta.html')
@@ -19,6 +20,7 @@ var AdminList = require('./models/admin-list.js');
 //var getAdmin = require('./lib/admin-type.js');
 //var spinner = require('./lib/spinner.js');
 var Projects = require('./models/projects.js');
+var Project = require('./models/project.js');
 
 var admin = require('./lib/admin-type.js');
 
@@ -33,7 +35,7 @@ module.exports = Backbone.Router.extend({
 
     // project-specific pages
     'analytics/all/projects(/)': 'projects',
-    'analytics/all/projects/:type': 'projects',
+    'analytics/all/projects/:type': 'projectDetail',
 
     '*path': 'defaultRoute'
   },
@@ -94,6 +96,13 @@ module.exports = Backbone.Router.extend({
     var projects = new Projects({type: type});
     this.showView(new ProjectsView({
       model: projects
+    }));
+  },
+
+  projectDetail: function (id) {
+    var project = new Project({id: id});
+    this.showView(new ProjectView({
+      model: project
     }));
   },
 
