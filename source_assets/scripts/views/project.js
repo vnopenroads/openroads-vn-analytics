@@ -8,5 +8,4 @@ $.DataTable = dataTable;
 
 module.exports = BaseView.extend({
   template: require('../templates/project.html'),
-
 });

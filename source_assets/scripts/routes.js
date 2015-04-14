@@ -35,7 +35,7 @@ module.exports = Backbone.Router.extend({
 
     // project-specific pages
     'analytics/all/projects(/)': 'projects',
-    'analytics/all/projects/:type': 'projectDetail',
+    'analytics/all/projects/:type': 'project',
 
     '*path': 'defaultRoute'
   },
@@ -99,7 +99,7 @@ module.exports = Backbone.Router.extend({
     }));
   },
 
-  projectDetail: function (id) {
+  project: function (id) {
     var project = new Project({id: id});
     this.showView(new ProjectView({
       model: project
