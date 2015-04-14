@@ -15,7 +15,7 @@
       <tbody>
         <% subregions.forEach(function(subregion) { %>
         <tr>
-          <td><a href="#" class="admin-area"><%= subregion.name %></a></td>
+          <td><a href="#/analytics/areas/<%- subregion.id %>" class="admin-area"><%= subregion.name %></a></td>
         </tr>
         <% }) %>
       </tbody>

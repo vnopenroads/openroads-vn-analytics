@@ -6,7 +6,7 @@ var $ = require('jquery');
 $.DataTable = dataTable;
 
 module.exports = BaseView.extend({
-  template: require('../templates/region-list.html'),
+  template: require('../templates/admin-list.html'),
 
   render: function () {
     var model = this.model ? this.model.attributes : {};
