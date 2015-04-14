@@ -6,9 +6,9 @@ var $ = require('jquery');
 var BaseView = require('./views/base-view.js');
 var AppView = require('./views/app.js');
 var DashboardView = require('./views/dashboard.js');
-var RoadNetworkView = require('./views/road-network.js');
 var AdminListView = require('./views/admin-list.js');
-var BarangayBiew = require('./views/barangay.js');
+var BarangayView = require('./views/barangay.js');
+var MunicipalityView = require('./views/municipality.js');
 
 // Note: eventually some of these can be broken out into their own file
 // (like AppView), but if there's no view logic this is simpler.
@@ -32,7 +32,6 @@ module.exports = Backbone.Router.extend({
     'analytics/:id': 'dashboard',
 
     'analytics/:id/meta': 'meta',
-    'analytics/:id/road-network': 'roadNetwork',
     'analytics/:id/projects': 'projects'
   },
 
@@ -54,8 +53,15 @@ module.exports = Backbone.Router.extend({
     }
 
     if (id && admin.get(id) === 'b') {
-      this.showView(new BarangayBiew({
-        model: region
+      this.showView(new BarangayView({
+        model: new AdminRegion({id: id}),
+        adminListModel: region
+      }));
+    }
+    else if (id && admin.get(id) === 'm') {
+      return this.showView(new MunicipalityView({
+        model: new AdminRegion({id: id}),
+        adminListModel: region
       }));
     }
     else {
@@ -68,13 +74,6 @@ module.exports = Backbone.Router.extend({
   meta: function (id) {
     var region = new AdminRegion({id: id});
     this.showView(new MetaView({
-      model: region
-    }));
-  },
-
-  roadNetwork: function (id) {
-    var region = new AdminRegion({id: id});
-    this.showView(new RoadNetworkView({
       model: region
     }));
   },

@@ -1,9 +1,13 @@
 'use strict';
 
 var BaseView = require('./base-view.js');
+var dataTable = require('datatables');
+var _ = require('underscore');
+var $ = require('jquery');
+$.DataTable = dataTable;
 
 module.exports = BaseView.extend({
-  template: require('../templates/barangay.html'),
+  template: require('../templates/municipality.html'),
 
   initialize: function (options) {
     this.adminListModel = options.adminListModel;
@@ -16,12 +20,13 @@ module.exports = BaseView.extend({
   render: function () {
     var model = this.model ? this.model.attributes : {};
     var adminListModel = this.adminListModel ? this.adminListModel.attributes : {};
+    console.log('model', model);
+    console.log('adminListModel', adminListModel);
     if (!model.properties || !adminListModel.crumbs ) {
       return this;
     }
 
     model.crumbs = adminListModel.crumbs;
-    console.log(model);
 
     try {
       this.$el.html(this.template(model));
