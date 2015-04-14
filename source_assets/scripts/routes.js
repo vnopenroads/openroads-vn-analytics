@@ -18,6 +18,7 @@ var CachedAdminRegion = require('./models/cached-admin-region.js');
 var AdminList = require('./models/admin-list.js');
 //var getAdmin = require('./lib/admin-type.js');
 //var spinner = require('./lib/spinner.js');
+var Projects = require('./models/projects.js');
 
 var admin = require('./lib/admin-type.js');
 
@@ -31,7 +32,10 @@ module.exports = Backbone.Router.extend({
     'analytics/:id/road-network': 'roadNetwork',
 
     // project-specific pages
-    'projects': 'projects'
+    'analytics/all/projects(/)': 'projects',
+    'analytics/all/projects/:type': 'projects',
+
+    '*path': 'defaultRoute'
   },
 
   initialize: function() {
@@ -85,11 +89,16 @@ module.exports = Backbone.Router.extend({
     }));
   },
 
-  projects: function () {
-    var region = new AdminRegion({id: id});
+  projects: function (type) {
+    type = type ? type.toLowerCase() : type;
+    var projects = new Projects({type: type});
     this.showView(new ProjectsView({
-      model: region
+      model: projects
     }));
+  },
+
+  defaultRoute: function () {
+    this.navigate('#analytics', {trigger: true});
   },
 
   showView: function(view) {

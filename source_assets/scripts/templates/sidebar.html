@@ -1,7 +1,7 @@
 <% var _ = require('underscore') %>
 <header>
   <sup><%- require('./breadcrumbs.html')({ crumbs: crumbs }) %></sup>
-  
+
   <% if (crumbs.length) { %>
     <h1><%- crumbs[crumbs.length-1].name %></h1>
   <% } else { %>
