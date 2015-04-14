@@ -1,27 +1,11 @@
 'use strict';
 
-var BaseView = require('./base-view.js');
-var dataTable = require('datatables');
-var $ = require('jquery');
-$.DataTable = dataTable;
+var DashboardView = require('./dashboard.js');
 
-module.exports = BaseView.extend({
-  template: require('../templates/admin-list.html'),
-
-  render: function () {
-    var model = this.model ? this.model.attributes : {};
-    if (!model.type) {
-      return this;
-    }
-
-    try {
-      this.$el.html(this.template(model));
-    } catch (e) {
-      console.error(e);
-    }
-
-    this.$('.table').dataTable({ 'pageLength': 25 });
-    return this;
+module.exports = DashboardView.extend({
+  template: require('../templates/region.html'),
+  render: function() {
+    this.model.set(this.adminListModel.attributes);
+    return DashboardView.prototype.render.call(this);
   }
-
 });

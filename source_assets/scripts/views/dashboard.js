@@ -9,6 +9,9 @@ $.DataTable = dataTable;
 module.exports = BaseView.extend({
 
   initialize: function (options) {
+    if(!options.adminListModel) {
+      throw new Error('DashboardView requires an adminListModel!');
+    }
     this.adminListModel = options.adminListModel;
 
     BaseView.prototype.initialize.call(this);
@@ -25,6 +28,7 @@ module.exports = BaseView.extend({
       return this;
     }
 
+    model.subregionMeta = adminListModel.subregions;
     model.crumbs = adminListModel.crumbs;
 
     try {

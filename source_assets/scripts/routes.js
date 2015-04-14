@@ -9,8 +9,6 @@ var AdminListView = require('./views/admin-list.js');
 var BarangayView = require('./views/barangay.js');
 var MunicipalityView = require('./views/municipality.js');
 
-// Note: eventually some of these can be broken out into their own file
-// (like AppView), but if there's no view logic this is simpler.
 var MetaView = BaseView.extend({
   template: require('./templates/meta.html')
 });
@@ -18,6 +16,7 @@ var ProjectsView = BaseView.extend({
   template: require('./templates/projects.html')
 });
 var AdminRegion = require('./models/admin-region.js');
+var CachedAdminRegion = require('./models/cached-admin-region.js');
 var AdminList = require('./models/admin-list.js');
 var getAdmin = require('./lib/admin-type.js');
 var spinner = require('./lib/spinner.js');
@@ -64,8 +63,9 @@ module.exports = Backbone.Router.extend({
       }));
     }
     else {
-      this.showView(new AdminListView({
-        model: region
+      return this.showView(new AdminListView({
+        model: new CachedAdminRegion(region),
+        adminListModel: region
       }));
     }
   },

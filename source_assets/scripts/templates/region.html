@@ -1,6 +1,7 @@
 <% var _ = require('underscore'); %>
 <% var statsForDisplay = require('../lib/stats.js').statsForDisplay; %>
-
+<% var adminType = require('../lib/admin-type.js'); %>
+<% var subType = adminType.getNext(id); %>
 <article>
 <%- require('./sidebar.html')({ active: 'road-network', crumbs: crumbs, id: id }) %>
   <div id="content">
@@ -21,16 +22,18 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Barangay</th>
+          <th><%= subType.plural %></th>
           <% _.forEach(_.pluck(statsDisplay, 'display'), function(disp) { %>
           <th class="value"><%= disp %></th>
           <% }); %>
         </tr>
       </thead>
       <tbody>
-        <% subregions.forEach(function(subregion) { %>
+        <% subregions.forEach(function(subregion, i) {
+            var id = subregionMeta[i].id;
+            var name = subregionMeta[i].name; %>
         <tr>
-          <td><a href="#/analytics/<%= subregion.properties.ID_4_OR %>" class="admin-area"><%= subregion.properties.NAME_4 %></a></td>
+          <td><a href="#/analytics/<%= id %>" class="admin-area"><%= name %></a></td>
           <% _.forEach(statsForDisplay(subregion.stats), function(stat) { %>
           <td class="value"><%= stat.kilometers %> km</td>
           <% }); %>
