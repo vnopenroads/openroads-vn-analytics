@@ -1,3 +1,5 @@
+'use strict';
+
 var Spinner = require('spin');
 var spinner = new Spinner();
 
@@ -7,7 +9,7 @@ module.exports = {
     target.appendChild(spinner.spin().el);
     return this;
   },
-  spin: function(id) {
+  spin: function() {
     spinner.spin();
     return this;
   },

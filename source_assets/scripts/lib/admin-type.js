@@ -49,17 +49,17 @@ module.exports = {
   get: function (id) {
     verify(id);
     id = parseInt(id, 0);
-    if (!(id % r)) {
-      return 'r'
+    if (id % r === 0) {
+      return 'r';
     }
-    else if (!(id % p)) {
-      return 'p'
+    else if (id % p === 0) {
+      return 'p';
     }
-    else if (!(id % m)) {
-      return 'm'
+    else if (id % m === 0) {
+      return 'm';
     }
     else {
-      return 'b'
+      return 'b';
     }
   },
 
@@ -68,14 +68,14 @@ module.exports = {
   slice: function(type, id) {
     // Requesting barangay, just return the id.
     if (type === 'b') {
-      return id
+      return id;
     }
     id = '' + id;
     var offset = offsets[id.length][type];
     var parent = _.map(id.split(''), function(letter, i) {
       if (i > offset)
         return '0';
-      return letter
+      return letter;
     });
     return parent.join('');
   },
@@ -104,6 +104,6 @@ module.exports = {
   },
 
   getFull: function (id) {
-    return this.full[this.get(id)]
+    return this.full[this.get(id)];
   },
-}
+};
