@@ -16,7 +16,7 @@ var request = require('request');
 
 
 if (process.argv.length < 6) {
-  console.log('Usage: node fetch-admin-data.js TYPE ENDPOINT_BASE_URL OUTPUT_DIR');
+  console.log('node fetch-admin-data.js ADMIN_AREAS_CSV TYPE ENDPOINT_BASE_URL OUTPUT_DIR');
   process.exit();
 }
 
@@ -25,6 +25,7 @@ var type = +process.argv[3];
 var endpoint = process.argv[4];
 var outputDir = path.resolve(process.cwd(), process.argv[5]);
 
+
 fs.createReadStream(csvFile)
   .pipe(csv())
   .pipe(through.obj(function (data, _, next) {
@@ -32,9 +33,11 @@ fs.createReadStream(csvFile)
       console.log('Fetching ' + data.id);
       request(endpoint + '/admin/' + data.id)
         .pipe(fs.createWriteStream(path.resolve(outputDir, data.id + '.json')))
-        .on('finish', function () { console.log('Finished', data.id); })
+        .on('finish', function () {
+          console.log('Finished', data.id);
+          next();
+        })
         .on('error', console.error.bind(console));
-      next();
     }
     else next();
   }));
