@@ -10,7 +10,7 @@ var urlBase = config.apiUrl;
 // In this model we don't do any analysis,
 // so simplilfy it's creation.
 
-var accessors = {
+var map = {
   r: {
     id: 'ID_1_OR',
     name: 'ADM1',
@@ -46,33 +46,41 @@ module.exports = Backbone.Model.extend({
     if (!id) {
       throw new Error('Not a valid response');
     }
+
+    // Once it's all figured out, use the keys object map
+    // to get the right object property names for the data.
     var type = admin.get(id);
-    var accessor = accessors[type];
+    var keys = map[type];
+
+    // Use the first subregion to create the trail of breadcrumbs
+    // TODO again: this is a little hacky but it works if we trust our data.
+    var crumbs = keys.crumbs.map(function(crumb) {
+        return test[crumb]
+    });
 
     var regions = _.map(response.subregions.features, function(feature) {
       feature = feature.properties;
-      var name, id;
+      var name;
 
       // Regions can have either ADM1 or ADM1_1.
       if (type === 'r') {
         name = feature.ADM1 || feature.ADM1_1;
       }
       else {
-        name = feature[accessor.name];
+        name = feature[keys.name];
       }
-
-      id = feature[accessor.id];
 
       return {
         name: name,
-        id: id
+        id: id = feature[keys.id]
       }
     });
 
     return {
       // Only return regions that do not break, so this looks a bit more polished.
       subregions: _.filter(regions, function(region) { return region.name }),
-      type: admin.full[type]
+      type: admin.full[type],
+      crumbs: crumbs
     }
   },
 
