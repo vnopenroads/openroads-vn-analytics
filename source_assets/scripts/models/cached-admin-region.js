@@ -7,7 +7,6 @@ var cachedStats = rfolder('../stats/by_condition');
 module.exports = Backbone.Model.extend({
 
   constructor: function(adminList) {
-    console.log('CACHED!', cachedStats);
     this.adminList = adminList;
     Backbone.Model.call(this, {
       id: adminList.get('id'),
@@ -24,17 +23,32 @@ module.exports = Backbone.Model.extend({
    * Mimic the schema produced by computeStats
    */
   loadCachedStats: function() {
-    var stats = cachedStats[this.get('id')];
-    if(!stats) return;
-    stats = formatStats(stats.groups);
     var subregions = this.adminList.get('subregions') || [];
     subregions.forEach(function (subr) {
       subr.stats = formatStats(cachedStats[subr.id].groups);
     })
+
+    var stats = cachedStats[this.get('id')];
+    var groups;
+    if (!stats) {
+      // we must be at top level, so just add up the subregions.
+      groups = subregions.reduce(function(memo, s) {
+        s.stats.forEach(function (stat) {
+          memo[stat.condition] = (memo[stat.condition] || 0) + stat.kilometers;
+        })
+        return memo;
+      }, {})
+    }
+    else {
+      groups = stats.groups;
+    }
+    stats = formatStats(groups)
+
     this.set({
       stats: stats,
       subregions: subregions
     })
+    console.log('cached stats loaded', stats, subregions);
   },
 
   fetch: function () {}
