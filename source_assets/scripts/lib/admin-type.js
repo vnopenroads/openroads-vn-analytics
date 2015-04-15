@@ -114,5 +114,16 @@ module.exports = {
       case 'p': return this.full.m;
       case 'm': return this.full.b;
     }
-  }
+  },
+
+  getByIndex: function (numIndex) {
+    switch (numIndex) {
+      case 1: return this.full.r;
+      case 2: return this.full.p;
+      case 3: return this.full.m;
+      case 4: return this.full.b;
+      default: return null;
+    }
+  },
+
 };

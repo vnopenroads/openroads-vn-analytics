@@ -30,6 +30,16 @@ html, body {
   left: 50%;
 }
 
+#admin-search {
+  .results {
+    small {
+      color: #888;
+      font-size: 0.625rem;
+      text-transform: uppercase;
+    }
+  }
+}
+
 
 /* Links */
 
