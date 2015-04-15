@@ -1,0 +1,25 @@
+<% var _ = require('underscore') %>
+
+<article>
+  <%- require('./sidebar.html')({ id: '', active: 'projects', crumbs: crumbs }) %>
+  <div id="content">
+
+    <% if (crumbs.length) { %>
+    <h1><%- crumbs[crumbs.length-1].name %>&nbsp;<%- type.plural %></h1>
+    <% } else { %>
+    <h1>Projects</h1>
+    <% } %>
+
+    <table class="table">
+      <tbody>
+        <% _.each(tags, function(tag) { %>
+        <tr>
+        <td><%- tag.k %></td>
+        <td><%- tag.v %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+  </div>
+</article>

@@ -1,0 +1,36 @@
+<% var _ = require('underscore') %>
+
+<article>
+  <%- require('./sidebar.html')({ id: '', active: 'projects', type: type, crumbs: crumbs }) %>
+  <div id="content">
+
+    <% if (crumbs.length) { %>
+    <h1><%- crumbs[crumbs.length-1].name %>&nbsp;<%- type.plural %></h1>
+    <% } else { %>
+    <h1>Projects</h1>
+    <% } %>
+
+    <h4>Click on a project for detailed project information.</h4>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <% _.each(columns, function(column) { %>
+          <th><%- column %></th>
+          <% }) %>
+        </tr>
+      </thead>
+      <tbody>
+        <% _.each(projects, function(project) { %>
+        <tr class="link-row" data-id="<%- project.id %>">
+        <% _.each(project.rows, function(row) { %>
+
+        <td><%- row %></td>
+        <% }) %>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+  </div>
+</article>

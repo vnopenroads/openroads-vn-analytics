@@ -8,18 +8,19 @@ var AppView = require('./views/app.js');
 var AdminListView = require('./views/admin-list.js');
 var BarangayView = require('./views/barangay.js');
 var MunicipalityView = require('./views/municipality.js');
+var ProjectsView = require('./views/projects.js');
+var ProjectView = require('./views/project.js');
 
 var MetaView = BaseView.extend({
   template: require('./templates/meta.html')
-});
-var ProjectsView = BaseView.extend({
-  template: require('./templates/projects.html')
 });
 var AdminRegion = require('./models/admin-region.js');
 var CachedAdminRegion = require('./models/cached-admin-region.js');
 var AdminList = require('./models/admin-list.js');
 //var getAdmin = require('./lib/admin-type.js');
 //var spinner = require('./lib/spinner.js');
+var Projects = require('./models/projects.js');
+var Project = require('./models/project.js');
 
 var admin = require('./lib/admin-type.js');
 
@@ -30,7 +31,13 @@ module.exports = Backbone.Router.extend({
     'analytics/:id': 'dashboard',
 
     'analytics/:id/meta': 'meta',
-    'analytics/:id/projects': 'projects'
+    'analytics/:id/road-network': 'roadNetwork',
+
+    // project-specific pages
+    'analytics/all/projects(/)': 'projects',
+    'analytics/all/projects/:type': 'project',
+
+    '*path': 'defaultRoute'
   },
 
   initialize: function() {
@@ -77,11 +84,30 @@ module.exports = Backbone.Router.extend({
     }));
   },
 
-  projects: function (id) {
+  roadNetwork: function (id) {
     var region = new AdminRegion({id: id});
-    this.showView(new ProjectsView({
+    this.showView(new RoadNetworkView({
       model: region
     }));
+  },
+
+  projects: function (type) {
+    type = type ? type.toLowerCase() : type;
+    var projects = new Projects({type: type});
+    this.showView(new ProjectsView({
+      model: projects
+    }));
+  },
+
+  project: function (id) {
+    var project = new Project({id: id});
+    this.showView(new ProjectView({
+      model: project
+    }));
+  },
+
+  defaultRoute: function () {
+    this.navigate('#analytics', {trigger: true});
   },
 
   showView: function(view) {
