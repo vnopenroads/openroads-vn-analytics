@@ -2,7 +2,6 @@
 
 var BaseView = require('./base-view.js');
 var dataTable = require('datatables');
-var _ = require('underscore');
 var $ = require('jquery');
 $.DataTable = dataTable;
 
@@ -21,7 +20,8 @@ module.exports = BaseView.extend({
 
   render: function () {
     var model = this.model ? this.model.attributes : {};
-    var adminListModel = this.adminListModel ? this.adminListModel.attributes : {};
+    var adminListModel = this.adminListModel ?
+      this.adminListModel.attributes : {};
     console.log('model', model);
     console.log('adminListModel', adminListModel);
     if (!model.properties || !adminListModel.crumbs ) {

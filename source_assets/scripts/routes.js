@@ -18,8 +18,8 @@ var ProjectsView = BaseView.extend({
 var AdminRegion = require('./models/admin-region.js');
 var CachedAdminRegion = require('./models/cached-admin-region.js');
 var AdminList = require('./models/admin-list.js');
-var getAdmin = require('./lib/admin-type.js');
-var spinner = require('./lib/spinner.js');
+//var getAdmin = require('./lib/admin-type.js');
+//var spinner = require('./lib/spinner.js');
 
 var admin = require('./lib/admin-type.js');
 

@@ -108,11 +108,11 @@ module.exports = {
   },
 
   getNext: function (id) {
-    if(!id) return this.full['r'];
+    if(!id) return this.full.r;
     switch (this.get(id)) {
-      case 'r': return this.full['p'];
-      case 'p': return this.full['m'];
-      case 'm': return this.full['b'];
+      case 'r': return this.full.p;
+      case 'p': return this.full.m;
+      case 'm': return this.full.b;
     }
   }
 };
