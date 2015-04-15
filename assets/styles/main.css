@@ -21,6 +21,12 @@ html, body {
   padding: 0;
 }
 
+#spin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
 /* Links */
 a {
   cursor: pointer;
@@ -751,6 +757,14 @@ table.dataTable td {
   .dataTables_wrapper .dataTables_filter {
     margin-top: 0.5em;
   }
+}
+.link-row,
+.link-row > td {
+  cursor: pointer;
+}
+.link-row:hover,
+.link-row > td:hover {
+  background-color: #f9f9f9;
 }
 
 /*# sourceMappingURL=main.css.map */
