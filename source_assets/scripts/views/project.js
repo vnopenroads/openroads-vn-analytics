@@ -1,6 +1,5 @@
 'use strict';
 
-var _ = require('underscore');
 var BaseView = require('./base-view.js');
 var dataTable = require('datatables');
 var $ = require('jquery');

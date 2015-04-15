@@ -4,6 +4,10 @@ var BaseView = require('./base-view.js');
 var dataTable = require('datatables');
 var $ = require('jquery');
 $.DataTable = dataTable;
+var Spinner = require('../lib/spinner.js');
+
+var AdminSearchView = require('./admin-search.js');
+
 
 module.exports = BaseView.extend({
 
@@ -16,6 +20,8 @@ module.exports = BaseView.extend({
     BaseView.prototype.initialize.call(this);
     this.listenTo(this.adminListModel, 'change', this.render);
     this.adminListModel.fetch();
+
+    this.adminSearchView = new AdminSearchView();
   },
 
   render: function () {
@@ -32,9 +38,14 @@ module.exports = BaseView.extend({
 
     try {
       this.$el.html(this.template(model));
+
+      this.$el.find('#admin-search').html(this.adminSearchView.render().el);
     } catch (e) {
       console.error(e);
     }
+
+    // Spinner is set on the routes.js before rendering the view.
+    Spinner.stop();
 
     this.$('.datatable').dataTable({ 'pageLength': 25 });
     return this;

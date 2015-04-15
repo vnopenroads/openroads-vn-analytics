@@ -2,6 +2,7 @@
 
 var Backbone = require('backbone');
 var $ = require('jquery');
+var Spinner = require('./lib/spinner.js');
 
 var BaseView = require('./views/base-view.js');
 var AppView = require('./views/app.js');
@@ -27,15 +28,14 @@ var admin = require('./lib/admin-type.js');
 module.exports = Backbone.Router.extend({
   routes: {
     // sub-region pages
-    'analytics(/)': 'dashboard',
-    'analytics/:id': 'dashboard',
+    '': 'dashboard',
+    ':id': 'dashboard',
 
-    'analytics/:id/meta': 'meta',
-    'analytics/:id/road-network': 'roadNetwork',
+    ':id/meta': 'meta',
 
     // project-specific pages
-    'analytics/all/projects(/)': 'projects',
-    'analytics/all/projects/:type': 'project',
+    'all/projects(/)': 'projects',
+    'all/projects/:type': 'project',
 
     '*path': 'defaultRoute'
   },
@@ -84,13 +84,6 @@ module.exports = Backbone.Router.extend({
     }));
   },
 
-  roadNetwork: function (id) {
-    var region = new AdminRegion({id: id});
-    this.showView(new RoadNetworkView({
-      model: region
-    }));
-  },
-
   projects: function (type) {
     type = type ? type.toLowerCase() : type;
     var projects = new Projects({type: type});
@@ -107,12 +100,12 @@ module.exports = Backbone.Router.extend({
   },
 
   defaultRoute: function () {
-    this.navigate('#analytics', {trigger: true});
+    this.navigate('', {trigger: true});
   },
 
   showView: function(view) {
+    Spinner.set('spin');
     view.model.fetch(); // TODO: only fetch if we don't have it
     this.app.$el.find('#main').html(view.render().el);
   }
 });
-

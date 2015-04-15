@@ -39,7 +39,7 @@ var columnOrder = {
   project: ['name', 'id', 'type'],
   fmr: ['name', 'id', 'type', 'cost'],
   trp: ['name', 'id', 'type', 'tour', 'work']
-}
+};
 
 var crumbs = [{
   name: 'Projects',
@@ -47,13 +47,14 @@ var crumbs = [{
 }];
 
 function makeCrumbs(crumb) {
-  if (!crumb)
-    return crumbs
+  if (!crumb) {
+    return crumbs;
+  }
   return _.clone(crumbs).concat(toArray(crumb).map(function(crumb) {
     return {
       name: crumb.name,
       id: 'all/projects/' + crumb.id
-    }
+    };
   }));
 }
 
@@ -67,10 +68,10 @@ function toArray(val) {
 function findTag(key, tags) {
   for (var i = 0, ii = tags.length; i < ii; ++i) {
     if (tags[i].k === key) {
-      return tags[i]
+      return tags[i];
     }
   }
-  return false
+  return false;
 }
 
 module.exports = Backbone.Model.extend({
@@ -89,8 +90,11 @@ module.exports = Backbone.Model.extend({
       // In the case of project and everything else,
       // go to projects and set type to projects.
       case 'project':
+        /* falls through */
       case undefined:
+        /* falls through */
       case null:
+        /* falls through */
       default:
         this.query = 'type=project';
         this.crumbs = makeCrumbs();
@@ -104,23 +108,23 @@ module.exports = Backbone.Model.extend({
 
   parse: function(projects) {
 
-    var columns = columnOrder[this.type] || columnOrder['project'];
+    var columns = columnOrder[this.type] || columnOrder.project;
 
     _.each(projects, function(project) {
       var tags = project.tags;
       project.rows = _.map(columns, function(column) {
         column = columnData[column];
-        return (findTag(column.tag, tags).v || 'n/a')
+        return (findTag(column.tag, tags).v || 'n/a');
       });
     });
 
     return {
       projects: projects,
       columns: _.map(columns, function(column) {
-        return columnData[column].display
+        return columnData[column].display;
       }),
       crumbs: this.crumbs,
       type: this.type
-    }
+    };
   },
 });

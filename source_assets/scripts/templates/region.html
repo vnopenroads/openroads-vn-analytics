@@ -40,7 +40,7 @@
             var id = subregion.id;
             var name = subregion.name; %>
         <tr>
-          <td><a href="#/analytics/<%= id %>" class="admin-area"><%= name %></a></td>
+          <td><a href="#/<%= id %>" class="admin-area"><%= name %></a></td>
           <% _.forEach(statsForDisplay(subregion.stats), function(stat) { %>
           <td class="value"><%= toFixed(stat.kilometers, 3) %> km</td>
           <% }); %>
