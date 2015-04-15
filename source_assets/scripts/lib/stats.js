@@ -34,8 +34,8 @@ module.exports.computeStats = function (roadFeatures, subregions) {
     stats: statsByCondition(roadFeatures),
     subregions: subregions.map(function (subregion) {
       return {
-        name: subregion.name,
-        id: subregion.id,
+        name: subregion.properties.NAME_4,
+        id: subregion.properties.ID_4_OR,
         properties: subregion.properties,
         stats: statsByCondition(clip(roadFeatures, subregion))
       };
