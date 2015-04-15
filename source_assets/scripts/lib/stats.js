@@ -53,7 +53,7 @@ var conditions = {
   fair: {
     display: 'Fair'
   },
-  god: {
+  good: {
     display: 'Good'
   },
   excellent: {
