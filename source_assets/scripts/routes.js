@@ -27,15 +27,15 @@ var admin = require('./lib/admin-type.js');
 module.exports = Backbone.Router.extend({
   routes: {
     // sub-region pages
-    'analytics(/)': 'dashboard',
-    'analytics/:id': 'dashboard',
+    '': 'dashboard',
+    ':id': 'dashboard',
 
-    'analytics/:id/meta': 'meta',
-    'analytics/:id/road-network': 'roadNetwork',
+    ':id/meta': 'meta',
+    ':id/road-network': 'roadNetwork',
 
     // project-specific pages
-    'analytics/all/projects(/)': 'projects',
-    'analytics/all/projects/:type': 'project',
+    'all/projects(/)': 'projects',
+    'all/projects/:type': 'project',
 
     '*path': 'defaultRoute'
   },
@@ -107,7 +107,7 @@ module.exports = Backbone.Router.extend({
   },
 
   defaultRoute: function () {
-    this.navigate('#analytics', {trigger: true});
+    this.navigate('', {trigger: true});
   },
 
   showView: function(view) {

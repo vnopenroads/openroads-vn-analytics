@@ -2,15 +2,15 @@
 
 <% var length = crumbs.length; %>
 <% if (!length) { %>
-  <a href="#/analytics" class="admin-area current">Philippines</a>
+  <a href="#/" class="admin-area current">Philippines</a>
 <% } else { %>
-  <a href="#/analytics" class="admin-area">Philippines</a>&nbsp;/&nbsp;
+  <a href="#/" class="admin-area">Philippines</a>&nbsp;/&nbsp;
 
   <% _.each(crumbs, function(crumb, i) { %>
     <% if (i === length-1) { %>
-      <a href="#/analytics/<%= crumb.id %>" class="admin-area current"><%= crumb.name %></a>
+      <a href="#/<%= crumb.id %>" class="admin-area current"><%= crumb.name %></a>
     <% } else { %>
-      <a href="#/analytics/<%= crumb.id %>" class="admin-area"><%= crumb.name %></a>&nbsp;/&nbsp;
+      <a href="#/<%= crumb.id %>" class="admin-area"><%= crumb.name %></a>&nbsp;/&nbsp;
     <% } %>
   <% }); %>
 
