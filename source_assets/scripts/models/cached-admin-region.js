@@ -1,8 +1,17 @@
 'use strict';
-
+/* global rfolder */
 var Backbone = require('backbone');
-var _ = require('underscore');
 var cachedStats = rfolder('../stats/by_condition');
+
+function formatStats (grouped) {
+  if(!grouped) return [];
+  return Object.keys(grouped).map(function (condition) {
+    return {
+      condition: condition,
+      kilometers: grouped[condition]
+    };
+  });
+}
 
 module.exports = Backbone.Model.extend({
 
@@ -13,7 +22,7 @@ module.exports = Backbone.Model.extend({
       properties: {},
       stats: [],
       subregions: []
-    })
+    });
   },
 
   defaults: {
@@ -26,7 +35,7 @@ module.exports = Backbone.Model.extend({
     var subregions = this.adminList.get('subregions') || [];
     subregions.forEach(function (subr) {
       subr.stats = formatStats(cachedStats[subr.id].groups);
-    })
+    });
 
     var stats = cachedStats[this.get('id')];
     var groups;
@@ -35,19 +44,19 @@ module.exports = Backbone.Model.extend({
       groups = subregions.reduce(function(memo, s) {
         s.stats.forEach(function (stat) {
           memo[stat.condition] = (memo[stat.condition] || 0) + stat.kilometers;
-        })
+        });
         return memo;
-      }, {})
+      }, {});
     }
     else {
       groups = stats.groups;
     }
-    stats = formatStats(groups)
+    stats = formatStats(groups);
 
     this.set({
       stats: stats,
       subregions: subregions
-    })
+    });
     console.log('cached stats loaded', stats, subregions);
   },
 
@@ -55,12 +64,3 @@ module.exports = Backbone.Model.extend({
 
 });
 
-function formatStats (grouped) {
-  if(!grouped) return [];
-  return Object.keys(grouped).map(function (condition) {
-    return {
-      condition: condition,
-      kilometers: grouped[condition]
-    }
-  })
-}
