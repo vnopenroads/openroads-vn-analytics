@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "bundle": "browserify app.js -t browserify-ejs -o dist/bundle.js",
+    "test": "echo \"Error: no test specified\" && exit 0",
     "install": "bundle install --path bundle/cache"
   },
   "author": "Anand Thakker <vestibule@anandthakker.net> (http://anandthakker.net/)",
