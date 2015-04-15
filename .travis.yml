@@ -1,12 +1,11 @@
 language: node_js
 node_js:
 - '0.12'
-
 env:
   global:
   - GH_REF=github.com/developmentseed/openroads-analytics.git
   - DEPLOY_BRANCH=master
-  - secure: a2e6ixXoBhOgFFll4UeNCco53d6BISv5W/x67XfM3iPrzLVfgED34jlfXhHfh7y9AWg86zUWofyz2SJbal/6+MFAujKT04HvTaynUyn3eFV1RIZH5waF10eV/Styq/u2KpQmExWBJWqMUeZJSETcnBD9qFk1E1nZ8lGrsz5yAg0=
+  - secure: sYu3pAJ6P2Ckewb1Khb/KUk7cGemhEKIMqHTMqpC1xTaqP2Q1yZPtsASkamDScS1ZCSNoa0NnHZTA96dI9QsELoX1hPSaVU3JjmuLjhELxK9tWddHjzSgNyNPtVGSPgjNz7YlRgJs2ktPTO4N4qAOqEqe+xH4JFnaR/6VK6GGgU=
 
 before_install:
   - chmod +x ./.build_scripts/build.sh
