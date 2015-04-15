@@ -1,6 +1,5 @@
 'use strict';
 
-var _ = require('underscore');
 var BaseView = require('./base-view.js');
 var dataTable = require('datatables');
 var $ = require('jquery');
@@ -16,10 +15,10 @@ module.exports = BaseView.extend({
     var projects = this.model.get('projects');
     for (var i = 0, ii = projects.length; i < ii; ++i) {
       if (projects[i].id === id) {
-        return id
+        return id;
       }
     }
-    return false
+    return false;
   },
 
   navigateToProject: function(e) {

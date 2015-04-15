@@ -31,7 +31,6 @@ module.exports = Backbone.Router.extend({
     ':id': 'dashboard',
 
     ':id/meta': 'meta',
-    ':id/road-network': 'roadNetwork',
 
     // project-specific pages
     'all/projects(/)': 'projects',
@@ -80,13 +79,6 @@ module.exports = Backbone.Router.extend({
   meta: function (id) {
     var region = new AdminRegion({id: id});
     this.showView(new MetaView({
-      model: region
-    }));
-  },
-
-  roadNetwork: function (id) {
-    var region = new AdminRegion({id: id});
-    this.showView(new RoadNetworkView({
       model: region
     }));
   },

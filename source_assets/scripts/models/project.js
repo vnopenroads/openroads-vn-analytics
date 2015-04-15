@@ -9,13 +9,14 @@ var crumbs = [{
 }];
 
 function makeCrumbs(crumb) {
-  if (!crumb)
-    return crumbs
+  if (!crumb) {
+    return crumbs;
+  }
   return _.clone(crumbs).concat(toArray(crumb).map(function(crumb) {
     return {
       name: crumb.name,
       id: 'all/projects/' + crumb.id
-    }
+    };
   }));
 }
 
@@ -29,22 +30,22 @@ function toArray(val) {
 function findTag(key, tags) {
   for (var i = 0, ii = tags.length; i < ii; ++i) {
     if (tags[i].k === key) {
-      return tags[i]
+      return tags[i];
     }
   }
-  return false
+  return false;
 }
 
 module.exports = Backbone.Model.extend({
   url: config.apiUrl + '/relations/',
 
   initialize: function(options) {
-    this.url += options.id
+    this.url += options.id;
   },
 
   parse: function(resp) {
     if (!resp.length) {
-      return
+      return;
     }
     resp = resp[0];
     var crumbs = makeCrumbs({
