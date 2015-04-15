@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA;cACe;EACb,MAAM,EAAE,OAAO",
+"sources": ["../../source_assets/styles/table.scss"],
+"names": [],
+"file": "table.css"
+}
