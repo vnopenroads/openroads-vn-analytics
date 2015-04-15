@@ -10,17 +10,23 @@
     <h2>Road Condition</h2>
 
     <% var statsDisplay = statsForDisplay(stats); %>
-    <table>
-    <% _.forEach(statsDisplay, function(stat) { %>
+    <table class="table">
       <tr>
-        <td><%= stat.display %></td>
-        <td><%= toFixed(stat.kilometers, 3) %> km</td>
+        <% _.forEach(statsDisplay, function(stat) { %>
+          <td><%= stat.display %></td>
+        <% }); %>
       </tr>
-    <% }); %>
+
+      <tr>
+        <% _.forEach(statsDisplay, function(stat) { %>
+          <td><%= toFixed(stat.kilometers, 3) %> km</td>
+        <% }); %>
+      </tr>
     </table>
+
     <p>A detailed breakdown of the road condition in kilometer mapped for this municipality's barangays</p>
 
-    <table class="table">
+    <table class="table datatable">
       <thead>
         <tr>
           <th><%= subType.plural %></th>

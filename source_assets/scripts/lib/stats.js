@@ -31,7 +31,7 @@ module.exports.computeStats = function (roadFeatures, subregions) {
     subregions = subregions.features;
 
   return {
-    stats: statsByCondition(roadFeatures), 
+    stats: statsByCondition(roadFeatures),
     subregions: subregions.map(function (subregion) {
       return {
         name: subregion.name,
@@ -54,7 +54,7 @@ var conditions = {
     display: 'Fair'
   },
   god: {
-    display: 'God'
+    display: 'Good'
   },
   excellent: {
     display: 'Excellent'

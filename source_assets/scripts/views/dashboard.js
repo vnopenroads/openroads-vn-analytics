@@ -36,7 +36,7 @@ module.exports = BaseView.extend({
       console.error(e);
     }
 
-    this.$('.table').dataTable({ 'pageLength': 25 });
+    this.$('.datatable').dataTable({ 'pageLength': 25 });
     return this;
   }
 
