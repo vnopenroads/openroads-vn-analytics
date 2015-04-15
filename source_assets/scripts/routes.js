@@ -2,6 +2,7 @@
 
 var Backbone = require('backbone');
 var $ = require('jquery');
+var Spinner = require('./lib/spinner.js');
 
 var BaseView = require('./views/base-view.js');
 var AppView = require('./views/app.js');
@@ -103,8 +104,8 @@ module.exports = Backbone.Router.extend({
   },
 
   showView: function(view) {
+    Spinner.set('spin');
     view.model.fetch(); // TODO: only fetch if we don't have it
     this.app.$el.find('#main').html(view.render().el);
   }
 });
-

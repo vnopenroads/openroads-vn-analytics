@@ -4,6 +4,7 @@ var BaseView = require('./base-view.js');
 var dataTable = require('datatables');
 var $ = require('jquery');
 $.DataTable = dataTable;
+var Spinner = require('../lib/spinner.js');
 
 module.exports = BaseView.extend({
   template: require('../templates/projects.html'),
@@ -39,6 +40,10 @@ module.exports = BaseView.extend({
     } catch (e) {
       console.error(e);
     }
+
+    // Spinner is set on the routes.js before rendering the view.
+    Spinner.stop();
+
     this.$('.table').dataTable({ 'pageLength': 25 });
     return this;
   }
