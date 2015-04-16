@@ -10,16 +10,16 @@ var ejs = require('browserify-ejs');
 var gutil = require('gulp-util');
 var jshint = require('gulp-jshint');
 var cp = require('child_process');
- 
-// Basic usage 
+
+// Basic usage
 gulp.task('scripts:build', function(done) {
-  /*var b = browserify({
+  var b = browserify({
     entries: './source_assets/scripts/app.js',
     debug: true,
     transform: [ ejs ]
   });
 
-  // Single entry point to browserify 
+  // Single entry point to browserify
   return b.bundle()
     .on('error', function (err) {
       gutil.log(err.message || err);
@@ -29,8 +29,9 @@ gulp.task('scripts:build', function(done) {
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true}))
     .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('assets/scripts'));*/
+    .pipe(gulp.dest('assets/scripts'));
 
+   /*
   var args = ['node_modules/.bin/browserify', 'source_assets/scripts/app.js',
     '-d', '-o', 'assets/scripts/app.js',
     '-t', 'browserify-ejs',
@@ -38,6 +39,7 @@ gulp.task('scripts:build', function(done) {
 
   return cp.spawn('node', args, {stdio: 'inherit'})
     .on('close', done);
+    */
 });
 
 gulp.task('scripts:lint', function() {

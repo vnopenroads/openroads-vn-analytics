@@ -26,6 +26,7 @@ var Project = require('./models/project.js');
 var admin = require('./lib/admin-type.js');
 
 module.exports = Backbone.Router.extend({
+
   routes: {
     // sub-region pages
     '': 'dashboard',
@@ -41,9 +42,6 @@ module.exports = Backbone.Router.extend({
   },
 
   initialize: function() {
-    this.app = new AppView();
-    this.app.render();
-    $('body').append(this.app.$el);
   },
 
   dashboard: function (id) {
@@ -106,6 +104,6 @@ module.exports = Backbone.Router.extend({
   showView: function(view) {
     Spinner.set('spin');
     view.model.fetch(); // TODO: only fetch if we don't have it
-    this.app.$el.find('#main').html(view.render().el);
+    $('#main').html(view.render().el);
   }
 });

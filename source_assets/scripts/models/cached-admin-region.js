@@ -1,7 +1,6 @@
 'use strict';
 /* global rfolder */
 var Backbone = require('backbone');
-var cachedStats = rfolder('../stats/by_condition');
 
 function formatStats (grouped) {
   if(!grouped) return [];
@@ -32,6 +31,7 @@ module.exports = Backbone.Model.extend({
    * Mimic the schema produced by computeStats
    */
   loadCachedStats: function() {
+    /*
     var subregions = this.adminList.get('subregions') || [];
     subregions.forEach(function (subr) {
       subr.stats = formatStats(cachedStats[subr.id].groups);
@@ -58,6 +58,7 @@ module.exports = Backbone.Model.extend({
       subregions: subregions
     });
     console.log('cached stats loaded', stats, subregions);
+    */
   },
 
   fetch: function () {}
