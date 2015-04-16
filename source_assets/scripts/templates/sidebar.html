@@ -1,19 +1,10 @@
-<% var _ = require('underscore') %>
-<header>
-  <sup><%- require('./breadcrumbs.html')({ crumbs: crumbs }) %></sup>
-
-  <% if (crumbs.length) { %>
-    <h1><%- crumbs[crumbs.length-1].name %></h1>
-  <% } else { %>
-    <h1>Philippines</h1>
-  <% } %>
-
-  <div id="admin-search"></div>
-
-  <nav>
-    <ul>
-      <li><a class="<%= active == 'road-network' ? 'active' : '' %>" href="#/<%= id ? id : '' %>" id="sidebar-road-network">Road Network</a></li>
-      <li><a class="<%= active == 'projects' ? 'active' : '' %>" href="#/all/projects" id="sidebar-projects">Projects</a></li>
-    </ul>
-  </nav>
-</header>
+<div>
+<sup id="breadcrumbs"></sup>
+<h1 id="title-location">Philippines</h1>
+<nav>
+  <ul>
+    <li><a class="path" data-path="areas" href="#/" id="sidebar-road-network">Road Network</a></li>
+    <li><a class="path" data-path="projects" href="#/all/projects" id="sidebar-projects">Projects</a></li>
+  </ul>
+</nav>
+</div>
