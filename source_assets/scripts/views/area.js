@@ -1,16 +1,23 @@
 'use strict';
+var _ = require('underscore');
 var View = require('backbone').View;
+var dataTable = require('datatables');
+var $ = require('jquery');
+$.DataTable = dataTable;
+
+var stats = require('../lib/stats.js');
 
 module.exports = View.extend({
   template: require('../templates/area.html'),
-
+  initialize: function() {
+    this.render();
+  },
   render: function() {
-
-    /*
-    this.model.set(this.adminListModel.attributes);
-    this.model.loadCachedStats();
-    return DashboardView.prototype.render.call(this);
-    */
-
+    var model = this.model;
+    model.set('overview', stats.displayStats(model.get('stats')));
+    _.each(model.attributes.subregions, function(region) {
+      region.overview = stats.displayStats(region.stats);
+    });
+    this.$el.html(this.template(model.attributes));
   },
 });

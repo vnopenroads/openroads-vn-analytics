@@ -2,10 +2,20 @@
 
 var Backbone = require('backbone');
 var $ = require('jquery');
+
+// MODELS
+var Area = require('./models/area.js');
+
+// VIEWS
+var SidebarView = require('./views/sidebar.js');
+var AreaView = require('./views/area.js');
+
+// HELPERS
+var ID = require('./lib/id.js');
+
 var Spinner = require('./lib/spinner.js');
 
 var BaseView = require('./views/base-view.js');
-var AdminListView = require('./views/admin-list.js');
 var BarangayView = require('./views/barangay.js');
 var MunicipalityView = require('./views/municipality.js');
 var ProjectsView = require('./views/projects.js');
@@ -15,42 +25,55 @@ var MetaView = BaseView.extend({
   template: require('./templates/meta.html')
 });
 var AdminRegion = require('./models/admin-region.js');
-var CachedAdminRegion = require('./models/cached-admin-region.js');
-var AdminList = require('./models/admin-list.js');
 var Projects = require('./models/projects.js');
 var Project = require('./models/project.js');
 
-var admin = require('./lib/admin-type.js');
 
 module.exports = Backbone.Router.extend({
 
   routes: {
-    // sub-region pages
-    '': 'dashboard',
-    ':id': 'dashboard',
-
-    ':id/meta': 'meta',
-
-    // project-specific pages
-    'all/projects(/)': 'projects',
-    'all/projects/:type': 'project',
-
+    '':                       'area',
+    ':id':                    'area',
+    ':id/meta':               'meta',
+    'all/projects(/)':        'projects',
+    'all/projects/:type':     'project',
     '*path': 'defaultRoute'
   },
 
   initialize: function() {
+    this.sidebar = new SidebarView({el: $('#sidebar')});
   },
 
-  dashboard: function (id) {
-    var region;
+  area: function(id) {
+    id = new ID(id);
+    switch (id.type()) {
+      case 'n':
+      case 'r':
+      case 'p':
+        this.cachedRegion(id);
+      break;
 
-    // If there's no id, assume it's the national view.
-    if (id) {
-      region = new AdminList({id: id});
+      case 'm':
+        this.municipality(id);
+      break;
+
+      case 'b':
+        this.barangay(id);
+      break;
     }
-    else {
-      region = new AdminList();
-    }
+  },
+
+  cachedRegion: function(id, callback) {
+    var area = new Area({ id: id }).addCachedResource();
+    area.fetch({success: function areaSuccess() {
+      var areaView = new AreaView({ model: area, el: $('#content') });
+    }});
+  },
+
+  something: function() {
+    var view = new AreaView({
+      model: model
+    });
 
     if (id && admin.get(id) === 'b') {
       this.showView(new BarangayView({
@@ -66,7 +89,7 @@ module.exports = Backbone.Router.extend({
     }
     else {
       return this.showView(new AdminListView({
-        model: new CachedAdminRegion(region),
+        //model: new CachedAdminRegion(region),
         adminListModel: region
       }));
     }

@@ -11,24 +11,25 @@ function statsByCondition(roadFeatures) {
     return feat.properties.rd_cond;
   });
 
-  return Object.keys(grouped).map(function(condition) {
+  return _.map(Object.keys(grouped), function(condition) {
     return {
       condition: condition,
       kilometers: grouped[condition].map(function (feat) {
         return util.round(lineDistance(feat, 'kilometers'), 3);
       })
-      .reduce(function(a, b) { return a+b; }, 0)
+      .reduce(function(a, b) { return a + b; }, 0)
     };
   });
 }
 
-
 module.exports.computeStats = function (roadFeatures, subregions) {
-  if ('FeatureCollection' === roadFeatures.type)
+  if ('FeatureCollection' === roadFeatures.type) {
     roadFeatures = roadFeatures.features;
+  }
 
-  if ('FeatureCollection' === subregions.type)
+  if ('FeatureCollection' === subregions.type) {
     subregions = subregions.features;
+  }
 
   return {
     stats: statsByCondition(roadFeatures),
@@ -63,25 +64,24 @@ var conditions = {
     display: 'No Data'
   },
 };
-module.exports.statsForDisplay = function (cumputedStats) {
+
+module.exports.displayStats = function (stats) {
   var total = 0;
 
-  var r = Object.keys(conditions).map(function(cond) {
-    var val = _.findWhere(cumputedStats, {condition: cond});
-    var kms = val ? val.kilometers : 0;
-    total += kms;
+  var display = _.map(Object.keys(conditions), function(condition) {
+    var val = _.findWhere(stats, {condition: condition});
+    var km = val ? val.kilometers : 0;
+    total += km;
     return {
-      condition: cond,
-      display: conditions[cond].display,
-      kilometers: kms
+      display: conditions[condition].display,
+      length: km
     };
   });
 
-  r.push({
-    condition: 'total',
+  display.push({
     display: 'Total',
-    kilometers: total
+    length: total
   });
 
-  return r;
+  return display;
 };

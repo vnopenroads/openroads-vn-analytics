@@ -1,52 +1,44 @@
 <% var _ = require('underscore'); %>
 <% var statsForDisplay = require('../lib/stats.js').statsForDisplay; %>
-<% var adminType = require('../lib/id.js'); %>
-<% var subType = adminType.getNext(id); %>
 <% var toFixed = require('../lib/to-fixed.js'); %>
-<article>
-  <div id="content">
 
-    <h2>Road Condition</h2>
+<h2>Road Condition</h2>
 
-    <% var statsDisplay = statsForDisplay(stats); %>
-    <table class="table">
-      <tr>
-        <% _.forEach(statsDisplay, function(stat) { %>
-          <td><%= stat.display %></td>
-        <% }); %>
-      </tr>
+<table class="table">
+  <tr>
+    <% _.each(overview, function(stat) { %>
+    <td><%= stat.display %></td>
+    <% }); %>
+  </tr>
 
-      <tr>
-        <% _.forEach(statsDisplay, function(stat) { %>
-          <td><%= toFixed(stat.kilometers, 3) %> km</td>
-        <% }); %>
-      </tr>
-    </table>
+  <tr>
+    <% _.each(overview, function(stat) { %>
+    <td><%= toFixed(stat.length, 2) %> km</td>
+    <% }); %>
+  </tr>
+</table>
 
-    <p>A detailed breakdown of the road condition in kilometer mapped for this municipality's barangays.</p>
+<p>A detailed breakdown of the road condition in kilometer mapped for this municipality's barangays.</p>
 
-    <table class="table datatable">
-      <thead>
-        <tr>
-          <th><%= subType.plural %></th>
-          <% _.forEach(_.pluck(statsDisplay, 'display'), function(disp) { %>
-          <th class="value"><%= disp %></th>
-          <% }); %>
-        </tr>
-      </thead>
-      <tbody>
-        <% subregions.forEach(function(subregion, i) {
-            var id = subregion.id;
-            var name = subregion.name; %>
-        <tr>
-          <td><a href="#/<%= id %>" class="admin-area"><%= name %></a></td>
-          <% _.forEach(statsForDisplay(subregion.stats), function(stat) { %>
-          <td class="value"><%= toFixed(stat.kilometers, 3) %> km</td>
-          <% }); %>
-        </tr>
-        <% }) %>
-      </tbody>
-    </table>
+<table class="table datatable">
+  <thead>
+    <tr>
+      <th><%= subtype.plural %></th>
+      <% _.each(overview, function(stat) { %>
+        <th class="value"><%= stat.display %></th>
+      <% }); %>
+    </tr>
+  </thead>
 
-  </div>
-</article>
+  <tbody>
+    <% _.each(subregions, function(region, i) { %>
+    <tr>
+      <td><a href="#/<%= region.id %>" class="admin-area"><%= region.name %></a></td>
+      <% _.each(region.overview, function(stat) { %>
+      <td class="value"><%= toFixed(stat.length, 2) %> km</td>
+      <% }); %>
+    </tr>
+    <% }) %>
+  </tbody>
+
+</table>

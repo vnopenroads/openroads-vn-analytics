@@ -7,18 +7,12 @@ var ID = require('../lib/id.js');
 var config = require('../config.js');
 var Cache = require('../lib/cached-area.js');
 
-//  var adminNames = ['Region', 'Province', 'Municipality', 'Barangay'];
-// var adminAbbrev = ['r', 'p', 'm', 'b'];
-
 module.exports = Model.extend({
 
   url: config.apiUrl + '/subregions',
 
   initialize: function() {
-    if (this.id) {
-      this.url += ('/' + this.id.string());
-    }
-    this.id = new ID(99999999999);
+    this.url += this.id.urlString();
     return this
   },
 
@@ -46,9 +40,8 @@ module.exports = Model.extend({
     var model = {
       id: this.id.string(),
       subregions: response.adminAreas,
-      // This is not the type of what we're seeing but the type of the
-      // subregions instead.
-      // type: admin.full[adminAbbrev[response.meta.type]],
+      area: area,
+      subtype: this.id.display[this.id.childType()],
       history: history
     }
 
