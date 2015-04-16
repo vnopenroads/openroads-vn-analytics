@@ -5,10 +5,12 @@ var $ = require('jquery');
 
 // MODELS
 var Area = require('./models/area.js');
+var CachedArea = require('./models/cached-area.js');
 
 // VIEWS
 var SidebarView = require('./views/sidebar.js');
 var AreaView = require('./views/area.js');
+var Barangay = require('./views/barangay.js');
 
 // HELPERS
 var ID = require('./lib/id.js');
@@ -16,8 +18,6 @@ var ID = require('./lib/id.js');
 var Spinner = require('./lib/spinner.js');
 
 var BaseView = require('./views/base-view.js');
-var BarangayView = require('./views/barangay.js');
-var MunicipalityView = require('./views/municipality.js');
 var ProjectsView = require('./views/projects.js');
 var ProjectView = require('./views/project.js');
 
@@ -64,36 +64,29 @@ module.exports = Backbone.Router.extend({
   },
 
   cachedRegion: function(id, callback) {
-    var area = new Area({ id: id }).addCachedResource();
+    var area = new CachedArea({ id: id });
     area.fetch({success: function areaSuccess() {
       var areaView = new AreaView({ model: area, el: $('#content') });
     }});
   },
 
-  something: function() {
-    var view = new AreaView({
-      model: model
-    });
-
-    if (id && admin.get(id) === 'b') {
-      this.showView(new BarangayView({
-        model: new AdminRegion({id: id}),
-        adminListModel: region
-      }));
-    }
-    else if (id && admin.get(id) === 'm') {
-      return this.showView(new MunicipalityView({
-        model: new AdminRegion({id: id}),
-        adminListModel: region
-      }));
-    }
-    else {
-      return this.showView(new AdminListView({
-        //model: new CachedAdminRegion(region),
-        adminListModel: region
-      }));
-    }
+  municipality: function(id, callback) {
+    var area = new Area({ id: id });
+    area.fetch({success: function areaSuccess() {
+      var areaView = new AreaView({ model: area, el: $('#content') });
+    }});
   },
+
+  barangay: function(id, callback) {
+    console.log('in barangay');
+    var area = new Area({ id: id });
+    area.fetch({success: function areaSuccess() {
+      var areaView = new Barangay({ model: area, el: $('#content') });
+    }});
+  },
+
+
+
 
   meta: function (id) {
     var region = new AdminRegion({id: id});

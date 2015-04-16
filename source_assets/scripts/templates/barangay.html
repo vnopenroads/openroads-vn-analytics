@@ -1,17 +1,15 @@
 <% var _ = require('underscore'); %>
-<% var statsForDisplay = require('../lib/stats.js').statsForDisplay; %>
 
 <article>
-<%- require('./sidebar.html')({ active: 'road-network', crumbs: crumbs, id: id }) %>
   <div id="content">
 
     <h2>Road Condition</h2>
 
     <table>
-    <% _.forEach(statsForDisplay(stats), function(stat) { %>
+      <% _.each(overview, function(stat) { %>
       <tr>
         <td><%= stat.display %></td>
-        <td><%= stat.kilometers %> km</td>
+        <td><%= stat.length %> km</td>
       </tr>
     <% }); %>
     </table>
