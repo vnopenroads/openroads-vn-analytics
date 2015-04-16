@@ -1,10 +1,9 @@
 <% var _ = require('underscore'); %>
 <% var statsForDisplay = require('../lib/stats.js').statsForDisplay; %>
-<% var adminType = require('../lib/admin-type.js'); %>
+<% var adminType = require('../lib/id.js'); %>
 <% var subType = adminType.getNext(id); %>
 <% var toFixed = require('../lib/to-fixed.js'); %>
 <article>
-<%- require('./sidebar.html')({ active: 'road-network', crumbs: crumbs, id: id }) %>
   <div id="content">
 
     <h2>Road Condition</h2>
