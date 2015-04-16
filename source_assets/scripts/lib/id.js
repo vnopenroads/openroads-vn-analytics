@@ -27,6 +27,7 @@ var offsets = {
 };
 
 var ID = function (id) {
+  id = id || 99999999999;
   this.id = trim(id);
   this.verify(this.id);
   this._type = this.identify(this.id);
@@ -49,7 +50,10 @@ ID.prototype.verify = function(id) {
 
 ID.prototype.identify = function(id) {
   id = parseInt(id, 0);
-  if (id % r === 0) {
+  if (id === 99999999999) {
+    return 'n';
+  }
+  else if (id % r === 0) {
     return 'r';
   }
   else if (id % p === 0) {
@@ -61,6 +65,13 @@ ID.prototype.identify = function(id) {
   else {
     return 'b';
   }
+}
+
+ID.prototype.urlString = function() {
+  if (this._type === 'n') {
+    return ''
+  }
+  return '/' + this.string()
 }
 
 ID.prototype.type = function() {
@@ -78,6 +89,37 @@ ID.prototype.string = function() {
 ID.prototype.json = function() {
   return this.id + '.json'
 }
+
+ID.prototype.childType = function() {
+  var order = ['n', 'r', 'p', 'm', 'b'];
+  return order[order.indexOf(this._type) + 1];
+},
+
+ID.prototype.display = {
+  n: {
+    display: 'Country',
+  },
+  r: {
+    parent: 'Country',
+    display: 'Region',
+    plural: 'Regions'
+  },
+  p: {
+    parent: 'Region',
+    display: 'Province',
+    plural: 'Provinces'
+  },
+  m: {
+    parent: 'Province',
+    display: 'Municipality',
+    plural: 'Municipalities'
+  },
+  b: {
+    parent: 'Municipality',
+    display: 'Barangay',
+    plural: 'Barangays'
+  }
+};
 
 module.exports = ID;
 /*
@@ -99,40 +141,8 @@ module.exports = ID;
     return parent.join('');
   },
 
-  display: {
-    r: {
-      parent: 'Country',
-      display: 'Region',
-      plural: 'Regions'
-    },
-    p: {
-      parent: 'Region',
-      display: 'Province',
-      plural: 'Provinces'
-    },
-    m: {
-      parent: 'Province',
-      display: 'Municipality',
-      plural: 'Municipalities'
-    },
-    b: {
-      parent: 'Municipality',
-      display: 'Barangay',
-      plural: 'Barangays'
-    }
-  },
-
   getDisplay: function (id) {
     return this.display[this.get(id)];
-  },
-
-  getNext: function (id) {
-    if(!id) return this.display.r;
-    switch (this.get(id)) {
-      case 'r': return this.display.p;
-      case 'p': return this.display.m;
-      case 'm': return this.display.b;
-    }
   },
 
   getByIndex: function (numIndex) {
