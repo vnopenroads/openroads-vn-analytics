@@ -5,7 +5,6 @@ var $ = require('jquery');
 var Spinner = require('./lib/spinner.js');
 
 var BaseView = require('./views/base-view.js');
-var AppView = require('./views/app.js');
 var AdminListView = require('./views/admin-list.js');
 var BarangayView = require('./views/barangay.js');
 var MunicipalityView = require('./views/municipality.js');
@@ -18,8 +17,6 @@ var MetaView = BaseView.extend({
 var AdminRegion = require('./models/admin-region.js');
 var CachedAdminRegion = require('./models/cached-admin-region.js');
 var AdminList = require('./models/admin-list.js');
-//var getAdmin = require('./lib/admin-type.js');
-//var spinner = require('./lib/spinner.js');
 var Projects = require('./models/projects.js');
 var Project = require('./models/project.js');
 
