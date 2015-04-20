@@ -5,22 +5,25 @@
 <h2>Road Condition</h2>
 
 <table class="table">
-  <tr>
-    <% _.each(overview, function(stat) { %>
-    <td><%= stat.display %></td>
-    <% }); %>
-  </tr>
-
-  <tr>
-    <% _.each(overview, function(stat) { %>
-    <td><%= toFixed(stat.length, 2) %> km</td>
-    <% }); %>
-  </tr>
+  <thead>
+    <tr>
+      <% _.each(overview, function(stat) { %>
+      <td><%= stat.display %></td>
+      <% }); %>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <% _.each(overview, function(stat) { %>
+      <td><%= toFixed(stat.length, 2) %> km</td>
+      <% }); %>
+    </tr>
+  </tbody>
 </table>
 
 <p>A detailed breakdown of the road condition in kilometer mapped for this municipality's barangays.</p>
 
-<table class="table datatable">
+<table class="table datatable hover">
   <thead>
     <tr>
       <th><%= subtype.plural %></th>
