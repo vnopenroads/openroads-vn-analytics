@@ -25,8 +25,6 @@ module.exports = View.extend({
       region.overview = stats.displayStats(region.stats);
     });
 
-    console.log(model.attributes);
-
     this.$el.html(this.template(model.attributes));
     this.$('.datatable').dataTable({ 'pageLength': 25 });
   },

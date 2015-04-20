@@ -19,6 +19,21 @@ module.exports = View.extend({
     return this
   },
 
+  setModel: function(model) {
+    this.model = model;
+    this.listenToOnce(model, 'change', this.update);
+  },
+
+  update: function() {
+    var history = this.getHistory(this.model.get('id'), this.model.get('properties'));
+    console.log(history, this.model.attributes);
+    var items = history.length;
+    if (items) {
+      this.title(history[items-1].name);
+      this.renderHistory(history);
+    }
+  },
+
   title: function(title) {
     if (title) {
       this.$title.text(title);
@@ -30,21 +45,23 @@ module.exports = View.extend({
   renderHistory: function(history) {
     history = history || [];
     this.$breadcrumbs.html(this.breadcrumbs({history: history}));
-    this.$breadcrumbs.find('.history-item').last().addClass('current');
+    this.$breadcrumbs.find('current').removeClass('current')
+      .end()
+      .find('.history-item').last().addClass('current');
     return this;
   },
 
-  getHistory: function(area) {
+  getHistory: function(id, area) {
     var history = [];
-    switch(area.type) {
-      case 4:
-        history.push({name: area.NAME_4, id: area.ID_4_OR});
-      case 3:
-        history.push({name: area.NAME_3, id: area.ID_3_OR});
-      case 2:
-        history.push({name: area.NAME_2, id: area.ID_2_OR});
-      case 1:
-        history.push({name: area.NAME_1, id: area.ID_1_OR});
+    switch(id.type()) {
+      case 'b':
+        history.push({name: area.NAME_4, id: area.ID_4_OR, type: 'Barangay'});
+      case 'm':
+        history.push({name: area.NAME_3, id: area.ID_3_OR, type: 'Municipality'});
+      case 'p':
+        history.push({name: area.NAME_2, id: area.ID_2_OR, type: 'Province'});
+      case 'r':
+        history.push({name: area.NAME_1, id: area.ID_1_OR, type: 'Region'});
       break;
     }
     return history.reverse();

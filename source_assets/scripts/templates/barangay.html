@@ -1,4 +1,5 @@
 <% var _ = require('underscore'); %>
+<% var toFixed = require('../lib/to-fixed.js'); %>
 
 <article>
   <div id="content">
@@ -9,7 +10,7 @@
       <% _.each(overview, function(stat) { %>
       <tr>
         <td><%= stat.display %></td>
-        <td><%= stat.length %> km</td>
+        <td><%= toFixed(stat.length, 2) %> km</td>
       </tr>
     <% }); %>
     </table>
