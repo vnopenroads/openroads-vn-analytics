@@ -3,17 +3,15 @@
 var Backbone = require('backbone');
 var $ = require('jquery');
 
-// MODELS
+// MODELS & COLLECTIONS
 var Area = require('./models/area.js');
 var CachedArea = require('./models/cached-area.js');
-var Project = require('./models/project.js');
-var Projects = require('./models/projects.js');
+var Projects = require('./collections/projects.js');
 
 // VIEWS
 var SidebarView = require('./views/sidebar.js');
 var AreaView = require('./views/area.js');
 var Barangay = require('./views/barangay.js');
-var ProjectView = require('./views/project.js');
 var ProjectsView = require('./views/projects.js');
 
 // HELPERS
@@ -27,8 +25,7 @@ module.exports = Backbone.Router.extend({
     ':id':                    'area',
 
     'all/projects(/)':        'projects',
-    'all/projects/:type':     'project',
-
+    'all/projects/:id':       'projects',
     '*path': 'defaultRoute'
   },
 
@@ -68,23 +65,17 @@ module.exports = Backbone.Router.extend({
     });
   },
 
-  projects: function (type) {
-    type = type ? type.toLowerCase() : type;
-    var projects = new Projects({type: type});
-    /*
-    this.showView(new ProjectsView({
-      model: projects
-    }));
-    */
-  },
-
-  project: function (id) {
-    var project = new Project({id: id});
-    /*
-    this.showView(new ProjectView({
-      model: project
-    }));
-    */
+  projects: function (project) {
+    // If there's no project, then search all projects.
+    project = project ? project.toLowerCase() : 'all';
+    spin.set('spin');
+    var projects = new Projects({ project: project });
+    projects.fetch({
+      success: function projectsLoaded() {
+        var view = new ProjectsView({ collection: projects, el: $('#content') });
+        spin.stop();
+      }
+    });
   },
 
   defaultRoute: function () {
