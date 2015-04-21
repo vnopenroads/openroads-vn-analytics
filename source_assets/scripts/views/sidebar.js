@@ -26,7 +26,6 @@ module.exports = View.extend({
 
   update: function() {
     var history = this.getHistory(this.model.get('id'), this.model.get('properties'));
-    console.log(history, this.model.attributes);
     var items = history.length;
     if (items) {
       this.title(history[items-1].name);

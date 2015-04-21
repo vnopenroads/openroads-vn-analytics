@@ -17,7 +17,17 @@ module.exports = Model.extend({
 
   headers: function() {
     return _.map(['name', 'id', 'type'], function(t) {
-      return projectTags[t].display
+      return projectTags[t].display;
     });
   },
+
+  tags: function() {
+    var tags = [];
+    _.each(this.get('tags'), function(t) {
+      var tag = _.result(_.find(projectTags, { tag: t.k }), 'display');
+      if (tag) tags.push({ prop: tag, val: t.v });
+    });
+    return tags;
+  },
+
 });
