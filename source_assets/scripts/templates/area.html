@@ -1,6 +1,6 @@
 <% var _ = require('underscore'); %>
 <% var statsForDisplay = require('../lib/stats.js').statsForDisplay; %>
-<% var toFixed = require('../lib/to-fixed.js'); %>
+<% var round = require('../lib/helpers.js').round; %>
 
 <h2>Overall Road Condition</h2>
 
@@ -15,7 +15,7 @@
   <tbody>
     <tr>
       <% _.each(overview, function(stat) { %>
-      <td><%= toFixed(stat.length, 2) %> km</td>
+      <td><%= round(stat.length, 2) %> km</td>
       <% }); %>
     </tr>
   </tbody>
@@ -38,7 +38,7 @@
     <tr>
       <td><a href="#/<%= region.id %>" class="admin-area"><%= region.name %></a></td>
       <% _.each(region.overview, function(stat) { %>
-      <td class="value"><%= toFixed(stat.length, 2) %> km</td>
+      <td class="value"><%= round(stat.length, 2) %> km</td>
       <% }); %>
     </tr>
     <% }) %>
