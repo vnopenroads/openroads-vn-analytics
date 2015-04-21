@@ -22,6 +22,16 @@ module.exports = View.extend({
   setModel: function(model) {
     this.model = model;
     this.listenToOnce(model, 'change', this.update);
+    return this;
+  },
+
+  select: function(option) {
+    var $option = this.$('#sidebar-' + option);
+    if (option.length) {
+      this.$('.active').removeClass('active');
+      $option.addClass('active');
+    }
+    return this;
   },
 
   update: function() {
@@ -31,6 +41,7 @@ module.exports = View.extend({
       this.title(history[items-1].name);
       this.renderHistory(history);
     }
+    return this;
   },
 
   title: function(title) {

@@ -26,6 +26,7 @@ module.exports = Backbone.Router.extend({
 
     'all/projects(/)':        'projects',
     'all/projects/:id':       'projects',
+
     '*path': 'defaultRoute'
   },
 
@@ -34,6 +35,7 @@ module.exports = Backbone.Router.extend({
   },
 
   area: function(id) {
+    this.sidebar.renderHistory();
     id = new ID(id);
     var view, model;
     switch (id.type()) {
@@ -56,7 +58,7 @@ module.exports = Backbone.Router.extend({
     }
 
     spin.set('spin');
-    this.sidebar.setModel(model);
+    this.sidebar.setModel(model).select('road-network');
     model.fetch({
       success: function areaLoaded() {
         view = new view({ model: model, el: $('#content') });
@@ -69,6 +71,7 @@ module.exports = Backbone.Router.extend({
     // If there's no project, then search all projects.
     project = project ? project.toLowerCase() : 'all';
     spin.set('spin');
+    this.sidebar.renderHistory([{ type: 'Projects', id: 'all/projects' }]).select('projects');
     var projects = new Projects({ project: project });
     projects.fetch({
       success: function projectsLoaded() {
