@@ -1,6 +1,6 @@
 'use strict';
 var Model = require('backbone').Model;
-var _ = require('lodash');
+var _ = require('underscore');
 var projectTags = require('../lib/project-tags.js');
 
 module.exports = Model.extend({
