@@ -93,7 +93,7 @@ ID.prototype.json = function() {
 ID.prototype.childType = function() {
   var order = ['n', 'r', 'p', 'm', 'b'];
   return order[order.indexOf(this._type) + 1];
-},
+}
 
 ID.prototype.display = {
   n: {
@@ -120,5 +120,19 @@ ID.prototype.display = {
     plural: 'Barangays'
   }
 };
+
+ID.prototype.parentID = function(parent) {
+  var id = this.string();
+  if (parent === 'b') {
+    return id;
+  }
+  var offset = offsets[id.length][parent];
+  var parentID = _.map(id.split(''), function(letter, i) {
+    if (i > offset)
+      return '0';
+    return letter;
+  });
+  return parentID.join('');
+}
 
 module.exports = ID;

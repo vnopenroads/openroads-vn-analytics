@@ -1,7 +1,13 @@
 'use strict';
 
 var Spinner = require('spin');
-var spinner = new Spinner();
+var spinner = new Spinner({
+  lines: 11,
+  length: 10,
+  width: 3,
+  radius: 15,
+  speed: .7
+});
 
 module.exports = {
   set: function(id) {

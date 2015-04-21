@@ -35,11 +35,16 @@ module.exports = View.extend({
   },
 
   update: function() {
+    console.log(this.model.get('id'), this.model.get('properties'));
     var history = this.getHistory(this.model.get('id'), this.model.get('properties'));
     var items = history.length;
     if (items) {
       this.title(history[items-1].name);
       this.renderHistory(history);
+    }
+    else {
+      this.title('Philippines');
+      this.renderHistory();
     }
     return this;
   },
@@ -65,13 +70,13 @@ module.exports = View.extend({
     var history = [];
     switch(id.type()) {
       case 'b':
-        history.push({name: area.NAME_4, id: area.ID_4_OR, type: 'Barangay'});
+        history.push({name: area.NAME_4, id: area.ID_4_OR || id.string(), type: 'Barangay'});
       case 'm':
-        history.push({name: area.NAME_3, id: area.ID_3_OR, type: 'Municipality'});
+        history.push({name: area.NAME_3, id: area.ID_3_OR || id.parentID('m'), type: 'Municipality'});
       case 'p':
-        history.push({name: area.NAME_2, id: area.ID_2_OR, type: 'Province'});
+        history.push({name: area.NAME_2, id: area.ID_2_OR || id.parentID('p'), type: 'Province'});
       case 'r':
-        history.push({name: area.NAME_1, id: area.ID_1_OR, type: 'Region'});
+        history.push({name: area.NAME_1, id: area.ID_1_OR || id.parentID('r'), type: 'Region'});
       break;
     }
     return history.reverse();

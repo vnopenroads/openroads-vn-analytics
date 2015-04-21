@@ -37,7 +37,6 @@ module.exports = Backbone.Router.extend({
   },
 
   area: function(id) {
-    this.sidebar.renderHistory();
     id = new ID(id);
     var view, model;
     switch (id.type()) {
