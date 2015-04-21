@@ -2,8 +2,6 @@
 
 var _ = require('underscore');
 var Model = require('backbone').Model;
-var get = require('jquery').getJSON;
-var ID = require('../lib/id.js');
 var config = require('../config.js');
 var Cache = require('../lib/cached-area.js');
 
@@ -13,7 +11,7 @@ module.exports = Model.extend({
 
   initialize: function() {
     this.url += this.id.urlString();
-    return this
+    return this;
   },
 
   parse: function(response) {
@@ -23,12 +21,12 @@ module.exports = Model.extend({
       id: this.id,
       subregions: response.adminAreas,
       properties: properties,
-    }
+    };
 
     var cache = new Cache(this.id);
     var stats = cache.load(model.subregions);
     _.extend(model, stats);
 
-    return model
+    return model;
   }
 });

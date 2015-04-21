@@ -1,5 +1,5 @@
+'use strict';
 var View = require('backbone').View;
-var _ = require('underscore');
 
 var template = require('../templates/sidebar.html');
 var breadcrumbs = require('../templates/breadcrumbs.html');
@@ -8,15 +8,12 @@ module.exports = View.extend({
 
   template: template,
   breadcrumbs: breadcrumbs,
-  events: {
-    'click .path': 'navigate',
-  },
-  initialize: function(options) {
+  initialize: function() {
     this.$el.html(this.template());
     this.$title = this.$('#title-location');
     this.$breadcrumbs = this.$('#breadcrumbs');
     this.renderHistory();
-    return this
+    return this;
   },
 
   setModel: function(model) {
@@ -52,7 +49,7 @@ module.exports = View.extend({
   title: function(title) {
     if (title) {
       this.$title.text(title);
-      return this
+      return this;
     }
     return this.$title.text();
   },
@@ -81,9 +78,4 @@ module.exports = View.extend({
     }
     return history.reverse();
   },
-
-  navigate: function(e) {
-    var target = e.currentTarget;
-  },
-
 });

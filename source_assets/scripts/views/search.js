@@ -40,7 +40,6 @@ module.exports = Backbone.View.extend({
           result.id = new ID(result.id);
         });
 
-        var id = new ID(res.id);
         $results.html(resultsTemplate({
           results: res,
           term: term

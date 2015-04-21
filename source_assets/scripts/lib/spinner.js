@@ -6,7 +6,7 @@ var spinner = new Spinner({
   length: 10,
   width: 3,
   radius: 15,
-  speed: .7
+  speed: 0.7
 });
 
 module.exports = {

@@ -31,7 +31,7 @@ var ID = function (id) {
   this.id = trim(id);
   this.verify(this.id);
   this._type = this.identify(this.id);
-}
+};
 
 // Check that ID to make sure it's valid.
 ID.prototype.verify = function(id) {
@@ -45,8 +45,8 @@ ID.prototype.verify = function(id) {
   if (length > 11) {
     throw new Error('ID must be between 2 and 11 characters');
   }
-  return this
-}
+  return this;
+};
 
 ID.prototype.identify = function(id) {
   id = parseInt(id, 0);
@@ -65,35 +65,35 @@ ID.prototype.identify = function(id) {
   else {
     return 'b';
   }
-}
+};
 
 ID.prototype.urlString = function() {
   if (this._type === 'n') {
-    return ''
+    return '';
   }
-  return '/' + this.string()
-}
+  return '/' + this.string();
+};
 
 ID.prototype.type = function() {
-  return this._type
-}
+  return this._type;
+};
 
 ID.prototype.num = function() {
-  return parseInt(this.id, 10)
-}
+  return parseInt(this.id, 10);
+};
 
 ID.prototype.string = function() {
-  return '' + this.id
-}
+  return '' + this.id;
+};
 
 ID.prototype.json = function() {
-  return this.id + '.json'
-}
+  return this.id + '.json';
+};
 
 ID.prototype.childType = function() {
   var order = ['n', 'r', 'p', 'm', 'b'];
   return order[order.indexOf(this._type) + 1];
-}
+};
 
 ID.prototype.display = {
   n: {
@@ -133,6 +133,6 @@ ID.prototype.parentID = function(parent) {
     return letter;
   });
   return parentID.join('');
-}
+};
 
 module.exports = ID;

@@ -38,23 +38,23 @@ module.exports = Backbone.Router.extend({
 
   area: function(id) {
     id = new ID(id);
-    var view, model;
+    var View, model;
     switch (id.type()) {
       case 'n':
       case 'r':
       case 'p':
         model = new CachedArea({ id: id });
-        view = AreaView;
+        View = AreaView;
       break;
 
       case 'm':
         model = new Area({ id: id });
-        view = AreaView;
+        View = AreaView;
       break;
 
       case 'b':
         model = new Area({ id: id });
-        view = Barangay;
+        View = Barangay;
       break;
     }
 
@@ -62,7 +62,7 @@ module.exports = Backbone.Router.extend({
     this.sidebar.setModel(model).select('road-network');
     model.fetch({
       success: function areaLoaded() {
-        view = new view({ model: model, el: $('#content') });
+        new View({ model: model, el: $('#content') });
         spin.stop();
       }
     });
@@ -76,7 +76,7 @@ module.exports = Backbone.Router.extend({
     var projects = new Projects({ project: project });
     projects.fetch({
       success: function projectsLoaded() {
-        var view = new ProjectsView({ collection: projects, el: $('#content') });
+        new ProjectsView({ collection: projects, el: $('#content') });
         spin.stop();
       }
     });

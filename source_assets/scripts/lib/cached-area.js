@@ -14,7 +14,7 @@ function formatStats (grouped) {
 
 var Cached = function(id) {
   this.id = id;
-}
+};
 
 Cached.prototype.load = function(subregions) {
   _.each(subregions, function(region) {
@@ -42,7 +42,7 @@ Cached.prototype.load = function(subregions) {
   return {
     stats: stats,
     subregions: subregions
-  }
-}
+  };
+};
 
 module.exports = Cached;

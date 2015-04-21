@@ -11,7 +11,7 @@ module.exports = Model.extend({
 
   initialize: function() {
     this.url += this.id.urlString();
-    return this
+    return this;
   },
 
   parse: function(response) {
