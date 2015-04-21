@@ -43,7 +43,7 @@ $table-shade: black;
 
 table {
   width: 100%;
-  margin: 0 auto;
+  margin: 1.75rem 0 2.25rem;
   clear: both;
   border-collapse: separate;
   border-spacing: 0;
@@ -410,3 +410,11 @@ table.dataTable td {
     background-color: shade($table-row-background, 2.35%); // shade by f9
   }
 }
+
+// Some fixes for data tables and foundation
+.dataTables_filter input,
+.dataTables_length select {
+  width: auto;
+  display: inline-block;
+}
+

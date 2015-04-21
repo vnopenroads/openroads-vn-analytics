@@ -13,6 +13,7 @@ var SidebarView = require('./views/sidebar.js');
 var AreaView = require('./views/area.js');
 var Barangay = require('./views/barangay.js');
 var ProjectsView = require('./views/projects.js');
+var SearchView = require('./views/search.js');
 
 // HELPERS
 var ID = require('./lib/id.js');
@@ -32,6 +33,7 @@ module.exports = Backbone.Router.extend({
 
   initialize: function() {
     this.sidebar = new SidebarView({el: $('#sidebar')});
+    this.sidebarSearch = new SearchView({ el: $('#admin-search') });
   },
 
   area: function(id) {

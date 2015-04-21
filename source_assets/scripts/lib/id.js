@@ -122,38 +122,3 @@ ID.prototype.display = {
 };
 
 module.exports = ID;
-/*
-
-  // Using the full ID, get the ID of the parents.
-  // @type: the parent you're requesting.
-  idByType: function(id, type) {
-    // Requesting barangay, just return the id.
-    if (type === 'b') {
-      return id;
-    }
-    id = '' + id;
-    var offset = offsets[id.length][type];
-    var parent = _.map(id.split(''), function(letter, i) {
-      if (i > offset)
-        return '0';
-      return letter;
-    });
-    return parent.join('');
-  },
-
-  getDisplay: function (id) {
-    return this.display[this.get(id)];
-  },
-
-  getByIndex: function (numIndex) {
-    switch (numIndex) {
-      case 1: return this.display.r;
-      case 2: return this.display.p;
-      case 3: return this.display.m;
-      case 4: return this.display.b;
-      default: return null;
-    }
-  },
-
-};
-*/

@@ -7356,19 +7356,34 @@ html, body {
   text-transform: uppercase;
 }
 
+ul, li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
 /* Basic structure */
 .analytics,
 #main {
   position: relative;
-  padding-top: 1.45em;
 }
 
 .analytics {
-  padding-bottom: 5em;
+  padding-top: 1.45em;
+}
+
+h1 {
+  font-size: 1.525rem !important;
+  margin: 1.875rem 0;
+  color: #564f50;
+  font-weight: bold;
 }
 
 h2 {
   font-size: 1.25rem;
+  margin: 1.25rem 0;
+  color: #564f50;
+  font-weight: bold;
 }
 
 nav form,
@@ -7404,6 +7419,24 @@ nav li ul {
   margin: 0 0 0 1rem;
 }
 
+#sidebar {
+  white-space: wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-area {
+  color: #006699;
+}
+.admin-area:visited {
+  color: #006699;
+}
+.admin-area small {
+  color: #888;
+  font-size: 0.625rem;
+  text-transform: uppercase;
+}
+
 a {
   cursor: pointer;
   color: #564f50;
@@ -7425,7 +7458,7 @@ a:active {
 
 table {
   width: 100%;
-  margin: 0 auto;
+  margin: 1.75rem 0 2.25rem;
   clear: both;
   border-collapse: separate;
   border-spacing: 0;
@@ -7717,6 +7750,12 @@ table.dataTable td {
 .link-row:hover,
 .link-row > td:hover {
   background-color: #f9f9f9;
+}
+
+.dataTables_filter input,
+.dataTables_length select {
+  width: auto;
+  display: inline-block;
 }
 
 /*# sourceMappingURL=main.css.map */
