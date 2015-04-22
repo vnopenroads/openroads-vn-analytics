@@ -68,10 +68,13 @@ module.exports = View.extend({
     switch(id.type()) {
       case 'b':
         history.push({name: area.NAME_4, id: area.ID_4_OR || id.string(), type: 'Barangay'});
+        /* falls through */
       case 'm':
         history.push({name: area.NAME_3, id: area.ID_3_OR || id.parentID('m'), type: 'Municipality'});
+        /* falls through */
       case 'p':
         history.push({name: area.NAME_2, id: area.ID_2_OR || id.parentID('p'), type: 'Province'});
+        /* falls through */
       case 'r':
         history.push({name: area.NAME_1, id: area.ID_1_OR || id.parentID('r'), type: 'Region'});
       break;
