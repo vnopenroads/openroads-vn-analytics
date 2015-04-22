@@ -1,36 +1,25 @@
 <% var _ = require('underscore') %>
 
-<article>
-  <%- require('./sidebar.html')({ id: '', active: 'projects', type: type, crumbs: crumbs }) %>
-  <div id="content">
+<h2>Click on a project for detailed project information.</h2>
 
-    <% if (crumbs.length) { %>
-    <h1><%- crumbs[crumbs.length-1].name %>&nbsp;<%- type.plural %></h1>
-    <% } else { %>
-    <h1>Projects</h1>
-    <% } %>
+<table class="table datatable">
+  <thead>
+    <tr>
+      <% _.each(projects[0].headers(), function(header) { %>
+      <th><%- header %></th>
+      <% }) %>
+    </tr>
+  </thead>
+  <tbody>
+    <% _.each(projects, function(project) { %>
+    <tr class="link-row" data-id="<%- project.id %>">
+    <% _.each(project.tableRows(), function(attribute) { %>
 
-    <h4>Click on a project for detailed project information.</h4>
+    <td><%- attribute %></td>
 
-    <table class="table">
-      <thead>
-        <tr>
-          <% _.each(columns, function(column) { %>
-          <th><%- column %></th>
-          <% }) %>
-        </tr>
-      </thead>
-      <tbody>
-        <% _.each(projects, function(project) { %>
-        <tr class="link-row" data-id="<%- project.id %>">
-        <% _.each(project.rows, function(row) { %>
+    <% }) %>
+    </tr>
+    <% }) %>
+  </tbody>
+</table>
 
-        <td><%- row %></td>
-        <% }) %>
-        </tr>
-        <% }) %>
-      </tbody>
-    </table>
-
-  </div>
-</article>

@@ -1,0 +1,14 @@
+<% var _ = require('underscore'); %>
+
+<% if (results.length) { %>
+<ul>
+<% _.each(results, function(result) { %>
+<li>
+  <a href="#<%= result.id.urlString() %>" class="admin-area"><%- result.name %>&nbsp;<small><%= result.id.display[result.id.type()].display %></small></a>
+</li>
+<% }); %>
+</ul>
+
+<% } else { %>
+  <p>No results available for <strong><%= term %></strong></p>
+<% } %>

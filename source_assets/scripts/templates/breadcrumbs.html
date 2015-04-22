@@ -1,17 +1,7 @@
-<% var _ = require('underscore') %>
-
-<% var length = crumbs.length; %>
-<% if (!length) { %>
-  <a href="#/" class="admin-area current">Philippines</a>
-<% } else { %>
-  <a href="#/" class="admin-area">Philippines</a>&nbsp;/&nbsp;
-
-  <% _.each(crumbs, function(crumb, i) { %>
-    <% if (i === length-1) { %>
-      <a href="#/<%= crumb.id %>" class="admin-area current"><%= crumb.name %></a>
-    <% } else { %>
-      <a href="#/<%= crumb.id %>" class="admin-area"><%= crumb.name %></a>&nbsp;/&nbsp;
-    <% } %>
+<% var _ = require('underscore'); %>
+<ul class="breadcrumbs">
+  <li><a href="#/" class="history-item">Country</a></li>
+  <% _.each(history, function(item) { %>
+  <li><a href="#/<%= item.id %>" class="history-item"><%= item.type %></a></li>
   <% }); %>
-
-<% } %>
+</ul>

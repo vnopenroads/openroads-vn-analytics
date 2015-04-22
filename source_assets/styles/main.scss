@@ -1,5 +1,14 @@
+@import "foundation/normalize";
+
+// Importing table before foundation, so
+// foundation styles take precedent.
+// @import "table";
+@import "foundation/foundation";
+
 @import "variables";
 
 @import "base";
-@import "datatable";
+@import "nav";
+@import "links";
+
 @import "table";

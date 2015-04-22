@@ -1,25 +1,23 @@
 <% var _ = require('underscore') %>
 
-<article>
-  <%- require('./sidebar.html')({ id: '', active: 'projects', crumbs: crumbs }) %>
-  <div id="content">
+<h2>Project #<%- projects[0].get('id') %></h2>
 
-    <% if (crumbs.length) { %>
-    <h1><%- crumbs[crumbs.length-1].name %>&nbsp;<%- type.plural %></h1>
-    <% } else { %>
-    <h1>Projects</h1>
-    <% } %>
+<% var tags = projects[0].tags(); %>
+<% if (tags.length) { %>
 
-    <table class="table">
-      <tbody>
-        <% _.each(tags, function(tag) { %>
-        <tr>
-        <td><%- tag.k %></td>
-        <td><%- tag.v %></td>
-        </tr>
-        <% }) %>
-      </tbody>
-    </table>
+<table class="table">
+  <tbody>
+    <% _.each(tags, function(tag) { %>
+    <tr>
+    <td><%- tag.prop %></td>
+    <td><%- tag.val %></td>
+    </tr>
+    <% }) %>
+  </tbody>
+</table>
 
-  </div>
-</article>
+<% } else { %>
+
+<p>Sorry, no data available for this project.</p>
+
+<% } %>
