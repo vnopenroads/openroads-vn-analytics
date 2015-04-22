@@ -2,110 +2,87 @@
 
 var Backbone = require('backbone');
 var $ = require('jquery');
-var Spinner = require('./lib/spinner.js');
 
-var BaseView = require('./views/base-view.js');
-var AppView = require('./views/app.js');
-var AdminListView = require('./views/admin-list.js');
-var BarangayView = require('./views/barangay.js');
-var MunicipalityView = require('./views/municipality.js');
+// MODELS & COLLECTIONS
+var Area = require('./models/area.js');
+var CachedArea = require('./models/cached-area.js');
+var Projects = require('./collections/projects.js');
+
+// VIEWS
+var SidebarView = require('./views/sidebar.js');
+var AreaView = require('./views/area.js');
+var Barangay = require('./views/barangay.js');
 var ProjectsView = require('./views/projects.js');
-var ProjectView = require('./views/project.js');
+var SearchView = require('./views/search.js');
 
-var MetaView = BaseView.extend({
-  template: require('./templates/meta.html')
-});
-var AdminRegion = require('./models/admin-region.js');
-var CachedAdminRegion = require('./models/cached-admin-region.js');
-var AdminList = require('./models/admin-list.js');
-//var getAdmin = require('./lib/admin-type.js');
-//var spinner = require('./lib/spinner.js');
-var Projects = require('./models/projects.js');
-var Project = require('./models/project.js');
-
-var admin = require('./lib/admin-type.js');
+// HELPERS
+var ID = require('./lib/id.js');
+var spin = require('./lib/spinner.js');
 
 module.exports = Backbone.Router.extend({
+
   routes: {
-    // sub-region pages
-    '': 'dashboard',
-    ':id': 'dashboard',
+    '':                       'area',
+    ':id':                    'area',
 
-    ':id/meta': 'meta',
-
-    // project-specific pages
-    'all/projects(/)': 'projects',
-    'all/projects/:type': 'project',
+    'all/projects(/)':        'projects',
+    'all/projects/:id':       'projects',
 
     '*path': 'defaultRoute'
   },
 
   initialize: function() {
-    this.app = new AppView();
-    this.app.render();
-    $('body').append(this.app.$el);
+    this.sidebar = new SidebarView({el: $('#sidebar')});
+    this.sidebarSearch = new SearchView({ el: $('#admin-search') });
   },
 
-  dashboard: function (id) {
-    var region;
+  area: function(id) {
+    id = new ID(id);
+    var View, model;
+    switch (id.type()) {
+      case 'n':
+      case 'r':
+      case 'p':
+        model = new CachedArea({ id: id });
+        View = AreaView;
+      break;
 
-    // If there's no id, assume it's the national view.
-    if (id) {
-      region = new AdminList({id: id});
-    }
-    else {
-      region = new AdminList();
+      case 'm':
+        model = new Area({ id: id });
+        View = AreaView;
+      break;
+
+      case 'b':
+        model = new Area({ id: id });
+        View = Barangay;
+      break;
     }
 
-    if (id && admin.get(id) === 'b') {
-      this.showView(new BarangayView({
-        model: new AdminRegion({id: id}),
-        adminListModel: region
-      }));
-    }
-    else if (id && admin.get(id) === 'm') {
-      return this.showView(new MunicipalityView({
-        model: new AdminRegion({id: id}),
-        adminListModel: region
-      }));
-    }
-    else {
-      return this.showView(new AdminListView({
-        model: new CachedAdminRegion(region),
-        adminListModel: region
-      }));
-    }
+    spin.set('spin');
+    this.sidebar.setModel(model).select('road-network');
+    model.fetch({
+      success: function areaLoaded() {
+        new View({ model: model, el: $('#content') });
+        spin.stop();
+      }
+    });
   },
 
-  meta: function (id) {
-    var region = new AdminRegion({id: id});
-    this.showView(new MetaView({
-      model: region
-    }));
-  },
-
-  projects: function (type) {
-    type = type ? type.toLowerCase() : type;
-    var projects = new Projects({type: type});
-    this.showView(new ProjectsView({
-      model: projects
-    }));
-  },
-
-  project: function (id) {
-    var project = new Project({id: id});
-    this.showView(new ProjectView({
-      model: project
-    }));
+  projects: function (project) {
+    // If there's no project, then search all projects.
+    project = project ? project.toLowerCase() : 'all';
+    spin.set('spin');
+    this.sidebar.renderHistory([{ type: 'Projects', id: 'all/projects' }]).select('projects');
+    var projects = new Projects({ project: project });
+    projects.fetch({
+      success: function projectsLoaded() {
+        new ProjectsView({ collection: projects, el: $('#content') });
+        spin.stop();
+      }
+    });
   },
 
   defaultRoute: function () {
-    this.navigate('', {trigger: true});
+    this.navigate('/#', {trigger: true});
   },
-
-  showView: function(view) {
-    Spinner.set('spin');
-    view.model.fetch(); // TODO: only fetch if we don't have it
-    this.app.$el.find('#main').html(view.render().el);
-  }
 });

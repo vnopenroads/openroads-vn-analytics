@@ -1,7 +1,7 @@
 'use strict';
 
-var DashboardView = require('./dashboard.js');
+var Area = require('./area.js');
 
-module.exports = DashboardView.extend({
+module.exports = Area.extend({
   template: require('../templates/barangay.html'),
 });
