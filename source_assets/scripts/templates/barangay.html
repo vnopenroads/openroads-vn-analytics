@@ -4,15 +4,23 @@
 <article>
   <div id="content">
 
-    <h2>Road Condition</h2>
+    <h2>Overall Road Condition</h2>
 
-    <table>
-      <% _.each(overview, function(stat) { %>
-      <tr>
-        <td><%= stat.display %></td>
-        <td><%= round(stat.length, 2) %> km</td>
-      </tr>
-    <% }); %>
+    <table class="table">
+      <thead>
+        <tr>
+          <% _.each(overview, function(stat) { %>
+          <td><%= stat.display %></td>
+          <% }); %>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <% _.each(overview, function(stat) { %>
+          <td><%= round(stat.length, 2) %> km</td>
+          <% }); %>
+        </tr>
+      </tbody>
     </table>
 
   </div>
