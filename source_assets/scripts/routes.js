@@ -10,6 +10,7 @@ var Projects = require('./collections/projects.js');
 
 // VIEWS
 var SidebarView = require('./views/sidebar.js');
+var NationalAreaView = require('./views/national-area.js');
 var AreaView = require('./views/area.js');
 var Barangay = require('./views/barangay.js');
 var ProjectsView = require('./views/projects.js');
@@ -22,7 +23,7 @@ var spin = require('./lib/spinner.js');
 module.exports = Backbone.Router.extend({
 
   routes: {
-    '':                       'area',
+    '':                       'national',
     ':id':                    'area',
 
     'all/projects(/)':        'projects',
@@ -36,11 +37,25 @@ module.exports = Backbone.Router.extend({
     this.sidebarSearch = new SearchView({ el: $('#admin-search') });
   },
 
+  national: function() {
+
+    var id = new ID(null);
+    var area = new CachedArea({ id: id });
+
+    spin.set('spin');
+    // this.sidebar.setModel(area).select('road-network');
+    area.fetch({
+      success: function nationalLoaded() {
+        new NationalAreaView({ model: area, el: $('#content') });
+        spin.stop();
+      }
+    });
+  },
+
   area: function(id) {
     id = new ID(id);
     var View, model;
     switch (id.type()) {
-      case 'n':
       case 'r':
       case 'p':
         model = new CachedArea({ id: id });
