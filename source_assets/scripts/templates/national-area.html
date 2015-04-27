@@ -1,0 +1,52 @@
+<% var _ = require('underscore'); %>
+<% var statsForDisplay = require('../lib/stats.js').statsForDisplay; %>
+<% var round = require('../lib/helpers.js').round; %>
+
+<h2>Country Road Data Statistics</h2>
+
+<p><strong><%= mapped %> km (<%= pct %>%) of road network mapped.</strong></p>
+<div id="road-progress"></div>
+
+<h2>Overall Road Condition</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <% _.each(overview, function(stat) { %>
+      <td><%= stat.display %></td>
+      <% }); %>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <% _.each(overview, function(stat) { %>
+      <td><%= round(stat.length, 2) %> km</td>
+      <% }); %>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Road Condition Breakdown</h2>
+
+<table class="table datatable hover">
+  <thead>
+    <tr>
+      <th><%= subtype.plural %></th>
+      <% _.each(overview, function(stat) { %>
+        <th class="value"><%= stat.display %></th>
+      <% }); %>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% _.each(subregions, function(region, i) { %>
+    <tr>
+      <td><a href="#/<%= region.id %>" class="admin-area"><%= region.name %></a></td>
+      <% _.each(region.overview, function(stat) { %>
+      <td class="value"><%= round(stat.length, 2) %> km</td>
+      <% }); %>
+    </tr>
+    <% }) %>
+  </tbody>
+
+</table>
