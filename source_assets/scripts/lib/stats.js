@@ -2,7 +2,7 @@
 // jshint camelcase: false
 
 var _ = require('underscore');
-var centroid = require('turf-centroid');
+var getCentroid = require('turf-centroid');
 var lineDistance = require('turf-line-distance');
 var clip = require('./clip.js');
 var util = require('./helpers.js');
@@ -26,9 +26,10 @@ function statsByCondition(roadFeatures) {
 module.exports.computeStats = function (roads, subregions) {
   var roadFeatures = roads.type === 'FeatureCollection' ? roads.features : roads;
   var subregionFeatures = subregions.type === 'FeatureCollection' ? subregions.features : subregions;
+  var centroid = getCentroid(roads) || null;
 
   return {
-    centroid: centroid(roads),
+    centroid: centroid,
     stats: statsByCondition(roadFeatures),
     subregions: subregionFeatures.map(function (subregion) {
       return {
