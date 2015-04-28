@@ -2,13 +2,10 @@
 <% var statsForDisplay = require('../lib/stats.js').statsForDisplay; %>
 <% var round = require('../lib/helpers.js').round; %>
 
-<h2>Country Road Data Statistics</h2>
-
-<p><strong><%= mapped %> km (<%= pct %>%) of road network mapped.</strong></p>
+<h1 id="title-location">Philippines Road Data</h1>
 <div id="road-progress"></div>
 
 <h2>Overall Road Condition</h2>
-
 <table class="table">
   <thead>
     <tr>
@@ -26,9 +23,9 @@
   </tbody>
 </table>
 
-<h2>Road Condition Breakdown</h2>
-
-<table class="table datatable hover">
+<h2>Road Condition by Region</h2>
+<h3 class="callout">Select a region to begin mapping.</h3>
+<table class="table">
   <thead>
     <tr>
       <th><%= subtype.plural %></th>

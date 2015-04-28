@@ -51,3 +51,10 @@ nav li ul {
     text-transform: uppercase;
   }
 }
+
+.breadcrumbs {
+  margin-bottom: 2em;
+  @include small-only {
+    margin-bottom: .5em;
+  }
+}

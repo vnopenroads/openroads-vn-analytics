@@ -16,8 +16,9 @@ module.exports = View.extend({
     var model = this.model;
 
     // top-line stats
-    model.set('overview', stats.displayStats(model.get('stats')));
     var id = model.get('id');
+    model.set('name', id.getDisplayName(model.get('properties')));
+    model.set('overview', stats.displayStats(model.get('stats')));
     model.set('subtype', id.display[id.childType()]);
 
     // stats for each subregion

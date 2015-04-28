@@ -7374,7 +7374,7 @@ ul, li {
 
 h1 {
   font-size: 1.525rem !important;
-  margin: 1.875rem 0;
+  margin: 0 0 1.875rem;
   color: #564f50;
   font-weight: bold;
 }
@@ -7384,6 +7384,13 @@ h2 {
   margin: 1.25rem 0;
   color: #564f50;
   font-weight: bold;
+}
+
+h3.callout {
+  font-size: 1rem;
+  margin: 1rem 0;
+  font-weight: normal;
+  color: #2e2a2b;
 }
 
 nav form,
@@ -7437,6 +7444,15 @@ nav li ul {
   text-transform: uppercase;
 }
 
+.breadcrumbs {
+  margin-bottom: 2em;
+}
+@media only screen and (max-width: 1024px) {
+  .breadcrumbs {
+    margin-bottom: .5em;
+  }
+}
+
 a {
   cursor: pointer;
   color: #564f50;
@@ -7467,7 +7483,8 @@ a:active {
 }
 
 .progress-marker {
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: bold;
   text-transform: uppercase;
   fill: #747474;
 }
