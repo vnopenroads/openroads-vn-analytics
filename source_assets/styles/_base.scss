@@ -59,6 +59,10 @@ h1 {
   margin: 0 0 1.875rem;
   color: #564f50;
   font-weight: bold;
+
+  a {
+    color: $link;
+  }
 }
 
 h2 {

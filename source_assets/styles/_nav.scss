@@ -39,10 +39,10 @@ nav li ul {
 }
 
 .admin-area {
-  color: #006699;
+  color: $link;
 
   &:visited {
-    color: #006699;
+    color: $link;
   }
 
   small {

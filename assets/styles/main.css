@@ -7378,6 +7378,9 @@ h1 {
   color: #564f50;
   font-weight: bold;
 }
+h1 a {
+  color: #008CBA;
+}
 
 h2 {
   font-size: 1.25rem;
@@ -7433,10 +7436,10 @@ nav li ul {
 }
 
 .admin-area {
-  color: #006699;
+  color: #008CBA;
 }
 .admin-area:visited {
-  color: #006699;
+  color: #008CBA;
 }
 .admin-area small {
   color: #888;
@@ -7455,12 +7458,12 @@ nav li ul {
 
 a {
   cursor: pointer;
-  color: #564f50;
+  color: #008CBA;
   text-decoration: none;
 }
 
 a:visited {
-  color: #564f50;
+  color: #008CBA;
 }
 
 a:hover {

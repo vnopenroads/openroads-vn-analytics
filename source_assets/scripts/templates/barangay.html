@@ -1,27 +1,23 @@
 <% var _ = require('underscore'); %>
 <% var round = require('../lib/helpers.js').round; %>
 
-<article>
-  <div id="content">
+<h1 id="title-location"><%= name %><% if (editor) { %> <a href="<%- editor %>" target="_blank">(map this area)</a><% } %></h1>
+<h2>Overall Road Condition</h2>
 
-    <h2>Overall Road Condition</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <% _.each(overview, function(stat) { %>
+      <td><%= stat.display %></td>
+      <% }); %>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <% _.each(overview, function(stat) { %>
+      <td><%= round(stat.length, 2) %> km</td>
+      <% }); %>
+    </tr>
+  </tbody>
+</table>
 
-    <table class="table">
-      <thead>
-        <tr>
-          <% _.each(overview, function(stat) { %>
-          <td><%= stat.display %></td>
-          <% }); %>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <% _.each(overview, function(stat) { %>
-          <td><%= round(stat.length, 2) %> km</td>
-          <% }); %>
-        </tr>
-      </tbody>
-    </table>
-
-  </div>
-</article>

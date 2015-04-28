@@ -2,7 +2,7 @@
 <% var statsForDisplay = require('../lib/stats.js').statsForDisplay; %>
 <% var round = require('../lib/helpers.js').round; %>
 
-<h1 id="title-location"><%= name %></h1>
+<h1 id="title-location"><%= name %><% if (editor) { %> <a href="<%- editor %>" target="_blank">(map this area)</a><% } %></h1>
 <h2>Overall Road Condition</h2>
 
 <table class="table">
@@ -23,7 +23,7 @@
 </table>
 
 <h2>Road Condition Breakdown</h2>
-
+<% if (!editor) { %><h3 class="callout">Select an area to start mapping. Must be on municipality level to map.</h3><% } %>
 <table class="table datatable hover">
   <thead>
     <tr>
