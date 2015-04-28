@@ -19,7 +19,7 @@ module.exports = Area.extend({
     model.set('overview', stats.displayStats(model.get('stats')));
 
     // Calculate the percentage of roads mapped.
-    var mapped = _.result(_.find(model.get('overview'), { display: 'Total' }), 'length') || 0;
+    var mapped = +_.result(_.find(model.get('overview'), { display: 'Total' }), 'length') || 0;
     var pct = util.round(mapped / total * 100, 2);
     model.set({
       total: util.delimit(total),
@@ -51,10 +51,10 @@ module.exports = Area.extend({
       .attr('height', 14)
       .attr('class', 'progress-fill');
 
-    svg.append('text')
+    var start = svg.append('text')
       .attr('x', 0)
       .attr('y', 30)
-      .text('0 km')
+      .text(0)
       .attr('class', 'progress-marker');
 
     svg.append('text')
@@ -71,8 +71,22 @@ module.exports = Area.extend({
       .attr('height', 14)
       .attr('class', 'progress-indicator');
 
+    var delay = 600;
+
     rect.transition()
-      .delay(1000)
+      .delay(delay)
+      .duration(400)
       .attr('width', progress);
+
+    start.transition()
+      .delay(delay)
+      .duration(400)
+      .tween('text', function() {
+        var i = d3.interpolate(this.textContent, mapped);
+        return function(t) {
+          console.log(i(t));
+          this.textContent = util.delimit(Math.round(i(t))) + ' km';
+        };
+      });
   },
 });

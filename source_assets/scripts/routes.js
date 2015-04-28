@@ -43,7 +43,7 @@ module.exports = Backbone.Router.extend({
     var area = new CachedArea({ id: id });
 
     spin.set('spin');
-    // this.sidebar.setModel(area).select('road-network');
+    this.sidebar.setModel(area).select('road-network');
     area.fetch({
       success: function nationalLoaded() {
         new NationalAreaView({ model: area, el: $('#content') });
