@@ -2,6 +2,7 @@
 // jshint camelcase: false
 
 var _ = require('underscore');
+var centroid = require('turf-centroid');
 var lineDistance = require('turf-line-distance');
 var clip = require('./clip.js');
 var util = require('./helpers.js');
@@ -22,18 +23,14 @@ function statsByCondition(roadFeatures) {
   });
 }
 
-module.exports.computeStats = function (roadFeatures, subregions) {
-  if ('FeatureCollection' === roadFeatures.type) {
-    roadFeatures = roadFeatures.features;
-  }
-
-  if ('FeatureCollection' === subregions.type) {
-    subregions = subregions.features;
-  }
+module.exports.computeStats = function (roads, subregions) {
+  var roadFeatures = roads.type === 'FeatureCollection' ? roads.features : roads;
+  var subregionFeatures = subregions.type === 'FeatureCollection' ? subregions.features : subregions;
 
   return {
+    centroid: centroid(roads),
     stats: statsByCondition(roadFeatures),
-    subregions: subregions.map(function (subregion) {
+    subregions: subregionFeatures.map(function (subregion) {
       return {
         name: subregion.name,
         id: subregion.id,
