@@ -15,3 +15,21 @@
   text-transform: uppercase;
   fill: #747474;
 }
+
+// Admin area count
+
+.admin-area-count {
+  dl {
+    margin-bottom: 1rem;
+  }
+  dd {
+    float: left;
+    font-weight: normal;
+    margin-right: 0.5rem;
+    text-align: right;
+    width: 4rem;
+  }
+  dt, dd {
+    margin-bottom: 0.5rem;
+  }
+}
