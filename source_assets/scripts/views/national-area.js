@@ -19,7 +19,7 @@ module.exports = Area.extend({
     model.set('overview', stats.displayStats(model.get('stats')));
 
     // Calculate the percentage of roads mapped.
-    var mapped = _.result(_.find(model.get('overview'), { display: 'Total' }), 'length') || 0;
+    var mapped = +_.result(_.find(model.get('overview'), { display: 'Total' }), 'length') || 0;
     var pct = util.round(mapped / total * 100, 2);
     model.set({
       total: util.delimit(total),
@@ -34,45 +34,63 @@ module.exports = Area.extend({
     var id = '#road-progress';
     var $container = $(id);
 
-    var margin = [0, 20, 40, 20];
+    var margin = [0, 5, 40, 5];
     var width = $container.width() - margin[1] - margin[3];
-    var height = 100 - margin[0] - margin[2];
+    var height = 70 - margin[0] - margin[2];
 
     var svg = d3.select(id).append('svg')
-      .attr('width', width)
-      .attr('height', height);
+      .attr('width', width + margin[0] + margin[3])
+      .attr('height', height + margin[0] + margin[2]);
+
+    var g = svg.append('g')
+      .attr('transform', 'translate(' + margin[3] + ',' + margin[0] + ')');
 
     var progress = (mapped / total) * width;
 
-    svg.append('rect')
+    g.append('rect')
       .attr('x', 0)
       .attr('y', 0)
       .attr('width', width)
-      .attr('height', 14)
+      .attr('height', height)
       .attr('class', 'progress-fill');
 
-    svg.append('text')
+    var start = g.append('text')
       .attr('x', 0)
-      .attr('y', 30)
-      .text('0 km')
+      .attr('y', height)
+      .attr('dy', 16)
+      .text(0)
       .attr('class', 'progress-marker');
 
-    svg.append('text')
+    g.append('text')
       .attr('x', width)
-      .attr('y', 30)
+      .attr('y', height)
+      .attr('dy', 16)
       .text(util.delimit(total) + ' km')
       .attr('class', 'progress-marker')
       .attr('text-anchor', 'end');
 
-    var rect = svg.append('rect')
+    var rect = g.append('rect')
       .attr('x', 0)
       .attr('y', 0)
       .attr('width', 0)
-      .attr('height', 14)
+      .attr('height', height)
       .attr('class', 'progress-indicator');
 
+    var delay = 600;
+
     rect.transition()
-      .delay(1000)
+      .delay(delay)
+      .duration(400)
       .attr('width', progress);
+
+    start.transition()
+      .delay(delay)
+      .duration(400)
+      .tween('text', function() {
+        var i = d3.interpolate(this.textContent, mapped);
+        return function(t) {
+          this.textContent = util.delimit(Math.round(i(t))) + ' km mapped';
+        };
+      });
   },
 });

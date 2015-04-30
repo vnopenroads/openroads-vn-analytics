@@ -102,22 +102,26 @@ ID.prototype.display = {
   r: {
     parent: 'Country',
     display: 'Region',
-    plural: 'Regions'
+    plural: 'Regions',
+    key: 'NAME_1'
   },
   p: {
     parent: 'Region',
     display: 'Province',
-    plural: 'Provinces'
+    plural: 'Provinces',
+    key: 'NAME_2'
   },
   m: {
     parent: 'Province',
     display: 'Municipality',
-    plural: 'Municipalities'
+    plural: 'Municipalities',
+    key: 'NAME_3'
   },
   b: {
     parent: 'Municipality',
     display: 'Barangay',
-    plural: 'Barangays'
+    plural: 'Barangays',
+    key: 'NAME_4'
   }
 };
 
@@ -133,6 +137,11 @@ ID.prototype.parentID = function(parent) {
     return letter;
   });
   return parentID.join('');
+};
+
+ID.prototype.getDisplayName = function(props) {
+  var key = _.result(this.display[this.type()], 'key');
+  return props[key];
 };
 
 module.exports = ID;

@@ -32,7 +32,6 @@ module.exports = View.extend({
   },
 
   update: function() {
-    console.log(this.model.get('id'), this.model.get('properties'));
     var history = this.getHistory(this.model.get('id'), this.model.get('properties'));
     var items = history.length;
     if (items) {

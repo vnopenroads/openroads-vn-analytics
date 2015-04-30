@@ -2,6 +2,7 @@
 // jshint camelcase: false
 
 var _ = require('underscore');
+var getCentroid = require('turf-centroid');
 var lineDistance = require('turf-line-distance');
 var clip = require('./clip.js');
 var util = require('./helpers.js');
@@ -22,18 +23,20 @@ function statsByCondition(roadFeatures) {
   });
 }
 
-module.exports.computeStats = function (roadFeatures, subregions) {
-  if ('FeatureCollection' === roadFeatures.type) {
-    roadFeatures = roadFeatures.features;
-  }
+module.exports.computeStats = function (roads, subregions) {
+  var roadFeatures = roads.type === 'FeatureCollection' ? roads.features : roads;
+  var subregionFeatures = subregions.type === 'FeatureCollection' ? subregions.features : subregions;
 
-  if ('FeatureCollection' === subregions.type) {
-    subregions = subregions.features;
-  }
+  // Take the centroid from any geometry that has data.
+  // On barangay, the subregion will not exist, so we won't be able to map this.
+  // TODO pass the area's administrative bounds along with the API query.
+  var centroid = roadFeatures.length ? getCentroid(roads) :
+    subregionFeatures.length ? getCentroid(subregions) : null;
 
   return {
+    centroid: centroid,
     stats: statsByCondition(roadFeatures),
-    subregions: subregions.map(function (subregion) {
+    subregions: subregionFeatures.map(function (subregion) {
       return {
         name: subregion.name,
         id: subregion.id,
@@ -61,7 +64,7 @@ var conditions = {
     display: 'Excellent'
   },
   'undefined': {
-    display: 'No Data'
+    display: 'Not specified'
   },
 };
 
