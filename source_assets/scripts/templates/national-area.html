@@ -2,14 +2,24 @@
 <% var statsForDisplay = require('../lib/stats.js').statsForDisplay; %>
 <% var round = require('../lib/helpers.js').round; %>
 
-<% if (editor) { %>
-<div id="map-this">
-  <a href="<%- editor %>" target="_blank" class="btn-map" title="View <%= name %> on the map"><span class="visually-hidden">Map <%= name %></span></a>
-</div>
-<% } %>
+<div id="road-progress"></div>
+
+<p>Welcome to <strong>OpenRoads Philippines</strong>, the platform that allows you to map the national road network and review road projects.   These dashboards contain detailed road statistics for:</p>
+
+<dl class="admin-area-count">
+  <dd>17</dd>
+  <dt>regions</dt>
+  <dd>81</dd>
+  <dt>provinces</dt>
+  <dd>1 647</dd>
+  <dt>municipalities and cities</dt>
+  <dd>41 933</dd>
+  <dt>barangays</dt>
+</dl>
+
+<p>To improve the map and make sure your local road network is well represented, you can use the <a href="http://devseed.com/openroads/#/editor/">Network Editor</a>.</p>
 
 <h2>Overall Road Condition</h2>
-
 <table class="table">
   <thead>
     <tr>
@@ -27,9 +37,9 @@
   </tbody>
 </table>
 
-<h2>Road Condition Breakdown</h2>
-<% if (!editor) { %><h3 class="callout">Select an area to start mapping. Must be on municipality level to map.</h3><% } %>
-<table class="table datatable hover">
+<h2>Road Condition by Region</h2>
+<h3 class="callout">Select a region to start mapping. Must be on municipality level to map.</h3>
+<table class="table">
   <thead>
     <tr>
       <th><%= subtype.plural %></th>

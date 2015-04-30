@@ -468,13 +468,13 @@ body {
 
 body {
   background: #fff;
-  color: #222;
+  color: #564f50;
   padding: 0;
   margin: 0;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: normal;
   font-style: normal;
-  line-height: 1.5;
+  line-height: 150%;
   position: relative;
   cursor: auto;
 }
@@ -2294,7 +2294,7 @@ button, .button {
   border-style: solid;
   border-width: 0;
   cursor: pointer;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: normal;
   line-height: normal;
   margin: 0 0 1.25rem;
@@ -3830,7 +3830,7 @@ select {
   border-color: #cccccc;
   padding: 0.5rem;
   font-size: 0.875rem;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   color: rgba(0, 0, 0, 0.75);
   line-height: normal;
   border-radius: 0;
@@ -4236,7 +4236,7 @@ kbd {
 
 .label {
   font-weight: normal;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   text-align: center;
   text-decoration: none;
   line-height: 1;
@@ -4411,7 +4411,7 @@ ul.pagination li {
   color: #EEEEEE;
   font-weight: normal;
   font-size: 1rem;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 .pricing-table .price {
   background-color: #F6F6F6;
@@ -4420,7 +4420,7 @@ ul.pagination li {
   color: #333333;
   font-weight: normal;
   font-size: 2rem;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 .pricing-table .description {
   background-color: #FFFFFF;
@@ -4635,7 +4635,7 @@ ul.pagination li {
   padding: 0.875rem 0;
   list-style-type: none;
   list-style-position: outside;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 .side-nav li {
   margin: 0 0 0.4375rem 0;
@@ -4655,7 +4655,7 @@ ul.pagination li {
 .side-nav li.active > a:first-child:not(.button) {
   color: #1cc7ff;
   font-weight: normal;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 .side-nav li.divider {
   border-top: 1px solid;
@@ -4992,7 +4992,7 @@ table tr td {
   background-color: #EFEFEF;
   color: #222222;
   padding: 1rem 2rem;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 1rem;
 }
 .tabs dd > a:hover, .tabs .tab-title > a:hover {
@@ -5349,7 +5349,7 @@ meta.foundation-mq-topbar {
   color: #FFFFFF;
   padding: 12px 0 12px 0;
   padding-left: 0.9375rem;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 0.8125rem;
   font-weight: normal;
   text-transform: none;
@@ -6038,10 +6038,10 @@ p aside {
 
 /* Default header styles */
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
-  font-weight: normal;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
   font-style: normal;
-  color: #222222;
+  color: #564f50;
   text-rendering: optimizeLegibility;
   margin-top: 0.2rem;
   margin-bottom: 0.5rem;
@@ -6049,7 +6049,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
   font-size: 60%;
-  color: #6f6f6f;
+  color: #948a8b;
   line-height: 0;
 }
 
@@ -6079,7 +6079,7 @@ h6 {
 
 .subheader {
   line-height: 1.4;
-  color: #6f6f6f;
+  color: #948a8b;
   font-weight: normal;
   margin-top: 0.2rem;
   margin-bottom: 0.5rem;
@@ -6195,7 +6195,7 @@ abbr,
 acronym {
   text-transform: uppercase;
   font-size: 90%;
-  color: #222;
+  color: #564f50;
   cursor: help;
 }
 
@@ -6215,20 +6215,20 @@ blockquote {
 blockquote cite {
   display: block;
   font-size: 0.8125rem;
-  color: #555555;
+  color: #7f7576;
 }
 blockquote cite:before {
   content: "\2014 \0020";
 }
 blockquote cite a,
 blockquote cite a:visited {
-  color: #555555;
+  color: #7f7576;
 }
 
 blockquote,
 blockquote p {
   line-height: 1.6;
-  color: #6f6f6f;
+  color: #948a8b;
 }
 
 /* Microformats */
@@ -7338,10 +7338,18 @@ th.hide-for-touch {
 /* Generic styles */
 html, body {
   box-sizing: border-box;
-  color: #564f50;
-  font-family: Arial, Helvetica, sans-serif;
-  line-height: 1.5;
-  height: 100%;
+}
+
+h1 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  margin: 0 0 1rem 0;
+}
+
+h2 {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  margin: 0 0 1rem 0;
 }
 
 #spin {
@@ -7372,48 +7380,51 @@ ul, li {
   padding-top: 1.45em;
 }
 
-h1 {
-  font-size: 1.525rem !important;
-  margin: 1.875rem 0;
-  color: #564f50;
-  font-weight: bold;
+.callout {
+  font-size: 1rem;
+  margin: 1rem 0;
+  font-weight: normal;
+  color: #2e2a2b;
 }
 
-h2 {
-  font-size: 1.25rem;
-  margin: 1.25rem 0;
-  color: #564f50;
-  font-weight: bold;
+/* Button that takes user to map */
+#map-this {
+  padding-right: 3rem;
+  position: relative;
+}
+
+.btn-map {
+  background: #008CBA url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTYgMTYiPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDNsNS0ydjEybC01IDJ2LTEyem0xMSAwdjEybC01LTEuN3YtMTJsNSAxLjd6bTUtMnYxMmwtNCAxLjZ2LTEybDQtMS42eiIvPjwvc3ZnPg==") center center no-repeat;
+  background-size: 1rem;
+  border-radius: 0.125rem;
+  height: 2rem;
+  width: 3rem;
+  position: absolute;
+  top: 0rem;
+  right: 0;
 }
 
 nav form,
 nav input {
   width: 100%;
 }
-
 nav input {
   height: 2rem;
 }
-
 nav ul {
   margin-top: 2rem;
 }
-
 nav a {
   border-left: 4px #fff solid;
   display: block;
   padding: 0.5rem 0 0.5rem 0.5rem;
 }
-
 nav a.active {
-  border-left: 4px #006699 solid;
+  border-left: 4px #008CBA solid;
 }
-
-nav a:active,
-nav a.active {
+nav a:active, nav a.active {
   font-weight: bold;
 }
-
 nav li ul {
   border-bottom: 0;
   margin: 0 0 0 1rem;
@@ -7426,10 +7437,10 @@ nav li ul {
 }
 
 .admin-area {
-  color: #006699;
+  color: #008CBA;
 }
 .admin-area:visited {
-  color: #006699;
+  color: #008CBA;
 }
 .admin-area small {
   color: #888;
@@ -7437,14 +7448,26 @@ nav li ul {
   text-transform: uppercase;
 }
 
+.breadcrumbs {
+  background: none;
+  border: none;
+  margin-bottom: 2em;
+  padding: 0;
+}
+@media only screen and (max-width: 1024px) {
+  .breadcrumbs {
+    margin-bottom: .5em;
+  }
+}
+
 a {
   cursor: pointer;
-  color: #564f50;
+  color: #008CBA;
   text-decoration: none;
 }
 
 a:visited {
-  color: #564f50;
+  color: #008CBA;
 }
 
 a:hover {
@@ -7454,6 +7477,37 @@ a:hover {
 
 a:active {
   outline: none;
+}
+
+.progress-fill {
+  fill: #f4f4f4;
+  stroke: #CCC;
+  stroke-opacity: .4;
+}
+
+.progress-indicator {
+  fill: #008CBA;
+}
+
+.progress-marker {
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  fill: #747474;
+}
+
+.admin-area-count dl {
+  margin-bottom: 1rem;
+}
+.admin-area-count dd {
+  float: left;
+  font-weight: normal;
+  margin-right: 0.5rem;
+  text-align: right;
+  width: 4rem;
+}
+.admin-area-count dt, .admin-area-count dd {
+  margin-bottom: 0.5rem;
 }
 
 table {

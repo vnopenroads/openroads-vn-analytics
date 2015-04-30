@@ -1,27 +1,28 @@
 <% var _ = require('underscore'); %>
 <% var round = require('../lib/helpers.js').round; %>
 
-<article>
-  <div id="content">
+<% if (editor) { %>
+<div id="map-this">
+  <a href="<%- editor %>" target="_blank" class="btn-map" title="View <%= name %> on the map"><span class="visually-hidden">Map <%= name %></span></a>
+</div>
+<% } %>
 
-    <h2>Overall Road Condition</h2>
+<h2>Overall Road Condition</h2>
 
-    <table class="table">
-      <thead>
-        <tr>
-          <% _.each(overview, function(stat) { %>
-          <td><%= stat.display %></td>
-          <% }); %>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <% _.each(overview, function(stat) { %>
-          <td><%= round(stat.length, 2) %> km</td>
-          <% }); %>
-        </tr>
-      </tbody>
-    </table>
+<table class="table">
+  <thead>
+    <tr>
+      <% _.each(overview, function(stat) { %>
+      <td><%= stat.display %></td>
+      <% }); %>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <% _.each(overview, function(stat) { %>
+      <td><%= round(stat.length, 2) %> km</td>
+      <% }); %>
+    </tr>
+  </tbody>
+</table>
 
-  </div>
-</article>

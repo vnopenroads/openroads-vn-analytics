@@ -16,11 +16,19 @@
 
 html, body {
   box-sizing: border-box;
-  color: #564f50;
-  font-family: Arial, Helvetica, sans-serif;
-  line-height: 1.5;
-  height: 100%;
 }
+
+h1 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  margin: 0 0 1rem 0;
+}
+h2 {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  margin: 0 0 1rem 0;
+}
+
 
 #spin {
   position: absolute;
@@ -54,17 +62,27 @@ ul, li {
   padding-top: 1.45em;
 }
 
-h1 {
-  font-size: 1.525rem !important;
-  margin: 1.875rem 0;
-  color: #564f50;
-  font-weight: bold;
+.callout {
+  font-size: 1rem;
+  margin: 1rem 0;
+  font-weight: normal;
+  color: darken($body-font-color, 15%);
 }
 
-h2 {
-  font-size: 1.25rem;
-  margin: 1.25rem 0;
-  color: #564f50;
-  font-weight: bold;
+
+/* Button that takes user to map */
+#map-this {
+  padding-right: 3rem;
+  position: relative;
 }
 
+.btn-map {
+  background: $primary-color url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTYgMTYiPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDNsNS0ydjEybC01IDJ2LTEyem0xMSAwdjEybC01LTEuN3YtMTJsNSAxLjd6bTUtMnYxMmwtNCAxLjZ2LTEybDQtMS42eiIvPjwvc3ZnPg==") center center no-repeat;
+  background-size: 1rem;
+  border-radius: 0.125rem;
+  height: 2rem;
+  width: 3rem;
+  position: absolute;
+  top: 0rem;
+  right: 0;
+}
