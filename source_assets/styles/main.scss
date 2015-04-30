@@ -3,6 +3,10 @@
 // Importing table before foundation, so
 // foundation styles take precedent.
 // @import "table";
+
+// Custom settings
+@import "settings";
+
 @import "foundation/foundation";
 
 @import "variables";

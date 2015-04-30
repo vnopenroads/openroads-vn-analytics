@@ -59,7 +59,7 @@ var conditions = {
     display: 'Excellent'
   },
   'undefined': {
-    display: 'No Data'
+    display: 'Not specified'
   },
 };
 

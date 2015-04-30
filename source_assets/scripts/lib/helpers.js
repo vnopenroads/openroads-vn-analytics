@@ -9,5 +9,5 @@ module.exports.round = function(value, decimals) {
 };
 
 module.exports.delimit = function(n) {
-  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
