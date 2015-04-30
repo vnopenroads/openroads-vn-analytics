@@ -1,7 +1,8 @@
 <% var _ = require('underscore'); %>
 <% var round = require('../lib/helpers.js').round; %>
 
-<h1 id="title-location"><%= name %><% if (editor) { %> <a href="<%- editor %>" target="_blank">(map this area)</a><% } %></h1>
+<h1 id="title-location"><%= name %><% if (editor) { %><a href="<%- editor %>" target="_blank" class="btn-map" title="View <%= name %> on the map"><span class="visually-hidden">Map <%= name %></span></a><% } %></h1>
+
 <h2>Overall Road Condition</h2>
 
 <table class="table">
