@@ -4,7 +4,7 @@
 
 <div id="road-progress"></div>
 
-<p>Welcome to <strong>OpenRoads Philippines</strong>, the platform that allows you to map the national road network and review road projects.   These dashboards contain detailed road statistics for:</p>
+<p>Welcome to <strong>OpenRoads Philippines</strong>, the platform that allows you to progressively map the national road network and review road projects by responsibility and quality. These dashboards contain detailed road statistics for:</p>
 
 <dl class="admin-area-count">
   <dd>17</dd>
@@ -19,7 +19,7 @@
 
 <p>To improve the map and make sure your local road network is well represented, you can use the <a href="http://devseed.com/openroads/#/editor/">Network Editor</a>.</p>
 
-<h2>Overall Road Condition</h2>
+<h2>Overall Road Condition - in km</h2>
 <table class="table">
   <thead>
     <tr>
@@ -31,14 +31,13 @@
   <tbody>
     <tr>
       <% _.each(overview, function(stat) { %>
-      <td><%= round(stat.length, 2) %> km</td>
+      <td><%= round(stat.length, 2) %></td>
       <% }); %>
     </tr>
   </tbody>
 </table>
 
-<h2>Road Condition by Region</h2>
-<h3 class="callout">Select a region to start mapping. Must be on municipality level to map.</h3>
+<h2>Road Condition by Region - in km</h2>
 <table class="table">
   <thead>
     <tr>
@@ -54,7 +53,7 @@
     <tr>
       <td><a href="#/<%= region.id %>" class="admin-area"><%= region.name %></a></td>
       <% _.each(region.overview, function(stat) { %>
-      <td class="value"><%= round(stat.length, 2) %> km</td>
+      <td class="value"><%= round(stat.length, 2) %></td>
       <% }); %>
     </tr>
     <% }) %>
