@@ -7436,6 +7436,16 @@ nav li ul {
   text-overflow: ellipsis;
 }
 
+#sidebar-image {
+  width: 100%;
+  margin: 0 0 24px;
+}
+@media only screen and (max-width: 1024px) {
+  #sidebar-image {
+    display: none;
+  }
+}
+
 .admin-area {
   color: #008CBA;
 }
@@ -7810,6 +7820,10 @@ table.dataTable td {
 .dataTables_length select {
   width: auto;
   display: inline-block;
+}
+
+td.value {
+  text-align: right;
 }
 
 /*# sourceMappingURL=main.css.map */
