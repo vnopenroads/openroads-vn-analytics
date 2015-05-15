@@ -12,8 +12,15 @@ var jshint = require('gulp-jshint');
 var cp = require('child_process');
 
 // Basic usage
-gulp.task('scripts:build', function(done) {
+gulp.task('scripts:folders', function(done) {
+  // Make sure the scripts folder exists. Browserify won't create it itself.
+  var args = ['-p', 'assets/scripts'];
 
+  return cp.spawn('mkdir', args, {stdio: 'inherit'})
+    .on('close', done);
+});
+
+gulp.task('scripts:build', function(done) {
   var args = ['node_modules/.bin/browserify', 'source_assets/scripts/app.js',
     '-d', '-o', 'assets/scripts/app.js',
     '-t', 'browserify-ejs',
@@ -41,6 +48,12 @@ gulp.task('compass', function() {
     }));
 });
 
+// Copy source PNGs to the asset folder.
+gulp.task('images:copy', function() {
+  return gulp.src('source_assets/images/*.png')
+    .pipe(gulp.dest('assets/images'));
+});
+
 // Setup browserSync.
 gulp.task('browser-sync', function() {
   browserSync({
@@ -51,12 +64,12 @@ gulp.task('browser-sync', function() {
 });
 
 gulp.task('scripts', function(done) {
-  runSequence('scripts:lint', 'scripts:build', done);
+  runSequence('scripts:folders', 'scripts:lint', 'scripts:build', done);
 });
 
-// Main build task
+// Main build task.
 gulp.task('build', function(done) {
-  runSequence(['scripts', 'compass'], done);
+  runSequence(['scripts', 'images:copy', 'compass'], done);
 });
 
 gulp.task('watch', function() {
