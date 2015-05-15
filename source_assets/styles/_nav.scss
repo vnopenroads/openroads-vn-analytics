@@ -38,6 +38,15 @@ nav {
   text-overflow: ellipsis;
 }
 
+#sidebar-image {
+  width: 100%;
+  margin: 0 0 24px;
+
+  @include small-only {
+    display: none;
+  }
+}
+
 .admin-area {
   color: $link-color;
 
