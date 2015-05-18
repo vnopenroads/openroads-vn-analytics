@@ -1,6 +1,6 @@
 'use strict';
 var _ = require('underscore');
-var data = require('../../static/combined.json');
+var data = require('../../data/combined.json');
 
 function formatStats (grouped) {
   if(!grouped) return [];
