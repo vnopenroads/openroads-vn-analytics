@@ -10,6 +10,7 @@ var Projects = require('./collections/projects.js');
 
 // VIEWS
 var SidebarView = require('./views/sidebar.js');
+var LandingView = require('./views/landing.js');
 var NationalAreaView = require('./views/national-area.js');
 var AreaView = require('./views/area.js');
 var Barangay = require('./views/barangay.js');
@@ -23,7 +24,8 @@ var spin = require('./lib/spinner.js');
 module.exports = Backbone.Router.extend({
 
   routes: {
-    '':                       'national',
+    '':                       'landing',
+    'phi':                    'national',
     ':id':                    'area',
 
     'all/projects(/)':        'projects',
@@ -35,6 +37,10 @@ module.exports = Backbone.Router.extend({
   initialize: function() {
     this.sidebar = new SidebarView({el: $('#sidebar')});
     this.sidebarSearch = new SearchView({ el: $('#admin-search') });
+  },
+
+  landing: function() {
+    new LandingView({ el: $('#content') });
   },
 
   national: function() {
