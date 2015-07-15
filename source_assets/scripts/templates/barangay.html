@@ -1,5 +1,4 @@
 <% var _ = require('underscore'); %>
-<% var round = require('../lib/helpers.js').round; %>
 
 <% if (editor) { %>
 <div id="map-this">
@@ -20,7 +19,7 @@
   <tbody>
     <tr>
       <% _.each(overview, function(stat) { %>
-      <td><%= round(stat.length, 2) %> km</td>
+      <td><%= stat.length %> km</td>
       <% }); %>
     </tr>
   </tbody>

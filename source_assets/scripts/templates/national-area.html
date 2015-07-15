@@ -1,6 +1,5 @@
 <% var _ = require('underscore'); %>
 <% var statsForDisplay = require('../lib/stats.js').statsForDisplay; %>
-<% var round = require('../lib/helpers.js').round; %>
 
 <div id="road-progress"></div>
 
@@ -31,7 +30,7 @@
   <tbody>
     <tr>
       <% _.each(overview, function(stat) { %>
-      <td><%= round(stat.length, 2) %></td>
+      <td><%= stat.length %></td>
       <% }); %>
     </tr>
   </tbody>
@@ -53,7 +52,7 @@
     <tr>
       <td><a href="#/<%= region.id %>" class="admin-area"><%= region.name %></a></td>
       <% _.each(region.overview, function(stat) { %>
-      <td class="value"><%= round(stat.length, 2) %></td>
+      <td class="value"><%= stat.length %></td>
       <% }); %>
     </tr>
     <% }) %>
