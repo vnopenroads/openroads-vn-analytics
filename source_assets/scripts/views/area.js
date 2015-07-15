@@ -23,6 +23,8 @@ module.exports = View.extend({
     model.set('overview', stats.displayStats(model.get('stats')));
     model.set('subtype', id.display[id.childType()]);
 
+    model.set('responsibility', stats.responsibilityDisplayStats(model.get('statsResponsibility')));
+
     // stats for each subregion
     _.each(model.attributes.subregions, function(region) {
       region.overview = stats.displayStats(region.stats);
