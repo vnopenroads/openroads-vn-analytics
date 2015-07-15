@@ -100,7 +100,7 @@ module.exports.displayStats = function (stats) {
 
   display.push({
     display: 'Total',
-    length: total
+    length: util.round(total, 2)
   });
 
   return display;
@@ -142,7 +142,7 @@ module.exports.responsibilityDisplayStats = function (stats) {
 
   display.push({
     display: 'Total',
-    length: total
+    length: util.round(total, 2)
   });
 
   return display;
