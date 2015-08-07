@@ -86,18 +86,26 @@ ul, li {
 }
 
 /* Button that takes user to map */
-#map-this {
-  padding-right: 3rem;
+.btn {
   position: relative;
-}
-
-.btn-map {
-  background: $primary-color url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTYgMTYiPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDNsNS0ydjEybC01IDJ2LTEyem0xMSAwdjEybC01LTEuN3YtMTJsNSAxLjd6bTUtMnYxMmwtNCAxLjZ2LTEybDQtMS42eiIvPjwvc3ZnPg==") center center no-repeat;
-  background-size: 1rem;
-  border-radius: 0.125rem;
-  height: 2rem;
-  width: 3rem;
-  position: absolute;
-  top: 0rem;
-  right: 0;
+  a {
+    background-color: $primary-color;
+    background-size: 1rem;
+    border-radius: 0.125rem;
+    float: right;
+    height: 2rem;
+    line-height: 2rem;
+    margin-left: 1rem;
+    width: 3rem;
+    &.api {
+      color: #fff;
+      font-size: 0.875rem;
+      font-weight: bold;
+      text-align: center;
+    }
+    &.map {
+      background: $primary-color url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTYgMTYiPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDNsNS0ydjEybC01IDJ2LTEyem0xMSAwdjEybC01LTEuN3YtMTJsNSAxLjd6bTUtMnYxMmwtNCAxLjZ2LTEybDQtMS42eiIvPjwvc3ZnPg==") center center no-repeat;
+      background-size: 1rem;
+    }
+  }
 }

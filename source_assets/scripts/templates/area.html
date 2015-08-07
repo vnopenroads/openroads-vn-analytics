@@ -2,8 +2,11 @@
 <% var statsForDisplay = require('../lib/stats.js').statsForDisplay; %>
 
 <% if (editor) { %>
-<div id="map-this">
-  <a href="<%- editor %>" target="_blank" class="btn-map" title="View <%= name %> on the map"><span class="visually-hidden">Map <%= name %></span></a>
+<div class="btn">
+  <a href="http://openroads-api.herokuapp.com/admin/<%= id.id %>" target="_blank" class="api" title="View <%= name %> in the API">API</a>
+</div>
+<div class="btn">
+  <a href="<%- editor %>" target="_blank" class="map" title="View <%= name %> on the map"><span class="visually-hidden">Map <%= name %></span></a>
 </div>
 <% } %>
 
