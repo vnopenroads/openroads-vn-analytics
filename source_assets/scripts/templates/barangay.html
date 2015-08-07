@@ -1,12 +1,36 @@
 <% var _ = require('underscore'); %>
 
 <% if (editor) { %>
-<div id="map-this">
-  <a href="<%- editor %>" target="_blank" class="btn-map" title="View <%= name %> on the map"><span class="visually-hidden">Map <%= name %></span></a>
+<div class="btn">
+  <a href="http://openroads-api.herokuapp.com/admin/<%= id.id %>" target="_blank" class="api" title="View <%= name %> in the API">API</a>
+</div>
+<div class="btn">
+  <a href="<%- editor %>" target="_blank" class="map" title="View <%= name %> on the map"><span class="visually-hidden">Map <%= name %></span></a>
 </div>
 <% } %>
 
-<h2>Overall Road Condition</h2>
+<% if (responsibility) { %>
+  <h2>Roads by responsibility - km</h2>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <% _.each(responsibility, function(stat) { %>
+        <td><%= stat.display %></td>
+        <% }); %>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <% _.each(responsibility, function(stat) { %>
+        <td class="value"><%= stat.length %></td>
+        <% }); %>
+      </tr>
+    </tbody>
+  </table>
+<% } %>
+
+<h2>Roads by condition - km</h2>
 
 <table class="table">
   <thead>
@@ -19,9 +43,8 @@
   <tbody>
     <tr>
       <% _.each(overview, function(stat) { %>
-      <td><%= stat.length %> km</td>
+      <td class="value"><%= stat.length %></td>
       <% }); %>
     </tr>
   </tbody>
 </table>
-

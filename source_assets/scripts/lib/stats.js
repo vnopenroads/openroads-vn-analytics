@@ -9,7 +9,7 @@ var util = require('./helpers.js');
 
 function statsByCondition(roadFeatures) {
   var grouped = _.groupBy(roadFeatures, function (feat) {
-    return feat.properties.rd_cond;
+    return feat.properties.or_condition;
   });
 
   return _.map(Object.keys(grouped), function(condition) {
