@@ -1,0 +1,48 @@
+// ICONS
+
+// UI icon font: ds.o UI Icons
+// Designed by Development Seed
+
+
+
+
+@font-face {
+  font-family: "collecticons";
+  
+  
+  src: url(data:application/font-woff;charset=utf-8;base64,d09GRgABAAAAAAQcAAsAAAAABoAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAADMAAABCsP6z7U9TLzIAAAE8AAAAPQAAAFY5ukXSY21hcAAAAXwAAABWAAABjOswaepnbHlmAAAB1AAAAFIAAABkQggBG2hlYWQAAAIoAAAAKQAAADYF6mOBaGhlYQAAAlQAAAAbAAAAJAPvAgVobXR4AAACcAAAAA4AAAAQBgAAAGxvY2EAAAKAAAAACgAAAAoARAAkbWF4cAAAAowAAAAfAAAAIAEPABJuYW1lAAACrAAAATEAAAJGOsJuNXBvc3QAAAPgAAAAPAAAAFakR7fmeJxjYGRgYOBikGPQYWB0cfMJYeBgYGGAAJAMY05meiJQDMoDyrGAaQ4gZoOIAgCKIwNPAHicY2BkbGCcwMDKwMHowpjGwMDgDqW/MkgytDAwMDGwMjNgBQFprikMDq8YXzEzgbh6TBBhRhABAIA4CAYAAAB4nO2QsQ2AQAwDL+9AgZiDipJJqNi/ZIn/JM8YRDpHtqIUBhZAwRk42IORc0dqlYutcueoG8/8Ve+hlhreS1t+spV/9tLrc8qmJtVdm5BbEzQAjoUNZQAAeJxjYGQAAsYWxu8MrEBanV3cXJ2xRff7d92TjCf1vn/XOwmSBqs5AFEjzC4OVHRS99Qp3e+MQHmgKga4mgQmBgYgEmYUTGBkAMF/QFEAiGEVVwAAeJxjYGRgYABi3y/+3PH8Nl8ZuJkYQOBSm6ATMs14ACzOwQCmAOlaB20AAAB4nGNgZGBgYgACPTDJwHiAgZEBFbAAABP+APoAeJxjYGBgYELCAABAAAcAAAAAAAAAEgAkADIAAHicY2BkYGBgYWBjANEMDExAzAWEDAz/wXwGAAljASIAeJx1kT1Ow0AQhZ8TJ4gEISQkRMdWNEjOT0GRkiLpU6Sgc5x14sj2WutNpHQcgxNwDEqOwCk4BM/LFBGSd6X1N9++GVsygBt8IUCzAlz5s1kdXLD64y7pVjgkPwj3MMSTcJ/+WXhA+yI8ZGfBCUF4SXOPN+EOrvEu3KX/EA7Jn8I93OFbuE//IzzAKgiFh3gMXhOT5zpxWWLKeqm3hzy25+qcV9rWmSnVJBqf64UutY2d3qj1SdXH7dS5VKXWFGpuSqfz3KjKmj3j0c65ajYapeKjxBRIYJBza5JD5usSNZY0Wxx4E8O2ptr8isbymflaYYII49b0gqb0HTG9xoYda5x41jjyK6a0DinrlBnDv6Iw971NuploaCp/t5fpEXa+q8IMI+70Xz7yby9+AQxXbEEAAAB4nGNgYoAAVgbsgIWRiZGZkYWRlYEnOSO1rCg/TzcnNa2EF8YpykzPKOEtKcpMzEvPSQXLMTAAAGKHD38=) format('truetype');
+  
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+.collecticons, [class^="collecticons-"], [class*=" collecticons-"] {
+  font-family: "collecticons";
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  vertical-align: bottom;
+
+  // Better Font Rendering
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+.collecticons-chevron-left {
+  @extend .collecticons;
+  content: "\EA01"
+}
+
+.collecticons-chevron-right {
+  @extend .collecticons;
+  content: "\EA02"
+}
+
+.collecticons-triangle-left {
+  @extend .collecticons;
+  content: "\EA03"
+}
