@@ -41,6 +41,7 @@ body {
   font-weight: $base-font-weight;
   font-style: $base-font-style;
   min-width: $row-min-width;
+  background: tint($base-color, 96%);
 }
 
 // Badges
@@ -133,41 +134,57 @@ a:active{
     @extend .row--centered;
   }
 
-  /* Main navigation */
-  .site-nav {
-    float: right;
-    ul {
-      @extend .clearfix;
-    }
-    li {
-      float: left;
-      margin-left: 0.5rem; 
-      a {
-        color: #fff;
-        text-transform: uppercase;
-        font-weight: $base-font-bold;
-        padding: 0.5rem;
-        font-size: 0.75rem;
-        display: block;
+  .site {
+    &__headline {
+      @include col(3/12);
+      * {
+        vertical-align: middle;
+        display: inline-block;
+      }
+  
+      .site__title {
+        margin: 0;
+        padding: 0.25rem 0;
+      }
+
+      img {
+        width: auto;
+        height: 1.25rem;
+      }
+      span {
+        @extend .visually-hidden;
       }
     }
-  }
-}
 
-.site-title {
-  float: left;
-  margin: 0;
-  padding: 0.25rem 0;
-  * {
-    vertical-align: middle;
-    display: inline-block;
-  }
-  img {
-    width: auto;
-    height: 1.25rem;
-  }
-  span {
-    @extend .visually-hidden;
+    &__search {
+      @include col(6/12);
+
+      .input-group {
+        max-width: 20rem;
+        margin: 0 auto;
+      }
+    }
+
+    /* Main navigation */
+    &__nav {
+      @include col(3/12);
+      ul {
+        @extend .clearfix;
+        float: right;
+      }
+      li {
+        float: left;
+        margin-left: 0.5rem; 
+        a {
+          color: #fff;
+          text-transform: uppercase;
+          font-weight: $base-font-bold;
+          padding: 0.5rem;
+          font-size: 0.75rem;
+          display: block;
+        }
+      }
+    }
   }
 }
 
@@ -209,8 +226,6 @@ a:active{
    ========================================================================== */
 
 .site-body {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
   .inner {
     @extend .row;
     @extend .row--centered;
@@ -218,11 +233,34 @@ a:active{
 }
 
 .page {
+  &__header {
+    padding: 2rem 0 1rem 0;
+    background: #fff;
+  }
   &__title {
     @extend .hd-l;
   }
 }
 
+.progress-bar {
+  background: #fff;
+  border-radius: $global-rounded;
+  box-shadow: inset 0 2px 0 0 $flat-shadow-rgba;
+  list-style-type: none;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  height: 1.25rem;
+  
+  li {
+    background: $secondary-color;
+    box-shadow: inset 0 2px 0 0 $flat-shadow-rgba;
+  }
+
+  &.progress-bar-s {
+    height: 0.5rem;
+  }
+}
 
 
 .aa {
@@ -240,36 +278,89 @@ a:active{
   }
 
   .aa-main {
-    &__nav {
-      ul {
-        @extend .clearfix;
-        /* Inline helper */
-        word-spacing: -0.26rem;
-        > * {
-          display: inline-block;
-          word-spacing: normal;
-        }
-      }
-      li {
-        margin-right: 0.5rem;
-        &:last-child {
-          margin-right: 0;
-        }
-        a {
-          color: $base-color;
-          text-transform: uppercase;
-          font-weight: $base-font-bold;
-          padding: 0.5rem;
-          font-size: 0.75rem;
-          display: block;
+    background: #fff;
+    border-bottom: 2px solid $flat-shadow-rgba;
+    > .inner {
+      margin-bottom: 2rem;
+    }
 
-          &.active {
-            border-bottom: 3px solid $secondary-color;
+    .completeness {
+      margin: 0;
+
+      .legend {
+        font-size: 0.75rem;
+        font-weight: $base-font-bold;
+      }
+    }
+    .aa-image {
+      width: 100%;
+      display: block;
+      margin-top: 2rem; 
+    }
+
+    .aa-stats {
+      &__nav {
+        ul {
+          @extend .clearfix;
+          /* Inline helper */
+          word-spacing: -0.26rem;
+          > * {
+            display: inline-block;
+            word-spacing: normal;
+          }
+
+          border-bottom: 2px solid tint($base-color, 80%);
+        }
+        li {
+          margin-right: 0.5rem;
+          margin-bottom: -2px;
+          &:last-child {
+            margin-right: 0;
+          }
+
+          a {
+            display: block;
+            padding: 0.5rem;
+            border: 2px solid transparent;
+            border-radius: 0.25rem 0.25rem 0 0;
+            color: $base-color;
+            text-transform: uppercase;
+            font-weight: $base-font-bold;
+            font-size: 0.75rem;
+          }
+
+          &.active a,
+          &.active a:hover,
+          &.active a:focus, {
+            border-color: tint($base-color, 80%) tint($base-color, 80%) transparent;
+            background: #fff;
+            opacity: 1;
           }
         }
       }
+
+      /* vv Placeholer vv */
+      .chart-wrapper {
+        border: 2px dashed tint($base-color, 88%);
+        border-radius: 0.5rem;
+        padding: 4rem;
+        margin: 2rem;
+        text-align: center;
+
+        &:before {
+          @extend .collecticons-chart-line;
+          font-size: 8rem;
+          color: tint($base-color, 80%);
+
+        }
+      }
+      /* ^^ Placeholer ^^ */
+
+      &__controls {
+        float: right;
+        @extend .bttn-group;
+      }
     }
-    border-bottom: 2px solid $flat-shadow-rgba;
   }
 
   .aa-details {
@@ -378,22 +469,6 @@ a:active{
         font-weight: $base-font-bold;
       }
 
-      ul.completeness {
-        background: #fff;
-        border-radius: $global-rounded;
-        box-shadow: inset 0 2px 0 0 $flat-shadow-rgba;
-        height: 1.25rem;
-        list-style-type: none;
-        margin: 0.125rem 0;
-        overflow: hidden;
-        padding: 0;
-        margin: 0;
-        
-        li {
-          background: $secondary-color;
-          box-shadow: inset 0 2px 0 0 $flat-shadow-rgba;
-        }
-      }
     }
   }
 }

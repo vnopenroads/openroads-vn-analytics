@@ -237,3 +237,30 @@ input[type=submit] {
   @extend .bttn-s;
   @extend .bttn-base-light;
 }
+
+.bttn-stats-prev,
+.bttn-stats-next {
+  @extend .bttn;
+  @extend .bttn-s;
+  @extend .bttn-base-light;
+  @extend .bttn-notxt;
+}
+
+.bttn-stats-prev:before {
+  @extend .collecticons-chevron-left;
+}
+
+.bttn-stats-next:before {
+  @extend .collecticons-chevron-right;
+}
+
+.bttn-search {
+  @extend .bttn;
+  @extend .bttn-m;
+  @extend .bttn-base-light;
+  @extend .bttn-notxt;
+
+  &:before {
+    @extend .collecticons-magnifier-right;
+  }
+}

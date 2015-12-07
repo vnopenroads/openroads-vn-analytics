@@ -33,13 +33,27 @@
     <div class="site-canvas">
        <header class="site-header" role="">
         <div class="inner">
-          <h1 class="site-title"><img src="assets/graphics/layout/or-logo.png" width="500" height="63" alt="Open Roads logo" /><span>Open Roads Analytics</span></h1>
-          <nav class="site-nav">
-            <ul>
-              <li><a href="#">Home</a></li>
-              <li><a href="#">About</a></li>
-            </ul>
-          </nav>
+          <div class="site__headline">
+            <h1 class="site__title"><img src="assets/graphics/layout/or-logo.png" width="500" height="63" alt="Open Roads logo" /><span>Open Roads Analytics</span></h1>
+          </div>
+          <div class="site__search">
+            <form class="form-search">
+              <div class="input-group">
+                <input type="search" class="form-control input-search" placeholder="Search administrative area">
+                <span class="input-group-bttn">
+                  <button class="bttn-search"><span>Search</span></button>
+                </span>
+              </div>
+            </form>
+          </div>
+          <div class="site__nav">
+            <nav>
+              <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+              </ul>
+            </nav>
+          </div>
         </div>
       </header>
 
@@ -47,9 +61,6 @@
           <section class="page">
             <header class="page__header">
               <div class="inner">
-                <!-- <div class="page__search">
-                  <input type="search">
-                </div> -->
                 <div class="page__headline">
                   <h1 class="page__title">Region I (Ilocos region)</h1>
                 </div>
@@ -67,19 +78,32 @@
               <div class="aa-main">
                 <div class="inner">
                   <div class="col--sec">
-                    completeness chart
-                    region image
+                    <figure class="completeness">
+                      <ul class="progress-bar progress-bar-s"><li style="width:58%;">&nbsp;</li></ul>
+                      <figcaption class="legend">58% completed</figcaption>
+                    </figure>
+                    <img class="aa-image" src="http://placehold.it/300x450" alt="Administrative area">
                   </div>
                   <div class="col--main">
-                    <nav class="aa-main__nav">
-                      <ul>
-                        <li><a href="#" class="active">Responsibility</a></li>
-                        <li><a href="#">Condition</a></li>
-                        <li><a href="#">Completeness</a></li>
-                        <li><a href="#">Projects</a></li>
-                      </ul>
-                    </nav>
-                    charts here
+
+                    <div class="aa-stats">
+                      <nav class="aa-stats__nav">
+                        <ul>
+                          <li><a href="#">Responsibility</a></li>
+                          <li class="active"><a href="#">Condition</a></li>
+                          <li><a href="#">Completeness</a></li>
+                          <li><a href="#">Projects</a></li>
+                        </ul>
+                      </nav>
+
+                      <div class="chart-wrapper"></div>
+
+                      <div class="aa-stats__controls">
+                        <button class="bttn-stats-prev"><span>Previous stat</span></button>
+                        <button class="bttn-stats-next"><span>Next stat</span></button>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
               </div>
@@ -111,7 +135,7 @@
                         <tr>
                           <td><a href="#">Adams</a></td>
                           <td>
-                            <ul class="completeness"><li style="width:20%;">&nbsp;</li></ul>
+                            <ul class="progress-bar"><li style="width:20%;">&nbsp;</li></ul>
                           </td>
                           <td>
                             <ul class="actions-menu">
@@ -123,7 +147,7 @@
                         <tr>
                           <td><a href="#">Bacarra</a></td>
                           <td>
-                            <ul class="completeness"><li style="width:10%;">&nbsp;</li></ul>
+                            <ul class="progress-bar"><li style="width:10%;">&nbsp;</li></ul>
                           </td>
                           <td>
                             <ul class="actions-menu">
@@ -135,7 +159,7 @@
                         <tr>
                           <td><a href="#">Badoc</a></td>
                           <td>
-                            <ul class="completeness"><li style="width:36%;">&nbsp;</li></ul>
+                            <ul class="progress-bar"><li style="width:36%;">&nbsp;</li></ul>
                           </td>
                           <td>
                             <ul class="actions-menu">
@@ -147,7 +171,7 @@
                         <tr>
                           <td><a href="#">Bangui</a></td>
                           <td>
-                            <ul class="completeness"><li style="width:88%;">&nbsp;</li></ul>
+                            <ul class="progress-bar"><li style="width:88%;">&nbsp;</li></ul>
                           </td>
                           <td>
                             <ul class="actions-menu">
