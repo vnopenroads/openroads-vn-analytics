@@ -1,17 +1,29 @@
 'use strict';
 var config = require('./config');
 
-import React from 'react';
-import ReactDOM from 'react-dom'
-import { combineReducers, applyMiddleware, compose, createStore } from 'redux';
-import { Provider } from 'react-redux';
-import { Router, Route, IndexRoute } from 'react-router';
-import { createHistory } from 'history'
-import { syncReduxAndRouter, routeReducer } from 'redux-simple-router'
+var React = require('react');
+var ReactDOM = require('react-dom');
+var Redux = require('redux');
+var Provider = require('react-redux').Provider;
+var ReactRouter = require('react-router');
+var createHistory = require('history').createHistory;
+var ReduxSRouter = require('redux-simple-router');
 
-import UhOh from './views/uhoh';
-import App from './views/app';
-import Home from './views/home';
+// var UhOh = require('./views/uhoh');
+// var App = require('./views/app');
+// var Home = require('./views/home');
+
+var combineReducers = Redux.combineReducers;
+var applyMiddleware = Redux.applyMiddleware;
+var compose = Redux.compose;
+var createStore = Redux.createStore;
+
+var Router = ReactRouter.Router;
+var Route = ReactRouter.Route;
+var IndexRoute = ReactRouter.IndexRoute;
+
+var syncReduxAndRouter = ReduxSRouter.syncReduxAndRouter;
+var routeReducer = ReduxSRouter.routeReducer;
 
 // const reducer = combineReducers(Object.assign({}, reducers, {
 //   routing: routeReducer
