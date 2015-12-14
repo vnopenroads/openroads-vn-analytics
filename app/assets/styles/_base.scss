@@ -163,6 +163,28 @@ a:active{
         max-width: 20rem;
         margin: 0 auto;
       }
+
+      .search-results {
+        color: $base-color;
+        min-width: 80%;
+
+        .drop-menu-sectitle {
+          overflow: hidden;
+          strong {
+            @extend .truncated;
+            max-width: 22rem;
+            font-weight: inherit;
+            float: left;
+          }
+          small {
+            float: right;
+          }
+        }
+
+        i {
+          opacity: 0.64;
+        }
+      }
     }
 
     /* Main navigation */
