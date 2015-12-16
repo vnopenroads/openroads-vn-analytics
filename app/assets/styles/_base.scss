@@ -385,6 +385,14 @@ a:active{
     }
   }
 
+  .prose-wrapper {
+    padding: 2rem 0;
+    
+    p {
+      margin-bottom: 1rem;
+    }
+  }
+
   .aa-details {
     background: tint($base-color, 96%);
     .breadcrumbs {
