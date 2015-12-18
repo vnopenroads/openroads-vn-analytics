@@ -12,6 +12,7 @@ import reducer from './reducers/reducer';
 import UhOh from './views/uhoh';
 import App from './views/app';
 import Home from './views/home';
+import Editor from './views/editor';
 import Analytics from './views/analytics';
 
 const createStoreWithMiddleware = applyMiddleware(
@@ -26,6 +27,8 @@ render((
   <Provider store={store}>
     <Router history={history}>
       <Route path='/' component={App}>
+        <Route path='editor' component={Editor} />
+        <Route path='editor/*' component={Editor} />
         <Route path='analytics/:aaId' component={Analytics} />
         <IndexRoute component={Home}/>
       </Route>

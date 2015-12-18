@@ -65,8 +65,13 @@ body {
   @extend .antialiased;
 }
 
-
-
+#main-frame {
+  border: none;
+  display: block;
+  position: absolute;
+  height: calc(100% - 4rem); /* 100% - height header */
+  width: 100%;
+}
 /* Links
    ========================================================================== */
 
@@ -203,6 +208,7 @@ a:active{
           font-weight: $base-font-bold;
           padding: 0.5rem;
           font-size: 0.75rem;
+          line-height: 1rem;
           display: block;
         }
       }
