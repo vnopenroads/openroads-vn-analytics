@@ -441,6 +441,11 @@ a:active{
           bottom: auto;
           height: 1.125rem;
         }
+
+        &.disabled:before,
+        &.disabled:after {
+          background: tint($base-color, 64%);
+        }
       }
     }
 
@@ -453,6 +458,7 @@ a:active{
       @include column(9/12, $offset: 1/12);
       padding: 2rem 0;
       position: relative;
+      min-height: 20rem;
 
       &:before {
         background: $brdr-rgba;
@@ -473,12 +479,24 @@ a:active{
           @extend .collecticons-triangle-left;
           display: block;
           position: absolute;
-          top: 132px;
+          top: 92px;
           left: calc(-3rem + 1px);
           text-shadow: -1px 0 0 $spread-shadow-rgba;
           z-index: 1;
           color: tint($base-color, 96%);
           font-size: 1.5rem;
+        }
+        &.region:before {
+          top: calc(92px + 40px * 1);
+        }
+        &.province:before {
+          top: calc(92px + 40px * 2);
+        }
+        &.municipality:before {
+          top: calc(92px + 40px * 3);
+        }
+        &.barangay:before {
+          top: calc(92px + 40px * 4);
         }
       }
     }

@@ -1,6 +1,6 @@
 'use strict';
 import React from 'react';
-import Reflux from 'reflux';
+import SiteHeader from '../components/site-header';
 
 var App = React.createClass({
   propTypes: {
@@ -9,7 +9,11 @@ var App = React.createClass({
 
   render: function () {
     return (
-      <div> App
+      <div>
+        <SiteHeader/>
+        <main className='site-body'>
+          {this.props.children}
+        </main>
       </div>
     );
   }

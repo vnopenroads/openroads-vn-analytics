@@ -1,45 +1,35 @@
-'use strict';
-var config = require('./config');
+import 'babel-polyfill';
+import React from 'react';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
+import { Router, Route, IndexRoute } from 'react-router';
+import { createHashHistory } from 'history';
+import { createStore, applyMiddleware } from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import { syncReduxAndRouter } from 'redux-simple-router';
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var Redux = require('redux');
-var Provider = require('react-redux').Provider;
-var ReactRouter = require('react-router');
-var createHistory = require('history').createHistory;
-var ReduxSRouter = require('redux-simple-router');
+import reducer from './reducers/reducer';
+import UhOh from './views/uhoh';
+import App from './views/app';
+import Home from './views/home';
+import Analytics from './views/analytics';
 
-// var UhOh = require('./views/uhoh');
-// var App = require('./views/app');
-// var Home = require('./views/home');
+const createStoreWithMiddleware = applyMiddleware(
+  thunkMiddleware // lets us dispatch() functions
+)(createStore);
 
-var combineReducers = Redux.combineReducers;
-var applyMiddleware = Redux.applyMiddleware;
-var compose = Redux.compose;
-var createStore = Redux.createStore;
+const store = createStoreWithMiddleware(reducer);
+const history = createHashHistory();
+syncReduxAndRouter(history, store);
 
-var Router = ReactRouter.Router;
-var Route = ReactRouter.Route;
-var IndexRoute = ReactRouter.IndexRoute;
-
-var syncReduxAndRouter = ReduxSRouter.syncReduxAndRouter;
-var routeReducer = ReduxSRouter.routeReducer;
-
-// const reducer = combineReducers(Object.assign({}, reducers, {
-//   routing: routeReducer
-// }))
-// const store = createStore(reducer)
-// const history = createHistory()
-
-// syncReduxAndRouter(history, store)
-
-// ReactDOM.render(
-//   <Provider store={store}>
-//     <Router history={history}>
-//       <Route path='/' component={App}>
-//         <IndexRoute component={Home}/>
-//       </Route>
-//       <Route path='*' component={UhOh}/>
-//     </Router>
-//   </Provider>,
-// ), document.querySelector('#site-canvas'));
+render((
+  <Provider store={store}>
+    <Router history={history}>
+      <Route path='/' component={App}>
+        <Route path='analytics/:aaId' component={Analytics} />
+        <IndexRoute component={Home}/>
+      </Route>
+      <Route path='*' component={UhOh}/>
+    </Router>
+  </Provider>
+), document.querySelector('.site-canvas'));

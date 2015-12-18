@@ -6,6 +6,7 @@ test/bower_components
 app/assets/styles/_collecticons.scss
 
 ## Build
+.DS_Store
 dist
 .tmp
 npm-debug.log

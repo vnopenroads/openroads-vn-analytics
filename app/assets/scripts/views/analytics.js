@@ -5,22 +5,34 @@ import { fetchAdminSubregions } from '../actions/action-creators';
 import AADetails from '../components/aa-details';
 import PageHeader from '../components/page-header';
 
-var Home = React.createClass({
+var Analytics = React.createClass({
   propTypes: {
     children: React.PropTypes.object,
     subregions: React.PropTypes.object,
+    params: React.PropTypes.object,
     dispatch: React.PropTypes.func
   },
 
   componentDidMount: function () {
-    this.props.dispatch(fetchAdminSubregions());
+    this.props.dispatch(fetchAdminSubregions(this.props.params.aaId));
+  },
+
+  componentDidUpdate: function (prevProps, prevState) {
+    if (this.props.params.aaId !== prevProps.params.aaId && !this.props.subregions.fetching) {
+      console.log('Analytics componentDidUpdate', 'update');
+      this.props.dispatch(fetchAdminSubregions(this.props.params.aaId));
+    } else {
+      console.log('Analytics componentDidUpdate', 'NOT update');
+    }
   },
 
   render: function () {
+    console.log('Analytics props', this.props);
     return (
       <section className='page'>
         <PageHeader
-            pageTitle='OR Philippines' />
+          pageTitle={this.props.subregions.name}
+          actions />
 
         <div className='page__body aa'>
 
@@ -55,7 +67,8 @@ var Home = React.createClass({
           </div>
 
           <AADetails
-            level={0}
+            level={this.props.subregions.type}
+            adminAreaId={this.props.subregions.id}
             adminAreas={this.props.subregions.adminAreas}/>
         </div>
       </section>
@@ -67,4 +80,4 @@ module.exports = connect(state => {
   return {
     subregions: state.adminSubregions
   };
-})(Home);
+})(Analytics);
