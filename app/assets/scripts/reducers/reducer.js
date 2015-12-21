@@ -20,7 +20,20 @@ const adminSubregions = function (state = {adminAreas: [], fetching: false}, act
   return state;
 };
 
+const aaStats = function (state = {activeTab: null}, action) {
+  state = _.cloneDeep(state);
+
+  switch (action.type) {
+    case actions.CHANGE_AA_STATS_TAB:
+      console.log('CHANGE_AA_STATS_TAB');
+      state.activeTab = action.tab;
+      break;
+  }
+  return state;
+};
+
 export default combineReducers({
   adminSubregions,
+  aaStats,
   routing: routeReducer
 });
