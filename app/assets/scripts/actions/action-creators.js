@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import fetch from 'isomorphic-fetch';
 import * as actions from './action-types';
 import config from '../config';
