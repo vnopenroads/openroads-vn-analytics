@@ -47,7 +47,7 @@ var Analytics = React.createClass({
 
                 <AAStats
                   level={this.props.subregions.type}
-                  activeStat={this.props.aaStats.activeTab || 'responsibility'}
+                  activeStat={this.props.aaStats.activeTab || 'overview'}
                   chandeTabFn={(tab) => this.props.dispatch(changeStatsTab(tab))}/>
 
               </div>

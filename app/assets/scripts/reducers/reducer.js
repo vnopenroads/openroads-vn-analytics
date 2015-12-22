@@ -28,6 +28,10 @@ const aaStats = function (state = {activeTab: null}, action) {
       console.log('CHANGE_AA_STATS_TAB');
       state.activeTab = action.tab;
       break;
+    case actions.RECEIVE_ADMIN_SUBREGIONS:
+      // Reset to null so the default will be picked up.
+      state.activeTab = null;
+      break;
   }
   return state;
 };

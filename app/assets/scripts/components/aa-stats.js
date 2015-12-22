@@ -14,6 +14,7 @@ var AAStats = React.createClass({
     switch (this.props.level) {
       case 0:
         return [
+          {key: 'overview', display: 'Overview'},
           {key: 'responsibility', display: 'Responsibility'},
           {key: 'condition', display: 'Condition'},
           {key: 'completeness', display: 'Completeness'},
@@ -22,12 +23,13 @@ var AAStats = React.createClass({
         ];
       case 1:
         return [
+          {key: 'overview', display: 'Overview'},
           {key: 'responsibility', display: 'Responsibility'},
           {key: 'condition', display: 'Condition'},
           {key: 'completeness', display: 'Completeness'}
         ];
       default:
-        return [];
+        return [{key: 'overview', display: 'Overview'}];
     }
   },
 
@@ -62,6 +64,10 @@ var AAStats = React.createClass({
 
   renderContent: function () {
     switch (this.props.activeStat) {
+      case 'overview':
+        return (
+          <div className='chart-wrapper'>overview</div>
+        );
       case 'responsibility':
         return (
           <div className='chart-wrapper'>responsibility</div>

@@ -35,7 +35,7 @@ var Home = React.createClass({
 
                 <AAStats
                   level={0}
-                  activeStat={this.props.aaStats.activeTab || 'responsibility'}
+                  activeStat={this.props.aaStats.activeTab || 'overview'}
                   chandeTabFn={(tab) => this.props.dispatch(changeStatsTab(tab))}/>
 
               </div>
