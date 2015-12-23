@@ -54,8 +54,8 @@ var AADetails = React.createClass({
         </td>
         <td>
           <ul className='actions-menu'>
-            <li><a href='#' className='bttn-edit'>Edit</a></li>
             <li><a href='#' className='bttn-verify'>Verify</a></li>
+            <li><a href='#' className='bttn-edit'>Edit</a></li>
           </ul>
         </td>
       </tr>
