@@ -141,4 +141,11 @@ ID.prototype.getChildDisplayType = function (plural = false) {
   return plural ? this.display[this.childType()].plural : this.display[this.childType()].display;
 };
 
+ID.getDisplayType = function (type, plural = false) {
+  if (!isNaN(parseInt(type, 10))) {
+    type = ['n', 'r', 'p', 'm', 'b'][type];
+  }
+  return plural ? ID.prototype.display[type].plural : ID.prototype.display[type].display;
+};
+
 module.exports = ID;

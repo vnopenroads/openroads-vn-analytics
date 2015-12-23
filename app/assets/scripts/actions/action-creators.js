@@ -17,7 +17,7 @@ function receiveAdminSubregions (json) {
 }
 
 export function fetchAdminSubregions (id = null) {
-  return dispatch => {
+  return function (dispatch) {
     dispatch(requestAdminSubregions());
 
     // The function called by the thunk middleware can return a value,
@@ -34,11 +34,47 @@ export function fetchAdminSubregions (id = null) {
         // setTimeout(() => dispatch(receiveAdminSubregions(json)), 2000);
         dispatch(receiveAdminSubregions(json));
       });
-
-      // In a real world app, you also want to
       // catch any error in the network call.
   };
 }
+
+function requestSearchResults (query) {
+  return {
+    type: actions.REQUEST_SEARCH_RESULTS,
+    query
+  };
+}
+
+function receiveSearchResults (json) {
+  return {
+    type: actions.RECEIVE_SEARCH_RESULTS,
+    json: json,
+    receivedAt: Date.now()
+  };
+}
+
+export function cleanSearchResults () {
+  return {
+    type: actions.CLEAN_SEARCH_RESULTS
+  };
+}
+
+export function fetchSearchResults (searchQuery) {
+  return function (dispatch) {
+    dispatch(requestSearchResults(searchQuery));
+
+    console.time('fetch search results');
+    return fetch(`${config.api}/admin/search/${searchQuery}`)
+      .then(response => response.json())
+      .then(json => {
+        console.timeEnd('fetch search results');
+        //setTimeout(() => dispatch(receiveSearchResults(json)), 2000);
+        dispatch(receiveSearchResults(json));
+      });
+      // catch any error in the network call.
+  };
+}
+
 export function changeStatsTab (tab) {
   return {
     type: actions.CHANGE_AA_STATS_TAB,

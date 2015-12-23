@@ -189,6 +189,11 @@ a:active{
         i {
           opacity: 0.64;
         }
+
+        .info {
+          text-align: center;
+          color: tint($base-color, 32%);
+        }
       }
     }
 

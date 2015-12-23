@@ -36,8 +36,36 @@ const aaStats = function (state = {activeTab: null}, action) {
   return state;
 };
 
+const search = function (state = {results: [], fetching: false, query: '', searching: false}, action) {
+  state = _.cloneDeep(state);
+
+  switch (action.type) {
+    case actions.REQUEST_SEARCH_RESULTS:
+      console.log('REQUEST_SEARCH_RESULTS');
+      state.fetching = true;
+      state.query = action.query;
+      state.searching = true;
+      break;
+    case actions.RECEIVE_SEARCH_RESULTS:
+      console.log('RECEIVE_SEARCH_RESULTS');
+      state.results = action.json;
+      state.fetching = false;
+      break;
+    case actions.CLEAN_SEARCH_RESULTS:
+      console.log('CLEAN_SEARCH_RESULTS');
+      state.results = [];
+      state.fetching = false;
+      state.query = '';
+      state.searching = false;
+      break;
+  }
+  console.log('state', state);
+  return state;
+};
+
 export default combineReducers({
   adminSubregions,
   aaStats,
+  search,
   routing: routeReducer
 });
