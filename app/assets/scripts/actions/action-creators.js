@@ -68,7 +68,7 @@ export function fetchSearchResults (searchQuery) {
       .then(response => response.json())
       .then(json => {
         console.timeEnd('fetch search results');
-        //setTimeout(() => dispatch(receiveSearchResults(json)), 2000);
+        // setTimeout(() => dispatch(receiveSearchResults(json)), 2000);
         dispatch(receiveSearchResults(json));
       });
       // catch any error in the network call.
