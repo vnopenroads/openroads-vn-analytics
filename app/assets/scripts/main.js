@@ -14,6 +14,7 @@ import App from './views/app';
 import Home from './views/home';
 import Editor from './views/editor';
 import Analytics from './views/analytics';
+import AdminAreas from './views/admin-areas';
 
 // Sync dispatched route actions to the history
 const reduxRouterMiddleware = syncHistory(hashHistory);
@@ -36,6 +37,8 @@ render((
         <Route path='editor' component={Editor} />
         <Route path='editor/*' component={Editor} />
         <Route path='analytics/:aaId' component={Analytics} />
+        <Route path='analytics/:aaId/admin-areas' component={AdminAreas} />
+        <Route path='admin-areas' component={AdminAreas} />
         <IndexRoute component={Home}/>
       </Route>
       <Route path='*' component={UhOh}/>

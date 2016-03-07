@@ -32,7 +32,6 @@ var App = React.createClass({
 
 function mapStateToProps (state) {
   return {
-    aaStats: state.aaStats,
     subregions: state.adminSubregions,
     search: state.search
   };

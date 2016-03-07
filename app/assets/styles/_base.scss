@@ -41,7 +41,8 @@ body {
   font-weight: $base-font-weight;
   font-style: $base-font-style;
   min-width: $row-min-width;
-  background: tint($base-color, 96%);
+  // background: tint($base-color, 96%);
+  background: #fff;
 }
 
 // Badges
@@ -273,6 +274,21 @@ a:active{
   &__title {
     @extend .hd-l;
   }
+
+  &__breadcrumbs {
+    margin-bottom: 2rem;
+    .breadcrumbs {
+      @extend .clearfix;
+      li {
+        float: left;
+
+        &:not(:first-child):before {
+          content: '/';
+          margin: 0 0.5rem;
+        }
+      }
+    }
+  }
 }
 
 .progress-bar {
@@ -303,18 +319,24 @@ a:active{
   }
 
   .col--main {
-    @include column(9/12, $offset: 1/12);
+    @include column(7/12);
   }
 
   .col--sec {
-    @include column(2/12);
+    @include column(5/12);
   }
 
   .aa-main {
     background: #fff;
-    border-bottom: 2px solid $flat-shadow-rgba;
+    // border-bottom: 2px solid $flat-shadow-rgba;
     > .inner {
       margin-bottom: 2rem;
+    }
+
+    .aa-map {
+      background: rgba(#000, 0.08);
+      padding: 10rem 0;
+      text-align: center;
     }
 
     .completeness {
@@ -325,74 +347,44 @@ a:active{
         font-weight: $base-font-bold;
       }
     }
-    .aa-image {
-      width: 100%;
-      display: block;
-      margin-top: 2rem; 
-    }
 
     .aa-stats {
-      &__nav {
-        ul {
-          @extend .clearfix;
-          /* Inline helper */
-          word-spacing: -0.26rem;
-          > * {
-            display: inline-block;
-            word-spacing: normal;
-          }
 
-          border-bottom: 2px solid tint($base-color, 80%);
+      .aa-stats-list {
+        @extend .clearfix;
+        margin-bottom: 2rem; 
+      }
+
+      .aa-stats-completeness {
+        .aa-stat {
+          @include col(4/12);
         }
-        li {
-          margin-right: 0.5rem;
-          margin-bottom: -2px;
-          &:last-child {
-            margin-right: 0;
-          }
-
-          a {
-            display: block;
-            padding: 0.5rem;
-            border: 2px solid transparent;
-            border-radius: 0.25rem 0.25rem 0 0;
-            color: $base-color;
-            text-transform: uppercase;
-            font-weight: $base-font-bold;
-            font-size: 0.75rem;
-          }
-
-          &.active a,
-          &.active a:hover,
-          &.active a:focus, {
-            border-color: tint($base-color, 80%) tint($base-color, 80%) transparent;
-            background: #fff;
-            opacity: 1;
-          }
+      }
+      .aa-stats-extent {
+        .aa-stat {
+          @include col(6/12);
+        }
+      }
+      .aa-stats-condition {
+        .aa-stat {
+          @include col(6/12);
         }
       }
 
       /* vv Placeholer vv */
-      .chart-wrapper {
+      .chart-placeholder {
         border: 2px dashed tint($base-color, 88%);
-        border-radius: 0.5rem;
-        padding: 4rem;
-        margin: 2rem;
+        border-radius: 0.25rem;
         text-align: center;
 
         &:before {
           @extend .collecticons-chart-line;
-          font-size: 8rem;
+          font-size: 4rem;
           color: tint($base-color, 80%);
 
         }
       }
       /* ^^ Placeholer ^^ */
-
-      &__controls {
-        float: right;
-        @extend .bttn-group;
-      }
     }
   }
 
@@ -404,127 +396,17 @@ a:active{
     }
   }
 
-  .aa-details {
-    background: tint($base-color, 96%);
-    .breadcrumbs {
-      text-align: right;
-      li {
-        padding: 0.5rem 2rem 0.5rem 0;
-        position: relative;
 
-        a {
-          &:visited, & {
-            color: inherit;
-          }
-        }
-        /* Little circle for each breadcrumb */
-        &:before {
-          content: '';
-          border-radius: $global-rounded;
-          width: 0.5rem;
-          height: 0.5rem;
-          background: $secondary-color;
-          display: block;
-          position: absolute;
-          top: 1.125rem;
-          right: 0;
-        }
-
-        /*
-          The line is constructed using the :after
-          Each line spans the full height of the element, except the first
-          and the last one which take the padding into account.
-        */
-        &:after {
-          content: '';
-          width: 1px;
-          background: $secondary-color;
-          display: block;
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          right: 0.25rem;
-        }
-        &:first-child:after {
-          top: 1.125rem;
-        }
-        &:last-child:after {
-          bottom: auto;
-          height: 1.125rem;
-        }
-
-        &.disabled:before,
-        &.disabled:after {
-          background: tint($base-color, 64%);
-        }
-      }
-    }
-
-    &__header {
-      @include column(2/12);
-      padding: 2rem 0;
-    }
-
-    &__body {
-      @include column(9/12, $offset: 1/12);
-      padding: 2rem 0;
-      position: relative;
-      min-height: 20rem;
-
-      &:before {
-        background: $brdr-rgba;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: -2rem;
-        content: "";
-        display: block;
-        position: absolute;
-        width: 1px;
-        z-index: 1;
-      }
-
-      .indicator {
-        margin: 0;
-        &:before {
-          @extend .collecticons-triangle-left;
-          display: block;
-          position: absolute;
-          top: 92px;
-          left: calc(-3rem + 1px);
-          text-shadow: -1px 0 0 $spread-shadow-rgba;
-          z-index: 1;
-          color: tint($base-color, 96%);
-          font-size: 1.5rem;
-        }
-        &.region:before {
-          top: calc(92px + 40px * 1);
-        }
-        &.province:before {
-          top: calc(92px + 40px * 2);
-        }
-        &.municipality:before {
-          top: calc(92px + 40px * 3);
-        }
-        &.barangay:before {
-          top: calc(92px + 40px * 4);
-        }
-      }
-    }
-
+  .aa-list {
     &__table {
       @extend .table;
-
-      .aa-details-actions {
-        width: 1px;
-      }
 
       tr > td:last-child {
         white-space: nowrap;
       }
 
       a {
-        font-size: 14px;
+        font-size: 1rem;
         font-weight: $base-font-bold;
       }
 

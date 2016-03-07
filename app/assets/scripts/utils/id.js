@@ -116,13 +116,22 @@ ID.prototype.display = {
   }
 };
 
-// parent can be both the type (n, r, p, m, b)
-// or the level (0, 1, 2, 3, 4)
+// parent can be the level (0, 1, 2, 3, 4)
 ID.prototype.parentID = function (parent) {
   var id = this.string();
-  if (!isNaN(parseInt(parent, 10))) {
-    parent = ['n', 'r', 'p', 'm', 'b'][parent];
+
+  parent = parseInt(parent, 10);
+
+  if (isNaN(parent) || parent < 0 || parent > 4) {
+    parent = this.level() === 0 ? 0 : this.level() - 1;
   }
+
+  if (parent === 0) {
+    return null;
+  }
+
+  parent = ['n', 'r', 'p', 'm', 'b'][parent];
+
   if (parent === 'b') {
     return id;
   }

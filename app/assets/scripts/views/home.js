@@ -1,9 +1,10 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchAdminSubregions, changeStatsTab } from '../actions/action-creators';
-import AADetails from '../components/aa-details';
+import { fetchAdminSubregions } from '../actions/action-creators';
+import AAList from '../components/aa-list';
 import AAStats from '../components/aa-stats';
+import AAMap from '../components/aa-map';
 import PageHeader from '../components/page-header';
 
 var Home = React.createClass({
@@ -12,7 +13,6 @@ var Home = React.createClass({
   propTypes: {
     children: React.PropTypes.object,
     subregions: React.PropTypes.object,
-    aaStats: React.PropTypes.object,
     dispatch: React.PropTypes.func
   },
 
@@ -24,29 +24,23 @@ var Home = React.createClass({
     return (
       <section className='page'>
         <PageHeader
-            pageTitle='OR Philippines' />
+          pageTitle='OR Philippines' />
 
         <div className='page__body aa'>
 
           <div className='aa-main'>
             <div className='inner'>
               <div className='col--sec'>
-                Something something dark side...
+                <AAMap />
+                <AAList
+                  adminAreas={this.props.subregions.adminAreas}
+                  sliceList />
               </div>
               <div className='col--main'>
-
-                <AAStats
-                  level={0}
-                  activeStat={this.props.aaStats.activeTab || 'overview'}
-                  chandeTabFn={(tab) => this.props.dispatch(changeStatsTab(tab))}/>
-
+                <AAStats />
               </div>
             </div>
           </div>
-
-          <AADetails
-            level={0}
-            adminAreas={this.props.subregions.adminAreas}/>
         </div>
       </section>
     );
@@ -55,7 +49,6 @@ var Home = React.createClass({
 
 module.exports = connect(state => {
   return {
-    aaStats: state.aaStats,
     subregions: state.adminSubregions
   };
 })(Home);

@@ -20,22 +20,6 @@ const adminSubregions = function (state = {adminAreas: [], fetching: false}, act
   return state;
 };
 
-const aaStats = function (state = {activeTab: null}, action) {
-  state = _.cloneDeep(state);
-
-  switch (action.type) {
-    case actions.CHANGE_AA_STATS_TAB:
-      console.log('CHANGE_AA_STATS_TAB');
-      state.activeTab = action.tab;
-      break;
-    case actions.RECEIVE_ADMIN_SUBREGIONS:
-      // Reset to null so the default will be picked up.
-      state.activeTab = null;
-      break;
-  }
-  return state;
-};
-
 const search = function (state = {results: [], fetching: false, query: '', searching: false}, action) {
   state = _.cloneDeep(state);
 
@@ -65,7 +49,6 @@ const search = function (state = {results: [], fetching: false, query: '', searc
 
 export default combineReducers({
   adminSubregions,
-  aaStats,
   search,
   routing: routeReducer
 });

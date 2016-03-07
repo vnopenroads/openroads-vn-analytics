@@ -1,10 +1,11 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchAdminSubregions, changeStatsTab } from '../actions/action-creators';
-import AADetails from '../components/aa-details';
-import AAStats from '../components/aa-stats';
+import { fetchAdminSubregions } from '../actions/action-creators';
 import PageHeader from '../components/page-header';
+import AAList from '../components/aa-list';
+import AAStats from '../components/aa-stats';
+import AAMap from '../components/aa-map';
 
 var Analytics = React.createClass({
   displayName: 'Analytics',
@@ -12,7 +13,6 @@ var Analytics = React.createClass({
   propTypes: {
     children: React.PropTypes.object,
     subregions: React.PropTypes.object,
-    aaStats: React.PropTypes.object,
     params: React.PropTypes.object,
     dispatch: React.PropTypes.func
   },
@@ -35,6 +35,7 @@ var Analytics = React.createClass({
     return (
       <section className='page'>
         <PageHeader
+          adminAreaId={this.props.subregions.id}
           pageTitle={this.props.subregions.name}
           actions />
 
@@ -43,23 +44,17 @@ var Analytics = React.createClass({
           <div className='aa-main'>
             <div className='inner'>
               <div className='col--sec'>
-                Something something dark side...
+                <AAMap />
+                <AAList
+                  adminAreaId={this.props.subregions.id}
+                  adminAreas={this.props.subregions.adminAreas}
+                  sliceList />
               </div>
               <div className='col--main'>
-
-                <AAStats
-                  level={this.props.subregions.type}
-                  activeStat={this.props.aaStats.activeTab || 'overview'}
-                  chandeTabFn={(tab) => this.props.dispatch(changeStatsTab(tab))}/>
-
+                <AAStats />
               </div>
             </div>
           </div>
-
-          <AADetails
-            level={this.props.subregions.type}
-            adminAreaId={this.props.subregions.id}
-            adminAreas={this.props.subregions.adminAreas}/>
         </div>
       </section>
     );
@@ -68,7 +63,6 @@ var Analytics = React.createClass({
 
 module.exports = connect(state => {
   return {
-    aaStats: state.aaStats,
     subregions: state.adminSubregions
   };
 })(Analytics);

@@ -74,10 +74,3 @@ export function fetchSearchResults (searchQuery) {
       // catch any error in the network call.
   };
 }
-
-export function changeStatsTab (tab) {
-  return {
-    type: actions.CHANGE_AA_STATS_TAB,
-    tab
-  };
-}
