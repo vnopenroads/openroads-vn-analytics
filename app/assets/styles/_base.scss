@@ -300,14 +300,27 @@ a:active{
   padding: 0;
   margin: 0;
   height: 1.25rem;
+  position: relative;
   
   li {
     background: $secondary-color;
     box-shadow: inset 0 2px 0 0 $flat-shadow-rgba;
+    height: inherit;
   }
 
   &.progress-bar-s {
     height: 0.5rem;
+  }
+
+  .progress-value {
+    position: absolute;
+    right: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: $base-font-bold;
+  }
+
+  &.progress-value--hidden .progress-value {
+    @extend .visually-hidden;
   }
 }
 
@@ -347,46 +360,78 @@ a:active{
         font-weight: $base-font-bold;
       }
     }
+  }
 
-    .aa-stats {
+  .aa-stats-row {
+    @extend .clearfix;
+    margin-bottom: 4rem;
 
-      .aa-stats-list {
-        @extend .clearfix;
-        margin-bottom: 2rem; 
-      }
-
-      .aa-stats-completeness {
-        .aa-stat {
-          @include col(4/12);
-        }
-      }
-      .aa-stats-extent {
-        .aa-stat {
-          @include col(6/12);
-        }
-      }
-      .aa-stats-condition {
-        .aa-stat {
-          @include col(6/12);
-        }
-      }
-
-      /* vv Placeholer vv */
-      .chart-placeholder {
-        border: 2px dashed tint($base-color, 88%);
-        border-radius: 0.25rem;
-        text-align: center;
-
-        &:before {
-          @extend .collecticons-chart-line;
-          font-size: 4rem;
-          color: tint($base-color, 80%);
-
-        }
-      }
-      /* ^^ Placeholer ^^ */
+    .aa-stats__list {
+      @extend .clearfix;
     }
   }
+
+  .aa-stats--completeness {
+    .aa-stats__element {
+      @include col(4/12);
+      text-align: center;
+    }
+
+    .aa-stat__value {
+      font-size: 2rem;
+      font-weight: $base-font-bold;
+
+      small {
+        display: block;
+        font-size: 1rem;
+        font-weight: normal;
+      }
+    }
+  }
+
+  .aa-stats--extent {
+    .aa-stats__element {
+      @include col(6/12);
+      text-align: center;
+    }
+
+    .aa-stat__value {
+      font-size: 2rem;
+      font-weight: $base-font-bold;
+    }
+    .aa-stat__description {
+      font-weight: $base-font-bold;
+      font-size: 1.25rem;
+      small {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: normal;
+      }
+    }
+  }
+
+  .aa-stats--condition {
+    @include col(6/12);
+  }
+
+  .aa-stats--responsibility {
+    @include col(6/12);
+  }
+
+  /* vv Placeholer vv */
+  .chart-placeholder {
+    border: 2px dashed tint($base-color, 88%);
+    border-radius: 0.25rem;
+    text-align: center;
+
+    &:before {
+      @extend .collecticons-chart-line;
+      font-size: 4rem;
+      color: tint($base-color, 80%);
+
+    }
+  }
+  /* ^^ Placeholer ^^ */
 
   .prose-wrapper {
     padding: 2rem 0;

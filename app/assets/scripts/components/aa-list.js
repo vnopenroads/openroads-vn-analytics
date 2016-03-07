@@ -22,7 +22,7 @@ var AAList = React.createClass({
       <tr key={`adminArea${i}`}>
         <td><Link to={`/analytics/${o.id}`}>{o.name}</Link></td>
         <td>
-          <ul className='progress-bar'><li style={{width: '20%'}}>&nbsp;</li></ul>
+          <ul className='progress-bar progress-value--hidden'><li style={{width: '20%'}}><span className='progress-value'>20%</span></li></ul>
         </td>
       </tr>
     );
