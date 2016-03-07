@@ -35,6 +35,8 @@ if (!process.env.DS_ENV) {
   }
 }
 
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
 // /////////////////////////////////////////////////////////////////////////////
 // ------------------------- Helper functions --------------------------------//
 // ---------------------------------------------------------------------------//
@@ -52,7 +54,7 @@ gulp.task('default', ['clean'], function () {
   gulp.start('build');
 });
 
-gulp.task('serve', ['vendorScripts', 'javascript', 'styles', 'fonts', 'collecticons'], function () {
+gulp.task('serve', ['vendorScripts', 'javascript', 'styles', 'fonts'], function () {
   browserSync({
     port: 3000,
     server: {

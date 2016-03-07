@@ -2,6 +2,8 @@
 import React from 'react';
 
 var UhOh = React.createClass({
+  displayName: 'UhOh',
+
   render: function () {
     return (
       <div>

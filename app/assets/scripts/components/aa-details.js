@@ -5,6 +5,8 @@ import { Link } from 'react-router';
 import ID from '../utils/id';
 
 var AADetails = React.createClass({
+  displayName: 'AADetails',
+
   propTypes: {
     level: React.PropTypes.number,
     adminAreaId: React.PropTypes.number,

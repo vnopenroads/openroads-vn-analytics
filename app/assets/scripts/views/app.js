@@ -6,6 +6,8 @@ import { fetchSearchResults, cleanSearchResults } from '../actions/action-creato
 import SiteHeader from '../components/site-header';
 
 var App = React.createClass({
+  displayName: 'App',
+
   propTypes: {
     fetchSearchResults: React.PropTypes.func,
     cleanSearchResults: React.PropTypes.func,

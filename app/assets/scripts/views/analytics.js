@@ -7,6 +7,8 @@ import AAStats from '../components/aa-stats';
 import PageHeader from '../components/page-header';
 
 var Analytics = React.createClass({
+  displayName: 'Analytics',
+
   propTypes: {
     children: React.PropTypes.object,
     subregions: React.PropTypes.object,

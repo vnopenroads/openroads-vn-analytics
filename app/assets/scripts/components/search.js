@@ -7,6 +7,8 @@ import ID from '../utils/id';
 import { isDescendent } from '../utils/dom';
 
 var Search = React.createClass({
+  displayName: 'Search',
+
   propTypes: {
     fetchSearchResults: React.PropTypes.func,
     cleanSearchResults: React.PropTypes.func,

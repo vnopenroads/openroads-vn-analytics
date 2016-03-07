@@ -3,6 +3,8 @@ import React from 'react';
 import Search from './search';
 
 var SiteHeader = React.createClass({
+  displayName: 'SiteHeader',
+
   propTypes: {
     fetchSearchResults: React.PropTypes.func,
     cleanSearchResults: React.PropTypes.func,

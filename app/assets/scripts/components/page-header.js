@@ -2,6 +2,8 @@
 import React from 'react';
 
 var PageHeader = React.createClass({
+  displayName: 'PageHeader',
+
   propTypes: {
     // Actions will probably change to a list...
     actions: React.PropTypes.bool,

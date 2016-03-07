@@ -1,10 +1,12 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
-import { pushPath } from 'redux-simple-router';
+import { pushPath } from 'react-router-redux';
 import config from '../config';
 
 var Editor = React.createClass({
+  displayName: 'Editor',
+
   propTypes: {
     params: React.PropTypes.object,
     dispatch: React.PropTypes.func

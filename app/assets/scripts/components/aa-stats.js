@@ -4,6 +4,8 @@ import classNames from 'classnames';
 import _ from 'lodash';
 
 var AAStats = React.createClass({
+  displayName: 'AAStats',
+
   propTypes: {
     level: React.PropTypes.number,
     activeStat: React.PropTypes.string,
