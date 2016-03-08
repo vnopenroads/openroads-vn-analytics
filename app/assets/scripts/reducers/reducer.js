@@ -47,8 +47,27 @@ const search = function (state = {results: [], fetching: false, query: '', searc
   return state;
 };
 
+const stats = function (state = {}, action) {
+  state = _.cloneDeep(state)
+
+  switch (action.type) {
+    case actions.REQUEST_ADMIN_STATS:
+      console.log('REQUEST_ADMIN_STATS');
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_ADMIN_STATS:
+      console.log('RECEIVE_ADMIN_STATS');
+      state = action.json;
+      state.fetching = false;
+      break;
+  }
+  console.log('state', state);
+  return state;
+};
+
 export default combineReducers({
   adminSubregions,
   search,
+  stats,
   routing: routeReducer
 });

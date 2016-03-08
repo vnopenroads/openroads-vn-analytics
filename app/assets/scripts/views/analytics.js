@@ -1,7 +1,7 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchAdminSubregions } from '../actions/action-creators';
+import { fetchAdminSubregions, fetchAdminStats } from '../actions/action-creators';
 import PageHeader from '../components/page-header';
 import AAList from '../components/aa-list';
 import AAStats from '../components/aa-stats';
@@ -13,12 +13,14 @@ var Analytics = React.createClass({
   propTypes: {
     children: React.PropTypes.object,
     subregions: React.PropTypes.object,
+    stats: React.PropTypes.object,
     params: React.PropTypes.object,
     dispatch: React.PropTypes.func
   },
 
   componentDidMount: function () {
     this.props.dispatch(fetchAdminSubregions(this.props.params.aaId));
+    this.props.dispatch(fetchAdminStats(this.props.params.aaId))
   },
 
   componentDidUpdate: function (prevProps, prevState) {
@@ -51,7 +53,9 @@ var Analytics = React.createClass({
                   sliceList />
               </div>
               <div className='col--main'>
-                <AAStats />
+                {!this.props.stats.fetching ? (
+                  <AAStats stats={this.props.stats}/>
+                  ) : null}
               </div>
             </div>
           </div>
@@ -63,6 +67,7 @@ var Analytics = React.createClass({
 
 module.exports = connect(state => {
   return {
-    subregions: state.adminSubregions
+    subregions: state.adminSubregions,
+    stats: state.stats
   };
 })(Analytics);
