@@ -1,7 +1,7 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchAdminSubregions } from '../actions/action-creators';
+import { fetchAdminSubregions, fetchAdminStats } from '../actions/action-creators';
 import AAList from '../components/aa-list';
 import AAStats from '../components/aa-stats';
 import AAMap from '../components/aa-map';
@@ -13,11 +13,13 @@ var Home = React.createClass({
   propTypes: {
     children: React.PropTypes.object,
     subregions: React.PropTypes.object,
+    stats: React.PropTypes.object,
     dispatch: React.PropTypes.func
   },
 
   componentDidMount: function () {
     this.props.dispatch(fetchAdminSubregions());
+    this.props.dispatch(fetchAdminStats());
   },
 
   render: function () {
@@ -37,7 +39,10 @@ var Home = React.createClass({
                   sliceList />
               </div>
               <div className='col--main'>
-                <AAStats />
+                <AAStats
+                  fetched={this.props.stats.fetched}
+                  fetching={this.props.stats.fetching}
+                  stats={this.props.stats}/>
               </div>
             </div>
           </div>
@@ -49,6 +54,7 @@ var Home = React.createClass({
 
 module.exports = connect(state => {
   return {
-    subregions: state.adminSubregions
+    subregions: state.adminSubregions,
+    stats: state.stats
   };
 })(Home);

@@ -20,7 +20,7 @@ var Analytics = React.createClass({
 
   componentDidMount: function () {
     this.props.dispatch(fetchAdminSubregions(this.props.params.aaId));
-    this.props.dispatch(fetchAdminStats(this.props.params.aaId))
+    this.props.dispatch(fetchAdminStats(this.props.params.aaId));
   },
 
   componentDidUpdate: function (prevProps, prevState) {
@@ -33,7 +33,6 @@ var Analytics = React.createClass({
   },
 
   render: function () {
-    console.log('Analytics props', this.props);
     return (
       <section className='page'>
         <PageHeader
@@ -53,9 +52,10 @@ var Analytics = React.createClass({
                   sliceList />
               </div>
               <div className='col--main'>
-                {!this.props.stats.fetching ? (
-                  <AAStats stats={this.props.stats}/>
-                  ) : null}
+                <AAStats
+                  fetched={this.props.stats.fetched}
+                  fetching={this.props.stats.fetching}
+                  stats={this.props.stats}/>
               </div>
             </div>
           </div>

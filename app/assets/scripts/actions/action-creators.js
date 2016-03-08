@@ -94,10 +94,10 @@ function receiveAdminStats (json) {
 export function fetchAdminStats (id) {
   return function (dispatch) {
     dispatch(requestAdminStats());
-    return dispatch(receiveAdminStats(mock))
+    return dispatch(receiveAdminStats(mock));
 
     // TODO swap this out with real url once endpoint is ready
-    let url = ''
+    let url = '';
     return fetch(url)
       .then(response => response.json())
       .then(json => {
