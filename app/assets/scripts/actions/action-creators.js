@@ -97,11 +97,13 @@ export function fetchAdminStats (id) {
     return dispatch(receiveAdminStats(mock));
 
     // TODO swap this out with real url once endpoint is ready
+    /*
     let url = '';
     return fetch(url)
       .then(response => response.json())
       .then(json => {
         dispatch(receiveAdminStats(json));
       });
+    */
   };
 }

@@ -19,6 +19,7 @@ var AAStats = React.createClass({
       // Handle better.
       return null;
     }
+    let stats = this.props.stats.stats;
 
     return (
       <div className='aa-stats-wrapper'>
@@ -59,16 +60,14 @@ var AAStats = React.createClass({
         <div className='aa-stats-row'>
           <div className='aa-stats aa-stats--condition'>
             <h2 className='hd-s'>Condition</h2>
-            {this.props.fetching
-              ? <p>Loading data</p>
-              : <PieChart />}
+            {this.props.fetching ? <p>Loading data</p>
+              : this.props.fetched ? <PieChart data={stats.or_condition} className="piechart"/> : null}
           </div>
 
           <div className='aa-stats aa-stats--responsibility'>
             <h2 className='hd-s'>Responsibility</h2>
-            {this.props.fetching
-              ? <p>Loading data</p>
-              : <PieChart />}
+            {this.props.fetching ? <p>Loading data</p>
+              : this.props.fetched ? <PieChart data={stats.or_rdclass} className="piechart"/> : null}
           </div>
         </div>
 
