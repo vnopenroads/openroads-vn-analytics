@@ -28,13 +28,13 @@ var AAStats = React.createClass({
             <h2 className='hd-s'>Completeness</h2>
             <ul className="aa-stats__list">
               <li className='aa-stats__element'>
-                <p className='aa-stat__value'>35%<small>complete</small></p>
+                <strong>35%</strong>complete
               </li>
               <li className='aa-stats__element'>
-                <a className='aa-stat__value'>121<small>Errors to Fix</small></a>
+                <a href='#'><strong>121</strong>Errors to Fix</a>
               </li>
               <li className='aa-stats__element'>
-                <a className='aa-stat__value'>8<small>Projects</small></a>
+                <a href='#'><strong>8</strong>Projects</a>
               </li>
             </ul>
           </div>
@@ -46,13 +46,11 @@ var AAStats = React.createClass({
             <ul className="aa-stats__list">
               <li className='aa-stats__element'>
                 <ul className='progress-bar'><li style={{width: '100%'}}><span className='progress-value'>217,456Km</span></li></ul>
-                <p className='aa-stat__value'>100%</p>
-                <p className='aa-stat__description'>National <small>Roads mapped</small></p>
+                <p className='aa-stat__value'><strong>100%</strong>National <small>Roads mapped</small></p>
               </li>
               <li className='aa-stats__element'>
                 <ul className='progress-bar'><li style={{width: '18%'}}><span className='progress-value'>50,456Km</span></li></ul>
-                <p className='aa-stat__value'>18%</p>
-                <p className='aa-stat__description'>Local <small>Roads mapped</small></p>
+                <p className='aa-stat__value'><strong>18%</strong>Local <small>Roads mapped</small></p>
               </li>
             </ul>
           </div>
