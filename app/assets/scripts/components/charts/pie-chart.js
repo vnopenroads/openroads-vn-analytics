@@ -3,20 +3,21 @@ import React from 'react';
 import hat from 'hat';
 import _ from 'lodash';
 
-var AAPie = React.createClass({
-  displayName: 'AAPie',
+var PieChart = React.createClass({
+  displayName: 'PieChart',
 
   propTypes: {
   },
 
   chart: null,
   chartId: null,
+
   onWindowResize: function () {
-    this.chart.update()
+    this.chart.update();
   },
 
   componentWillMount: function () {
-    this.chartId = 'piechart-' + hat()
+    this.chartId = 'piechart-' + hat();
   },
 
   componentDidMount: function () {
@@ -41,6 +42,6 @@ var AAPie = React.createClass({
 
 var Pie = function (id, props) {
 
-}
+};
 
-module.exports = AAPie;
+module.exports = PieChart;

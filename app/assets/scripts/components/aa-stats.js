@@ -1,6 +1,6 @@
 'use strict';
 import React from 'react';
-import AAPie from './aa-pie';
+import PieChart from './charts/pie-chart';
 
 var AAStats = React.createClass({
   displayName: 'AAStats',
@@ -9,10 +9,17 @@ var AAStats = React.createClass({
     level: React.PropTypes.number,
     activeStat: React.PropTypes.string,
     chandeTabFn: React.PropTypes.func,
-    stats: React.PropTypes.object
+    stats: React.PropTypes.object,
+    fetched: React.PropTypes.bool,
+    fetching: React.PropTypes.bool
   },
 
   render: function () {
+    if (!this.props.fetched && !this.props.fetching) {
+      // Handle better.
+      return null;
+    }
+
     return (
       <div className='aa-stats-wrapper'>
 
@@ -54,13 +61,16 @@ var AAStats = React.createClass({
         <div className='aa-stats-row'>
           <div className='aa-stats aa-stats--condition'>
             <h2 className='hd-s'>Condition</h2>
-            <AAPie />
+            {this.props.fetching
+              ? <p>Loading data</p>
+              : <PieChart />}
           </div>
 
           <div className='aa-stats aa-stats--responsibility'>
             <h2 className='hd-s'>Responsibility</h2>
-            <AAPie />
-
+            {this.props.fetching
+              ? <p>Loading data</p>
+              : <PieChart />}
           </div>
         </div>
 
