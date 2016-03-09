@@ -229,3 +229,25 @@
     }
   }
 }
+
+// POPOVER
+
+.popover {
+  @extend .antialiased;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  padding: 1rem;
+  pointer-events: none;
+  max-width: 18rem;
+  width: 100%;
+  // Just to ensure that there are no flickers before it is positioned.
+  opacity: 0;
+  background: #fff;
+  box-shadow: 0 0 2px 1px rgba($base-color, 0.16);
+  color: tint($base-color, 16%);
+  font-size: 0.85rem;
+  line-height: 1.25rem;
+  font-family: $base-font-family;
+}

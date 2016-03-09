@@ -2,6 +2,7 @@
 import React from 'react';
 import _ from 'lodash';
 import d3 from 'd3';
+import Popover from '../../utils/popover';
 // will be useful once we show tooltips
 // import titlecase from 'titlecase';
 
@@ -30,6 +31,7 @@ var PieChart = React.createClass({
 
   propTypes: {
     className: React.PropTypes.string,
+    popoverContentFn: React.PropTypes.func,
     data: React.PropTypes.object
   },
 
@@ -56,6 +58,7 @@ var PieChart = React.createClass({
 
   componentDidUpdate: function () {
     // console.log('PieChart componentDidUpdate');
+    this.chart.setPopoverContentFn(this.props.popoverContentFn);
     this.chart.setData(this.props.data);
   },
 
@@ -74,6 +77,7 @@ var Chart = function (el, data) {
   this.data = null;
   this.stages = null;
 
+  var _this = this;
   // must be added.
   var _width, _height, _radius;
   // Elements.
@@ -82,13 +86,16 @@ var Chart = function (el, data) {
   var arc = d3.svg.arc();
   // Generators
   var pie;
-  pie = d3.layout.pie()
-    .sort(null)
-    .value(d => d.val);
+  // Init the popover.
+  var chartPopover = new Popover();
 
   this._calcSize = function () {
     _width = parseInt(this.$el.style('width'), 10);
     _height = parseInt(this.$el.style('height'), 10);
+  };
+
+  this.setPopoverContentFn = function (fn) {
+    this.popoverContentFn = fn;
   };
 
   this.setData = function (data) {
@@ -109,6 +116,10 @@ var Chart = function (el, data) {
     // Chart elements
     dataCanvas = svg.append('g')
       .attr('class', 'data-canvas');
+
+    pie = d3.layout.pie()
+      .sort(null)
+      .value(d => d.val);
   };
 
   this.update = function () {
@@ -134,11 +145,32 @@ var Chart = function (el, data) {
       .attr('class', 'piechart-arc')
     .append('path')
       .attr('d', arc)
-      .style('fill', d => getMeta(d.data).fill);
+      .style('fill', d => getMeta(d.data).fill)
+      .on('mouseover', this._onMouseOver)
+      .on('mouseout', this._onMouseOut);
   };
 
   this.destroy = function () {
+    chartPopover.hide();
     this.$el.empty();
+  };
+
+  this._onMouseOver = function (d) {
+    if (_this.popoverContentFn) {
+      let bounding = this.getBoundingClientRect();
+
+      let posX = window.pageXOffset + bounding.left;
+      let posY = window.pageYOffset + bounding.top - 16;
+
+      posX += bounding.width / 2;
+      posY += bounding.height / 2;
+
+      chartPopover.setContent(_this.popoverContentFn(d)).show(posX, posY);
+    }
+  };
+
+  this._onMouseOut = function () {
+    chartPopover.hide();
   };
 
   // ------------------------------------------------------------------------ //
