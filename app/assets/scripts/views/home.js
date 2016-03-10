@@ -2,10 +2,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { fetchAdminSubregions, fetchAdminStats } from '../actions/action-creators';
+import PageHeader from '../components/page-header';
 import AAList from '../components/aa-list';
 import AAStats from '../components/aa-stats';
+import AAExtendedStats from '../components/aa-extended-stats';
 import AAMap from '../components/aa-map';
-import PageHeader from '../components/page-header';
 
 var Home = React.createClass({
   displayName: 'Home',
@@ -29,22 +30,29 @@ var Home = React.createClass({
           pageTitle='OR Philippines' />
 
         <div className='page__body aa'>
-
           <div className='aa-main'>
+            <AAMap />
+
+            <AAStats
+              fetched={this.props.stats.fetched}
+              fetching={this.props.stats.fetching}
+              stats={this.props.stats}/>
+
             <div className='inner'>
-              <div className='col--sec'>
-                <AAMap />
-                <AAList
-                  adminAreas={this.props.subregions.adminAreas}
-                  sliceList />
-              </div>
               <div className='col--main'>
-                <AAStats
+                <AAExtendedStats
                   fetched={this.props.stats.fetched}
                   fetching={this.props.stats.fetching}
                   stats={this.props.stats}/>
               </div>
+
+              <div className='col--sec'>
+                <AAList
+                  adminAreas={this.props.subregions.adminAreas}
+                  sliceList />
+              </div>
             </div>
+
           </div>
         </div>
       </section>

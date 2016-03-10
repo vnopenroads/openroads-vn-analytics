@@ -62,6 +62,7 @@ var AdminAreas = React.createClass({
       return (
         <AAList
           adminAreaId={this.props.subregions.id}
+          adminAreaName={this.props.subregions.name}
           adminAreas={this.props.subregions.adminAreas}/>
       );
     }
@@ -74,13 +75,13 @@ var AdminAreas = React.createClass({
 
   render: function () {
     return (
-      <section className='page'>
+      <section className='page page--list-solo'>
         {this.renderPageHeader()}
 
         <div className='page__body aa'>
           <div className='aa-main'>
             <div className='inner'>
-              <div className='col--sec'>
+              <div className='col--main'>
                 {this.renderBackLink()}
                 {this.renderList()}
               </div>

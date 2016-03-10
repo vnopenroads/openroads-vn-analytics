@@ -37,7 +37,7 @@
  * Using Kenneth Ormandy's OpenType features—ligatures, kerning, and more—to Normalize.css:
  * https://github.com/kennethormandy/normalize-opentype.css
  */
-@import "normalize-opentype";
+// @import "normalize-opentype";
 
 
 /* Settings
@@ -47,6 +47,11 @@
 @import "functions";
 @import "mixins";
 
+
+/* Third-party
+   ========================================================================== */
+
+@import "../../../node_modules/mapbox.js/theme/style.css";
 
 /* Main
    ========================================================================== */
