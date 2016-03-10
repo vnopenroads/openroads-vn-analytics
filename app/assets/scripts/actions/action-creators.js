@@ -2,6 +2,8 @@ import fetch from 'isomorphic-fetch';
 import * as actions from './action-types';
 import config from '../config';
 
+let mock = require('../mock/1611254000.json');
+
 function requestAdminSubregions () {
   return {
     type: actions.REQUEST_ADMIN_SUBREGIONS
@@ -72,5 +74,36 @@ export function fetchSearchResults (searchQuery) {
         dispatch(receiveSearchResults(json));
       });
       // catch any error in the network call.
+  };
+}
+
+function requestAdminStats () {
+  return {
+    type: actions.REQUEST_ADMIN_STATS
+  };
+}
+
+function receiveAdminStats (json) {
+  return {
+    type: actions.RECEIVE_ADMIN_STATS,
+    json: json,
+    receivedAt: Date.now()
+  };
+}
+
+export function fetchAdminStats (id) {
+  return function (dispatch) {
+    dispatch(requestAdminStats());
+    return dispatch(receiveAdminStats(mock));
+
+    // TODO swap this out with real url once endpoint is ready
+    /*
+    let url = '';
+    return fetch(url)
+      .then(response => response.json())
+      .then(json => {
+        dispatch(receiveAdminStats(json));
+      });
+    */
   };
 }
