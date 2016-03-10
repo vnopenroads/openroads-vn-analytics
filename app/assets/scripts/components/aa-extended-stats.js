@@ -1,6 +1,8 @@
 'use strict';
 import React from 'react';
+import titlecase from 'titlecase';
 import PieChart from './charts/pie-chart';
+import {formatPercent} from '../utils/format';
 
 var AAExtendedStats = React.createClass({
   displayName: 'AAExtendedStats',
@@ -13,7 +15,7 @@ var AAExtendedStats = React.createClass({
   },
 
   chartPopoverContent: function (d) {
-    return <pre>{JSON.stringify(d, null, 1)}</pre>;
+    return <span className="piechart-popover">{formatPercent(d.data.val)} | {titlecase(d.data.title)}</span>;
   },
 
   render: function () {

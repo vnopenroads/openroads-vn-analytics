@@ -3,23 +3,21 @@ import React from 'react';
 import _ from 'lodash';
 import d3 from 'd3';
 import Popover from '../../utils/popover';
-// will be useful once we show tooltips
-// import titlecase from 'titlecase';
 
 const meta = {
   // condition
-  excellent: { index: 0, fill: '#ffffd4' },
-  good: { index: 1, fill: '#fed98e' },
-  fair: { index: 2, fill: '#fe9929' },
-  bad: { index: 3, fill: '#d95f0e' },
-  poor: { index: 4, fill: '#993404' },
+  excellent: { index: 0, fill: '#0C9ECB' },
+  good: { index: 1, fill: '#3DB1D5' },
+  fair: { index: 2, fill: '#91D3E7' },
+  bad: { index: 3, fill: '#B6E1EF' },
+  poor: { index: 4, fill: '#e0f2f8' },
 
   // responsibility
-  barangay: { index: 0, fill: '#8dd3c7' },
-  municipal: { index: 1, fill: '#ffffb3' },
-  provincial: { index: 2, fill: '#bebada' },
-  national: { index: 3, fill: '#fb8072' },
-  'private': { index: 4, fill: '#80b1d3' },
+  barangay: { index: 0, fill: '#0C9ECB' },
+  municipal: { index: 1, fill: '#3DB1D5' },
+  provincial: { index: 2, fill: '#91D3E7' },
+  national: { index: 3, fill: '#B6E1EF' },
+  'private': { index: 4, fill: '#E0F2F8' },
 
   'default': { index: 99, fill: '#EEEEEE' }
 };
@@ -102,7 +100,9 @@ var Chart = function (el, data) {
     if (data === null) {
       return null;
     }
-    this.data = Object.keys(data).map(d => ({title: d, val: data[d]}))
+
+    let total = _.values(data).map(parseFloat).reduce((a, b) => a + b);
+    this.data = Object.keys(data).map(d => ({title: d, val: data[d] / total}))
       .sort((a, b) => getMeta(a).index > getMeta(b).index ? 1 : -1);
     this.update();
   };

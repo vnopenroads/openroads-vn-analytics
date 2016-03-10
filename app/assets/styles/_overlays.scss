@@ -190,7 +190,7 @@
 
 
 // TITLED
-  
+
 *[data-title-rel]:hover {
   position: relative;
 }
@@ -245,7 +245,7 @@
   padding: 1rem;
   pointer-events: none;
   max-width: 18rem;
-  width: 100%;
+  width: auto;
   // Just to ensure that there are no flickers before it is positioned.
   opacity: 0;
   background: #fff;
