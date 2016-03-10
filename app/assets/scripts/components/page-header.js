@@ -18,7 +18,7 @@ var PageHeader = React.createClass({
       return (
         <div className='page__actions'>
           <ul className='actions-menu'>
-            <li><a href='#' className='bttn-edit'>Edit</a></li>
+            <li><a href='#' className='bttn-edit'>Improve map</a></li>
           </ul>
         </div>
       );

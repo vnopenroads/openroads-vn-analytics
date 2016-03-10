@@ -1,6 +1,7 @@
 'use strict';
 import React from 'react';
 import { Link } from 'react-router';
+import classnames from 'classnames';
 import ID from '../utils/id';
 
 var AAList = React.createClass({
@@ -8,21 +9,32 @@ var AAList = React.createClass({
 
   propTypes: {
     adminAreaId: React.PropTypes.number,
+    adminAreaName: React.PropTypes.string,
     adminAreas: React.PropTypes.array,
     sliceList: React.PropTypes.bool
   },
 
   sliceSize: 10,
 
+  // TODO: Define thresholds.
+  thresholds: [30, 70],
+
   // Admin area ID object
   ID: null,
 
   renderAdminAreaRow: function (o, i) {
+    // TODO: Remove randoms.
+    let val = Math.floor(Math.random() * 101);
+    let colorCoding = {
+      'progress-bar--low': val < this.thresholds[0],
+      'progress-bar--med': val >= this.thresholds[0] && val <= this.thresholds[1],
+      'progress-bar--high': val > this.thresholds[1]
+    };
+
     return (
       <tr key={`adminArea${i}`}>
-        <td><Link to={`/analytics/${o.id}`}>{o.name}</Link></td>
-        <td>
-          <ul className='progress-bar progress-value--hidden'><li style={{width: '20%'}}><span className='progress-value'>20%</span></li></ul>
+        <td colSpan='2'><Link to={`/analytics/${o.id}`}>{o.name}</Link>
+          <ul className={classnames('progress-bar progress-bar--inline', colorCoding)}><li style={{width: `${val}%`}}><span className='value'>{val}%</span></li></ul>
         </td>
       </tr>
     );
@@ -30,9 +42,7 @@ var AAList = React.createClass({
 
   renderAdminAreaTable: function () {
     if (!this.props.adminAreas.length) {
-      return (
-        <p>No more areas to show</p>
-      );
+      return null;
     }
 
     let adminAreas;
@@ -43,17 +53,20 @@ var AAList = React.createClass({
     }
 
     return (
-      <table className='aa-list__table'>
-        <thead>
-          <tr>
-            <th className='aa-list-title'>{this.ID.getChildDisplayType(true)} <span className='badge'>{this.props.adminAreas.length}</span></th>
-            <th className='aa-list-chart'>Completeness</th>
-          </tr>
-        </thead>
-        <tbody>
-          {adminAreas.map(this.renderAdminAreaRow)}
-        </tbody>
-      </table>
+      <div>
+        <h2 className='hd-s'>{this.ID.getChildDisplayType(true)} of {this.props.adminAreaName || 'Philippines'}</h2>
+        <table className='aa-list__table'>
+          <thead>
+            <tr>
+              <th className='aa-list-title'>{this.ID.getChildDisplayType()} <span className='badge'>{this.props.adminAreas.length}</span></th>
+              <th className='aa-list-chart'>Completeness</th>
+            </tr>
+          </thead>
+          <tbody>
+            {adminAreas.map(this.renderAdminAreaRow)}
+          </tbody>
+        </table>
+      </div>
     );
   },
 
@@ -63,8 +76,8 @@ var AAList = React.createClass({
     }
 
     return this.props.adminAreaId
-      ? <Link to={`/analytics/${this.props.adminAreaId}/admin-areas`}>View all</Link>
-      : <Link to='/admin-areas'>View all</Link>;
+      ? <Link to={`/analytics/${this.props.adminAreaId}/admin-areas`} className='bttn-view-more'>View all {this.ID.getChildDisplayType(true)}</Link>
+      : <Link to='/admin-areas' className='bttn-view-more'>View all {this.ID.getChildDisplayType(true)}</Link>;
   },
 
   render: function () {

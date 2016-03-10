@@ -1,21 +1,14 @@
 'use strict';
 import React from 'react';
-import PieChart from './charts/pie-chart';
+import Dropdown from '../components/dropdown';
 
 var AAStats = React.createClass({
   displayName: 'AAStats',
 
   propTypes: {
-    level: React.PropTypes.number,
-    activeStat: React.PropTypes.string,
-    chandeTabFn: React.PropTypes.func,
     stats: React.PropTypes.object,
     fetched: React.PropTypes.bool,
     fetching: React.PropTypes.bool
-  },
-
-  chartPopoverContent: function (d) {
-    return <pre>{JSON.stringify(d, null, 1)}</pre>;
   },
 
   render: function () {
@@ -26,55 +19,57 @@ var AAStats = React.createClass({
     let stats = this.props.stats.stats;
 
     return (
-      <div className='aa-stats-wrapper'>
-
-        <div className='aa-stats-row'>
+      <div className='aa-stats-row aa-stats-row--completeness'>
+        <div className='inner'>
           <div className='aa-stats aa-stats--completeness'>
-            <h2 className='hd-s'>Completeness</h2>
+            <h2 className='aa-stats__title'>Admin area stats</h2>
             <ul className='aa-stats__list'>
               <li className='aa-stats__element'>
-                <strong>35%</strong>complete
+                <div className='wrapper'>
+                  <strong><span className='highlight'>35%</span> Complete</strong>
+                  <Dropdown element='span' className='dropdown left' triggerTitle='View additional info' triggerClassName='bttn-info' triggerText='View additional info'>
+                    <div className='aa-stats-info'>
+                      <dl>
+                        <dd>Condition:</dd>
+                        <dt>somewhat stable</dt>
+                      </dl>
+                      <p>we have clocks but what about a long text.</p>
+                    </div>
+                  </Dropdown>
+                </div>
               </li>
               <li className='aa-stats__element'>
-                <a href='#'><strong>121</strong>Errors to Fix</a>
+                <div className='wrapper'>
+                  <strong><span className='highlight'>$2.5M</span> Asset Value</strong>
+                  <Dropdown element='span' className='dropdown right' triggerTitle='View additional info' triggerClassName='bttn-info' triggerText='View additional info'>
+                    <div className='aa-stats-info'>
+                      <dl>
+                        <dd>Condition:</dd>
+                        <dt>somewhat stable</dt>
+                      </dl>
+                      <p>we have clocks but what about a long text.</p>
+                    </div>
+                  </Dropdown>
+                </div>
               </li>
               <li className='aa-stats__element'>
-                <a href='#'><strong>8</strong>Projects</a>
+                <div className='wrapper'>
+                  <a href='#' className='aa-stats__link'><strong><span className='highlight'>121</span> Errors to Fix</strong></a>
+                </div>
+              </li>
+              <li className='aa-stats__element'>
+                <div className='wrapper'>
+                  <a href='#' className='aa-stats__link'><strong><span className='highlight'>8</span> Projects</strong></a>
+                </div>
+              </li>
+              <li className='aa-stats__element'>
+                <div className='wrapper'>
+                  <a href='#' className='aa-stats__link'><strong><span className='highlight'>50</span> Municipalities</strong></a>
+                </div>
               </li>
             </ul>
           </div>
         </div>
-
-        <div className='aa-stats-row'>
-          <div className='aa-stats aa-stats--extent'>
-            <h2 className='hd-s'>Extent</h2>
-            <ul className='aa-stats__list'>
-              <li className='aa-stats__element'>
-                <ul className='progress-bar'><li style={{width: '100%'}}><span className='progress-value'>217,456Km</span></li></ul>
-                <p className='aa-stat__value'><strong>100%</strong>National <small>Roads mapped</small></p>
-              </li>
-              <li className='aa-stats__element'>
-                <ul className='progress-bar'><li style={{width: '18%'}}><span className='progress-value'>50,456Km</span></li></ul>
-                <p className='aa-stat__value'><strong>18%</strong>Local <small>Roads mapped</small></p>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className='aa-stats-row'>
-          <div className='aa-stats aa-stats--condition'>
-            <h2 className='hd-s'>Condition</h2>
-            {this.props.fetching ? <p>Loading data</p>
-              : this.props.fetched ? <PieChart popoverContentFn={this.chartPopoverContent} data={stats.or_condition} className='piechart'/> : null}
-          </div>
-
-          <div className='aa-stats aa-stats--responsibility'>
-            <h2 className='hd-s'>Responsibility</h2>
-            {this.props.fetching ? <p>Loading data</p>
-              : this.props.fetched ? <PieChart popoverContentFn={this.chartPopoverContent} data={stats.or_rdclass} className='piechart'/> : null}
-          </div>
-        </div>
-
       </div>
     );
   }

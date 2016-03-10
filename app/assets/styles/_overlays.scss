@@ -22,7 +22,7 @@
 .drop-content {
   @extend %base-overlay-skin;
   position: absolute;
-  left: 0;
+  left: -1rem;
   z-index: 1000;
   float: left;
   min-width: 12rem;
@@ -75,7 +75,7 @@
     @include transform(translate(-50%, 0));
   }
   .right > & {
-    right: 0;
+    right: -1rem;
     left: auto;
   }
   .open > & {
@@ -87,6 +87,10 @@
   }
   .dropup.open > & {
     margin-bottom: 0.75rem;
+  }
+
+  &.popover-behavior {
+    pointer-events: none;
   }
 }
 

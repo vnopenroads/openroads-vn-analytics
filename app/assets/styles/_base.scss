@@ -41,8 +41,7 @@ body {
   font-weight: $base-font-weight;
   font-style: $base-font-style;
   min-width: $row-min-width;
-  // background: tint($base-color, 96%);
-  background: #fff;
+  background: tint($base-color, 96%);
 }
 
 // Badges
@@ -78,14 +77,14 @@ body {
 
 a {
   cursor: pointer;
-  color: $primary-color;
-  text-decoration: none;
+  color: $secondary-color;
+  // text-decoration: none;
   @include transition(opacity 0.2s ease 0s);
   @include transform(translateZ(0));
 }
 
 a:visited {
-  color: $primary-color;
+  color: $secondary-color;
 }
 
 a:hover {
@@ -132,7 +131,7 @@ a:active{
    ========================================================================== */
 
 .site-header {
-  background: shade($primary-color, 64%);
+  background: $primary-color;
   color: #fff;
   padding: 1rem 0;
   > .inner {
@@ -211,6 +210,7 @@ a:active{
         a {
           color: #fff;
           text-transform: uppercase;
+          text-decoration: none;
           font-weight: $base-font-bold;
           padding: 0.5rem;
           font-size: 0.75rem;
@@ -220,10 +220,6 @@ a:active{
       }
     }
   }
-}
-
-.page__headline {
-  @include col(8/12);
 }
 
 .actions-menu {
@@ -269,18 +265,44 @@ a:active{
 .page {
   &__header {
     padding: 2rem 0 1rem 0;
-    background: #fff;
+    background: rgba(#fff, 0.64);
+    position: absolute;
+    width: 100%;
+    z-index: 1000;
+    color: $base-font-color;
+    padding: $global-padding 0;
+    box-shadow: inset 0 -1px 0 0 rgba($base-color, 0.16);
+
+    @include media(medium-up) {
+      padding: ($global-padding * 2) 0;
+    }
+  }
+  &__headline {
+    @include col(8/12);
   }
   &__title {
     @extend .hd-l;
+    margin: 0;
+  }
+
+  &__actions {
+    .bttn-edit {
+      @extend .bttn-m, .bttn-secondary;
+      text-decoration: none;
+    }
   }
 
   &__breadcrumbs {
-    margin-bottom: 2rem;
+    // margin-bottom: 2rem;
     .breadcrumbs {
       @extend .clearfix;
       li {
         float: left;
+
+        a {
+          color: tint($base-font-color, 16%);
+          font-size: 0.875rem;
+        }
 
         &:not(:first-child):before {
           content: '/';
@@ -291,36 +313,49 @@ a:active{
   }
 }
 
+.page--list-solo {
+  .col--main {
+    padding-top: 10rem;
+  }
+}
+
 .progress-bar {
-  background: #fff;
-  border-radius: $global-rounded;
-  box-shadow: inset 0 2px 0 0 $flat-shadow-rgba;
   list-style-type: none;
-  overflow: hidden;
   padding: 0;
-  margin: 0;
-  height: 1.25rem;
+  margin: 0 0 1.25rem 0;
+  height: 0.75rem;
   position: relative;
   
   li {
-    background: $secondary-color;
-    box-shadow: inset 0 2px 0 0 $flat-shadow-rgba;
+    background: tint($base-color, 80%);
     height: inherit;
   }
 
-  &.progress-bar-s {
-    height: 0.5rem;
+  &--high li {
+    background: $info-color;
   }
-
-  .progress-value {
-    position: absolute;
-    right: 0.5rem;
+  &--med li {
+    background: $warning-color;
+  }
+  &--low li {
+    background: $alert-color;
+  }
+  .value {
     font-size: 0.75rem;
-    font-weight: $base-font-bold;
+    line-height: 1;
+    display: block;
+    padding-top: 1rem;
   }
 
-  &.progress-value--hidden .progress-value {
-    @extend .visually-hidden;
+  &--inline  {
+    box-shadow: 0 1px 0 0 $brdr-rgba;
+    margin-bottom: 0;
+    .value {
+      position: absolute;
+      right: 0.5rem;
+      top: -0.125rem;
+      padding-top: 0
+    }
   }
 }
 
@@ -332,24 +367,34 @@ a:active{
   }
 
   .col--main {
-    @include column(7/12);
+    @include media(medium-up) {
+      @include column(7/12);
+    }
   }
 
   .col--sec {
-    @include column(5/12);
+    @include media(medium-up) {
+      @include column(5/12);
+    }
   }
 
   .aa-main {
-    background: #fff;
     // border-bottom: 2px solid $flat-shadow-rgba;
     > .inner {
       margin-bottom: 2rem;
     }
 
-    .aa-map {
-      background: rgba(#000, 0.08);
-      padding: 10rem 0;
-      text-align: center;
+    .aa-map-wrapper {
+      position: relative;
+      overflow: hidden;
+      height: 30rem;
+
+      .aa-map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
     }
 
     .completeness {
@@ -361,96 +406,180 @@ a:active{
       }
     }
   }
+}
 
-  .aa-stats-row {
+
+.aa-stats-row {
+  @extend .clearfix;
+  margin-bottom: 2rem;
+
+  .aa-stats__list {
     @extend .clearfix;
-    margin-bottom: 4rem;
-
-    .aa-stats__list {
-      @extend .clearfix;
-    }
   }
 
-  .aa-stats--completeness {
-    .aa-stats__element {
-      @include col(4/12);
-      text-align: center;
-      font-size: 1rem;
-
-      strong {
-        display: block;
-        font-size: 2rem;
-        font-weight: $base-font-bold;
-      }
+  &--completeness {
+    background: $secondary-color;
+    color: #fff;
+    a {
+      color: inherit;
     }
   }
+}
 
-  .aa-stats--extent {
-    .aa-stats__element {
+.aa-stats {
+  &__title {
+    @extend .hd-s;
+  }
+  &__contents {
+    background: #fff;
+    border-radius: $global-radius;
+    box-shadow: 0 0 0 2px $flat-shadow-rgba;
+    padding: $global-padding;
+    @include media(medium-up) {
+      padding: $global-padding * 2;
+    }
+  }
+}
+
+.aa-stats--completeness {
+  padding: $global-padding * 2 0;
+
+  .aa-stats__title {
+    @extend .visually-hidden;
+  }
+
+  .aa-stats__element:nth-child(1),
+  .aa-stats__element:nth-child(2) {
+    @include col(6/12, $cycle: 2);
+    margin-bottom: 2rem;
+    @include media(small-up) {
       @include col(6/12);
-      text-align: center;
-      font-size: 1rem;
-      font-weight: $base-font-bold;
+    }
+    @include media(large-up) {
+      @include col(3/12, $uncycle: 2);
+      margin-bottom: 0;
+    }
+  }
+  .aa-stats__element:nth-child(3),
+  .aa-stats__element:nth-child(4),
+  .aa-stats__element:nth-child(5) {
+    @include col(6/12, $cycle: 2);
+    margin-bottom: 2rem;
+    @include media(small-up) {
+      @include col(4/12, $uncycle: 2);
+      margin-bottom: 0;
+    }
+    @include media(large-up) {
+      @include col(2/12, $uncycle: 2);
+      margin-bottom: 0;
+    }
+  }
+  .aa-stats__element:last-child {
+    margin: 0
+  }
 
-      strong {
+  .aa-stats__element:nth-child(2) {
+    @include media(large-up) {
+      box-shadow: 1px 0 0 0 rgba(#fff, 0.16);
+    }
+  }
+
+  .aa-stats__element {
+    font-size: 1rem;
+    color: $base-color;
+
+    .wrapper {
+      text-align: center;
+    }
+
+    strong {
+      font-weight: $base-font-bold;
+      .highlight {
         display: block;
         font-size: 2rem;
-        font-weight: $base-font-bold;
+        color: #fff;
       }
-      small {
-        display: block;
-        font-size: 0.875rem;
-        text-transform: uppercase;
-        font-weight: normal;
+    }
+
+    .aa-stats__link {
+      text-align: center;
+      display: block;
+      text-decoration: none;
+      .highlight {
+        text-decoration: underline;
       }
     }
   }
 
-  .aa-stats--condition {
-    @include col(6/12);
+  .dropdown {
+    margin-left: 0.5rem;
   }
 
-  .aa-stats--responsibility {
-    @include col(6/12);
-  }
+  .bttn-info {
+    font-size: 1rem;
+    line-height: 1.5;
+    vertical-align: middle;
+    text-decoration: none;
 
-  /* vv Placeholer vv */
-  .chart-placeholder {
-    border: 2px dashed tint($base-color, 88%);
-    border-radius: 0.25rem;
-    text-align: center;
-
-    &:before {
-      @extend .collecticons-chart-line;
-      font-size: 4rem;
-      color: tint($base-color, 80%);
-
+    span {
+      @extend .visually-hidden;
+    }
+    &:after {
+      @extend .collecticons-circle-information;
     }
   }
-  /* ^^ Placeholer ^^ */
+}
 
-  .prose-wrapper {
-    padding: 2rem 0;
-    
-    p {
-      margin-bottom: 1rem;
+.aa-stats--extent {
+  .aa-stats__element {
+    @include media(small-up) {
+      @include col(6/12);
+    }
+    font-size: 1rem;
+
+    strong {
+      display: block;
+      font-size: 2rem;
+      font-weight: $base-font-bold;
+    }
+  }
+}
+
+.aa-stats--condition {
+  margin-bottom: $global-padding * 2;
+  @include media(medium-up) {
+    @include column(6/12);
+    margin-bottom: 0;
+  }
+}
+
+.aa-stats--responsibility {
+  @include media(medium-up) {
+    @include column(6/12);
+  }
+}
+
+.aa-list {
+  @extend .clearfix;
+  &__table {
+    @extend .table;
+
+    tr > td:last-child {
+      white-space: nowrap;
+    }
+
+    a {
+      font-size: 1rem;
+      color: $base-color;
+      font-size: 0.875rem;
+      // text-decoration: underline;
+      // font-weight: $base-font-bold;
     }
   }
 
-
-  .aa-list {
-    &__table {
-      @extend .table;
-
-      tr > td:last-child {
-        white-space: nowrap;
-      }
-
-      a {
-        font-size: 1rem;
-        font-weight: $base-font-bold;
-      }
-
-    }
+  .bttn-view-more {
+    float: right;
+    margin-right: 1rem;
+    font-weight: $base-font-bold;
   }
 }
