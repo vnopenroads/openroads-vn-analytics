@@ -193,6 +193,10 @@ a:active{
         float: right;
       }
 
+      .bttn-search {
+        text-decoration: none;
+      }
+
       .input-search::-webkit-input-placeholder { font-style: italic; }
       .input-search::-ms-input-placeholder { font-style: italic; }
       .input-search::-moz-placeholder { font-style: italic; }
@@ -269,7 +273,6 @@ a:active{
 
 .page {
   &__header {
-    padding: 2rem 0 1rem 0;
     background: rgba(#fff, 0.64);
     position: absolute;
     width: 100%;
@@ -279,7 +282,7 @@ a:active{
     box-shadow: inset 0 -1px 0 0 rgba($base-color, 0.16);
 
     @include media(medium-up) {
-      padding: ($global-padding * 2) 0;
+      padding: ($global-padding * 1.5) 0;
     }
   }
   &__headline {
@@ -307,6 +310,7 @@ a:active{
         a {
           color: tint($base-font-color, 16%);
           font-size: 0.875rem;
+          font-style: italic;
         }
 
         &:not(:first-child):before {
@@ -447,7 +451,7 @@ a:active{
 }
 
 .aa-stats--completeness {
-  padding: $global-padding * 2 0;
+  padding: ($global-padding * 1.5) 0 ($global-padding * 1);
 
   .aa-stats__title {
     @extend .visually-hidden;

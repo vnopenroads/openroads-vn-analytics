@@ -41,7 +41,7 @@ var AdminAreas = React.createClass({
 
     return (
       <PageHeader
-        pageTitle='OR Philippines' />
+        pageTitle='Philippines' />
     );
   },
 
