@@ -16,7 +16,6 @@ var AAStats = React.createClass({
       // Handle better.
       return null;
     }
-    let stats = this.props.stats.stats;
 
     return (
       <div className='aa-stats-row aa-stats-row--completeness'>
