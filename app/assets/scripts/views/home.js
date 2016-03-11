@@ -27,7 +27,7 @@ var Home = React.createClass({
     return (
       <section className='page'>
         <PageHeader
-          pageTitle='OR Philippines' />
+          pageTitle='Philippines' />
 
         <div className='page__body aa'>
           <div className='aa-main'>

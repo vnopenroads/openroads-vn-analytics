@@ -1,6 +1,10 @@
 'use strict';
 import React from 'react';
+import titlecase from 'titlecase';
 import PieChart from './charts/pie-chart';
+// import ProjectList from './project-list';
+import {formatPercent} from '../utils/format';
+// import mockProjects from '../mock/projects';
 
 var AAExtendedStats = React.createClass({
   displayName: 'AAExtendedStats',
@@ -13,7 +17,7 @@ var AAExtendedStats = React.createClass({
   },
 
   chartPopoverContent: function (d) {
-    return <pre>{JSON.stringify(d, null, 1)}</pre>;
+    return <span className="piechart-popover">{formatPercent(d.data.val)} | {titlecase(d.data.title)}</span>;
   },
 
   render: function () {
@@ -22,6 +26,7 @@ var AAExtendedStats = React.createClass({
       return null;
     }
     let stats = this.props.stats.stats;
+    // let projects = mockProjects(8);
 
     return (
       <div className='aa-stats-wrapper'>
@@ -62,6 +67,18 @@ var AAExtendedStats = React.createClass({
           </div>
         </div>
 
+        {/*
+        <div className='aa-stats-row'>
+          <div className='aa-stats aa-stats--projects'>
+            <h2 className='aa-stats__title'>Projects{this.props.fetched ? ` (${projects.length} in progress)`
+              : null
+            }</h2>
+            <div className='aa-stats__contents'>
+              {this.props.fetched ? <ProjectList data={projects}/> : null}
+            </div>
+          </div>
+        </div>
+        */}
       </div>
     );
   }

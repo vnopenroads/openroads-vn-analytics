@@ -7,7 +7,15 @@ svg.chart {
   transition: left 0.25s ease 0s, top 0.25s ease 0s;
 }
 
-.piechart-arc {
+.piechart-arc > path {
   stroke: #FEFEFE;
   stroke-width: 0.2px;
+  transition: stroke-width .2s;
+  &:hover {
+    stroke-width: 2.2px;
+  }
+}
+
+.piechart-popover {
+  font-weight: $base-font-bold;
 }
