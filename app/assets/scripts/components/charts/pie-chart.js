@@ -36,7 +36,9 @@ var PieChart = React.createClass({
   chart: null,
 
   onWindowResize: function () {
-    this.chart.update();
+    if (this.chart) {
+      this.chart.update();
+    }
   },
 
   componentDidMount: function () {
@@ -52,13 +54,17 @@ var PieChart = React.createClass({
   componentWillUnmount: function () {
     // console.log('PieChart componentWillUnmount');
     window.removeEventListener('resize', this.onWindowResize);
-    this.chart.destroy();
+    if (this.chart) {
+      this.chart.destroy();
+    }
   },
 
   componentDidUpdate: function () {
     // console.log('PieChart componentDidUpdate');
-    this.chart.setPopoverContentFn(this.props.popoverContentFn);
-    this.chart.setData(this.props.data);
+    if (this.chart) {
+      this.chart.setPopoverContentFn(this.props.popoverContentFn);
+      this.chart.setData(this.props.data);
+    }
   },
 
   render: function () {
