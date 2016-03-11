@@ -34,9 +34,7 @@ var Home = React.createClass({
             <AAMap />
 
             <AAStats
-              fetched={this.props.stats.fetched}
-              fetching={this.props.stats.fetching}
-              stats={this.props.stats}/>
+              adminAreas={this.props.subregions.adminAreas} />
 
             <div className='inner'>
               <div className='col--main'>
