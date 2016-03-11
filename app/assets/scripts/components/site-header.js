@@ -1,6 +1,7 @@
 'use strict';
 import React from 'react';
 import Search from './search';
+import config from '../config';
 
 var SiteHeader = React.createClass({
   displayName: 'SiteHeader',
@@ -21,7 +22,7 @@ var SiteHeader = React.createClass({
               <nav>
                 <ul>
                   <li><a href='#'>Analytics</a></li>
-                  <li><a href='#'>Map</a></li>
+                  <li><a href={config.editorUrl}>Map</a></li>
                   <li><a href='#'>About</a></li>
                 </ul>
               </nav>

@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import ID from '../utils/id';
+import config from '../config';
 
 var PageHeader = React.createClass({
   displayName: 'PageHeader',
@@ -10,7 +11,8 @@ var PageHeader = React.createClass({
     // Actions will probably change to a list...
     actions: React.PropTypes.bool,
     pageTitle: React.PropTypes.string,
-    adminAreaId: React.PropTypes.number
+    adminAreaId: React.PropTypes.number,
+    bbox: React.PropTypes.array
   },
 
   renderActions: function () {
@@ -18,7 +20,7 @@ var PageHeader = React.createClass({
       return (
         <div className='page__actions'>
           <ul className='actions-menu'>
-            <li><a href='#' className='bttn-edit'>Improve map</a></li>
+            <li><a href={`${config.editorUrl}/#bounds=${this.props.bbox.join('/')}`} className='bttn-edit'>Improve map</a></li>
           </ul>
         </div>
       );
