@@ -2,7 +2,9 @@
 import React from 'react';
 import titlecase from 'titlecase';
 import PieChart from './charts/pie-chart';
+import ProjectList from './project-list';
 import {formatPercent} from '../utils/format';
+import mockProjects from '../mock/projects';
 
 var AAExtendedStats = React.createClass({
   displayName: 'AAExtendedStats',
@@ -24,6 +26,7 @@ var AAExtendedStats = React.createClass({
       return null;
     }
     let stats = this.props.stats.stats;
+    let projects = mockProjects(8);
 
     return (
       <div className='aa-stats-wrapper'>
@@ -60,6 +63,17 @@ var AAExtendedStats = React.createClass({
             <div className='aa-stats__contents'>
               {this.props.fetching ? <p>Loading data</p>
                 : this.props.fetched ? <PieChart popoverContentFn={this.chartPopoverContent} data={stats.or_rdclass} className='piechart'/> : null}
+            </div>
+          </div>
+        </div>
+
+        <div className='aa-stats-row'>
+          <div className='aa-stats aa-stats--projects'>
+            <h2 className='aa-stats__title'>Projects{this.props.fetched ? ` (${projects.length} in progress)`
+              : null
+            }</h2>
+            <div className='aa-stats__contents'>
+              {this.props.fetched ? <ProjectList data={projects}/> : null}
             </div>
           </div>
         </div>

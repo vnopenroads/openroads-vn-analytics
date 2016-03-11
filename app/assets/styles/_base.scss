@@ -592,3 +592,27 @@ a:active{
     font-weight: $base-font-bold;
   }
 }
+
+.prj-list {
+  @extend .clearfix;
+  &__table {
+    @extend .table;
+
+    tbody tr {
+      cursor: pointer;
+      &:hover {
+        opacity: 0.64;
+      }
+    }
+
+    td {
+      box-shadow: 0 1px 0 0 $brdr-rgba;
+    }
+
+    thead td {
+      background: $neutral;
+      box-shadow: 0 1px 0 0 $neutral;
+      font-weight: $base-font-bold;
+    }
+  }
+}
