@@ -1,20 +1,22 @@
 'use strict';
 import React from 'react';
 import Dropdown from '../components/dropdown';
+import ID from '../utils/id';
 
 var AAStats = React.createClass({
   displayName: 'AAStats',
 
   propTypes: {
-    stats: React.PropTypes.object,
-    fetched: React.PropTypes.bool,
-    fetching: React.PropTypes.bool
+    adminAreas: React.PropTypes.array
   },
 
   render: function () {
-    if (!this.props.fetched && !this.props.fetching) {
-      // Handle better.
-      return null;
+    let subregions = null;
+    if (this.props.adminAreas && this.props.adminAreas.length) {
+      subregions = {
+        id: new ID(this.props.adminAreas[0].id),
+        count: this.props.adminAreas.length
+      };
     }
 
     return (
@@ -63,7 +65,7 @@ var AAStats = React.createClass({
               </li>
               <li className='aa-stats__element'>
                 <div className='wrapper'>
-                  <a href='#' className='aa-stats__link'><strong><span className='highlight'>50</span> Municipalities</strong></a>
+                  {subregions ? (<a href='#' className='aa-stats__link'><strong><span className='highlight'>{subregions.count}</span> {subregions.id.getDisplayType(subregions.count !== 1)}</strong></a>) : null}
                 </div>
               </li>
             </ul>
