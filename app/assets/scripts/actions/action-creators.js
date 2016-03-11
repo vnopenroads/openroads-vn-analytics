@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch';
 import * as actions from './action-types';
 import config from '../config';
 
-let mock = require('../mock/1611254000.json');
+// let mock = require('../mock/1611254000.json');
 
 function requestAdminSubregions () {
   return {
@@ -83,27 +83,34 @@ function requestAdminStats () {
   };
 }
 
-function receiveAdminStats (json) {
+function receiveAdminStats (json, error = null) {
   return {
     type: actions.RECEIVE_ADMIN_STATS,
     json: json,
+    error,
     receivedAt: Date.now()
   };
 }
 
-export function fetchAdminStats (id) {
+export function fetchAdminStats (id = null) {
   return function (dispatch) {
     dispatch(requestAdminStats());
-    return dispatch(receiveAdminStats(mock));
+    // return dispatch(receiveAdminStats(mock));
 
     // TODO swap this out with real url once endpoint is ready
-    /*
-    let url = '';
+    let url = id === null ? `${config.api}/admin/stats` : `${config.api}/admin/${id}/stats`;
     return fetch(url)
-      .then(response => response.json())
+      .then(response => {
+        if (response.status >= 400) {
+          throw new Error('Bad response');
+        }
+        return response.json();
+      })
       .then(json => {
         dispatch(receiveAdminStats(json));
+      })
+      .catch(e => {
+        dispatch(receiveAdminStats(null, 'Data not available'));
       });
-    */
   };
 }

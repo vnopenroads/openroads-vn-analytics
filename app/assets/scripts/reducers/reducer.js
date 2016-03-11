@@ -55,12 +55,17 @@ const stats = function (state = {fetching: false, fetched: false, data: null}, a
     case actions.REQUEST_ADMIN_STATS:
       console.log('REQUEST_ADMIN_STATS');
       state = _.cloneDeep(state);
+      state.error = null;
       state.fetching = true;
       break;
     case actions.RECEIVE_ADMIN_STATS:
       console.log('RECEIVE_ADMIN_STATS');
       state = _.cloneDeep(state);
-      state = action.json;
+      if (action.error) {
+        state.error = action.error;
+      } else {
+        state = action.json;
+      }
       state.fetching = false;
       state.fetched = true;
       break;

@@ -28,6 +28,7 @@ var Analytics = React.createClass({
     if (this.props.params.aaId !== prevProps.params.aaId && !this.props.subregions.fetching) {
       console.log('Analytics componentDidUpdate', 'update');
       this.props.dispatch(fetchAdminSubregions(this.props.params.aaId));
+      this.props.dispatch(fetchAdminStats(this.props.params.aaId));
     } else {
       console.log('Analytics componentDidUpdate', 'NOT update');
     }

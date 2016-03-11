@@ -17,15 +17,24 @@ var AAExtendedStats = React.createClass({
   },
 
   chartPopoverContent: function (d) {
-    return <span className="piechart-popover">{formatPercent(d.data.val)} | {titlecase(d.data.title)}</span>;
+    let title = d.data.title === 'roadTypeUndefined' ? 'Undefined' : d.data.title;
+    return <span className="piechart-popover">{formatPercent(d.data.val)} | {titlecase(title)}</span>;
+  },
+
+  renderChart: function (dataField) {
+    if (this.props.fetching) {
+      return <p>Loading data</p>;
+    } else if (this.props.fetched) {
+      return this.props.stats.error
+        ? <p>No data available</p>
+        : <PieChart popoverContentFn={this.chartPopoverContent} data={this.props.stats.stats[dataField]} className='piechart'/>;
+    }
   },
 
   render: function () {
     if (!this.props.fetched && !this.props.fetching) {
-      // Handle better.
       return null;
     }
-    let stats = this.props.stats.stats;
     // let projects = mockProjects(8);
 
     return (
@@ -53,16 +62,14 @@ var AAExtendedStats = React.createClass({
           <div className='aa-stats aa-stats--condition'>
             <h2 className='aa-stats__title'>Condition</h2>
             <div className='aa-stats__contents'>
-              {this.props.fetching ? <p>Loading data</p>
-                : this.props.fetched ? <PieChart popoverContentFn={this.chartPopoverContent} data={stats.or_condition} className='piechart'/> : null}
+              {this.renderChart('or_condition')}
             </div>
           </div>
 
           <div className='aa-stats aa-stats--responsibility'>
             <h2 className='aa-stats__title'>Responsibility</h2>
             <div className='aa-stats__contents'>
-              {this.props.fetching ? <p>Loading data</p>
-                : this.props.fetched ? <PieChart popoverContentFn={this.chartPopoverContent} data={stats.or_rdclass} className='piechart'/> : null}
+              {this.renderChart('or_rdclass')}
             </div>
           </div>
         </div>

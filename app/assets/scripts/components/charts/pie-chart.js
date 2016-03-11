@@ -45,7 +45,8 @@ var PieChart = React.createClass({
     this.onWindowResize = _.debounce(this.onWindowResize, 200);
 
     window.addEventListener('resize', this.onWindowResize);
-    this.chart = new Chart(this.refs.container, null);
+    this.chart = new Chart(this.refs.container, this.props.data);
+    this.chart.setPopoverContentFn(this.props.popoverContentFn);
   },
 
   componentWillUnmount: function () {
@@ -101,8 +102,8 @@ var Chart = function (el, data) {
       return null;
     }
 
-    let total = _.values(data).map(parseFloat).reduce((a, b) => a + b);
-    this.data = Object.keys(data).map(d => ({title: d, val: data[d] / total}))
+    let total = _.values(data).map(o => parseFloat(o.length)).reduce((a, b) => a + b);
+    this.data = Object.keys(data).map(d => ({title: d, val: data[d].length / total}))
       .sort((a, b) => getMeta(a).index > getMeta(b).index ? 1 : -1);
     this.update();
   };
