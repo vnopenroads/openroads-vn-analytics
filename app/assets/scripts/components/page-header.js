@@ -2,7 +2,6 @@
 import React from 'react';
 import { Link } from 'react-router';
 import ID from '../utils/id';
-import config from '../config';
 
 var PageHeader = React.createClass({
   displayName: 'PageHeader',
@@ -20,7 +19,7 @@ var PageHeader = React.createClass({
       return (
         <div className='page__actions'>
           <ul className='actions-menu'>
-            <li><a href={`${config.editorUrl}/#bounds=${this.props.bbox.join('/')}`} className='bttn-edit'>Improve map</a></li>
+            <li><Link to={`/editor/bounds=${this.props.bbox.join('/')}`} className='bttn-edit'>Improve map</Link></li>
           </ul>
         </div>
       );
