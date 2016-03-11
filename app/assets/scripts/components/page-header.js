@@ -10,7 +10,8 @@ var PageHeader = React.createClass({
     // Actions will probably change to a list...
     actions: React.PropTypes.bool,
     pageTitle: React.PropTypes.string,
-    adminAreaId: React.PropTypes.number
+    adminAreaId: React.PropTypes.number,
+    bbox: React.PropTypes.array
   },
 
   renderActions: function () {
@@ -18,7 +19,7 @@ var PageHeader = React.createClass({
       return (
         <div className='page__actions'>
           <ul className='actions-menu'>
-            <li><a href='#' className='bttn-edit'>Improve map</a></li>
+            <li><Link to={`/editor/bounds=${this.props.bbox.join('/')}`} className='bttn-edit'>Improve map</Link></li>
           </ul>
         </div>
       );
