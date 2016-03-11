@@ -141,7 +141,7 @@ a:active{
 
   .site {
     &__headline {
-      @include col(6/12);
+      @include col(8/12);
       * {
         vertical-align: middle;
         display: inline-block;
@@ -166,12 +166,14 @@ a:active{
     &__nav {
       ul {
         @extend .clearfix;
-        float: right;
-        margin-left: 1rem;
+        margin-left: 2rem;
       }
       li {
         float: left;
         margin-left: 0.5rem;
+        &:first-child {
+          margin-left: 0;
+        }
         a {
           color: #fff;
           text-transform: uppercase;
@@ -185,12 +187,27 @@ a:active{
     }
 
     &__search {
-      @include col(6/12);
+      @include col(4/12);
+
+      .drop {
+        @extend .clearfix;
+      }
+
+      .drop-content {
+        left: auto;
+        right: 0rem;
+        width: 100%;
+        max-width: 20rem;
+
+        &:before {
+          left: 50%;
+          margin-left: -0.5rem;
+        }
+      }
 
       .input-group {
-        max-width: 20rem;
-        margin: 0 auto;
         float: right;
+        max-width: 20rem;
       }
 
       .bttn-search {
@@ -202,6 +219,7 @@ a:active{
       .input-search::-moz-placeholder { font-style: italic; }
 
       .search-results {
+        z-index: 9999;
         color: $base-color;
         min-width: 80%;
 
