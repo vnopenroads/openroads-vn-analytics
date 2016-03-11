@@ -1,27 +1,38 @@
 language: node_js
 node_js:
-  - "0.12"
-
+- '0.12'
 env:
   global:
-  - GH_REF=github.com/opengovt/openroads-analytics.git
-  - DEPLOY_BRANCH=master
+  - PRODUCTION_BRANCH=master
+  - STAGING_BRANCH=develop
   - secure: gOr2+aMiSF/EoaJn0aRCYLEGC/frIqk71ZrzrcdgAn/Cs0D2a6CQ3lnlw33APPGABYxzYN58/pCcbyR4JUT4U3EjG/FsCl0edi0bSRO39i3Hs1wptfPtPt+yJtYCisdcWsGFX678cNkX39nvtvFeVPqgdvAcPtXLfY1Hi1+42Lc=
-
 cache:
   directories:
-    - node_modules
-
+  - node_modules
 before_install:
 - chmod +x ./.build_scripts/deploy.sh
 - chmod +x ./.build_scripts/lint.sh
-
 before_script:
-- ./.build_scripts/lint.sh
+- "./.build_scripts/lint.sh"
 - npm test
-
 script:
 - npm run build
-
-after_success:
-- ./.build_scripts/deploy.sh
+deploy:
+  - provider: s3
+    access_key_id: AKIAIAASN6DDRMPTSIGA
+    secret_access_key:
+      secure: ojbLD8uKXDQiiQqDQwrRY+kkmaKdJLO/JRGcriLZg7cdQ6mVmslPl6gvjtDyd1cOIE+rs9aZNf15FZVn2V3rXmeCuCItRujV6LzZD0VkwpdBSEsEtk+OGlNDWItWhsaeeLThtDq9pLoiNqxCUaoJq81U5YRswiMGedCCRzDykKo=
+    bucket: openroads-staging
+    local-dir: dist
+    acl: public_read
+    skip_cleanup: true
+    region: us-east-1
+    on:
+      repo: opengovt/openroads-analytics
+      branch: ${STAGING_BRANCH}
+  - provider: script
+    skip_cleanup: true
+    script: .build_scripts/deploy.sh
+    on:
+      repo: opengovt/openroads-analytics
+      branch: ${PRODUCTION_BRANCH}
