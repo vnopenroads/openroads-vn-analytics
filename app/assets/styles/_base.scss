@@ -182,6 +182,7 @@ a:active{
           font-size: 0.75rem;
           line-height: 1rem;
           display: block;
+          font-weight: bold;
         }
       }
     }
@@ -214,9 +215,9 @@ a:active{
         text-decoration: none;
       }
 
-      .input-search::-webkit-input-placeholder { font-style: italic; }
-      .input-search::-ms-input-placeholder { font-style: italic; }
-      .input-search::-moz-placeholder { font-style: italic; }
+      .input-search::-webkit-input-placeholder { font-size: 0.875rem; font-style: italic; }
+      .input-search::-ms-input-placeholder { font-size: 0.875rem; font-style: italic; }
+      .input-search::-moz-placeholder { font-size: 0.875rem; font-style: italic; }
 
       .search-results {
         z-index: 9999;
