@@ -93,7 +93,7 @@ var Search = React.createClass({
   render: function () {
     return (
       <form className='form-search' ref='searchForm'>
-        <div className={classNames('drop dropdown center', {open: this.props.searching})}>
+        <div className={classNames('drop dropdown', {open: this.props.searching})}>
           <div className='input-group'>
             <input type='search' className='form-control input-search' placeholder='Search administrative area' ref='searchBox' onChange={_.debounce(this.onSearchQueryChange, 300)} />
             <span className='input-group-bttn'>
