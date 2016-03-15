@@ -98,6 +98,46 @@ a:active{
 }
 
 
+/* Flag
+   ========================================================================== */
+
+.flag {
+  display: table;
+  width: 100%;
+}
+
+.flag__image,
+.flag__body {
+  display: table-cell;
+  vertical-align: middle;
+
+  .flag--top & {
+    vertical-align: top;
+  }
+
+  .flag--bottom & {
+    vertical-align: bottom;
+  }
+}
+
+.flag__image {
+  padding-right: 1rem;
+
+  > * {
+    display: block;
+    max-width: none;
+  }
+
+  .flag--rev & {
+    padding-right: 0;
+    padding-left: 1rem;
+  }
+}
+
+.flag__body {
+  width: 100%;
+}
+
 /* Rows
    ========================================================================== */
 
@@ -763,4 +803,34 @@ a:active{
       font-weight: $base-font-bold;
     }
   }
+}
+
+.aa-tofixtasks {
+  &__title {
+    @extend .hd-s;
+  }
+  &__contents li {
+    margin-bottom: $global-padding * 2;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  &__wrapper {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+    border-radius: $global-radius;
+    box-shadow: 0 0 0 2px $flat-shadow-rgba;
+    padding: $global-padding;
+  }
+
+  // vv Temp.
+  &__map {
+    background: #ddd;
+    text-align: center;
+    width: 6rem;
+    padding: 2rem 0;
+  }
+  // ^^ Temp.
 }

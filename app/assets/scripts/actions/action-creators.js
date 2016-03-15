@@ -3,6 +3,7 @@ import * as actions from './action-types';
 import config from '../config';
 
 // let mock = require('../mock/1611254000.json');
+let mockToFix = require('../mock/tofix.json');
 
 function requestAdminSubregions () {
   return {
@@ -108,6 +109,44 @@ export function fetchAdminStats (id = null) {
       })
       .then(json => {
         dispatch(receiveAdminStats(json));
+      })
+      .catch(e => {
+        dispatch(receiveAdminStats(null, 'Data not available'));
+      });
+  };
+}
+
+function requestTofixTasks () {
+  return {
+    type: actions.REQUEST_TOFIX_TASKS
+  };
+}
+
+function receiveTofixTasks (json, error = null) {
+  return {
+    type: actions.RECEIVE_TOFIX_TASKS,
+    json: json,
+    error,
+    receivedAt: Date.now()
+  };
+}
+
+export function fetchTofixTasks (id = null) {
+  return function (dispatch) {
+    dispatch(requestTofixTasks());
+    return dispatch(receiveTofixTasks(mockToFix));
+
+    // TODO swap this out with real url once endpoint is ready
+    let url = id === null ? `${config.api}/admin/stats` : `${config.api}/admin/${id}/stats`;
+    return fetch(url)
+      .then(response => {
+        if (response.status >= 400) {
+          throw new Error('Bad response');
+        }
+        return response.json();
+      })
+      .then(json => {
+        dispatch(receiveTofixTasks(json));
       })
       .catch(e => {
         dispatch(receiveAdminStats(null, 'Data not available'));

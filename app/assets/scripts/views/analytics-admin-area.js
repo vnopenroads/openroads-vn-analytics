@@ -1,12 +1,13 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchAdminSubregions, fetchAdminStats } from '../actions/action-creators';
+import { fetchAdminSubregions, fetchAdminStats, fetchTofixTasks } from '../actions/action-creators';
 import PageHeader from '../components/page-header';
 import AAList from '../components/aa-list';
 import AAStats from '../components/aa-stats';
 import AAExtendedStats from '../components/aa-extended-stats';
 import AAMap from '../components/aa-map';
+import AATofixTasks from '../components/aa-tofix-tasks';
 
 var AnalyticsAA = React.createClass({
   displayName: 'AnalyticsAA',
@@ -15,6 +16,7 @@ var AnalyticsAA = React.createClass({
     children: React.PropTypes.object,
     subregions: React.PropTypes.object,
     stats: React.PropTypes.object,
+    tofixtasks: React.PropTypes.object,
     params: React.PropTypes.object,
     dispatch: React.PropTypes.func
   },
@@ -22,6 +24,7 @@ var AnalyticsAA = React.createClass({
   componentDidMount: function () {
     this.props.dispatch(fetchAdminSubregions(this.props.params.aaId));
     this.props.dispatch(fetchAdminStats(this.props.params.aaId));
+    this.props.dispatch(fetchTofixTasks());
   },
 
   componentDidUpdate: function (prevProps, prevState) {
@@ -57,6 +60,11 @@ var AnalyticsAA = React.createClass({
                   fetched={this.props.stats.fetched}
                   fetching={this.props.stats.fetching}
                   stats={this.props.stats}/>
+
+                <AATofixTasks
+                  fetched={this.props.tofixtasks.fetched}
+                  fetching={this.props.tofixtasks.fetching}
+                  tasks={this.props.tofixtasks.data}/>
               </div>
 
               <div className='col--sec'>

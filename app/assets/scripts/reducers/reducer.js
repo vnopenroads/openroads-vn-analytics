@@ -46,7 +46,6 @@ const search = function (state = {results: [], fetching: false, fetched: false, 
       state.searching = false;
       break;
   }
-  console.log('state', state);
   return state;
 };
 
@@ -73,9 +72,33 @@ const stats = function (state = {fetching: false, fetched: false, data: null}, a
   return state;
 };
 
+const tofixtasks = function (state = {fetching: false, fetched: false, data: null}, action) {
+  switch (action.type) {
+    case actions.REQUEST_TOFIX_TASKS:
+      console.log('REQUEST_TOFIX_TASKS');
+      state = _.cloneDeep(state);
+      state.error = null;
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_TOFIX_TASKS:
+      console.log('RECEIVE_TOFIX_TASKS');
+      state = _.cloneDeep(state);
+      if (action.error) {
+        state.error = action.error;
+      } else {
+        state.data = action.json;
+      }
+      state.fetching = false;
+      state.fetched = true;
+      break;
+  }
+  return state;
+};
+
 export default combineReducers({
   adminSubregions,
   search,
   stats,
+  tofixtasks,
   routing: routeReducer
 });
