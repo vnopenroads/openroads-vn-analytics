@@ -316,6 +316,7 @@ a:active{
     .bttn-edit {
       @extend .bttn-m, .bttn-secondary;
       text-decoration: none;
+      box-shadow: none;
     }
   }
 

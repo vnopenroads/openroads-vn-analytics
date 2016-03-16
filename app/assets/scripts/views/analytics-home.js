@@ -15,38 +15,23 @@ var Analytics = React.createClass({
     children: React.PropTypes.object,
     subregions: React.PropTypes.object,
     stats: React.PropTypes.object,
-    params: React.PropTypes.object,
     dispatch: React.PropTypes.func
   },
 
   componentDidMount: function () {
-    this.props.dispatch(fetchAdminSubregions(this.props.params.aaId));
-    this.props.dispatch(fetchAdminStats(this.props.params.aaId));
-  },
-
-  componentDidUpdate: function (prevProps, prevState) {
-    if (this.props.params.aaId !== prevProps.params.aaId && !this.props.subregions.fetching) {
-      console.log('Analytics componentDidUpdate', 'update');
-      this.props.dispatch(fetchAdminSubregions(this.props.params.aaId));
-      this.props.dispatch(fetchAdminStats(this.props.params.aaId));
-    } else {
-      console.log('Analytics componentDidUpdate', 'NOT update');
-    }
+    this.props.dispatch(fetchAdminSubregions());
+    this.props.dispatch(fetchAdminStats());
   },
 
   render: function () {
     return (
       <section className='page'>
         <PageHeader
-          adminAreaId={this.props.subregions.id}
-          pageTitle={this.props.subregions.name}
-          bbox={this.props.subregions.bbox || []}
-          actions />
+          pageTitle='Philippines' />
 
         <div className='page__body aa'>
           <div className='aa-main'>
-            <AAMap
-              bounds={this.props.subregions.bbox} />
+            <AAMap />
 
             <AAStats
               adminAreas={this.props.subregions.adminAreas} />
@@ -61,8 +46,6 @@ var Analytics = React.createClass({
 
               <div className='col--sec'>
                 <AAList
-                  adminAreaId={this.props.subregions.id}
-                  adminAreaName={this.props.subregions.name}
                   adminAreas={this.props.subregions.adminAreas}
                   sliceList />
               </div>

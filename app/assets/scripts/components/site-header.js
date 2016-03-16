@@ -17,11 +17,11 @@ var SiteHeader = React.createClass({
       <header className='site-header'>
         <div className='inner'>
           <div className='site__headline'>
-            <h1 className='site__title'><img src='assets/graphics/layout/or-logo.png' width='500' height='63' alt='Open Roads logo' /><span>Open Roads Analytics</span></h1>
+            <h1 className='site__title'><Link to='/'><img src='assets/graphics/layout/or-logo.png' width='500' height='63' alt='Open Roads logo' /><span>Open Roads Analytics</span></Link></h1>
             <div className='site__nav'>
               <nav>
                 <ul>
-                  <li><a href='#'>Analytics</a></li>
+                  <li><Link to='/analytics'>Analytics</Link></li>
                   <li><Link to='/editor'>Map</Link></li>
                   <li><a href='#'>About</a></li>
                 </ul>
