@@ -1,5 +1,6 @@
 'use strict';
 import React from 'react';
+import _ from 'lodash';
 import Search from './search';
 import { Link } from 'react-router';
 
@@ -12,31 +13,81 @@ var SiteHeader = React.createClass({
     search: React.PropTypes.object
   },
 
+  toggleMenuHandler: function (e) {
+    e.preventDefault();
+    this.refs.nav.classList.remove('show-search');
+    this.refs.nav.classList.toggle('show-menu');
+  },
+
+  toggleSearchHandler: function (e) {
+    e.preventDefault();
+    this.refs.nav.classList.remove('show-menu');
+    this.refs.nav.classList.toggle('show-search');
+  },
+
+  closeSearch: function () {
+    this.refs.nav.classList.remove('show-menu');
+    this.refs.nav.classList.remove('show-search');
+  },
+
+  resizeHandler: function () {
+    if (document.body.getBoundingClientRect().width > 991) {
+      this.refs.nav.classList.remove('show-menu');
+      this.refs.nav.classList.remove('show-search');
+    }
+  },
+
+  menuClickHandler: function () {
+    this.refs.nav.classList.remove('show-menu');
+  },
+
+  componentDidMount: function () {
+    this.refs.toggleMenu.addEventListener('click', this.toggleMenuHandler, false);
+    this.refs.toggleSearch.addEventListener('click', this.toggleSearchHandler, false);
+
+    this.resizeHandler = _.debounce(this.resizeHandler, 200);
+    window.addEventListener('resize', this.resizeHandler);
+  },
+
+  componentWillUnmount: function () {
+    this.refs.toggleMenu.removeEventListener('click', this.toggleMenuHandler);
+    this.refs.toggleSearch.removeEventListener('click', this.toggleSearchHandler);
+    window.removeEventListener('resize', this.resizeHandler);
+  },
+
   render: function () {
     return (
       <header className='site-header'>
         <div className='inner'>
           <div className='site__headline'>
             <h1 className='site__title'><Link to='/'><img src='assets/graphics/layout/or-logo.png' width='500' height='63' alt='Open Roads logo' /><span>Open Roads Analytics</span></Link></h1>
-            <div className='site__nav'>
-              <nav>
-                <ul>
-                  <li><Link to='/analytics'>Analytics</Link></li>
-                  <li><Link to='/editor'>Map</Link></li>
-                  <li><a href='#'>About</a></li>
-                </ul>
-              </nav>
+          </div>
+
+          <nav className='site__nav' role='navigation' ref='nav'>
+            <h2 className='toggle-search'><a href='#global-search' title='Show search' ref='toggleSearch'><span>Search</span></a></h2>
+            <div className='search-wrapper'>
+              <div className='site__search'>
+                <Search
+                  fetchSearchResults={this.props.fetchSearchResults}
+                  cleanSearchResults={this.props.cleanSearchResults}
+                  onResultClick={this.closeSearch}
+                  results={this.props.search.results}
+                  query={this.props.search.query}
+                  fetching={this.props.search.fetching}
+                  searching={this.props.search.searching} />
+              </div>
             </div>
-          </div>
-          <div className='site__search'>
-            <Search
-              fetchSearchResults={this.props.fetchSearchResults}
-              cleanSearchResults={this.props.cleanSearchResults}
-              results={this.props.search.results}
-              query={this.props.search.query}
-              fetching={this.props.search.fetching}
-              searching={this.props.search.searching} />
-          </div>
+
+            <h2 className='toggle-menu'><a href='#global-menu' title='Show menu' ref='toggleMenu'><span>Menu</span></a></h2>
+            <div className='menu-wrapper'>
+              <ul className='global-menu' id='global-menu'>
+                <li><Link to='/analytics' className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}><span>Analytics</span></Link></li>
+                <li><Link to='/editor' className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}><span>Map</span></Link></li>
+                <li><Link to='/' className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}><span>About</span></Link></li>
+              </ul>
+            </div>
+          </nav>
+
         </div>
       </header>
     );

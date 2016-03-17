@@ -28,16 +28,16 @@
         padding-bottom: 5rem;
       }
 
-      &:before {
-        background: rgba($primary-color, 0.80);
-        content: "";
-        position: absolute;
-        right: 0;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        z-index: 1;
-      }
+      // &:before {
+      //   background: rgba($primary-color, 0.80);
+      //   content: "";
+      //   position: absolute;
+      //   right: 0;
+      //   top: 0;
+      //   left: 0;
+      //   bottom: 0;
+      //   z-index: 1;
+      // }
     }
     &__headline--landing {
       position: relative;
