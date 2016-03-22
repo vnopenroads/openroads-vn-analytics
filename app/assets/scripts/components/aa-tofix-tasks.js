@@ -6,12 +6,14 @@ var AATofixTasks = React.createClass({
   displayName: 'AATofixTasks',
 
   propTypes: {
+    fetched: React.PropTypes.bool,
+    fetching: React.PropTypes.bool,
     adminAreaId: React.PropTypes.number,
     adminAreaName: React.PropTypes.string,
     tasks: React.PropTypes.array,
     meta: React.PropTypes.object,
-    fetched: React.PropTypes.bool,
-    fetching: React.PropTypes.bool
+    error: React.PropTypes.string,
+    sliceList: React.PropTypes.bool
   },
 
   renderTasks: function (task) {
@@ -26,6 +28,7 @@ var AATofixTasks = React.createClass({
   },
 
   renderViewAllLink: function () {
+    if (!this.props.sliceList) return null;
     let {limit, total} = this.props.meta;
 
     if (total > limit) {
@@ -37,9 +40,17 @@ var AATofixTasks = React.createClass({
   renderContent: function () {
     let content;
     if (this.props.fetching) {
-      content = <p>Loading data...</p>;
+      content = (
+        <ul className='loading-placeholder'>
+          <AATofixTaskItemLoading />
+          <AATofixTaskItemLoading />
+          <AATofixTaskItemLoading />
+        </ul>
+      );
+    } else if (this.props.error) {
+      content = <p>Ups.. An error occourred. Try again.</p>;
     } else if (!this.props.meta.total) {
-      content = <p>No tasks</p>;
+      content = <p>Great! All errors are fixed.</p>;
     }
 
     if (content) {
@@ -78,6 +89,7 @@ var AATofixTaskItem = React.createClass({
   propTypes: {
     type: React.PropTypes.string,
     details: React.PropTypes.string,
+    id: React.PropTypes.number,
     fetching: React.PropTypes.bool
   },
 
@@ -90,7 +102,7 @@ var AATofixTaskItem = React.createClass({
       <Link to='' className='aa-tofixtasks__wrapper'>
         <div className='flag'>
           <div className='flag__image'>
-            <div className='aa-tofixtasks__map'>MAP</div>
+            <div className='aa-tofixtasks__map'>MAP-{this.props.id}</div>
           </div>
           <div className='flag__body'>
             <p><strong>Type:</strong> {this.typeMatrix[this.props.type]}</p>
@@ -98,6 +110,27 @@ var AATofixTaskItem = React.createClass({
           </div>
         </div>
       </Link>
+    );
+  }
+});
+
+// Faux task item for loading ghost.
+var AATofixTaskItemLoading = React.createClass({
+  displayName: 'AATofixTaskItemLoading',
+
+  render: function () {
+    return (
+      <li className='aa-tofixtasks__wrapper'>
+        <div className='flag'>
+          <div className='flag__image'>
+            <div className='aa-tofixtasks__map'>&nbsp;</div>
+          </div>
+          <div className='flag__body'>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+          </div>
+        </div>
+      </li>
     );
   }
 });

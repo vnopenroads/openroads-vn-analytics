@@ -107,11 +107,11 @@ export function fetchAdminStats (id = null) {
         }
         return response.json();
       })
-      .catch(e => {
-        dispatch(receiveAdminStats(null, 'Data not available'));
-      })
       .then(json => {
         dispatch(receiveAdminStats(json));
+      }, e => {
+        console.log('e', e);
+        return dispatch(receiveAdminStats(null, 'Data not available'));
       });
   };
 }
@@ -131,13 +131,14 @@ function receiveTofixTasks (json, error = null) {
   };
 }
 
-export function fetchTofixTasks (id = null) {
+export function fetchTofixTasks (aaid = null, page, limit) {
   return function (dispatch) {
     dispatch(requestTofixTasks());
 
-    // TODO swap this out with real url once endpoint is ready.
-    id = null;
-    let url = id === null ? `${config.api}/admin/0/tasks` : `${config.api}/admin/${id}/stats`;
+    // Note: `page` is 0 based, so subtract 1.
+    let url = aaid === null
+      ? `${config.api}/admin/0/tasks?page=${--page}&limit=${limit}`
+      : `${config.api}/admin/${aaid}/tasks?page=${--page}&limit=${limit}`;
     return fetch(url)
       .then(response => {
         if (response.status >= 400) {
@@ -145,12 +146,12 @@ export function fetchTofixTasks (id = null) {
         }
         return response.json();
       })
-      .catch(e => {
-        console.log('e', e);
-        dispatch(receiveTofixTasks(null, 'Data not available'));
-      })
       .then(json => {
-        dispatch(receiveTofixTasks(json));
+        // setTimeout(() => dispatch(receiveTofixTasks(json)), 2000);
+        return dispatch(receiveTofixTasks(json));
+      }, e => {
+        console.log('e', e);
+        return dispatch(receiveTofixTasks(null, 'Data not available'));
       });
   };
 }

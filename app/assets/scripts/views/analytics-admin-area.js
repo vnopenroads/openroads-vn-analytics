@@ -26,7 +26,7 @@ var AnalyticsAA = React.createClass({
   componentDidMount: function () {
     this.props._fetchAdminSubregions(this.props.params.aaId);
     this.props._fetchAdminStats(this.props.params.aaId);
-    this.props._fetchTofixTasks(this.props.params.aaId);
+    this.props._fetchTofixTasks(this.props.params.aaId, 1, 10);
   },
 
   componentDidUpdate: function (prevProps, prevState) {
@@ -34,7 +34,7 @@ var AnalyticsAA = React.createClass({
       console.log('AnalyticsAA componentDidUpdate', 'update');
       this.props._fetchAdminSubregions(this.props.params.aaId);
       this.props._fetchAdminStats(this.props.params.aaId);
-      this.props._fetchTofixTasks(this.props.params.aaId);
+      this.props._fetchTofixTasks(this.props.params.aaId, 1, 10);
     } else {
       console.log('AnalyticsAA componentDidUpdate', 'NOT update');
     }
@@ -59,18 +59,21 @@ var AnalyticsAA = React.createClass({
 
             <div className='inner'>
               <div className='col--main'>
+{/*
                 <AAExtendedStats
                   fetched={this.props.stats.fetched}
                   fetching={this.props.stats.fetching}
-                  stats={this.props.stats}/>
-
+                  stats={this.props.stats} />
+*/}
                 <AATofixTasks
                   fetched={this.props.tofixtasks.fetched}
                   fetching={this.props.tofixtasks.fetching}
-                  adminAreaId={this.props.tofixtasks.data.id}
+                  adminAreaId={Number(this.props.tofixtasks.data.id)}
                   adminAreaName={this.props.tofixtasks.data.name}
                   meta={this.props.tofixtasks.data.tasks.meta}
-                  tasks={this.props.tofixtasks.data.tasks.results}/>
+                  tasks={this.props.tofixtasks.data.tasks.results}
+                  error={this.props.tofixtasks.error}
+                  sliceList />
               </div>
 
               <div className='col--sec'>
@@ -104,7 +107,7 @@ function dispatcher (dispatch) {
   return {
     _fetchAdminSubregions: (aaid) => dispatch(fetchAdminSubregions(aaid)),
     _fetchAdminStats: (aaid) => dispatch(fetchAdminStats(aaid)),
-    _fetchTofixTasks: (aaid) => dispatch(fetchTofixTasks(aaid))
+    _fetchTofixTasks: (aaid, page, limit) => dispatch(fetchTofixTasks(aaid, page, limit))
   };
 }
 

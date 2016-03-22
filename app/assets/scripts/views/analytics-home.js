@@ -24,8 +24,8 @@ var Analytics = React.createClass({
 
   componentDidMount: function () {
     this.props._fetchAdminSubregions();
-    this.props._fetchAdminStats();
-    this.props._fetchTofixTasks();
+    // this.props._fetchAdminStats();
+    this.props._fetchTofixTasks(null, 1, 10);
   },
 
   render: function () {
@@ -43,17 +43,20 @@ var Analytics = React.createClass({
 
             <div className='inner'>
               <div className='col--main'>
+{/*
                 <AAExtendedStats
                   fetched={this.props.stats.fetched}
                   fetching={this.props.stats.fetching}
-                  stats={this.props.stats}/>
-
+                  stats={this.props.stats} />
+*/}
                 <AATofixTasks
                   fetched={this.props.tofixtasks.fetched}
                   fetching={this.props.tofixtasks.fetching}
                   adminAreaName='Philippines'
                   meta={this.props.tofixtasks.data.tasks.meta}
-                  tasks={this.props.tofixtasks.data.tasks.results}/>
+                  tasks={this.props.tofixtasks.data.tasks.results}
+                  error={this.props.tofixtasks.error}
+                  sliceList />
               </div>
 
               <div className='col--sec'>
@@ -85,7 +88,7 @@ function dispatcher (dispatch) {
   return {
     _fetchAdminSubregions: () => dispatch(fetchAdminSubregions()),
     _fetchAdminStats: () => dispatch(fetchAdminStats()),
-    _fetchTofixTasks: () => dispatch(fetchTofixTasks())
+    _fetchTofixTasks: (aaid, page, limit) => dispatch(fetchTofixTasks(aaid, page, limit))
   };
 }
 
