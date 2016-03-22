@@ -823,6 +823,9 @@ a:active{
     border-radius: $global-radius;
     box-shadow: 0 0 0 2px $flat-shadow-rgba;
     padding: $global-padding;
+    &:visited, &:active {
+      color: inherit;
+    }
   }
 
   // vv Temp.

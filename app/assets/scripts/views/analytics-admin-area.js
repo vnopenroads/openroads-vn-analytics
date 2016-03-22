@@ -14,24 +14,27 @@ var AnalyticsAA = React.createClass({
 
   propTypes: {
     children: React.PropTypes.object,
+    _fetchAdminSubregions: React.PropTypes.func,
+    _fetchAdminStats: React.PropTypes.func,
+    _fetchTofixTasks: React.PropTypes.func,
     subregions: React.PropTypes.object,
     stats: React.PropTypes.object,
     tofixtasks: React.PropTypes.object,
-    params: React.PropTypes.object,
-    dispatch: React.PropTypes.func
+    params: React.PropTypes.object
   },
 
   componentDidMount: function () {
-    this.props.dispatch(fetchAdminSubregions(this.props.params.aaId));
-    this.props.dispatch(fetchAdminStats(this.props.params.aaId));
-    this.props.dispatch(fetchTofixTasks());
+    this.props._fetchAdminSubregions(this.props.params.aaId);
+    this.props._fetchAdminStats(this.props.params.aaId);
+    this.props._fetchTofixTasks(this.props.params.aaId);
   },
 
   componentDidUpdate: function (prevProps, prevState) {
     if (this.props.params.aaId !== prevProps.params.aaId && !this.props.subregions.fetching) {
       console.log('AnalyticsAA componentDidUpdate', 'update');
-      this.props.dispatch(fetchAdminSubregions(this.props.params.aaId));
-      this.props.dispatch(fetchAdminStats(this.props.params.aaId));
+      this.props._fetchAdminSubregions(this.props.params.aaId);
+      this.props._fetchAdminStats(this.props.params.aaId);
+      this.props._fetchTofixTasks(this.props.params.aaId);
     } else {
       console.log('AnalyticsAA componentDidUpdate', 'NOT update');
     }
@@ -64,7 +67,10 @@ var AnalyticsAA = React.createClass({
                 <AATofixTasks
                   fetched={this.props.tofixtasks.fetched}
                   fetching={this.props.tofixtasks.fetching}
-                  tasks={this.props.tofixtasks.data}/>
+                  adminAreaId={this.props.tofixtasks.data.id}
+                  adminAreaName={this.props.tofixtasks.data.name}
+                  meta={this.props.tofixtasks.data.tasks.meta}
+                  tasks={this.props.tofixtasks.data.tasks.results}/>
               </div>
 
               <div className='col--sec'>
@@ -83,9 +89,23 @@ var AnalyticsAA = React.createClass({
   }
 });
 
-module.exports = connect(state => {
+// /////////////////////////////////////////////////////////////////// //
+// Connect functions
+
+function selector (state) {
   return {
     subregions: state.adminSubregions,
-    stats: state.stats
+    stats: state.stats,
+    tofixtasks: state.tofixtasks
   };
-})(AnalyticsAA);
+}
+
+function dispatcher (dispatch) {
+  return {
+    _fetchAdminSubregions: (aaid) => dispatch(fetchAdminSubregions(aaid)),
+    _fetchAdminStats: (aaid) => dispatch(fetchAdminStats(aaid)),
+    _fetchTofixTasks: (aaid) => dispatch(fetchTofixTasks(aaid))
+  };
+}
+
+module.exports = connect(selector, dispatcher)(AnalyticsAA);

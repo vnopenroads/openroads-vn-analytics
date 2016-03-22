@@ -14,16 +14,18 @@ var Analytics = React.createClass({
 
   propTypes: {
     children: React.PropTypes.object,
+    _fetchAdminSubregions: React.PropTypes.func,
+    _fetchAdminStats: React.PropTypes.func,
+    _fetchTofixTasks: React.PropTypes.func,
     subregions: React.PropTypes.object,
     stats: React.PropTypes.object,
-    tofixtasks: React.PropTypes.object,
-    dispatch: React.PropTypes.func
+    tofixtasks: React.PropTypes.object
   },
 
   componentDidMount: function () {
-    this.props.dispatch(fetchAdminSubregions());
-    this.props.dispatch(fetchAdminStats());
-    this.props.dispatch(fetchTofixTasks());
+    this.props._fetchAdminSubregions();
+    this.props._fetchAdminStats();
+    this.props._fetchTofixTasks();
   },
 
   render: function () {
@@ -49,7 +51,9 @@ var Analytics = React.createClass({
                 <AATofixTasks
                   fetched={this.props.tofixtasks.fetched}
                   fetching={this.props.tofixtasks.fetching}
-                  tasks={this.props.tofixtasks.data}/>
+                  adminAreaName='Philippines'
+                  meta={this.props.tofixtasks.data.tasks.meta}
+                  tasks={this.props.tofixtasks.data.tasks.results}/>
               </div>
 
               <div className='col--sec'>
@@ -66,10 +70,23 @@ var Analytics = React.createClass({
   }
 });
 
-module.exports = connect(state => {
+// /////////////////////////////////////////////////////////////////// //
+// Connect functions
+
+function selector (state) {
   return {
     subregions: state.adminSubregions,
     stats: state.stats,
     tofixtasks: state.tofixtasks
   };
-})(Analytics);
+}
+
+function dispatcher (dispatch) {
+  return {
+    _fetchAdminSubregions: () => dispatch(fetchAdminSubregions()),
+    _fetchAdminStats: () => dispatch(fetchAdminStats()),
+    _fetchTofixTasks: () => dispatch(fetchTofixTasks())
+  };
+}
+
+module.exports = connect(selector, dispatcher)(Analytics);

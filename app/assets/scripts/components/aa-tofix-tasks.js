@@ -6,14 +6,12 @@ var AATofixTasks = React.createClass({
   displayName: 'AATofixTasks',
 
   propTypes: {
+    adminAreaId: React.PropTypes.number,
+    adminAreaName: React.PropTypes.string,
     tasks: React.PropTypes.array,
+    meta: React.PropTypes.object,
     fetched: React.PropTypes.bool,
     fetching: React.PropTypes.bool
-  },
-
-  typeMatrix: {
-    'missing-props': 'Missing Props',
-    'invalid-one-way': 'Invalid One-way'
   },
 
   renderTasks: function (task) {
@@ -27,34 +25,48 @@ var AATofixTasks = React.createClass({
     );
   },
 
+  renderViewAllLink: function () {
+    let {limit, total} = this.props.meta;
+
+    if (total > limit) {
+      let url = this.props.adminAreaId ? `/analytics/${this.props.adminAreaId}/tasks` : '/analytics/tasks';
+      return <Link to={url} className='bttn-view-more'>View all tasks</Link>;
+    }
+  },
+
   renderContent: function () {
+    let content;
     if (this.props.fetching) {
-      return <p>Loading data...</p>;
+      content = <p>Loading data...</p>;
+    } else if (!this.props.meta.total) {
+      content = <p>No tasks</p>;
     }
 
-    let tasks = this.props.tasks;
-    if (!tasks.length) {
-      return <p>No tasks</p>;
+    if (content) {
+      return <div className='aa-tofixtasks__contents'>{content}</div>;
     }
 
-    return <ul>{tasks.map(this.renderTasks)}</ul>;
+    return (
+      <div className='aa-tofixtasks__contents'>
+        <ul>{this.props.tasks.map(this.renderTasks)}</ul>
+        {this.renderViewAllLink()}
+      </div>
+    );
   },
 
   render: function () {
     if (!this.props.fetched && !this.props.fetching) {
       return null;
     }
-    let tasks = this.props.tasks;
+
     let title = 'To fix';
-    if (this.props.fetched && !this.props.fetching && tasks.length) {
-      title += ` (${tasks.length})`;
+    if (this.props.fetched && !this.props.fetching && this.props.meta.total) {
+      title += ` (${this.props.meta.total})`;
     }
     return (
       <div className='aa-tofixtasks'>
         <h2 className='aa-tofixtasks__title'>{title}</h2>
-        <div className='aa-tofixtasks__contents'>
-          {this.renderContent()}
-        </div>
+        {this.renderContent()}
       </div>
     );
   }
@@ -70,8 +82,7 @@ var AATofixTaskItem = React.createClass({
   },
 
   typeMatrix: {
-    'missing-props': 'Missing Props',
-    'invalid-one-way': 'Invalid One-way'
+    'missing-prop': 'Missing Props'
   },
 
   render: function () {

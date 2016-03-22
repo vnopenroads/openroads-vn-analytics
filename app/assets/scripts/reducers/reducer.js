@@ -72,7 +72,21 @@ const stats = function (state = {fetching: false, fetched: false, data: null}, a
   return state;
 };
 
-const tofixtasks = function (state = {fetching: false, fetched: false, data: null}, action) {
+const tofixtasksDefaultState = {
+  fetching: false,
+  fetched: false,
+  data: {
+    tasks: {
+      meta: {
+        page: null,
+        limit: null,
+        total: null
+      },
+      results: []
+    }
+  }
+};
+const tofixtasks = function (state = tofixtasksDefaultState, action) {
   switch (action.type) {
     case actions.REQUEST_TOFIX_TASKS:
       console.log('REQUEST_TOFIX_TASKS');
