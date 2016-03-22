@@ -1,7 +1,6 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 import { fetchSearchResults, cleanSearchResults } from '../actions/action-creators';
 import SiteHeader from '../components/site-header';
@@ -10,8 +9,8 @@ var App = React.createClass({
   displayName: 'App',
 
   propTypes: {
-    fetchSearchResults: React.PropTypes.func,
-    cleanSearchResults: React.PropTypes.func,
+    _fetchSearchResults: React.PropTypes.func,
+    _cleanSearchResults: React.PropTypes.func,
     search: React.PropTypes.object,
     routes: React.PropTypes.array,
     children: React.PropTypes.object
@@ -28,8 +27,8 @@ var App = React.createClass({
     return (
       <div className={klass}>
         <SiteHeader
-          fetchSearchResults={this.props.fetchSearchResults}
-          cleanSearchResults={this.props.cleanSearchResults}
+          fetchSearchResults={this.props._fetchSearchResults}
+          cleanSearchResults={this.props._cleanSearchResults}
           search={this.props.search} />
         <main className='site-body'>
           {this.props.children}
@@ -39,15 +38,21 @@ var App = React.createClass({
   }
 });
 
-function mapStateToProps (state) {
+// /////////////////////////////////////////////////////////////////// //
+// Connect functions
+
+function selector (state) {
   return {
     subregions: state.adminSubregions,
     search: state.search
   };
 }
 
-function mapDispatchToProps (dispatch) {
-  return bindActionCreators({ fetchSearchResults, cleanSearchResults }, dispatch);
+function dispatcher (dispatch) {
+  return {
+    _fetchSearchResults: () => dispatch(fetchSearchResults()),
+    _cleanSearchResults: () => dispatch(cleanSearchResults())
+  };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(App);
+module.exports = connect(selector, dispatcher)(App);
