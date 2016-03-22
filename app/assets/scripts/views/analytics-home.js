@@ -24,7 +24,7 @@ var Analytics = React.createClass({
 
   componentDidMount: function () {
     this.props._fetchAdminSubregions();
-    // this.props._fetchAdminStats();
+    this.props._fetchAdminStats();
     this.props._fetchTofixTasks(null, 1, 10);
   },
 
@@ -43,12 +43,12 @@ var Analytics = React.createClass({
 
             <div className='inner'>
               <div className='col--main'>
-{/*
+
                 <AAExtendedStats
                   fetched={this.props.stats.fetched}
                   fetching={this.props.stats.fetching}
-                  stats={this.props.stats} />
-*/}
+                  stats={this.props.stats.stats} />
+
                 <AATofixTasks
                   fetched={this.props.tofixtasks.fetched}
                   fetching={this.props.tofixtasks.fetching}

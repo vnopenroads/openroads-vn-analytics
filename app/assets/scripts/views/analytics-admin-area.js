@@ -59,12 +59,12 @@ var AnalyticsAA = React.createClass({
 
             <div className='inner'>
               <div className='col--main'>
-{/*
+
                 <AAExtendedStats
                   fetched={this.props.stats.fetched}
                   fetching={this.props.stats.fetching}
-                  stats={this.props.stats} />
-*/}
+                  stats={this.props.stats.stats} />
+
                 <AATofixTasks
                   fetched={this.props.tofixtasks.fetched}
                   fetching={this.props.tofixtasks.fetching}
