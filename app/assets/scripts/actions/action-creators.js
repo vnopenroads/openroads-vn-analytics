@@ -3,6 +3,7 @@ import * as actions from './action-types';
 import config from '../config';
 
 // let mock = require('../mock/1611254000.json');
+// let mockToFix = require('../mock/tofix.json');
 
 function requestAdminSubregions () {
   return {
@@ -98,7 +99,7 @@ export function fetchAdminStats (id = null) {
     // return dispatch(receiveAdminStats(mock));
 
     // TODO swap this out with real url once endpoint is ready
-    let url = id === null ? `${config.api}/admin/stats` : `${config.api}/admin/${id}/stats`;
+    let url = id === null ? `${config.api}/admin/0/stats` : `${config.api}/admin/${id}/stats`;
     return fetch(url)
       .then(response => {
         if (response.status >= 400) {
@@ -108,9 +109,49 @@ export function fetchAdminStats (id = null) {
       })
       .then(json => {
         dispatch(receiveAdminStats(json));
+      }, e => {
+        console.log('e', e);
+        return dispatch(receiveAdminStats(null, 'Data not available'));
+      });
+  };
+}
+
+function requestTofixTasks () {
+  return {
+    type: actions.REQUEST_TOFIX_TASKS
+  };
+}
+
+function receiveTofixTasks (json, error = null) {
+  return {
+    type: actions.RECEIVE_TOFIX_TASKS,
+    json: json,
+    error,
+    receivedAt: Date.now()
+  };
+}
+
+export function fetchTofixTasks (aaid = null, page, limit) {
+  return function (dispatch) {
+    dispatch(requestTofixTasks());
+
+    // Note: `page` is 0 based, so subtract 1.
+    let url = aaid === null
+      ? `${config.api}/admin/0/tasks?page=${--page}&limit=${limit}`
+      : `${config.api}/admin/${aaid}/tasks?page=${--page}&limit=${limit}`;
+    return fetch(url)
+      .then(response => {
+        if (response.status >= 400) {
+          throw new Error('Bad response');
+        }
+        return response.json();
       })
-      .catch(e => {
-        dispatch(receiveAdminStats(null, 'Data not available'));
+      .then(json => {
+        // setTimeout(() => dispatch(receiveTofixTasks(json)), 2000);
+        return dispatch(receiveTofixTasks(json));
+      }, e => {
+        console.log('e', e);
+        return dispatch(receiveTofixTasks(null, 'Data not available'));
       });
   };
 }

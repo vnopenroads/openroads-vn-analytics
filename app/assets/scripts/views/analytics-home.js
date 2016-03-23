@@ -1,26 +1,31 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchAdminSubregions, fetchAdminStats } from '../actions/action-creators';
+import { fetchAdminSubregions, fetchAdminStats, fetchTofixTasks } from '../actions/action-creators';
 import PageHeader from '../components/page-header';
 import AAList from '../components/aa-list';
 import AAStats from '../components/aa-stats';
 import AAExtendedStats from '../components/aa-extended-stats';
 import AAMap from '../components/aa-map';
+import AATofixTasks from '../components/aa-tofix-tasks';
 
 var Analytics = React.createClass({
   displayName: 'Analytics',
 
   propTypes: {
     children: React.PropTypes.object,
+    _fetchAdminSubregions: React.PropTypes.func,
+    _fetchAdminStats: React.PropTypes.func,
+    _fetchTofixTasks: React.PropTypes.func,
     subregions: React.PropTypes.object,
     stats: React.PropTypes.object,
-    dispatch: React.PropTypes.func
+    tofixtasks: React.PropTypes.object
   },
 
   componentDidMount: function () {
-    this.props.dispatch(fetchAdminSubregions());
-    this.props.dispatch(fetchAdminStats());
+    this.props._fetchAdminSubregions();
+    this.props._fetchAdminStats();
+    this.props._fetchTofixTasks(null, 1, 10);
   },
 
   render: function () {
@@ -38,10 +43,20 @@ var Analytics = React.createClass({
 
             <div className='inner'>
               <div className='col--main'>
+
                 <AAExtendedStats
                   fetched={this.props.stats.fetched}
                   fetching={this.props.stats.fetching}
-                  stats={this.props.stats}/>
+                  stats={this.props.stats.stats} />
+
+                <AATofixTasks
+                  fetched={this.props.tofixtasks.fetched}
+                  fetching={this.props.tofixtasks.fetching}
+                  adminAreaName='Philippines'
+                  meta={this.props.tofixtasks.data.tasks.meta}
+                  tasks={this.props.tofixtasks.data.tasks.results}
+                  error={this.props.tofixtasks.error}
+                  sliceList />
               </div>
 
               <div className='col--sec'>
@@ -58,9 +73,23 @@ var Analytics = React.createClass({
   }
 });
 
-module.exports = connect(state => {
+// /////////////////////////////////////////////////////////////////// //
+// Connect functions
+
+function selector (state) {
   return {
     subregions: state.adminSubregions,
-    stats: state.stats
+    stats: state.stats,
+    tofixtasks: state.tofixtasks
   };
-})(Analytics);
+}
+
+function dispatcher (dispatch) {
+  return {
+    _fetchAdminSubregions: () => dispatch(fetchAdminSubregions()),
+    _fetchAdminStats: () => dispatch(fetchAdminStats()),
+    _fetchTofixTasks: (aaid, page, limit) => dispatch(fetchTofixTasks(aaid, page, limit))
+  };
+}
+
+module.exports = connect(selector, dispatcher)(Analytics);

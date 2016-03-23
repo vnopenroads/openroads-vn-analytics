@@ -11,19 +11,19 @@ var AdminAreas = React.createClass({
 
   propTypes: {
     children: React.PropTypes.object,
+    _fetchAdminSubregions: React.PropTypes.func,
     subregions: React.PropTypes.object,
-    params: React.PropTypes.object,
-    dispatch: React.PropTypes.func
+    params: React.PropTypes.object
   },
 
   componentDidMount: function () {
-    this.props.dispatch(fetchAdminSubregions(this.props.params.aaId || null));
+    this.props._fetchAdminSubregions(this.props.params.aaId || null);
   },
 
   componentDidUpdate: function (prevProps, prevState) {
     if (this.props.params.aaId !== prevProps.params.aaId && !this.props.subregions.fetching) {
       console.log('AdminAreas componentDidUpdate', 'update');
-      this.props.dispatch(fetchAdminSubregions(this.props.params.aaId));
+      this.props._fetchAdminSubregions(this.props.params.aaId);
     } else {
       console.log('AdminAreas componentDidUpdate', 'NOT update');
     }
@@ -35,6 +35,7 @@ var AdminAreas = React.createClass({
         <PageHeader
           adminAreaId={this.props.subregions.id}
           pageTitle={this.props.subregions.name}
+          bbox={this.props.subregions.bbox || []}
           actions />
       );
     }
@@ -93,8 +94,19 @@ var AdminAreas = React.createClass({
   }
 });
 
-module.exports = connect(state => {
+// /////////////////////////////////////////////////////////////////// //
+// Connect functions
+
+function selector (state) {
   return {
     subregions: state.adminSubregions
   };
-})(AdminAreas);
+}
+
+function dispatcher (dispatch) {
+  return {
+    _fetchAdminSubregions: (aaid) => dispatch(fetchAdminSubregions(aaid))
+  };
+}
+
+module.exports = connect(selector, dispatcher)(AdminAreas);

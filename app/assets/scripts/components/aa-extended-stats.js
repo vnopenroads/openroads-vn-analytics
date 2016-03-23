@@ -27,11 +27,12 @@ var AAExtendedStats = React.createClass({
     } else if (this.props.fetched) {
       return this.props.stats.error
         ? <p>No data available</p>
-        : <PieChart popoverContentFn={this.chartPopoverContent} data={this.props.stats.stats[dataField]} className='piechart'/>;
+        : <PieChart popoverContentFn={this.chartPopoverContent} data={this.props.stats[dataField]} className='piechart'/>;
     }
   },
 
   render: function () {
+    console.log('stats', this.props);
     if (!this.props.fetched && !this.props.fetching) {
       return null;
     }
@@ -69,7 +70,7 @@ var AAExtendedStats = React.createClass({
           <div className='aa-stats aa-stats--responsibility'>
             <h2 className='aa-stats__title'>Responsibility</h2>
             <div className='aa-stats__contents'>
-              {this.renderChart('or_rdclass')}
+              {this.renderChart('or_responsibility')}
             </div>
           </div>
         </div>
