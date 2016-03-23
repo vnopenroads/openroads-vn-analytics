@@ -18,10 +18,11 @@ import UhOh from './views/uhoh';
 import App from './views/app';
 import Home from './views/home';
 import Editor from './views/editor';
-import Analytics from './views/analytics';
+import Analytics from './views/analytics-home';
+import AnalyticsAA from './views/analytics-admin-area';
 import AdminAreas from './views/admin-areas';
 
-// Sync dispatched route actions to the history
+// Sync dispatched route actions to the syncHistory
 const reduxRouterMiddleware = syncHistory(hashHistory);
 const finalCreateStore = compose(
   // Middleware you want to use in development:
@@ -41,7 +42,8 @@ render((
       <Route path='/' component={App}>
         <Route path='editor' component={Editor} />
         <Route path='editor/*' component={Editor} />
-        <Route path='analytics/:aaId' component={Analytics} />
+        <Route path='analytics' component={Analytics} />
+        <Route path='analytics/:aaId' component={AnalyticsAA} />
         <Route path='analytics/:aaId/admin-areas' component={AdminAreas} />
         <Route path='admin-areas' component={AdminAreas} />
         <IndexRoute component={Home}/>

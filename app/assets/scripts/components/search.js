@@ -12,6 +12,7 @@ var Search = React.createClass({
   propTypes: {
     fetchSearchResults: React.PropTypes.func,
     cleanSearchResults: React.PropTypes.func,
+    onResultClick: React.PropTypes.func,
     results: React.PropTypes.array,
     searching: React.PropTypes.bool,
     fetching: React.PropTypes.bool
@@ -42,6 +43,13 @@ var Search = React.createClass({
       if (this.props.searching) {
         this.resetSearchResults();
       }
+    }
+  },
+
+  onResultClick: function (e) {
+    this.resetSearchResults();
+    if (this.props.onResultClick) {
+      this.props.onResultClick(e);
     }
   },
 
@@ -77,7 +85,7 @@ var Search = React.createClass({
       _.forEach(o, (d, i) => {
         results.push(
           <dd key={`aa-type-${k}-${i}`}>
-            <Link to={`/analytics/${d.id}`} onClick={this.resetSearchResults}><strong>{d.name}</strong><small> <i>in</i> {d.parent.name}</small></Link>
+            <Link to={`/analytics/${d.id}`} onClick={this.onResultClick}><strong>{d.name}</strong><small> <i>in</i> {d.parent.name}</small></Link>
           </dd>
         );
       });
@@ -93,7 +101,7 @@ var Search = React.createClass({
   render: function () {
     return (
       <form className='form-search' ref='searchForm'>
-        <div className={classNames('drop dropdown', {open: this.props.searching})}>
+        <div className={classNames('drop dropdown center', {open: this.props.searching})}>
           <div className='input-group'>
             <input type='search' className='form-control input-search' placeholder='Search administrative area' ref='searchBox' onChange={_.debounce(this.onSearchQueryChange, 300)} />
             <span className='input-group-bttn'>

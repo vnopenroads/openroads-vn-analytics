@@ -133,7 +133,10 @@ a:active{
 .site-header {
   background: $primary-color;
   color: #fff;
-  padding: .8rem 0 .7rem;
+  padding: 0.8rem 0 0.7rem;
+  position: relative;
+  z-index: 99999;
+
   > .inner {
     @extend .row;
     @extend .row--centered;
@@ -141,7 +144,7 @@ a:active{
 
   .site {
     &__headline {
-      @include col(8/12);
+      @include col(4/12);
       * {
         vertical-align: middle;
         display: inline-block;
@@ -164,50 +167,174 @@ a:active{
 
     /* Main navigation */
     &__nav {
-      ul {
-        @extend .clearfix;
-        margin-left: 2rem;
+      @include col(12/12);
+
+      &.show-menu,
+      &.show-search {
+        margin-top: 1rem;
       }
-      li {
-        float: left;
-        margin-left: 0.5rem;
-        &:first-child {
-          margin-left: 0;
-        }
+      @include media(large-up) {
+        @include col(8/12);
+        // margin-top: -0.5rem;
+        // margin-bottom: -0.5rem;
+      }
+  
+      // vv Menu
+      .toggle-menu {
+        position: absolute;
+        font-size: 1rem;
+        line-height: 1rem;
+        margin: 0;
+        top: 1rem;
+        right: $global-padding;
+        z-index: 1;
+
         a {
           color: #fff;
-          text-transform: uppercase;
           text-decoration: none;
-          padding: 0.5rem;
-          font-size: 0.75rem;
-          line-height: 1rem;
-          display: block;
-          font-weight: bold;
+          &:before {
+            @extend .collecticons-circle-information;
+          }
+        }
+
+        span {
+          @extend .visually-hidden;
+        }
+
+        @include media(small-up) {
+          right: $global-padding * 2;
+        }
+        @include media(large-up) {
+          display: none;
         }
       }
+
+      .menu-wrapper {
+        overflow: hidden;
+        visibility: hidden;
+        opacity: 0;
+        max-height: 0;
+        transition: opacity 0.16s ease 0s, max-height 0.16s ease 0s, visibility 0.16s linear 0s;
+        @include media(large-up) {
+          @include col(4/8);
+          display: block;
+          overflow: auto;
+          visibility: visible;
+          opacity: 1;
+          max-height: 600rem;
+          text-align: right;
+        }
+      }
+      &.show-menu .menu-wrapper {
+        display: block;
+        overflow: auto;
+        visibility: visible;
+        opacity: 1;
+        max-height: 600rem;
+      }
+
+      .global-menu {
+        @extend .clearfix;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        @include media(large-up) {
+          float: right;
+          > li {
+            float: left;
+            margin: 0 ($global-padding / 2) 0 0;
+            &:last-child {
+              margin-right: 0;
+            }
+          }
+        }
+      }
+
+      .global-menu-item {
+        @extend .antialiased;
+        display: block;
+        line-height: 2rem;
+        padding: 0 $global-padding;
+        color: #fff;
+        font-weight: normal;
+        text-decoration: none;
+        &, &:visited {
+          color: #fff;
+        }
+        &--active {
+          background: tint($primary-color, 8%);
+          border-radius: $global-radius;
+        }
+      }
+      // ^^ Menu.
+
+      // vv Search.
+      .toggle-search {
+        position: absolute;
+        font-size: 1rem;
+        line-height: 1rem;
+        margin: 0;
+        top: 1rem;
+        right: $global-padding + 2rem;
+        z-index: 1;
+
+        a {
+          color: #fff;
+          text-decoration: none;
+          &:before {
+            @extend .collecticons-magnifier-right;
+          }
+        }
+
+        span {
+          @extend .visually-hidden;
+        }
+
+        @include media(small-up) {
+          right: $global-padding * 2 + 2rem;
+        }
+        @include media(large-up) {
+          display: none;
+        }
+      }
+      .search-wrapper {
+        overflow: hidden;
+        visibility: hidden;
+        opacity: 0;
+        max-height: 0;
+        transition: opacity 0.16s ease 0s, max-height 0.16s ease 0s, visibility 0.16s linear 0s;
+        @include media(large-up) {
+          @include col(4/8);
+          display: block;
+          overflow: visible;
+          visibility: visible;
+          opacity: 1;
+          max-height: 600rem;
+          text-align: right;
+        }
+      }
+      &.show-search .search-wrapper {
+        display: block;
+        overflow: visible;
+        visibility: visible;
+        opacity: 1;
+        max-height: 600rem;
+      }
+      // ^^ Search.
     }
+    /* END Main navigation */
+
+
 
     &__search {
-      @include col(4/12);
+      // @include col(5/12);
 
       .drop {
         @extend .clearfix;
       }
 
-      .drop-content {
-        left: auto;
-        right: 0rem;
-        width: 100%;
-        max-width: 20rem;
-
-        &:before {
-          left: 50%;
-          margin-left: -0.5rem;
-        }
-      }
-
       .input-group {
-        float: right;
+        margin: 0 auto;
         max-width: 20rem;
       }
 
@@ -222,7 +349,8 @@ a:active{
       .search-results {
         z-index: 9999;
         color: $base-color;
-        min-width: 80%;
+        width: 80%;
+        max-width: 25rem;
 
         .drop-menu-sectitle {
           overflow: hidden;
@@ -316,6 +444,7 @@ a:active{
     .bttn-edit {
       @extend .bttn-m, .bttn-secondary;
       text-decoration: none;
+      box-shadow: none;
     }
   }
 

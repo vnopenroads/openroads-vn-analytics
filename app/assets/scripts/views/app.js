@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import _ from 'lodash';
 import { fetchSearchResults, cleanSearchResults } from '../actions/action-creators';
 import SiteHeader from '../components/site-header';
 
@@ -12,12 +13,20 @@ var App = React.createClass({
     fetchSearchResults: React.PropTypes.func,
     cleanSearchResults: React.PropTypes.func,
     search: React.PropTypes.object,
+    routes: React.PropTypes.array,
     children: React.PropTypes.object
   },
 
   render: function () {
+    let r = _.last(this.props.routes).path;
+    let klass;
+    switch (r) {
+      case undefined:
+        klass = 'page--landing';
+        break;
+    }
     return (
-      <div>
+      <div className={klass}>
         <SiteHeader
           fetchSearchResults={this.props.fetchSearchResults}
           cleanSearchResults={this.props.cleanSearchResults}
