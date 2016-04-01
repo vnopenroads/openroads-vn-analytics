@@ -137,8 +137,8 @@ export function fetchTofixTasks (aaid = null, page, limit) {
 
     // Note: `page` is 0 based, so subtract 1.
     let url = aaid === null
-      ? `${config.api}/admin/0/tasks?page=${--page}&limit=${limit}`
-      : `${config.api}/admin/${aaid}/tasks?page=${--page}&limit=${limit}`;
+      ? `${config.api}/admin/0/waytasks?page=${--page}&limit=${limit}`
+      : `${config.api}/admin/${aaid}/waytasks?page=${--page}&limit=${limit}`;
     return fetch(url)
       .then(response => {
         if (response.status >= 400) {

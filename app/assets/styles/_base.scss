@@ -810,7 +810,7 @@ a:active{
   &__title {
     @extend .hd-s;
   }
-  &__contents li {
+  &__contents > ul > li {
     margin-bottom: $global-padding * 2;
     &:last-child {
       margin-bottom: 0;
@@ -826,6 +826,15 @@ a:active{
     padding: $global-padding;
     &:visited, &:active {
       color: inherit;
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+    }
+
+    ul {
+      list-style: disc;
+      list-style-position: inside;
     }
   }
 
