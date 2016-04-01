@@ -16,13 +16,12 @@ var AATofixTasks = React.createClass({
     sliceList: React.PropTypes.bool
   },
 
-  renderTasks: function (task) {
+  renderWayTasks: function (way) {
     return (
-      <li key={task.id}>
+      <li key={way.way_id}>
         <AATofixTaskItem
-          id={task.id}
-          type={task.type}
-          details={task.details} />
+          id={way.way_id}
+          items={way.tasks} />
       </li>
     );
   },
@@ -59,7 +58,7 @@ var AATofixTasks = React.createClass({
 
     return (
       <div className='aa-tofixtasks__contents'>
-        <ul>{this.props.tasks.map(this.renderTasks)}</ul>
+        <ul>{this.props.tasks.map(this.renderWayTasks)}</ul>
         {this.renderViewAllLink()}
       </div>
     );
@@ -70,7 +69,7 @@ var AATofixTasks = React.createClass({
       return null;
     }
 
-    let title = 'To fix';
+    let title = 'Way tasks';
     if (this.props.fetched && !this.props.fetching && this.props.meta.total) {
       title += ` (${this.props.meta.total})`;
     }
@@ -87,26 +86,22 @@ var AATofixTaskItem = React.createClass({
   displayName: 'AATofixTaskItem',
 
   propTypes: {
-    type: React.PropTypes.string,
-    details: React.PropTypes.string,
-    id: React.PropTypes.number,
-    fetching: React.PropTypes.bool
-  },
-
-  typeMatrix: {
-    'missing-prop': 'Missing Props'
+    items: React.PropTypes.array,
+    id: React.PropTypes.number
   },
 
   render: function () {
     return (
-      <Link to='' className='aa-tofixtasks__wrapper'>
+      <Link to={`editor/id=w${this.props.id}`} className='aa-tofixtasks__wrapper'>
         <div className='flag'>
           <div className='flag__image'>
             <div className='aa-tofixtasks__map'>MAP-{this.props.id}</div>
           </div>
           <div className='flag__body'>
-            <p><strong>Type:</strong> {this.typeMatrix[this.props.type]}</p>
-            <p><strong>Details:</strong> {this.props.details}</p>
+            <h2>Way {this.props.id}</h2>
+            <ul>
+              {this.props.items.map((o, i) => <li key={i}>{o.details}</li>)}
+            </ul>
           </div>
         </div>
       </Link>
