@@ -10,7 +10,7 @@ var AAMap = React.createClass({
     bounds: React.PropTypes.array
   },
 
-  mapInitialView: [0, 0],
+  mapInitialView: [10.995, 122.267],
   mapInitialZoom: 6,
 
   map: null,
