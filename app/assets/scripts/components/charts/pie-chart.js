@@ -104,7 +104,7 @@ var Chart = function (el, data) {
   };
 
   this.setData = function (data) {
-    if (data === null) {
+    if (!data) {
       return null;
     }
 
