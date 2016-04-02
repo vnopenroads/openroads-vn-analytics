@@ -50,7 +50,7 @@ function selector (state) {
 
 function dispatcher (dispatch) {
   return {
-    _fetchSearchResults: () => dispatch(fetchSearchResults()),
+    _fetchSearchResults: (query) => dispatch(fetchSearchResults(query)),
     _cleanSearchResults: () => dispatch(cleanSearchResults())
   };
 }
