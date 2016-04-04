@@ -62,6 +62,8 @@ var AdminAreas = React.createClass({
     if (this.props.subregions.id) {
       return (
         <AAList
+          fetched={this.props.subregions.fetched}
+          fetching={this.props.subregions.fetching}
           adminAreaId={this.props.subregions.id}
           adminAreaName={this.props.subregions.name}
           adminAreas={this.props.subregions.adminAreas}/>
@@ -70,6 +72,8 @@ var AdminAreas = React.createClass({
 
     return (
       <AAList
+        fetched={this.props.subregions.fetched}
+        fetching={this.props.subregions.fetching}
         adminAreas={this.props.subregions.adminAreas} />
     );
   },

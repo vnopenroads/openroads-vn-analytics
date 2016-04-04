@@ -34,6 +34,12 @@ var ID = function (id) {
   this._type = this.identify();
 };
 
+ID.prototype.COUNTRY = 'n';
+ID.prototype.REGION = 'r';
+ID.prototype.PROVINCE = 'p';
+ID.prototype.MUNICIPALITY = 'm';
+ID.prototype.BARANGAY = 'b';
+
 // Check that ID to make sure it's valid.
 ID.prototype.verify = function () {
   // IDs are numerical, so enforce this.
