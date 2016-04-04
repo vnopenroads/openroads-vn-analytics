@@ -47,6 +47,7 @@ var Analytics = React.createClass({
                 <AAExtendedStats
                   fetched={this.props.stats.fetched}
                   fetching={this.props.stats.fetching}
+                  error={this.props.stats.error}
                   stats={this.props.stats.stats} />
 
                 <AATofixTasks
@@ -61,6 +62,8 @@ var Analytics = React.createClass({
 
               <div className='col--sec'>
                 <AAList
+                  fetched={this.props.subregions.fetched}
+                  fetching={this.props.subregions.fetching}
                   adminAreas={this.props.subregions.adminAreas}
                   sliceList />
               </div>

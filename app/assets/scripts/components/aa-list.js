@@ -8,6 +8,8 @@ var AAList = React.createClass({
   displayName: 'AAList',
 
   propTypes: {
+    fetched: React.PropTypes.bool,
+    fetching: React.PropTypes.bool,
     adminAreaId: React.PropTypes.number,
     adminAreaName: React.PropTypes.string,
     adminAreas: React.PropTypes.array,
@@ -42,7 +44,15 @@ var AAList = React.createClass({
 
   renderAdminAreaTable: function () {
     if (!this.props.adminAreas.length) {
-      return null;
+      if (this.ID.identify() === this.ID.BARANGAY) {
+        return (
+          <div>
+            <h2 className='hd-s'>Administrative Areas</h2>
+            <p className='aa-list__empty'><strong>{this.props.adminAreaName}</strong> is a barangay and there are no lower administrative areas to show</p>
+          </div>
+        );
+      }
+      return <p>No data available</p>;
     }
 
     let adminAreas;
@@ -77,10 +87,46 @@ var AAList = React.createClass({
 
     return this.props.adminAreaId
       ? <Link to={`/analytics/${this.props.adminAreaId}/admin-areas`} className='bttn-view-more'>View all {this.ID.getChildDisplayType(true)}</Link>
-      : <Link to='/admin-areas' className='bttn-view-more'>View all {this.ID.getChildDisplayType(true)}</Link>;
+      : <Link to='/analytics/admin-areas' className='bttn-view-more'>View all {this.ID.getChildDisplayType(true)}</Link>;
+  },
+
+  renderLoadingPlaceholder: function () {
+    return (
+      <div className='aa-list placeholder'>
+        <h2 className='hd-s'>&nbsp;</h2>
+        <table className='aa-list__table'>
+          <thead>
+            <tr>
+              <th className='aa-list-title'><span>&nbsp;</span></th>
+              <th className='aa-list-chart'><span>&nbsp;</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {[0, 0, 0].map((o, i) => {
+              return (<tr key={i}>
+                <td colSpan='2'>
+                  <p>&nbsp;</p>
+                  <ul className='progress-bar progress-bar--inline'>
+                    <li><span className='value'>&nbsp;</span></li>
+                  </ul>
+                </td>
+              </tr>);
+            })}
+          </tbody>
+        </table>
+      </div>
+    );
   },
 
   render: function () {
+    if (!this.props.fetched && !this.props.fetching) {
+      return null;
+    }
+
+    if (this.props.fetching) {
+      return this.renderLoadingPlaceholder();
+    }
+
     this.ID = new ID(this.props.adminAreaId);
 
     return (

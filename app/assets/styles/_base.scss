@@ -774,12 +774,51 @@ a:active{
       // font-weight: $base-font-bold;
     }
   }
+  &__empty {
+    padding: 2rem;
+    border-radius: $global-radius;
+    border: 2px dashed $flat-shadow-rgba;
+  }
 
   .bttn-view-more {
     float: right;
     margin-right: 1rem;
     font-weight: $base-font-bold;
   }
+
+  // Placeholder loading.
+  &.placeholder {
+    opacity: 0.5;
+    .hd-s {
+      background: #ddd;
+      // font-size: 1.5rem;
+      // line-height: 1;
+    }
+    th {
+      width: 50%;
+      line-height: 1;
+      span {
+        display: block;
+        background: #ddd;
+        margin-right: 1rem;
+      }
+      &:last-child span {
+        margin: 0;
+      }
+    }
+    tbody > tr > td {
+      p {
+        width: 30%;
+        background: #ddd;
+        line-height: 1;
+        margin-bottom: .5rem;
+      }
+      .progress-bar li {
+        background: #ddd;
+      }
+    }
+  }
+  // ^^ Placeholder loading.
 }
 
 .prj-list {
