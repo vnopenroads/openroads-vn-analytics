@@ -12,6 +12,7 @@ var AAExtendedStats = React.createClass({
   propTypes: {
     level: React.PropTypes.number,
     stats: React.PropTypes.object,
+    error: React.PropTypes.string,
     fetched: React.PropTypes.bool,
     fetching: React.PropTypes.bool
   },
@@ -25,14 +26,13 @@ var AAExtendedStats = React.createClass({
     if (this.props.fetching) {
       return <p>Loading data</p>;
     } else if (this.props.fetched) {
-      return this.props.stats.error
+      return this.props.error || !this.props.stats[dataField]
         ? <p>No data available</p>
         : <PieChart popoverContentFn={this.chartPopoverContent} data={this.props.stats[dataField]} className='piechart'/>;
     }
   },
 
   render: function () {
-    console.log('stats', this.props);
     if (!this.props.fetched && !this.props.fetching) {
       return null;
     }
