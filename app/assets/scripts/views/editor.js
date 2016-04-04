@@ -44,6 +44,12 @@ var Editor = React.createClass({
           this.props.dispatch(push(`/editor/${hash}`));
           break;
       }
+    } else if (e.data.type === 'navigate') {
+      switch (e.data.id) {
+        case 'or-editor':
+          this.props.dispatch(push(e.data.url));
+          break;
+      }
     }
   },
 
