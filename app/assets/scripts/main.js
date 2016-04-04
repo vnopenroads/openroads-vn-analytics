@@ -45,6 +45,7 @@ render((
         <Route path='editor/*' component={Editor} />
         <Route path='analytics' component={Analytics} />
         <Route path='analytics/tasks' component={TofixTasks} />
+        <Route path='analytics/admin-areas' component={AdminAreas} />
         <Route path='analytics/:aaId' component={AnalyticsAA} />
         <Route path='analytics/:aaId/admin-areas' component={AdminAreas} />
         <Route path='analytics/:aaId/tasks' component={TofixTasks} />

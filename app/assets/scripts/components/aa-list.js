@@ -87,7 +87,7 @@ var AAList = React.createClass({
 
     return this.props.adminAreaId
       ? <Link to={`/analytics/${this.props.adminAreaId}/admin-areas`} className='bttn-view-more'>View all {this.ID.getChildDisplayType(true)}</Link>
-      : <Link to='/admin-areas' className='bttn-view-more'>View all {this.ID.getChildDisplayType(true)}</Link>;
+      : <Link to='/analytics/admin-areas' className='bttn-view-more'>View all {this.ID.getChildDisplayType(true)}</Link>;
   },
 
   renderLoadingPlaceholder: function () {

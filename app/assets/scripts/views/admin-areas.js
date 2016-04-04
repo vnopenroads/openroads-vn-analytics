@@ -54,7 +54,7 @@ var AdminAreas = React.createClass({
       );
     }
     return (
-      <Link to='/'>Back to overview</Link>
+      <Link to='/analytics'>Back to overview</Link>
     );
   },
 
