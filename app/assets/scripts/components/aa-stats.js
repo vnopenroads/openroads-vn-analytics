@@ -16,7 +16,9 @@ var AAStats = React.createClass({
     let subregions = null;
     if (this.props.adminAreas && this.props.adminAreas.length) {
       subregions = {
-        id: new ID(this.props.adminAreas[0].id),
+        // https://github.com/developmentseed/openroads/issues/298
+        // No harm using the last admin area instead of the first.
+        id: new ID(this.props.adminAreas[this.props.adminAreas.length - 1].id),
         count: this.props.adminAreas.length
       };
     }
