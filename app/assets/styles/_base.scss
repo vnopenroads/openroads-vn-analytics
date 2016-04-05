@@ -757,6 +757,12 @@ a:active{
   }
 }
 
+%empty-box {
+  padding: 2rem;
+  border-radius: $global-radius;
+  border: 2px dashed $flat-shadow-rgba;
+}
+
 .aa-list {
   @extend .clearfix;
   &__table {
@@ -775,9 +781,7 @@ a:active{
     }
   }
   &__empty {
-    padding: 2rem;
-    border-radius: $global-radius;
-    border: 2px dashed $flat-shadow-rgba;
+    @extend %empty-box;
   }
 
   .bttn-view-more {
@@ -875,6 +879,11 @@ a:active{
       list-style: disc;
       list-style-position: inside;
     }
+  }
+  &--empty {
+    @extend %empty-box;
+    text-align: center;
+    text-transform: uppercase;
   }
 
   // vv Temp.
