@@ -47,9 +47,9 @@ var AATofixTasks = React.createClass({
         </ul>
       );
     } else if (this.props.error) {
-      content = <p>Ups.. An error occourred. Try again.</p>;
+      content = <p className='aa-tofixtasks--empty'>Ups... An error occourred. Try again.</p>;
     } else if (!this.props.meta.total) {
-      content = <p>Great! All errors are fixed.</p>;
+      content = <p className='aa-tofixtasks--empty'>Great! All errors are fixed</p>;
     }
 
     if (content) {
@@ -69,7 +69,7 @@ var AATofixTasks = React.createClass({
       return null;
     }
 
-    let title = 'Way tasks';
+    let title = 'Errors Detected';
     if (this.props.fetched && !this.props.fetching && this.props.meta.total) {
       title += ` (${this.props.meta.total})`;
     }

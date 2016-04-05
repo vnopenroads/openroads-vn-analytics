@@ -55,6 +55,7 @@ var AnalyticsAA = React.createClass({
               bounds={this.props.subregions.bbox} />
 
             <AAStats
+              tofixtasks={this.props.tofixtasks}
               adminAreas={this.props.subregions.adminAreas} />
 
             <div className='inner'>
