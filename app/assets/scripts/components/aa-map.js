@@ -2,6 +2,7 @@
 /* global L */
 import React from 'react';
 import _ from 'lodash';
+import config from '../config';
 
 var AAMap = React.createClass({
   displayName: 'AAMap',
@@ -19,7 +20,7 @@ var AAMap = React.createClass({
     this.map = L.mapbox.map(this.refs.map, 'devseed.524e060f', { zoomControl: false, scrollWheelZoom: false })
       .setView(this.mapInitialView, this.mapInitialZoom);
 
-    L.tileLayer('http://50.16.162.86/{z}/{x}/{y}.png').addTo(this.map);
+    L.tileLayer(config.roadNetTileLayerUrl).addTo(this.map);
     new L.Control.Zoom({ position: 'bottomright' }).addTo(this.map);
   },
 
