@@ -1,7 +1,7 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
+import { push, replace } from 'react-router-redux';
 import config from '../config';
 
 var Editor = React.createClass({
@@ -41,7 +41,7 @@ var Editor = React.createClass({
       switch (e.data.id) {
         case 'or-editor':
           var hash = this.cleanUrl(e.data.url, config.editorUrl);
-          this.props.dispatch(push(`/editor/${hash}`));
+          this.props.dispatch(replace(`/editor/${hash}`));
           break;
       }
     } else if (e.data.type === 'navigate') {
