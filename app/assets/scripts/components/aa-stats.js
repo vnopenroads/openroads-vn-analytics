@@ -46,6 +46,7 @@ var AAStats = React.createClass({
                   </Dropdown>
                 </div>
               </li>
+{/*
               <li className='aa-stats__element'>
                 <div className='wrapper'>
                   <strong><span className='highlight'>$2.5M</span> Asset Value</strong>
@@ -60,6 +61,7 @@ var AAStats = React.createClass({
                   </Dropdown>
                 </div>
               </li>
+*/}
               <li className='aa-stats__element'>
                 <div className='wrapper'>
                 {tofixtasks !== null ? <a href='#' className='aa-stats__link'><strong><span className='highlight'>{formatThousands(tofixtasks)}</span> Errors detected</strong></a> : null}
@@ -67,7 +69,7 @@ var AAStats = React.createClass({
               </li>
               <li className='aa-stats__element'>
                 <div className='wrapper'>
-                  <a href='#' className='aa-stats__link'><strong><span className='highlight'>8</span> Projects</strong></a>
+                  <a href='#' className='aa-stats__link'><strong><span className='highlight'>n/a</span> Projects</strong></a>
                 </div>
               </li>
               <li className='aa-stats__element'>

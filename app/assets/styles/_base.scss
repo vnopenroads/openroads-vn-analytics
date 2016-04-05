@@ -640,51 +640,63 @@ a:active{
 }
 
 .aa-stats--completeness {
-  padding: ($global-padding * 1.5) 0 ($global-padding * 1);
+  padding: ($global-padding * 1.5) 0 ($global-padding * 1.5);
 
   .aa-stats__title {
     @extend .visually-hidden;
   }
 
-  .aa-stats__element:nth-child(1),
-  .aa-stats__element:nth-child(2) {
+  // .aa-stats__element:nth-child(1),
+  // .aa-stats__element:nth-child(2) {
+  //   @include col(6/12, $cycle: 2);
+  //   margin-bottom: 2rem;
+  //   @include media(small-up) {
+  //     @include col(6/12);
+  //   }
+  //   @include media(large-up) {
+  //     @include col(3/12, $uncycle: 2);
+  //     margin-bottom: 0;
+  //   }
+  // }
+  // .aa-stats__element:nth-child(3),
+  // .aa-stats__element:nth-child(4),
+  // .aa-stats__element:nth-child(5) {
+  //   @include col(6/12, $cycle: 2);
+  //   margin-bottom: 2rem;
+  //   @include media(small-up) {
+  //     @include col(4/12, $uncycle: 2);
+  //     margin-bottom: 0;
+  //   }
+  //   @include media(large-up) {
+  //     @include col(2/12, $uncycle: 2);
+  //     margin-bottom: 0;
+  //   }
+  // }
+  // .aa-stats__element:last-child {
+  //   margin: 0
+  // }
+
+  // .aa-stats__element:nth-child(2) {
+  //   @include media(large-up) {
+  //     box-shadow: 1px 0 0 0 rgba(#fff, 0.16);
+  //   }
+  // }
+
+  .aa-stats__element {
     @include col(6/12, $cycle: 2);
     margin-bottom: 2rem;
-    @include media(small-up) {
-      @include col(6/12);
+    font-size: 1rem;
+    color: $base-color;
+
+    &:nth-last-child(1),
+    &:nth-last-child(2) {
+      margin-bottom: 0;
     }
-    @include media(large-up) {
+
+    @include media(small-up) {
       @include col(3/12, $uncycle: 2);
       margin-bottom: 0;
     }
-  }
-  .aa-stats__element:nth-child(3),
-  .aa-stats__element:nth-child(4),
-  .aa-stats__element:nth-child(5) {
-    @include col(6/12, $cycle: 2);
-    margin-bottom: 2rem;
-    @include media(small-up) {
-      @include col(4/12, $uncycle: 2);
-      margin-bottom: 0;
-    }
-    @include media(large-up) {
-      @include col(2/12, $uncycle: 2);
-      margin-bottom: 0;
-    }
-  }
-  .aa-stats__element:last-child {
-    margin: 0
-  }
-
-  .aa-stats__element:nth-child(2) {
-    @include media(large-up) {
-      box-shadow: 1px 0 0 0 rgba(#fff, 0.16);
-    }
-  }
-
-  .aa-stats__element {
-    font-size: 1rem;
-    color: $base-color;
 
     .wrapper {
       text-align: center;
