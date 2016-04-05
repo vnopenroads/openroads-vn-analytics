@@ -2,12 +2,14 @@
 import React from 'react';
 import Dropdown from '../components/dropdown';
 import ID from '../utils/id';
+import { formatThousands } from '../utils/format';
 
 var AAStats = React.createClass({
   displayName: 'AAStats',
 
   propTypes: {
-    adminAreas: React.PropTypes.array
+    adminAreas: React.PropTypes.array,
+    tofixtasks: React.PropTypes.object
   },
 
   render: function () {
@@ -17,6 +19,11 @@ var AAStats = React.createClass({
         id: new ID(this.props.adminAreas[0].id),
         count: this.props.adminAreas.length
       };
+    }
+
+    let tofixtasks = null;
+    if (this.props.tofixtasks.fetched && !this.props.tofixtasks.fetching) {
+      tofixtasks = this.props.tofixtasks.data.tasks.meta.total;
     }
 
     return (
@@ -55,7 +62,7 @@ var AAStats = React.createClass({
               </li>
               <li className='aa-stats__element'>
                 <div className='wrapper'>
-                  <a href='#' className='aa-stats__link'><strong><span className='highlight'>121</span> Errors to Fix</strong></a>
+                {tofixtasks !== null ? <a href='#' className='aa-stats__link'><strong><span className='highlight'>{formatThousands(tofixtasks)}</span> Errors to Fix</strong></a> : null}
                 </div>
               </li>
               <li className='aa-stats__element'>
