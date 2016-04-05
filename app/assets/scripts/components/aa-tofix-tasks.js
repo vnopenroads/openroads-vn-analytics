@@ -69,7 +69,7 @@ var AATofixTasks = React.createClass({
       return null;
     }
 
-    let title = 'Way tasks';
+    let title = 'Errors Detected';
     if (this.props.fetched && !this.props.fetching && this.props.meta.total) {
       title += ` (${this.props.meta.total})`;
     }

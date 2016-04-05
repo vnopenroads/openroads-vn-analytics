@@ -62,7 +62,7 @@ var AAStats = React.createClass({
               </li>
               <li className='aa-stats__element'>
                 <div className='wrapper'>
-                {tofixtasks !== null ? <a href='#' className='aa-stats__link'><strong><span className='highlight'>{formatThousands(tofixtasks)}</span> Errors to Fix</strong></a> : null}
+                {tofixtasks !== null ? <a href='#' className='aa-stats__link'><strong><span className='highlight'>{formatThousands(tofixtasks)}</span> Errors detected</strong></a> : null}
                 </div>
               </li>
               <li className='aa-stats__element'>
