@@ -876,11 +876,16 @@ a:active{
     text-decoration: none;
     color: inherit;
     background: #fff;
+    transition: background 200ms ease-in-out;
     border-radius: $global-radius;
     box-shadow: 0 0 0 2px $flat-shadow-rgba;
     padding: $global-padding;
     &:visited, &:active {
       color: inherit;
+    }
+    &:hover {
+      opacity: 1;
+      background: #fbfbfb;
     }
 
     h2 {
