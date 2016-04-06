@@ -405,6 +405,9 @@ a:active{
             float: right;
           }
         }
+        .drop-menu-result a {
+          @extend .truncated;
+        }
 
         i {
           opacity: 0.64;
