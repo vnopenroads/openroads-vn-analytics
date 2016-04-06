@@ -39,6 +39,7 @@ var Analytics = React.createClass({
             <AAMap />
 
             <AAStats
+              stats={this.props.stats.stats}
               tofixtasks={this.props.tofixtasks}
               adminAreas={this.props.subregions.adminAreas} />
 
