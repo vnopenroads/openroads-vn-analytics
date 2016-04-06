@@ -96,7 +96,7 @@ var Search = React.createClass({
       results.push(<dt key={`aa-type-${k}`} className='drop-menu-sectitle'><strong>{ID.getDisplayType(k, true)}</strong> <small className='badge'>{o.length}</small></dt>);
       // Admin areas.
       _.forEach(o, (d, i) => {
-        let lPath = this.props.isEditor ? `/editor/bounds=${d.bbox.join('/')}` : `/analytics/${d.id}`;
+        let lPath = this.props.isEditor ? `/editor/bbox=${d.bbox.join('/')}` : `/analytics/${d.id}`;
         results.push(
           <dd key={`aa-type-${k}-${i}`} className='drop-menu-result'>
             <Link to={lPath} onClick={this.onResultClick} title={`${d.name} in ${d.parent.name}`}><strong>{d.name}</strong><small> <i>in</i> {d.parent.name}</small></Link>
