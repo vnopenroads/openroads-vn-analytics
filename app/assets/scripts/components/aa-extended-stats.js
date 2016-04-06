@@ -58,13 +58,13 @@ var AAExtendedStats = React.createClass({
                   <li className='aa-stats__element'>
                     <p className='aa-stat__value'><strong>{formatPercent(extent.national.length)}</strong>National</p>
                     <ul className='progress-bar progress-bar--high'>
-                      <li style={{width: formatPercent(extent.national.length)}}><span className='value'>217,456km</span></li>
+                      <li style={{width: formatPercent(extent.national.length, 100)}}></li>
                     </ul>
                   </li>
                   <li className='aa-stats__element'>
                     <p className='aa-stat__value'><strong>{formatPercent(extent.local.length)}</strong>Local</p>
                     <ul className='progress-bar progress-bar--low'>
-                      <li style={{width: formatPercent(extent.local.length)}}><span className='value'>50,456km</span></li>
+                      <li style={{width: formatPercent(extent.local.length, 100)}}></li>
                     </ul>
                   </li>
                 </ul>
