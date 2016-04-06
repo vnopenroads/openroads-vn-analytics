@@ -52,7 +52,7 @@ var AnalyticsAA = React.createClass({
         <div className='page__body aa'>
           <div className='aa-main'>
             <AAMap
-              bounds={this.props.subregions.bbox} />
+              bbox={this.props.subregions.bbox} />
 
             <AAStats
               tofixtasks={this.props.tofixtasks}

@@ -8,7 +8,7 @@ var AAMap = React.createClass({
   displayName: 'AAMap',
 
   propTypes: {
-    bounds: React.PropTypes.array
+    bbox: React.PropTypes.array
   },
 
   mapInitialView: [10.995, 122.267],
@@ -29,8 +29,8 @@ var AAMap = React.createClass({
   },
 
   componentDidUpdate: function (prevProps) {
-    if (this.props.bounds && this.props.bounds.length && !_.isEqual(prevProps.bounds, this.props.bounds)) {
-      let b = this.props.bounds;
+    if (this.props.bbox && this.props.bbox.length && !_.isEqual(prevProps.bbox, this.props.bbox)) {
+      let b = this.props.bbox;
       this.map.fitBounds([
         [b[1], b[0]],
         [b[3], b[2]]

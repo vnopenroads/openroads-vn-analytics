@@ -29,6 +29,7 @@ var App = React.createClass({
         <SiteHeader
           fetchSearchResults={this.props._fetchSearchResults}
           cleanSearchResults={this.props._cleanSearchResults}
+          routes={this.props.routes}
           search={this.props.search} />
         <main className='site-body'>
           {this.props.children}

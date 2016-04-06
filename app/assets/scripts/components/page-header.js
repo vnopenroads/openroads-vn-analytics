@@ -19,7 +19,7 @@ var PageHeader = React.createClass({
       return (
         <div className='page__actions'>
           <ul className='actions-menu'>
-            <li><Link to={`/editor/bounds=${this.props.bbox.join('/')}`} className='bttn-edit'>Improve map</Link></li>
+            <li><Link to={`/editor/bbox=${this.props.bbox.join('/')}`} className='bttn-edit'>Improve map</Link></li>
           </ul>
         </div>
       );
