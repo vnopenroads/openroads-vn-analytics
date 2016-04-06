@@ -15,6 +15,7 @@ var Search = React.createClass({
     onResultClick: React.PropTypes.func,
     results: React.PropTypes.array,
     searching: React.PropTypes.bool,
+    isEditor: React.PropTypes.bool,
     fetching: React.PropTypes.bool
   },
 
@@ -46,6 +47,16 @@ var Search = React.createClass({
     }
   },
 
+  onKeyup: function (e) {
+    // Esc key
+    if (e.keyCode === 27) {
+      if (this.props.searching) {
+        this.refs.searchBox.blur();
+        this.resetSearchResults();
+      }
+    }
+  },
+
   onResultClick: function (e) {
     this.resetSearchResults();
     if (this.props.onResultClick) {
@@ -60,10 +71,12 @@ var Search = React.createClass({
 
   componentDidMount: function () {
     document.addEventListener('click', this.onDocumentClick, false);
+    document.addEventListener('keyup', this.onKeyup, false);
   },
 
   componentWillUnmount: function () {
     document.removeEventListener('click', this.onDocumentClick, false);
+    document.removeEventListener('keyup', this.onKeyup, false);
   },
 
   renderResults: function () {
@@ -83,9 +96,10 @@ var Search = React.createClass({
       results.push(<dt key={`aa-type-${k}`} className='drop-menu-sectitle'><strong>{ID.getDisplayType(k, true)}</strong> <small className='badge'>{o.length}</small></dt>);
       // Admin areas.
       _.forEach(o, (d, i) => {
+        let lPath = this.props.isEditor ? `/editor/bbox=${d.bbox.join('/')}` : `/analytics/${d.id}`;
         results.push(
-          <dd key={`aa-type-${k}-${i}`}>
-            <Link to={`/analytics/${d.id}`} onClick={this.onResultClick}><strong>{d.name}</strong><small> <i>in</i> {d.parent.name}</small></Link>
+          <dd key={`aa-type-${k}-${i}`} className='drop-menu-result'>
+            <Link to={lPath} onClick={this.onResultClick} title={`${d.name} in ${d.parent.name}`}><strong>{d.name}</strong><small> <i>in</i> {d.parent.name}</small></Link>
           </dd>
         );
       });

@@ -10,6 +10,7 @@ var SiteHeader = React.createClass({
   propTypes: {
     fetchSearchResults: React.PropTypes.func,
     cleanSearchResults: React.PropTypes.func,
+    routes: React.PropTypes.array,
     search: React.PropTypes.object
   },
 
@@ -56,6 +57,7 @@ var SiteHeader = React.createClass({
   },
 
   render: function () {
+    let last = _.last(this.props.routes).path;
     return (
       <header className='site-header'>
         <div className='inner'>
@@ -73,6 +75,7 @@ var SiteHeader = React.createClass({
                   onResultClick={this.closeSearch}
                   results={this.props.search.results}
                   query={this.props.search.query}
+                  isEditor={last === 'editor/*' || last === 'editor'}
                   fetching={this.props.search.fetching}
                   searching={this.props.search.searching} />
               </div>
