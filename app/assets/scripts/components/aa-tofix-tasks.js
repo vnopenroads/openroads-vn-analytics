@@ -47,9 +47,9 @@ var AATofixTasks = React.createClass({
         </ul>
       );
     } else if (this.props.error) {
-      content = <p className='aa-tofixtasks--empty'>Ups... An error occourred. Try again.</p>;
+      content = <p className='aa-tofixtasks--empty'>Oops... An error occurred.</p>;
     } else if (!this.props.meta.total) {
-      content = <p className='aa-tofixtasks--empty'>Great! All errors are fixed</p>;
+      content = <p className='aa-tofixtasks--empty'>No errors to show.</p>;
     }
 
     if (content) {
