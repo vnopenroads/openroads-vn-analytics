@@ -25,8 +25,7 @@ var AAList = React.createClass({
   ID: null,
 
   renderAdminAreaRow: function (o, i) {
-    // TODO: Remove randoms.
-    let val = Math.floor(Math.random() * 101);
+    let val = Math.round(o.completeness * 1000) / 10;
     let colorCoding = {
       'progress-bar--low': val < this.thresholds[0],
       'progress-bar--med': val >= this.thresholds[0] && val <= this.thresholds[1],
