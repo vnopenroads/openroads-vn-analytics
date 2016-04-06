@@ -47,6 +47,16 @@ var Search = React.createClass({
     }
   },
 
+  onKeyup: function (e) {
+    // Esc key
+    if (e.keyCode === 27) {
+      if (this.props.searching) {
+        this.refs.searchBox.blur();
+        this.resetSearchResults();
+      }
+    }
+  },
+
   onResultClick: function (e) {
     this.resetSearchResults();
     if (this.props.onResultClick) {
@@ -61,10 +71,12 @@ var Search = React.createClass({
 
   componentDidMount: function () {
     document.addEventListener('click', this.onDocumentClick, false);
+    document.addEventListener('keyup', this.onKeyup, false);
   },
 
   componentWillUnmount: function () {
     document.removeEventListener('click', this.onDocumentClick, false);
+    document.removeEventListener('keyup', this.onKeyup, false);
   },
 
   renderResults: function () {
