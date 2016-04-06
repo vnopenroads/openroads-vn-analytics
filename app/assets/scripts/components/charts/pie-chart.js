@@ -2,7 +2,9 @@
 import React from 'react';
 import _ from 'lodash';
 import d3 from 'd3';
+import titlecase from 'titlecase';
 import Popover from '../../utils/popover';
+import { formatThousands } from '../../utils/format';
 
 const meta = {
   // condition
@@ -69,7 +71,10 @@ var PieChart = React.createClass({
 
   render: function () {
     return (
-      <div className={this.props.className} ref='container'></div>
+      <div className={this.props.className} ref='container'>
+        <div className='chart-wrapper'></div>
+        <div className='legend-wrapper'></div>
+      </div>
     );
   }
 });
@@ -77,7 +82,8 @@ var PieChart = React.createClass({
 module.exports = PieChart;
 
 var Chart = function (el, data) {
-  this.$el = d3.select(el);
+  this.$elChart = d3.select(el).select('.chart-wrapper');
+  this.$elLegend = d3.select(el).select('.legend-wrapper');
 
   this.data = null;
   this.stages = null;
@@ -86,7 +92,7 @@ var Chart = function (el, data) {
   // must be added.
   var _width, _height, _radius;
   // Elements.
-  var svg, dataCanvas;
+  var svg, dataCanvas, legend;
   // Scales.
   var arc = d3.svg.arc();
   // Generators
@@ -95,8 +101,8 @@ var Chart = function (el, data) {
   var chartPopover = new Popover();
 
   this._calcSize = function () {
-    _width = parseInt(this.$el.style('width'), 10);
-    _height = parseInt(this.$el.style('height'), 10);
+    _width = parseInt(this.$elChart.style('width'), 10);
+    _height = parseInt(this.$elChart.style('height'), 10);
   };
 
   this.setPopoverContentFn = function (fn) {
@@ -109,7 +115,7 @@ var Chart = function (el, data) {
     }
 
     let total = _.values(data).map(o => parseFloat(o.length)).reduce((a, b) => a + b);
-    this.data = Object.keys(data).map(d => ({title: d, val: data[d].length / total}))
+    this.data = Object.keys(data).map(d => ({title: d, val: data[d].length / total, km: data[d].length}))
       .sort((a, b) => getMeta(a).index > getMeta(b).index ? 1 : -1);
     this.update();
   };
@@ -117,8 +123,12 @@ var Chart = function (el, data) {
   this._init = function () {
     this._calcSize();
     // The svg.
-    svg = this.$el.append('svg')
+    svg = this.$elChart.append('svg')
         .attr('class', 'chart');
+
+    // Legend element
+    legend = this.$elLegend.append('ul')
+        .attr('class', 'chart-legend');
 
     // Chart elements
     dataCanvas = svg.append('g')
@@ -145,21 +155,50 @@ var Chart = function (el, data) {
       .outerRadius(_radius - 10)
       .innerRadius(0);
 
-    let selection = dataCanvas.selectAll('.arc')
+    let arcs = dataCanvas.selectAll('.piechart-arc')
       .data(pie(this.data));
 
-    selection.enter().append('g')
+    arcs.enter().append('path')
       .attr('class', 'piechart-arc')
-    .append('path')
-      .attr('d', arc)
-      .style('fill', d => getMeta(d.data).fill)
       .on('mouseover', this._onMouseOver)
       .on('mouseout', this._onMouseOut);
+
+    arcs
+      .attr('d', arc)
+      .style('fill', d => getMeta(d.data).fill);
+
+    arcs.exit().remove();
+
+    this.renderLegend();
+  };
+
+  this.renderLegend = function () {
+    let legendItems = legend.selectAll('li')
+      .data(this.data);
+
+    let enterLi = legendItems
+      .enter()
+      .append('li');
+
+    let lKey = enterLi.append('span')
+      .datum(d => d)
+      .attr('class', 'legend-key')
+      .html('&nbsp;');
+
+    lKey.style('background-color', d => getMeta(d).fill);
+
+    let lVal = enterLi.append('span')
+      .datum(d => d)
+      .attr('class', 'legend-value');
+
+    lVal.text(d => {
+      let t = d.title === 'roadTypeUndefined' ? 'Undefined' : titlecase(d.title);
+      return `${formatThousands(d.km)}KM | ${t}`;
+    });
   };
 
   this.destroy = function () {
     chartPopover.hide();
-    this.$el.empty();
   };
 
   this._onMouseOver = function (d) {

@@ -992,3 +992,29 @@ a:active{
     }
   }
 }
+
+.piechart {
+  .chart-legend {
+    max-width: 13rem;
+    margin: 2rem auto 0 auto;
+    li {
+      margin-bottom: 0.5rem;
+      line-height: 1rem;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    .legend-key {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+    }
+    .legend-value {
+      display: inline-block;
+      font-size: 0.75rem;
+      line-height: 1rem;
+      font-weight: 700;
+      margin-left: 1rem;
+    }
+  }
+}
