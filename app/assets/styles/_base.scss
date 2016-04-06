@@ -218,7 +218,7 @@ a:active{
         // margin-top: -0.5rem;
         // margin-bottom: -0.5rem;
       }
-  
+
       // vv Menu
       .toggle-menu {
         position: absolute;
@@ -523,6 +523,7 @@ a:active{
   margin: 0 0 1.25rem 0;
   height: 0.75rem;
   position: relative;
+  box-shadow: 0 1px 0 0 $brdr-rgba;
 
   li {
     background: tint($base-color, 80%);
@@ -546,7 +547,6 @@ a:active{
   }
 
   &--inline  {
-    box-shadow: 0 1px 0 0 $brdr-rgba;
     margin-bottom: 0;
     .value {
       position: absolute;
@@ -937,7 +937,7 @@ a:active{
 
 .pagination {
   @extend .clearfix;
-  margin-top: $global-padding * 2; 
+  margin-top: $global-padding * 2;
   > li {
     float: left;
   }
