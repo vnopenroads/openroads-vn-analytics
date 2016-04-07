@@ -38,26 +38,40 @@ var AAExtendedStats = React.createClass({
     }
     // let projects = mockProjects(8);
 
+    // sanitize extent numbers
+    let extent = this.props.stats && this.props.stats.extent;
+    let isValidExtent = extent &&
+      extent.national.length &&
+      extent.local.length &&
+      !isNaN(extent.national.length) &&
+      !isNaN(extent.local.length);
+
     return (
       <div className='aa-stats-wrapper'>
 
-        <div className='aa-stats-row'>
-          <div className='aa-stats aa-stats--extent'>
-            <h2 className='aa-stats__title'>Extent (Roads mapped)</h2>
-            <div className='aa-stats__contents'>
-              <ul className='aa-stats__list'>
-                <li className='aa-stats__element'>
-                  <p className='aa-stat__value'><strong>100%</strong>National</p>
-                  <ul className='progress-bar progress-bar--high'><li style={{width: '100%'}}><span className='value'>217,456Km</span></li></ul>
-                </li>
-                <li className='aa-stats__element'>
-                  <p className='aa-stat__value'><strong>18%</strong>Local</p>
-                  <ul className='progress-bar progress-bar--low'><li style={{width: '18%'}}><span className='value'>50,456Km</span></li></ul>
-                </li>
-              </ul>
+        {!isValidExtent ? null : (
+          <div className='aa-stats-row'>
+            <div className='aa-stats aa-stats--extent'>
+              <h2 className='aa-stats__title'>Extent (Roads mapped)</h2>
+              <div className='aa-stats__contents'>
+                <ul className='aa-stats__list'>
+                  <li className='aa-stats__element'>
+                    <p className='aa-stat__value'><strong>{formatPercent(extent.national.length)}</strong>National</p>
+                    <ul className='progress-bar progress-bar--high'>
+                      <li style={{width: formatPercent(extent.national.length, 100)}}></li>
+                    </ul>
+                  </li>
+                  <li className='aa-stats__element'>
+                    <p className='aa-stat__value'><strong>{formatPercent(extent.local.length)}</strong>Local</p>
+                    <ul className='progress-bar progress-bar--low'>
+                      <li style={{width: formatPercent(extent.local.length, 100)}}></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         <div className='aa-stats-row'>
           <div className='aa-stats aa-stats--condition'>

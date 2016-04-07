@@ -25,18 +25,22 @@ var AAList = React.createClass({
   ID: null,
 
   renderAdminAreaRow: function (o, i) {
-    // TODO: Remove randoms.
-    let val = Math.floor(Math.random() * 101);
-    let colorCoding = {
-      'progress-bar--low': val < this.thresholds[0],
-      'progress-bar--med': val >= this.thresholds[0] && val <= this.thresholds[1],
-      'progress-bar--high': val > this.thresholds[1]
-    };
+    let val = '-';
+    let colorCoding = null;
+    if (!isNaN(o.completeness)) {
+      val = Math.round(o.completeness * 1000) / 10;
+      colorCoding = {
+        'progress-bar--low': val < this.thresholds[0],
+        'progress-bar--med': val >= this.thresholds[0] && val <= this.thresholds[1],
+        'progress-bar--high': val > this.thresholds[1]
+      };
+      val = val + '%';
+    }
 
     return (
       <tr key={`adminArea${i}`}>
         <td colSpan='2'><Link to={`/analytics/${o.id}`}>{o.name}</Link>
-          <ul className={classnames('progress-bar progress-bar--inline', colorCoding)}><li style={{width: `${val}%`}}><span className='value'>{val}%</span></li></ul>
+          <ul className={classnames('progress-bar progress-bar--inline', colorCoding)}><li style={{width: `${val}`}}><span className='value'>{val}</span></li></ul>
         </td>
       </tr>
     );

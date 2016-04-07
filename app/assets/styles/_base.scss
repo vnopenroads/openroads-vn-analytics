@@ -218,7 +218,7 @@ a:active{
         // margin-top: -0.5rem;
         // margin-bottom: -0.5rem;
       }
-  
+
       // vv Menu
       .toggle-menu {
         position: absolute;
@@ -526,6 +526,7 @@ a:active{
   margin: 0 0 1.25rem 0;
   height: 0.75rem;
   position: relative;
+  box-shadow: 0 1px 0 0 $brdr-rgba;
 
   li {
     background: tint($base-color, 80%);
@@ -549,7 +550,6 @@ a:active{
   }
 
   &--inline  {
-    box-shadow: 0 1px 0 0 $brdr-rgba;
     margin-bottom: 0;
     .value {
       position: absolute;
@@ -879,11 +879,16 @@ a:active{
     text-decoration: none;
     color: inherit;
     background: #fff;
+    transition: background 200ms ease-in-out;
     border-radius: $global-radius;
     box-shadow: 0 0 0 2px $flat-shadow-rgba;
     padding: $global-padding;
     &:visited, &:active {
       color: inherit;
+    }
+    &:hover {
+      opacity: 1;
+      background: #fbfbfb;
     }
 
     h2 {
@@ -898,7 +903,6 @@ a:active{
   &--empty {
     @extend %empty-box;
     text-align: center;
-    text-transform: uppercase;
   }
 
   // vv Temp.
@@ -940,7 +944,7 @@ a:active{
 
 .pagination {
   @extend .clearfix;
-  margin-top: $global-padding * 2; 
+  margin-top: $global-padding * 2;
   > li {
     float: left;
   }

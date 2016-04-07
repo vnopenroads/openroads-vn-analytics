@@ -1,13 +1,20 @@
 import d3 from 'd3';
 
-export function formatPercent (n) {
-  if (n !== 0 && !n) {
-    return '--';
+export function formatPercent (n, upperLimit) {
+  if (n !== 0 && !n || isNaN(n)) {
+    return '-';
   }
-  return Math.round(parseFloat(n) * 100) + '%';
+  let pct = Math.round(parseFloat(n) * 100);
+  if (typeof upperLimit !== 'undefined' && !isNaN(upperLimit) && pct > upperLimit) {
+    pct = upperLimit;
+  }
+  return pct + '%';
 }
 
 export function formatThousands (number, decimals = 2) {
+  if (isNaN(number)) {
+    return '-';
+  }
   let n = d3.format(',.' + decimals + 'f')(number);
   return n.replace(new RegExp('\\.0{' + decimals + '}$'), '');
 }

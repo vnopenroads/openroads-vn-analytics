@@ -55,6 +55,7 @@ var AnalyticsAA = React.createClass({
               bbox={this.props.subregions.bbox} />
 
             <AAStats
+              stats={this.props.stats.stats}
               tofixtasks={this.props.tofixtasks}
               adminAreas={this.props.subregions.adminAreas} />
 

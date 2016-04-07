@@ -2,12 +2,13 @@
 import React from 'react';
 import Dropdown from '../components/dropdown';
 import ID from '../utils/id';
-import { formatThousands } from '../utils/format';
+import { formatThousands, formatPercent } from '../utils/format';
 
 var AAStats = React.createClass({
   displayName: 'AAStats',
 
   propTypes: {
+    stats: React.PropTypes.object,
     adminAreas: React.PropTypes.array,
     tofixtasks: React.PropTypes.object
   },
@@ -16,15 +17,19 @@ var AAStats = React.createClass({
     let subregions = null;
     if (this.props.adminAreas && this.props.adminAreas.length) {
       subregions = {
-        id: new ID(this.props.adminAreas[0].id),
+        // https://github.com/developmentseed/openroads/issues/298
+        // No harm using the last admin area instead of the first.
+        id: new ID(this.props.adminAreas[this.props.adminAreas.length - 1].id),
         count: this.props.adminAreas.length
       };
     }
 
-    let tofixtasks = null;
+    let tofixtasks = '-';
     if (this.props.tofixtasks.fetched && !this.props.tofixtasks.fetching) {
       tofixtasks = this.props.tofixtasks.data.tasks.meta.total;
     }
+
+    let completeness = formatPercent(this.props.stats && this.props.stats.completeness && this.props.stats.completeness.length);
 
     return (
       <div className='aa-stats-row aa-stats-row--completeness'>
@@ -34,47 +39,31 @@ var AAStats = React.createClass({
             <ul className='aa-stats__list'>
               <li className='aa-stats__element'>
                 <div className='wrapper'>
-                  <strong><span className='highlight'>35%</span> Complete</strong>
+                  <strong><span className='highlight'>{completeness}</span> Complete</strong>
                   <Dropdown element='span' className='dropdown left' triggerTitle='View additional info' triggerClassName='bttn-info' triggerText='View additional info'>
                     <div className='aa-stats-info'>
-                      <dl>
-                        <dd>Condition:</dd>
-                        <dt>somewhat stable</dt>
-                      </dl>
-                      <p>we have clocks but what about a long text.</p>
+                      <p>Completeness of this area's road network, based on it's extent and number of issues.</p>
                     </div>
                   </Dropdown>
                 </div>
               </li>
-{/*
               <li className='aa-stats__element'>
                 <div className='wrapper'>
-                  <strong><span className='highlight'>$2.5M</span> Asset Value</strong>
-                  <Dropdown element='span' className='dropdown right' triggerTitle='View additional info' triggerClassName='bttn-info' triggerText='View additional info'>
-                    <div className='aa-stats-info'>
-                      <dl>
-                        <dd>Condition:</dd>
-                        <dt>somewhat stable</dt>
-                      </dl>
-                      <p>we have clocks but what about a long text.</p>
-                    </div>
-                  </Dropdown>
-                </div>
-              </li>
-*/}
-              <li className='aa-stats__element'>
-                <div className='wrapper'>
-                {tofixtasks !== null ? <a href='#' className='aa-stats__link'><strong><span className='highlight'>{formatThousands(tofixtasks)}</span> Errors detected</strong></a> : null}
+                  <strong><span className='highlight'>{formatThousands(tofixtasks)}</span> Errors detected</strong>
                 </div>
               </li>
               <li className='aa-stats__element'>
                 <div className='wrapper'>
-                  <a href='#' className='aa-stats__link'><strong><span className='highlight'>n/a</span> Projects</strong></a>
+                  <strong><span className='highlight'>-</span> Projects</strong>
                 </div>
               </li>
               <li className='aa-stats__element'>
                 <div className='wrapper'>
-                  {subregions ? (<a href='#' className='aa-stats__link'><strong><span className='highlight'>{subregions.count}</span> {subregions.id.getDisplayType(subregions.count !== 1)}</strong></a>) : null}
+                  {subregions ? (
+                    <strong><span className='highlight'>{subregions.count}</span> {subregions.id.getDisplayType(subregions.count !== 1)}</strong>
+                    ) : (
+                    <strong><span className='highlight'>-</span></strong>
+                    )}
                 </div>
               </li>
             </ul>
