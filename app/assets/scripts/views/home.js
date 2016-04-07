@@ -18,9 +18,8 @@ var Home = React.createClass({
         <div className='page__body--landing'>
           <div className='inner'>
             <h2>Access and improve Road Networks</h2>
-            <p className='description'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Numquam molestiae
-            deserunt temporibus voluptate ullam doloribus quam quisquam modi recusandae
-            debitis neque hic nam, quibusdam dolore rerum aut, eaque deleniti tenetur!</p>
+            <p className='description'>The Philippines has over 215 000 kilometers of road. 32 526 of these are national roads that are generally well mapped. The local road network is estimated to be well over 180 000 kilometers, but these estimates are rough since much of it remains unmapped.</p>
+            <p className='description'>Work with the OpenRoads project to close this critical information gap and create a comprehensive road network map of the Philippines.</p>
             <Link to='/analytics' className='bttn-explore'>Explore more</Link>
           </div>
         </div>
