@@ -21,6 +21,7 @@ var AATofixTasks = React.createClass({
       <li key={way.way_id}>
         <AATofixTaskItem
           id={way.way_id}
+          state={way.state}
           items={way.tasks} />
       </li>
     );
@@ -87,7 +88,8 @@ var AATofixTaskItem = React.createClass({
 
   propTypes: {
     items: React.PropTypes.array,
-    id: React.PropTypes.number
+    id: React.PropTypes.number,
+    state: React.PropTypes.string
   },
 
   render: function () {
@@ -95,10 +97,10 @@ var AATofixTaskItem = React.createClass({
       <Link to={`editor/id=w${this.props.id}`} className='aa-tofixtasks__wrapper'>
         <div className='flag'>
           <div className='flag__image'>
-            <div className='aa-tofixtasks__map'>MAP-{this.props.id}</div>
+            <div className='aa-tofixtasks__map'>{this.props.id}</div>
           </div>
           <div className='flag__body'>
-            <h2>Way {this.props.id}</h2>
+            <h2>Way {this.props.id} {this.props.state === 'pending' ? <small>In review</small> : null}</h2>
             <ul>
               {this.props.items.map((o, i) => <li key={i}>{o.details}</li>)}
             </ul>

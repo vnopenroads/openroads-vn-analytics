@@ -893,6 +893,14 @@ a:active{
 
     h2 {
       margin-bottom: 1rem;
+
+      small {
+        text-transform: uppercase;
+        font-size: 0.625rem;
+        background: rgba($base-color, 0.16);
+        padding: 0 0.5rem;
+        border-radius: $global-radius;
+      }
     }
 
     ul {
