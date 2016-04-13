@@ -59,8 +59,8 @@ var AAExtendedStats = React.createClass({
                     <p className='aa-stat__value'><strong>{formatPercent(extent.national.length)}</strong>National</p>
                     <ul className='progress-bar progress-bar--high'>
                       <li style={{width: formatPercent(extent.national.length, 100)}}></li>
-                      { extent.nationalKm && !isNaN(extent.nationalKm.length) ?
-                        <span className='value'>{ formatThousands(extent.nationalKm.length) }KM</span>
+                      { extent.nationalKm && !isNaN(extent.nationalKm.length)
+                        ? <span className='value'>{ formatThousands(extent.nationalKm.length) }KM</span>
                         : null
                       }
                     </ul>
@@ -69,8 +69,8 @@ var AAExtendedStats = React.createClass({
                     <p className='aa-stat__value'><strong>{formatPercent(extent.local.length)}</strong>Local</p>
                     <ul className='progress-bar progress-bar--low'>
                       <li style={{width: formatPercent(extent.local.length, 100)}}></li>
-                      { extent.localKm && !isNaN(extent.localKm.length) ?
-                        <span className='value'>{ formatThousands(extent.localKm.length) }KM</span>
+                      { extent.localKm && !isNaN(extent.localKm.length)
+                        ? <span className='value'>{ formatThousands(extent.localKm.length) }KM</span>
                         : null
                       }
                     </ul>
