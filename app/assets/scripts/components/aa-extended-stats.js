@@ -3,7 +3,7 @@ import React from 'react';
 import titlecase from 'titlecase';
 import PieChart from './charts/pie-chart';
 // import ProjectList from './project-list';
-import {formatPercent} from '../utils/format';
+import {formatPercent, formatThousands} from '../utils/format';
 // import mockProjects from '../mock/projects';
 
 var AAExtendedStats = React.createClass({
@@ -41,8 +41,8 @@ var AAExtendedStats = React.createClass({
     // sanitize extent numbers
     let extent = this.props.stats && this.props.stats.extent;
     let isValidExtent = extent &&
-      extent.national.length &&
-      extent.local.length &&
+      extent.national &&
+      extent.local &&
       !isNaN(extent.national.length) &&
       !isNaN(extent.local.length);
 
@@ -59,12 +59,20 @@ var AAExtendedStats = React.createClass({
                     <p className='aa-stat__value'><strong>{formatPercent(extent.national.length)}</strong>National</p>
                     <ul className='progress-bar progress-bar--high'>
                       <li style={{width: formatPercent(extent.national.length, 100)}}></li>
+                      { extent.nationalKm && !isNaN(extent.nationalKm.length)
+                        ? <span className='value'>{ formatThousands(extent.nationalKm.length) }KM</span>
+                        : null
+                      }
                     </ul>
                   </li>
                   <li className='aa-stats__element'>
                     <p className='aa-stat__value'><strong>{formatPercent(extent.local.length)}</strong>Local</p>
                     <ul className='progress-bar progress-bar--low'>
                       <li style={{width: formatPercent(extent.local.length, 100)}}></li>
+                      { extent.localKm && !isNaN(extent.localKm.length)
+                        ? <span className='value'>{ formatThousands(extent.localKm.length) }KM</span>
+                        : null
+                      }
                     </ul>
                   </li>
                 </ul>
