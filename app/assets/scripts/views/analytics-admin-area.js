@@ -65,6 +65,8 @@ var AnalyticsAA = React.createClass({
                 <AAExtendedStats
                   fetched={this.props.stats.fetched}
                   fetching={this.props.stats.fetching}
+                  adminAreaId={this.props.stats.id}
+                  bbox={this.props.subregions.bbox || []}
                   error={this.props.stats.error}
                   stats={this.props.stats.stats} />
 
