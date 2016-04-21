@@ -49,6 +49,7 @@ var Analytics = React.createClass({
                 <AAExtendedStats
                   fetched={this.props.stats.fetched}
                   fetching={this.props.stats.fetching}
+                  bbox={this.props.subregions.bbox || []}
                   error={this.props.stats.error}
                   stats={this.props.stats.stats} />
 

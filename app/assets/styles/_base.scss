@@ -523,7 +523,7 @@ a:active{
 .progress-bar {
   list-style-type: none;
   padding: 0;
-  margin: 0 0 1.25rem 0;
+  margin: 0 0 2rem 0;
   height: 0.75rem;
   position: relative;
   box-shadow: 0 1px 0 0 $brdr-rgba;
@@ -546,7 +546,10 @@ a:active{
     font-size: 0.75rem;
     line-height: 1;
     display: block;
-    padding-top: 1rem;
+    position: absolute;
+    top: 1rem;
+    left: 0;
+    right: 0;
   }
 
   &--inline  {
@@ -554,8 +557,9 @@ a:active{
     .value {
       position: absolute;
       right: 0.5rem;
+      left: auto;
       top: -0.125rem;
-      padding-top: 0
+      padding-top: 0;
     }
   }
 }
@@ -744,16 +748,42 @@ a:active{
 }
 
 .aa-stats--extent {
+  .aa-stats__description {
+    margin-bottom: 2rem;
+  }
+
   .aa-stats__element {
     @include media(small-up) {
       @include col(6/12);
     }
     font-size: 1rem;
 
-    strong {
-      display: block;
-      font-size: 2rem;
-      font-weight: $base-font-bold;
+    > .wrapper {
+      margin-bottom: 3rem;
+    }
+
+    .aa-stat__value {
+      strong {
+        display: block;
+        font-size: 2rem;
+        line-height: 1;
+        font-weight: $base-font-bold;
+      }
+      span {
+        font-weight: normal;
+      }
+      margin-bottom: 1rem;
+    }
+
+    &.roads-tagged {
+      .aa-stat__value {
+        font-size: 0.75rem;
+        margin-bottom: 0;
+        font-weight: $base-font-bold;
+      }
+      .progress-bar {
+        margin-bottom: 1.5rem;
+      }
     }
   }
 }
