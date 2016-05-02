@@ -30,51 +30,28 @@ var AdminAreas = React.createClass({
   },
 
   renderPageHeader: function () {
-    if (this.props.subregions.id) {
-      return (
-        <PageHeader
-          adminAreaId={this.props.subregions.id}
-          pageTitle={this.props.subregions.name}
-          bbox={this.props.subregions.bbox || []}
-          actions />
-      );
-    }
-
     return (
       <PageHeader
-        pageTitle='Philippines' />
+        adminAreaId={this.props.subregions.id}
+        pageTitle={this.props.subregions.name}
+        bbox={this.props.subregions.bbox || []} />
     );
   },
 
   renderBackLink: function () {
-    console.log('this.props.subregions', this.props.subregions);
-    if (this.props.subregions.id) {
-      return (
-        <Link to={`/analytics/${this.props.subregions.id}`}>Back to overview</Link>
-      );
-    }
     return (
-      <Link to='/analytics'>Back to overview</Link>
+      <Link to={`/analytics/${this.props.subregions.id}`}>Back to overview</Link>
     );
   },
 
   renderList: function () {
-    if (this.props.subregions.id) {
-      return (
-        <AAList
-          fetched={this.props.subregions.fetched}
-          fetching={this.props.subregions.fetching}
-          adminAreaId={this.props.subregions.id}
-          adminAreaName={this.props.subregions.name}
-          adminAreas={this.props.subregions.adminAreas}/>
-      );
-    }
-
     return (
       <AAList
         fetched={this.props.subregions.fetched}
         fetching={this.props.subregions.fetching}
-        adminAreas={this.props.subregions.adminAreas} />
+        adminAreaId={this.props.subregions.id}
+        adminAreaName={this.props.subregions.name}
+        adminAreas={this.props.subregions.adminAreas}/>
     );
   },
 

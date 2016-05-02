@@ -63,37 +63,22 @@ var TofixTasks = React.createClass({
   },
 
   handlePageClick: function (d) {
-    let url = this.props.subregions.id
-      ? `analytics/${this.props.subregions.id}/tasks?page=${d.selected + 1}`
-      : `analytics/tasks?page=${d.selected + 1}`;
+    let url = `analytics/${this.props.subregions.id}/tasks?page=${d.selected + 1}`;
     this.props._push(url);
   },
 
   renderPageHeader: function () {
-    if (this.props.subregions.id) {
-      return (
-        <PageHeader
-          adminAreaId={this.props.subregions.id}
-          pageTitle={this.props.subregions.name}
-          bbox={this.props.subregions.bbox || []}
-          actions />
-      );
-    }
-
     return (
       <PageHeader
-        pageTitle='Philippines' />
+        adminAreaId={this.props.subregions.id}
+        pageTitle={this.props.subregions.name}
+        bbox={this.props.subregions.bbox || []} />
     );
   },
 
   renderBackLink: function () {
-    if (this.props.subregions.id) {
-      return (
-        <Link to={`/analytics/${this.props.subregions.id}`}>Back to overview</Link>
-      );
-    }
     return (
-      <Link to='/'>Back to overview</Link>
+      <Link to={`/analytics/${this.props.subregions.id}`}>Back to overview</Link>
     );
   },
 

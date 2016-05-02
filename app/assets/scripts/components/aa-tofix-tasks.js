@@ -32,7 +32,7 @@ var AATofixTasks = React.createClass({
     let {limit, total} = this.props.meta;
 
     if (total > limit) {
-      let url = this.props.adminAreaId ? `/analytics/${this.props.adminAreaId}/tasks` : '/analytics/tasks';
+      let url = `/analytics/${this.props.adminAreaId}/tasks`;
       return <Link to={url} className='bttn-view-more'>View all tasks</Link>;
     }
   },
