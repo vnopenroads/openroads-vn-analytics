@@ -813,6 +813,10 @@ a:active{
   &__table {
     @extend .table;
 
+    .aa-list-chart {
+      text-align: right;
+    }
+
     tr > td:last-child {
       white-space: nowrap;
     }

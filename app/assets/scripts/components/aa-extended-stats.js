@@ -111,14 +111,14 @@ var AAExtendedStats = React.createClass({
 
     // sanitize extent numbers
     var extent = this.props.stats.extent;
-    if (isNaN(_.get(extent, 'national.lengths', null)) ||
-        isNaN(_.get(extent, 'local.lengths', null))) {
+    if (!extent || isNaN(_.get(extent, 'national.length', null)) ||
+        isNaN(_.get(extent, 'local.length', null))) {
       return null;
     }
 
     let estimated = this.props.stats.estimatedLength;
-    if (isNaN(_.get(estimated, 'national.lengths', null)) ||
-        isNaN(_.get(estimated, 'local.lengths', null))) {
+    if (!estimated || isNaN(_.get(estimated, 'national.length', null)) ||
+        isNaN(_.get(estimated, 'local.length', null))) {
       return null;
     }
 
