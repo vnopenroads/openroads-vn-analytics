@@ -7,7 +7,6 @@ var PageHeader = React.createClass({
   displayName: 'PageHeader',
 
   propTypes: {
-    // Actions will probably change to a list...
     pageTitle: React.PropTypes.string,
     adminAreaId: React.PropTypes.number,
     bbox: React.PropTypes.array
