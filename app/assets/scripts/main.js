@@ -5,7 +5,7 @@ import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, Route, IndexRoute, hashHistory } from 'react-router';
+import { Router, Route, IndexRoute, hashHistory, Redirect } from 'react-router';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { syncHistory } from 'react-router-redux';
@@ -18,7 +18,6 @@ import UhOh from './views/uhoh';
 import App from './views/app';
 import Home from './views/home';
 import Editor from './views/editor';
-import Analytics from './views/analytics-home';
 import AnalyticsAA from './views/analytics-admin-area';
 import AdminAreas from './views/admin-areas';
 import TofixTasks from './views/tofix-tasks';
@@ -43,9 +42,9 @@ render((
       <Route path='/' component={App}>
         <Route path='editor' component={Editor} />
         <Route path='editor/*' component={Editor} />
-        <Route path='analytics' component={Analytics} />
-        <Route path='analytics/tasks' component={TofixTasks} />
-        <Route path='analytics/admin-areas' component={AdminAreas} />
+        <Redirect from='analytics' to='analytics/0' />
+        <Redirect from='analytics/tasks' to='analytics/0/tasks' />
+        <Redirect from='analytics/admin-areas' to='analytics/0/admin-areas' />
         <Route path='analytics/:aaId' component={AnalyticsAA} />
         <Route path='analytics/:aaId/admin-areas' component={AdminAreas} />
         <Route path='analytics/:aaId/tasks' component={TofixTasks} />

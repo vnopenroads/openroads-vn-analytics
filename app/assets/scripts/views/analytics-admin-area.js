@@ -46,8 +46,7 @@ var AnalyticsAA = React.createClass({
         <PageHeader
           adminAreaId={this.props.subregions.id}
           pageTitle={this.props.subregions.name}
-          bbox={this.props.subregions.bbox || []}
-          actions />
+          bbox={this.props.subregions.bbox || []} />
 
         <div className='page__body aa'>
           <div className='aa-main'>

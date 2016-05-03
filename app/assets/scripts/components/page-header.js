@@ -7,29 +7,14 @@ var PageHeader = React.createClass({
   displayName: 'PageHeader',
 
   propTypes: {
-    // Actions will probably change to a list...
-    actions: React.PropTypes.bool,
     pageTitle: React.PropTypes.string,
     adminAreaId: React.PropTypes.number,
     bbox: React.PropTypes.array
   },
 
-  renderActions: function () {
-    if (this.props.actions) {
-      return (
-        <div className='page__actions'>
-          <ul className='actions-menu'>
-            <li><Link to={`/editor/bbox=${this.props.bbox.join('/')}`} className='bttn-edit'>Improve map</Link></li>
-          </ul>
-        </div>
-      );
-    }
-  },
-
   render: function () {
     let adminID = new ID(this.props.adminAreaId);
     let level = adminID.level();
-
     return (
       <header className='page__header'>
         <div className='inner'>
@@ -46,7 +31,11 @@ var PageHeader = React.createClass({
           <div className='page__headline'>
             <h1 className='page__title'>{this.props.pageTitle}</h1>
           </div>
-          {this.renderActions()}
+          <div className='page__actions'>
+            <ul className='actions-menu'>
+              <li><Link to={`/editor/bbox=${this.props.bbox.join('/')}`} className='bttn-edit'>Improve map</Link></li>
+            </ul>
+          </div>
         </div>
       </header>
     );
