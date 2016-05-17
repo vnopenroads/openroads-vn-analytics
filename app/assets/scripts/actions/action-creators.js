@@ -155,3 +155,43 @@ export function fetchTofixTasks (aaid = null, page, limit) {
       });
   };
 }
+
+function requestProjects () {
+  return {
+    type: actions.REQUEST_PROJECTS
+  };
+}
+
+function receiveProjects (json, error = null) {
+  return {
+    type: actions.RECEIVE_PROJECTS,
+    json: json,
+    error,
+    receivedAt: Date.now()
+  };
+}
+
+export function fetchProjects (aaid = null, page, limit) {
+  return function (dispatch) {
+    dispatch(requestProjects());
+
+    // Note: `page` is 0 based, so subtract 1.
+    let url = aaid === null
+      ? `${config.api}/admin/0/projects?page=${--page}&limit=${limit}`
+      : `${config.api}/admin/${aaid}/projects?page=${--page}&limit=${limit}`;
+    return fetch(url)
+      .then(response => {
+        if (response.status >= 400) {
+          throw new Error('Bad response');
+        }
+        return response.json();
+      })
+      .then(json => {
+        // setTimeout(() => dispatch(receiveProjects(json)), 2000);
+        return dispatch(receiveProjects(json));
+      }, e => {
+        console.log('e', e);
+        return dispatch(receiveProjects(null, 'Data not available'));
+      });
+  };
+}

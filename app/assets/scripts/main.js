@@ -21,6 +21,7 @@ import Editor from './views/editor';
 import AnalyticsAA from './views/analytics-admin-area';
 import AdminAreas from './views/admin-areas';
 import TofixTasks from './views/tofix-tasks';
+import Projects from './views/projects';
 
 // Sync dispatched route actions to the syncHistory
 const reduxRouterMiddleware = syncHistory(hashHistory);
@@ -45,9 +46,11 @@ render((
         <Redirect from='analytics' to='analytics/0' />
         <Redirect from='analytics/tasks' to='analytics/0/tasks' />
         <Redirect from='analytics/admin-areas' to='analytics/0/admin-areas' />
+        <Redirect from='analytics/projects' to='analytics/0/projects' />
         <Route path='analytics/:aaId' component={AnalyticsAA} />
         <Route path='analytics/:aaId/admin-areas' component={AdminAreas} />
         <Route path='analytics/:aaId/tasks' component={TofixTasks} />
+        <Route path='analytics/:aaId/projects' component={Projects} />
         <IndexRoute component={Home}/>
       </Route>
       <Route path='*' component={UhOh}/>

@@ -1,13 +1,14 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchAdminSubregions, fetchAdminStats, fetchTofixTasks } from '../actions/action-creators';
+import { fetchAdminSubregions, fetchAdminStats, fetchTofixTasks, fetchProjects } from '../actions/action-creators';
 import PageHeader from '../components/page-header';
 import AAList from '../components/aa-list';
 import AAStats from '../components/aa-stats';
 import AAExtendedStats from '../components/aa-extended-stats';
 import AAMap from '../components/aa-map';
 import AATofixTasks from '../components/aa-tofix-tasks';
+import AAProjects from '../components/project-list';
 
 var AnalyticsAA = React.createClass({
   displayName: 'AnalyticsAA',
@@ -17,9 +18,11 @@ var AnalyticsAA = React.createClass({
     _fetchAdminSubregions: React.PropTypes.func,
     _fetchAdminStats: React.PropTypes.func,
     _fetchTofixTasks: React.PropTypes.func,
+    _fetchProjects: React.PropTypes.func,
     subregions: React.PropTypes.object,
     stats: React.PropTypes.object,
     tofixtasks: React.PropTypes.object,
+    projects: React.PropTypes.object,
     params: React.PropTypes.object
   },
 
@@ -27,6 +30,7 @@ var AnalyticsAA = React.createClass({
     this.props._fetchAdminSubregions(this.props.params.aaId);
     this.props._fetchAdminStats(this.props.params.aaId);
     this.props._fetchTofixTasks(this.props.params.aaId, 1, 10);
+    this.props._fetchProjects(this.props.params.aaId, 1, 10);
   },
 
   componentDidUpdate: function (prevProps, prevState) {
@@ -35,6 +39,7 @@ var AnalyticsAA = React.createClass({
       this.props._fetchAdminSubregions(this.props.params.aaId);
       this.props._fetchAdminStats(this.props.params.aaId);
       this.props._fetchTofixTasks(this.props.params.aaId, 1, 10);
+      this.props._fetchProjects(this.props.params.aaId, 1, 10);
     } else {
       console.log('AnalyticsAA componentDidUpdate', 'NOT update');
     }
@@ -78,6 +83,16 @@ var AnalyticsAA = React.createClass({
                   tasks={this.props.tofixtasks.data.tasks.results}
                   error={this.props.tofixtasks.error}
                   sliceList />
+
+                <AAProjects
+                  fetched={this.props.projects.fetched}
+                  fetching={this.props.projects.fetching}
+                  adminAreaId={Number(this.props.projects.data.id)}
+                  adminAreaName={this.props.projects.data.name}
+                  meta={this.props.projects.data.projects.meta}
+                  projects={this.props.projects.data.projects.results}
+                  error={this.props.projects.error}
+                  sliceList />
               </div>
 
               <div className='col--sec'>
@@ -105,7 +120,8 @@ function selector (state) {
   return {
     subregions: state.adminSubregions,
     stats: state.stats,
-    tofixtasks: state.tofixtasks
+    tofixtasks: state.tofixtasks,
+    projects: state.projects
   };
 }
 
@@ -113,7 +129,8 @@ function dispatcher (dispatch) {
   return {
     _fetchAdminSubregions: (aaid) => dispatch(fetchAdminSubregions(aaid)),
     _fetchAdminStats: (aaid) => dispatch(fetchAdminStats(aaid)),
-    _fetchTofixTasks: (aaid, page, limit) => dispatch(fetchTofixTasks(aaid, page, limit))
+    _fetchTofixTasks: (aaid, page, limit) => dispatch(fetchTofixTasks(aaid, page, limit)),
+    _fetchProjects: (aaid, page, limit) => dispatch(fetchProjects(aaid, page, limit))
   };
 }
 
