@@ -11,7 +11,7 @@ var AAStats = React.createClass({
     stats: React.PropTypes.object,
     adminAreas: React.PropTypes.array,
     tofixtasks: React.PropTypes.object,
-    projects: React.PropTypes.object,
+    projects: React.PropTypes.object
   },
 
   render: function () {
