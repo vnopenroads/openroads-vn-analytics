@@ -61,7 +61,8 @@ var AnalyticsAA = React.createClass({
             <AAStats
               stats={this.props.stats.stats}
               tofixtasks={this.props.tofixtasks}
-              adminAreas={this.props.subregions.adminAreas} />
+              adminAreas={this.props.subregions.adminAreas}
+              projects={this.props.projects} />
 
             <div className='inner'>
               <div className='col--main'>

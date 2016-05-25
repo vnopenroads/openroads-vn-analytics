@@ -29,7 +29,7 @@ var ProjectList = React.createClass({
   renderContent: function () {
     let content;
     if (this.props.fetching) {
-      content = (<p>Loading projects</p>
+      content = (<p>Loading projects...</p>
       );
     } else if (this.props.error) {
       content = <p className='aa-stats--empty'>Oops... An error occurred.</p>;
