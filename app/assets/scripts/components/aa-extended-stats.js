@@ -96,7 +96,7 @@ var AAExtendedStats = React.createClass({
     return (
       <ul className={classnames('progress-bar progress-bar--inline', colorCoding)}>
         <li style={{width: val + '%'}}>
-          <p className='value'>{val}%</p>
+          <p className='value'>{isNaN(val) ? 'N/A' : val + '%'}</p>
         </li>
       </ul>
     );
