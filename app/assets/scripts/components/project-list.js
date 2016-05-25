@@ -1,6 +1,7 @@
 'use strict';
 import React from 'react';
 import { Link } from 'react-router';
+import { formatThousands } from '../utils/format';
 
 var ProjectList = React.createClass({
   displayName: 'ProjectList',
@@ -50,7 +51,7 @@ var ProjectList = React.createClass({
               <th>Code</th>
               <th>Year</th>
               <th>Road</th>
-              <th>Length</th>
+              <th>Length (km)</th>
               <th>Cost</th>
             </tr>
           </thead>
@@ -63,7 +64,7 @@ var ProjectList = React.createClass({
                   <td>{o.year}</td>
                   <td>{o.road_name}</td>
                   <td>{o.length_km}</td>
-                  <td>{o.project_cost}</td>
+                  <td>{formatThousands(o.project_cost)}</td>
                 </tr>
               );
             })}
