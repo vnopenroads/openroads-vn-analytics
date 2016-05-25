@@ -139,12 +139,12 @@ var AAExtendedStats = React.createClass({
                 <h3>Extent</h3>
                 <div className='wrapper'>
                   <p className='aa-stat__value'><strong>{formatPercent(extent.national.length)}</strong>National roads mapped</p>
-                  {this.renderExtentBar(extent.national.length, extent.nationalKm.length, estimated.national.length, 'national')}
+                  {extent.national && extent.nationalKm && estimated.national ? this.renderExtentBar(extent.national.length, extent.nationalKm.length, estimated.national.length, 'national') : null}
                 </div>
 
                 <div className='wrapper'>
                   <p className='aa-stat__value'><strong>{formatPercent(extent.local.length)}</strong>Local roads mapped</p>
-                  {this.renderExtentBar(extent.local.length, extent.localKm.length, estimated.local.length, 'local')}
+                  {extent.local && extent.localKm && estimated.local ? this.renderExtentBar(extent.local.length, extent.localKm.length, estimated.local.length, 'local') : null}
                 </div>
 
                 {$editorLink}
