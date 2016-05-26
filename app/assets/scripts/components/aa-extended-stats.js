@@ -6,8 +6,6 @@ import _ from 'lodash';
 import classnames from 'classnames';
 import { Link } from 'react-router';
 import {formatPercent, formatThousands} from '../utils/format';
-// import ProjectList from './project-list';
-// import mockProjects from '../mock/projects';
 
 var AAExtendedStats = React.createClass({
   displayName: 'AAExtendedStats',
@@ -98,7 +96,7 @@ var AAExtendedStats = React.createClass({
     return (
       <ul className={classnames('progress-bar progress-bar--inline', colorCoding)}>
         <li style={{width: val + '%'}}>
-          <p className='value'>{val}%</p>
+          <p className='value'>{isNaN(val) ? 'N/A' : val + '%'}</p>
         </li>
       </ul>
     );
@@ -141,12 +139,12 @@ var AAExtendedStats = React.createClass({
                 <h3>Extent</h3>
                 <div className='wrapper'>
                   <p className='aa-stat__value'><strong>{formatPercent(extent.national.length)}</strong>National roads mapped</p>
-                  {this.renderExtentBar(extent.national.length, extent.nationalKm.length, estimated.national.length, 'national')}
+                  {extent.national && extent.nationalKm && estimated.national ? this.renderExtentBar(extent.national.length, extent.nationalKm.length, estimated.national.length, 'national') : null}
                 </div>
 
                 <div className='wrapper'>
                   <p className='aa-stat__value'><strong>{formatPercent(extent.local.length)}</strong>Local roads mapped</p>
-                  {this.renderExtentBar(extent.local.length, extent.localKm.length, estimated.local.length, 'local')}
+                  {extent.local && extent.localKm && estimated.local ? this.renderExtentBar(extent.local.length, extent.localKm.length, estimated.local.length, 'local') : null}
                 </div>
 
                 {$editorLink}
@@ -174,7 +172,6 @@ var AAExtendedStats = React.createClass({
     if (!this.props.fetched && !this.props.fetching) {
       return null;
     }
-    // let projects = mockProjects(8);
 
     return (
       <div className='aa-stats-wrapper'>
@@ -198,18 +195,6 @@ var AAExtendedStats = React.createClass({
           </div>
         </div>
 
-        {/*
-        <div className='aa-stats-row'>
-          <div className='aa-stats aa-stats--projects'>
-            <h2 className='aa-stats__title'>Projects{this.props.fetched ? ` (${projects.length} in progress)`
-              : null
-            }</h2>
-            <div className='aa-stats__contents'>
-              {this.props.fetched ? <ProjectList data={projects}/> : null}
-            </div>
-          </div>
-        </div>
-        */}
       </div>
     );
   }

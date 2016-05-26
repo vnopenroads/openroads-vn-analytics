@@ -109,10 +109,48 @@ const tofixtasks = function (state = tofixtasksDefaultState, action) {
   return state;
 };
 
+const projectsDefaultState = {
+  fetching: false,
+  fetched: false,
+  data: {
+    projects: {
+      meta: {
+        page: null,
+        limit: null,
+        total: null
+      },
+      results: []
+    }
+  }
+};
+const projects = function (state = projectsDefaultState, action) {
+  switch (action.type) {
+    case actions.REQUEST_PROJECTS:
+      console.log('REQUEST_PROJECTS');
+      state = _.cloneDeep(state);
+      state.error = null;
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_PROJECTS:
+      console.log('RECEIVE_PROJECTS');
+      state = _.cloneDeep(state);
+      if (action.error) {
+        state.error = action.error;
+      } else {
+        state.data = action.json;
+      }
+      state.fetching = false;
+      state.fetched = true;
+      break;
+  }
+  return state;
+};
+
 export default combineReducers({
   adminSubregions,
   search,
   stats,
   tofixtasks,
+  projects,
   routing: routeReducer
 });
