@@ -48,9 +48,10 @@ var ProjectList = React.createClass({
           <thead>
             <tr>
               <th>Scope</th>
+              <th>Type</th>
               <th>Code</th>
+              <th>Name</th>
               <th>Year</th>
-              <th>Road</th>
               <th>Length (km)</th>
               <th>Cost</th>
             </tr>
@@ -58,13 +59,13 @@ var ProjectList = React.createClass({
           <tbody>
             {this.props.projects.map(o => {
               return (
-                <tr key={o.project_code}>
-                  <th scope='row'>{o.project_scope}</th>
-                  <td>{o.project_code}</td>
+                <tr key={o.id}>
+                  <th scope='row'>{o.scope}</th>
+                  <td>{o.code}</td>
+                  <td>{o.name}</td>
                   <td>{o.year}</td>
-                  <td>{o.road_name}</td>
-                  <td>{o.length_km}</td>
-                  <td>{formatThousands(o.project_cost)}</td>
+                  <td>{o.length}</td>
+                  <td>{formatThousands(o.cost)}</td>
                 </tr>
               );
             })}
