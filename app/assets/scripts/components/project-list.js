@@ -61,6 +61,7 @@ var ProjectList = React.createClass({
               return (
                 <tr key={o.id}>
                   <th scope='row'>{o.scope}</th>
+                  <td>{o.scope}</td>
                   <td>{o.code}</td>
                   <td>{o.name}</td>
                   <td>{o.year}</td>
