@@ -924,6 +924,8 @@ a:active{
     [scope='row'] {
       font-weight: $base-font-bold;
     }
+
+    margin-bottom: 0;
   }
 
   .actions {
@@ -1055,10 +1057,6 @@ a:active{
     @extend .clearfix;
     &__wrapper {
       float: left;
-
-      &--break span:hover {
-        opacity: 1;
-      }
     }
     &__page {
       @extend .bttn;
@@ -1075,6 +1073,21 @@ a:active{
     }
   }
 }
+
+.break {
+  @extend .clearfix;
+  float: left;
+  span:hover {
+    opacity: 1;
+  }
+
+  @extend .bttn;
+  border-radius: 0;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: $base-font-color;
+}
+
 
 .piechart {
   .chart-legend {
