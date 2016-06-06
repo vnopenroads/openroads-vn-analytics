@@ -1,7 +1,7 @@
 'use strict';
 import React from 'react';
 import { Link } from 'react-router';
-import { formatThousands } from '../utils/format';
+import { formatThousands, formatCurrency, formatTableText } from '../utils/format';
 
 var ProjectList = React.createClass({
   displayName: 'ProjectList',
@@ -50,7 +50,7 @@ var ProjectList = React.createClass({
               <th>Scope</th>
               <th>Type</th>
               <th>Code</th>
-              <th>Name</th>
+              <th>Description</th>
               <th>Year</th>
               <th>Length (km)</th>
               <th>Cost</th>
@@ -60,13 +60,13 @@ var ProjectList = React.createClass({
             {this.props.projects.map(o => {
               return (
                 <tr key={o.id}>
-                  <th scope='row'>{o.scope}</th>
-                  <td>{o.scope}</td>
+                  <th scope='row'>{formatTableText(o.scope)}</th>
+                  <td>{o.type}</td>
                   <td>{o.code}</td>
-                  <td>{o.name}</td>
+                  <td>{formatTableText(o.name)}</td>
                   <td>{o.year}</td>
-                  <td>{o.length}</td>
-                  <td>{formatThousands(o.cost)}</td>
+                  <td>{formatThousands(o.length, 1)}</td>
+                  <td>{formatCurrency(o.cost, 0)}</td>
                 </tr>
               );
             })}

@@ -12,7 +12,7 @@ export function formatPercent (n, upperLimit) {
 }
 
 export function formatThousands (number, decimals = 2) {
-  if (isNaN(number)) {
+  if (isNaN(number) || number === null) {
     return '-';
   }
   let n = d3.format(',.' + decimals + 'f')(number);
@@ -21,10 +21,19 @@ export function formatThousands (number, decimals = 2) {
 
 export function formatCurrency (number, decimals = 2) {
   if (number >= 1e9) {
-    return d3.format(',.' + decimals + 'f')(number / 1e9) + ' B';
+    return d3.format(',.' + decimals + 'f')(number / 1e9) + '\u00A0B';
   }
   if (number >= 1e6) {
-    return d3.format(',.' + decimals + 'f')(number / 1e6) + ' M';
+    return d3.format(',.' + decimals + 'f')(number / 1e6) + '\u00A0M';
   }
   return d3.format(',.' + decimals + 'f')(number);
+}
+
+export function formatTableText (text) {
+  if (text === null) { return text; }
+
+  // Allow line breaks at '/' characters
+  text = text.replace(/\//g, '/\u200b');
+
+  return text;
 }
