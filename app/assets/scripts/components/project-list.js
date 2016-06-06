@@ -62,7 +62,7 @@ var ProjectList = React.createClass({
                 <tr key={o.id}>
                   <th scope='row'>{formatTableText(o.scope)}</th>
                   <td>{o.type}</td>
-                  <td>{o.code}</td>
+                  <td>{this.tableLink(o)}</td>
                   <td>{formatTableText(o.name)}</td>
                   <td>{o.year}</td>
                   <td>{formatThousands(o.length, 1)}</td>
@@ -75,6 +75,15 @@ var ProjectList = React.createClass({
         {this.renderViewAllLink()}
       </div>
     );
+  },
+
+  tableLink: function (o) {
+    let bbox = o.bbox;
+    if (!bbox) {
+      return o.code;
+    }
+    let url = '/editor/bbox=' + bbox.join('/');
+    return <Link to={url}>{o.code}</Link>;
   },
 
   render: function () {
