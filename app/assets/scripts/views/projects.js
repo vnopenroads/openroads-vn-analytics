@@ -113,7 +113,7 @@ var Projects = React.createClass({
     return (
       <ReactPaginate previousLabel={<span>previous</span>}
         nextLabel={<span>next</span>}
-        breakLabel={<li className='pages__wrapper pages__wrapper--break'><span className='pages__page'>...</span></li>}
+        breakLabel={<span className='pages__page'>...</span>}
         pageNum={this.getTotalPages()}
         forceSelected={this.getPage() - 1}
         marginPagesDisplayed={2}

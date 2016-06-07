@@ -924,6 +924,8 @@ a:active{
     [scope='row'] {
       font-weight: $base-font-bold;
     }
+
+    margin-bottom: 0;
   }
 
   .actions {
@@ -1055,10 +1057,6 @@ a:active{
     @extend .clearfix;
     &__wrapper {
       float: left;
-
-      &--break span:hover {
-        opacity: 1;
-      }
     }
     &__page {
       @extend .bttn;
@@ -1072,6 +1070,13 @@ a:active{
       color: #fff;
       background-color: rgba($secondary-color, 0.64);
       box-shadow: 0 0 0 1px rgba($secondary-color, 0.64);
+    }
+
+    .break {
+      float: left;
+      .pages__page {
+        opacity: 1;
+      }
     }
   }
 }
