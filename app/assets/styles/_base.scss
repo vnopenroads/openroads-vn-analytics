@@ -1071,23 +1071,15 @@ a:active{
       background-color: rgba($secondary-color, 0.64);
       box-shadow: 0 0 0 1px rgba($secondary-color, 0.64);
     }
+
+    .break {
+      float: left;
+      .pages__page {
+        opacity: 1;
+      }
+    }
   }
 }
-
-.break {
-  @extend .clearfix;
-  float: left;
-  span:hover {
-    opacity: 1;
-  }
-
-  @extend .bttn;
-  border-radius: 0;
-  text-decoration: none;
-  text-transform: uppercase;
-  color: $base-font-color;
-}
-
 
 .piechart {
   .chart-legend {
