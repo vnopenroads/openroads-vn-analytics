@@ -82,9 +82,10 @@ var ProjectList = React.createClass({
     if (!bbox || !bbox.length) {
       return o.code;
     }
-    let url = (bbox.length === 4) ? 'bbox=' + bbox.join('/')
-      : (bbox.length === 2) ? 'map=14/' + bbox.join('/')
-      : '';
+
+    let url = bbox[0] === bbox[2] && bbox[1] === bbox[3]
+      ? `map=14/${bbox[0]}/${bbox[1]}`
+      : `bbox=${bbox.join('/')}`;
 
     return <Link to={'/editor/' + url}>{o.code}</Link>;
   },
