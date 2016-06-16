@@ -109,6 +109,43 @@ const tofixtasks = function (state = tofixtasksDefaultState, action) {
   return state;
 };
 
+const projecttasksDefaultState = {
+  fetching: false,
+  fetched: false,
+  data: {
+    projecttasks: {
+      meta: {
+        page: null,
+        limit: null,
+        total: null
+      },
+      results: []
+    }
+  }
+};
+const projecttasks = function (state = projecttasksDefaultState, action) {
+  switch (action.type) {
+    case actions.REQUEST_PROJECT_TASKS:
+      console.log('REQUEST_PROJECT_TASKS');
+      state = _.cloneDeep(state);
+      state.error = null;
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_PROJECT_TASKS:
+      console.log('RECEIVE_PROJECT_TASKS');
+      state = _.cloneDeep(state);
+      if (action.error) {
+        state.error = action.error;
+      } else {
+        state.data = action.json;
+      }
+      state.fetching = false;
+      state.fetched = true;
+      break;
+  }
+  return state;
+};
+
 const projectsDefaultState = {
   fetching: false,
   fetched: false,
@@ -151,6 +188,7 @@ export default combineReducers({
   search,
   stats,
   tofixtasks,
+  projecttasks,
   projects,
   routing: routeReducer
 });

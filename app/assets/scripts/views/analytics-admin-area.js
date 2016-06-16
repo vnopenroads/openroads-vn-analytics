@@ -1,14 +1,14 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchAdminSubregions, fetchAdminStats, fetchTofixTasks, fetchProjects } from '../actions/action-creators';
+import { fetchAdminSubregions, fetchAdminStats, fetchTofixTasks, fetchProjects, fetchProjectTasks } from '../actions/action-creators';
 import PageHeader from '../components/page-header';
 import AAList from '../components/aa-list';
 import AAStats from '../components/aa-stats';
 import AAExtendedStats from '../components/aa-extended-stats';
 import AAMap from '../components/aa-map';
-import AATofixTasks from '../components/aa-tofix-tasks';
 import AAProjects from '../components/project-list';
+import AAErrors from '../components/aa-errors';
 
 var AnalyticsAA = React.createClass({
   displayName: 'AnalyticsAA',
@@ -18,10 +18,12 @@ var AnalyticsAA = React.createClass({
     _fetchAdminSubregions: React.PropTypes.func,
     _fetchAdminStats: React.PropTypes.func,
     _fetchTofixTasks: React.PropTypes.func,
+    _fetchProjectTasks: React.PropTypes.func,
     _fetchProjects: React.PropTypes.func,
     subregions: React.PropTypes.object,
     stats: React.PropTypes.object,
     tofixtasks: React.PropTypes.object,
+    projecttasks: React.PropTypes.object,
     projects: React.PropTypes.object,
     params: React.PropTypes.object
   },
@@ -30,6 +32,7 @@ var AnalyticsAA = React.createClass({
     this.props._fetchAdminSubregions(this.props.params.aaId);
     this.props._fetchAdminStats(this.props.params.aaId);
     this.props._fetchTofixTasks(this.props.params.aaId, 1, 10);
+    this.props._fetchProjectTasks(this.props.params.aaId, 1, 10);
     this.props._fetchProjects(this.props.params.aaId, 1, 10);
   },
 
@@ -39,6 +42,7 @@ var AnalyticsAA = React.createClass({
       this.props._fetchAdminSubregions(this.props.params.aaId);
       this.props._fetchAdminStats(this.props.params.aaId);
       this.props._fetchTofixTasks(this.props.params.aaId, 1, 10);
+      this.props._fetchProjectTasks(this.props.params.aaId, 1, 10);
       this.props._fetchProjects(this.props.params.aaId, 1, 10);
     } else {
       console.log('AnalyticsAA componentDidUpdate', 'NOT update');
@@ -61,6 +65,7 @@ var AnalyticsAA = React.createClass({
             <AAStats
               stats={this.props.stats.stats}
               tofixtasks={this.props.tofixtasks}
+              projecttasks={this.props.projecttasks}
               adminAreas={this.props.subregions.adminAreas}
               projects={this.props.projects} />
 
@@ -75,15 +80,10 @@ var AnalyticsAA = React.createClass({
                   error={this.props.stats.error}
                   stats={this.props.stats.stats} />
 
-                <AATofixTasks
-                  fetched={this.props.tofixtasks.fetched}
-                  fetching={this.props.tofixtasks.fetching}
-                  adminAreaId={Number(this.props.tofixtasks.data.id)}
-                  adminAreaName={this.props.tofixtasks.data.name}
-                  meta={this.props.tofixtasks.data.tasks.meta}
-                  tasks={this.props.tofixtasks.data.tasks.results}
-                  error={this.props.tofixtasks.error}
-                  sliceList />
+                <AAErrors
+                  adminAreaId={this.props.stats.id}
+                  tofixtasks={this.props.tofixtasks}
+                  projecttasks={this.props.projecttasks} />
 
                 <AAProjects
                   fetched={this.props.projects.fetched}
@@ -122,6 +122,7 @@ function selector (state) {
     subregions: state.adminSubregions,
     stats: state.stats,
     tofixtasks: state.tofixtasks,
+    projecttasks: state.projecttasks,
     projects: state.projects
   };
 }
@@ -131,6 +132,7 @@ function dispatcher (dispatch) {
     _fetchAdminSubregions: (aaid) => dispatch(fetchAdminSubregions(aaid)),
     _fetchAdminStats: (aaid) => dispatch(fetchAdminStats(aaid)),
     _fetchTofixTasks: (aaid, page, limit) => dispatch(fetchTofixTasks(aaid, page, limit)),
+    _fetchProjectTasks: (aaid, page, limit) => dispatch(fetchProjectTasks(aaid, page, limit)),
     _fetchProjects: (aaid, page, limit) => dispatch(fetchProjects(aaid, page, limit))
   };
 }

@@ -50,7 +50,7 @@ var AATofixTasks = React.createClass({
     } else if (this.props.error) {
       content = <p className='aa-tofixtasks--empty'>Oops... An error occurred.</p>;
     } else if (!this.props.meta.total) {
-      content = <p className='aa-tofixtasks--empty'>No errors to show.</p>;
+      content = <p className='aa-tofixtasks--empty'>Nothing to show.</p>;
     }
 
     if (content) {
@@ -70,7 +70,7 @@ var AATofixTasks = React.createClass({
       return null;
     }
 
-    let title = 'Errors Detected';
+    let title = 'Missing Properties';
     if (this.props.fetched && !this.props.fetching && this.props.meta.total) {
       title += ` (${this.props.meta.total})`;
     }
