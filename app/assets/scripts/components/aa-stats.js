@@ -11,6 +11,7 @@ var AAStats = React.createClass({
     stats: React.PropTypes.object,
     adminAreas: React.PropTypes.array,
     tofixtasks: React.PropTypes.object,
+    projecttasks: React.PropTypes.object,
     projects: React.PropTypes.object
   },
 
@@ -25,10 +26,15 @@ var AAStats = React.createClass({
       };
     }
 
-    let tofixtasks = '-';
+    let tasksCount = null;
     if (this.props.tofixtasks.fetched && !this.props.tofixtasks.fetching) {
-      tofixtasks = this.props.tofixtasks.data.tasks.meta.total;
+      tasksCount = this.props.tofixtasks.data.tasks.meta.total;
     }
+    if (this.props.projecttasks.fetched && !this.props.projecttasks.fetching) {
+      tasksCount = (tasksCount || 0) + this.props.projecttasks.data.projecttasks.meta.total;
+    }
+
+    tasksCount = tasksCount || '-';
 
     let completeness = formatPercent(this.props.stats && this.props.stats.completeness && this.props.stats.completeness.length);
 
@@ -55,7 +61,7 @@ var AAStats = React.createClass({
               </li>
               <li className='aa-stats__element'>
                 <div className='wrapper'>
-                  <strong><span className='highlight'>{formatThousands(tofixtasks)}</span> Errors detected</strong>
+                  <strong><span className='highlight'>{formatThousands(tasksCount)}</span> Errors detected</strong>
                 </div>
               </li>
               <li className='aa-stats__element'>

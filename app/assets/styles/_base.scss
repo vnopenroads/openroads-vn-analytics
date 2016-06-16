@@ -876,6 +876,10 @@ a:active{
   // ^^ Placeholder loading.
 }
 
+.aa-stats.aa-errors {
+  margin-bottom: 2rem;
+}
+
 .prj-list {
   @extend .clearfix;
   margin: -1rem;

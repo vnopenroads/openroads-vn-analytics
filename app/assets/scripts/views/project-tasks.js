@@ -4,22 +4,21 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 import ReactPaginate from 'react-paginate';
-import { fetchTofixTasks, fetchAdminSubregions } from '../actions/action-creators';
-import AATofixTasks from '../components/aa-tofix-tasks';
+import { fetchProjectTasks, fetchAdminSubregions } from '../actions/action-creators';
 import PageHeader from '../components/page-header';
 
-var TofixTasks = React.createClass({
-  displayName: 'TofixTasks',
+var ProjectTasks = React.createClass({
+  displayName: 'ProjectTasks',
 
   propTypes: {
     children: React.PropTypes.object,
-    _fetchTofixTasks: React.PropTypes.func,
+    _fetchProjectTasks: React.PropTypes.func,
     _fetchAdminSubregions: React.PropTypes.func,
     _push: React.PropTypes.func,
     subregions: React.PropTypes.object,
     params: React.PropTypes.object,
     location: React.PropTypes.object,
-    tofixtasks: React.PropTypes.object
+    projecttasks: React.PropTypes.object
   },
 
   perPage: 20,
@@ -31,39 +30,40 @@ var TofixTasks = React.createClass({
   },
 
   getTotalPages: function () {
-    let {total, limit} = this.props.tofixtasks.data.tasks.meta;
+    console.log('this.props.projecttasks', this.props.projecttasks);
+    let {total, limit} = this.props.projecttasks.data.projecttasks.meta;
     return Math.ceil(total / limit);
   },
 
   componentDidMount: function () {
     console.log('this.props.params.aaId', this.props.params.aaId);
     this.props._fetchAdminSubregions(this.props.params.aaId || null);
-    this.props._fetchTofixTasks(this.props.params.aaId || null, this.getPage(), this.perPage);
+    this.props._fetchProjectTasks(this.props.params.aaId || null, this.getPage(), this.perPage);
   },
 
   componentDidUpdate: function (prevProps, prevState) {
-    console.group('TofixTasks componentDidUpdate');
+    console.group('ProjectTasks componentDidUpdate');
     if (this.props.params.aaId !== prevProps.params.aaId) {
       console.log('aaId changed');
       if (!this.props.subregions.fetching) {
         console.log('update subregions');
         this.props._fetchAdminSubregions(this.props.params.aaId);
       }
-      if (!this.props.tofixtasks.fetching) {
+      if (!this.props.projecttasks.fetching) {
         console.log('update tofixtasks');
-        this.props._fetchTofixTasks(this.props.params.aaId, this.getPage(), this.perPage);
+        this.props._fetchProjectTasks(this.props.params.aaId, this.getPage(), this.perPage);
       }
     } else if (this.props.location.query.page && this.getPage() !== prevProps.location.query.page) {
       console.log('page changed');
-      this.props._fetchTofixTasks(this.props.params.aaId, this.getPage(), this.perPage);
+      this.props._fetchProjectTasks(this.props.params.aaId, this.getPage(), this.perPage);
     } else {
       console.log('NOT update');
     }
-    console.groupEnd('TofixTasks componentDidUpdate');
+    console.groupEnd('ProjectTasks componentDidUpdate');
   },
 
   handlePageClick: function (d) {
-    let url = `analytics/${this.props.subregions.id}/tasks?page=${d.selected + 1}`;
+    let url = `analytics/${this.props.subregions.id}/projecttasks?page=${d.selected + 1}`;
     this.props._push(url);
   },
 
@@ -82,25 +82,68 @@ var TofixTasks = React.createClass({
     );
   },
 
-  renderList: function () {
-    let allFetched = this.props.subregions.fetched && this.props.tofixtasks.fetched;
-    let someFething = this.props.subregions.fetching || this.props.tofixtasks.fetching;
+  renderContent: function () {
+    let someFething = this.props.subregions.fetching || this.props.projecttasks.fetching;
+    let data = this.props.projecttasks.data.projecttasks;
+    let content;
+    if (someFething) {
+      content = (
+        <ul className='loading-placeholder'>
+          <li className='aa-tofixtasks__wrapper'><p>&nbsp;</p></li>
+          <li className='aa-tofixtasks__wrapper'><p>&nbsp;</p></li>
+          <li className='aa-tofixtasks__wrapper'><p>&nbsp;</p></li>
+        </ul>
+      );
+    } else if (data.error) {
+      content = <p className='aa-tofixtasks--empty'>Oops... An error occurred.</p>;
+    } else if (!data.meta.total) {
+      content = <p className='aa-tofixtasks--empty'>Nothing to show.</p>;
+    }
+
+    if (content) {
+      return <div className='aa-tofixtasks__contents'>{content}</div>;
+    }
 
     return (
-      <AATofixTasks
-        fetched={allFetched}
-        fetching={someFething}
-        adminAreaId={Number(this.props.tofixtasks.data.id)}
-        adminAreaName={this.props.tofixtasks.data.name}
-        meta={this.props.tofixtasks.data.tasks.meta}
-        tasks={this.props.tofixtasks.data.tasks.results}
-        error={this.props.tofixtasks.error} />
+      <div className='aa-tofixtasks__contents'>
+        <ul>
+          {data.results.map(o => {
+            return (
+              <li key={o.id}>
+                <Link to={`editor/bbox=${o.bbox.join('/')}`} className='aa-tofixtasks__wrapper'>
+                  <p>Missin Road for project <strong>{o.id}</strong></p>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    );
+  },
+
+  renderList: function () {
+    let allFetched = this.props.subregions.fetched && this.props.projecttasks.fetched;
+    let someFething = this.props.subregions.fetching || this.props.projecttasks.fetching;
+
+    if (!allFetched && !someFething) {
+      return null;
+    }
+
+    let title = 'Missing Roads';
+    if (allFetched && !someFething && this.props.projecttasks.data.projecttasks.meta.total) {
+      title += ` (${this.props.projecttasks.data.projecttasks.meta.total})`;
+    }
+    return (
+      <div className='aa-tofixtasks'>
+        <h2 className='aa-tofixtasks__title'>{title}</h2>
+        {this.renderContent()}
+      </div>
     );
   },
 
   renderPagination: function () {
     // Only show pagination after EVERYTHING has loaded.
-    let {fetched: tasksFetched, fetching: tasksFetching, error} = this.props.tofixtasks;
+    let {fetched: tasksFetched, fetching: tasksFetching, error} = this.props.projecttasks;
     let {fetched: regFetched, fetching: regFetching} = this.props.subregions;
 
     let allFetched = tasksFetched && regFetched;
@@ -154,16 +197,16 @@ var TofixTasks = React.createClass({
 function selector (state) {
   return {
     subregions: state.adminSubregions,
-    tofixtasks: state.tofixtasks
+    projecttasks: state.projecttasks
   };
 }
 
 function dispatcher (dispatch) {
   return {
     _fetchAdminSubregions: (aaid) => dispatch(fetchAdminSubregions(aaid)),
-    _fetchTofixTasks: (aaid, page, limit) => dispatch(fetchTofixTasks(aaid, page, limit)),
+    _fetchProjectTasks: (aaid, page, limit) => dispatch(fetchProjectTasks(aaid, page, limit)),
     _push: (loation) => dispatch(push(loation))
   };
 }
 
-module.exports = connect(selector, dispatcher)(TofixTasks);
+module.exports = connect(selector, dispatcher)(ProjectTasks);

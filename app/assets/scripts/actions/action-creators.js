@@ -2,8 +2,9 @@ import fetch from 'isomorphic-fetch';
 import * as actions from './action-types';
 import config from '../config';
 
-// let mock = require('../mock/1611254000.json');
-// let mockToFix = require('../mock/tofix.json');
+// ////////////////////////////////////////////////////////////////
+//                       ADMIN SUBREGIONS                        //
+// ////////////////////////////////////////////////////////////////
 
 function requestAdminSubregions () {
   return {
@@ -40,6 +41,10 @@ export function fetchAdminSubregions (id = null) {
       // catch any error in the network call.
   };
 }
+
+// ////////////////////////////////////////////////////////////////
+//                        SEARCH RESULTS                         //
+// ////////////////////////////////////////////////////////////////
 
 function requestSearchResults (query) {
   return {
@@ -78,6 +83,10 @@ export function fetchSearchResults (searchQuery) {
   };
 }
 
+// ////////////////////////////////////////////////////////////////
+//                         ADMIN STATS                           //
+// ////////////////////////////////////////////////////////////////
+
 function requestAdminStats () {
   return {
     type: actions.REQUEST_ADMIN_STATS
@@ -115,6 +124,10 @@ export function fetchAdminStats (id = null) {
       });
   };
 }
+
+// ////////////////////////////////////////////////////////////////
+//                          WAYTASKS                             //
+// ////////////////////////////////////////////////////////////////
 
 function requestTofixTasks () {
   return {
@@ -155,6 +168,54 @@ export function fetchTofixTasks (aaid = null, page, limit) {
       });
   };
 }
+
+// ////////////////////////////////////////////////////////////////
+//                        PROJECT TASKS                          //
+// ////////////////////////////////////////////////////////////////
+
+function requestProjectTasks () {
+  return {
+    type: actions.REQUEST_PROJECT_TASKS
+  };
+}
+
+function receiveProjectTasks (json, error = null) {
+  return {
+    type: actions.RECEIVE_PROJECT_TASKS,
+    json: json,
+    error,
+    receivedAt: Date.now()
+  };
+}
+
+export function fetchProjectTasks (aaid = null, page, limit) {
+  return function (dispatch) {
+    dispatch(requestProjectTasks());
+
+    // Note: `page` is 0 based, so subtract 1.
+    let url = aaid === null
+      ? `${config.api}/admin/0/projecttasks?page=${--page}&limit=${limit}`
+      : `${config.api}/admin/${aaid}/projecttasks?page=${--page}&limit=${limit}`;
+    return fetch(url)
+      .then(response => {
+        if (response.status >= 400) {
+          throw new Error('Bad response');
+        }
+        return response.json();
+      })
+      .then(json => {
+        // setTimeout(() => dispatch(receiveProjectTasks(json)), 2000);
+        return dispatch(receiveProjectTasks(json));
+      }, e => {
+        console.log('e', e);
+        return dispatch(receiveProjectTasks(null, 'Data not available'));
+      });
+  };
+}
+
+// ////////////////////////////////////////////////////////////////
+//                       LIST OF PROJECTS                        //
+// ////////////////////////////////////////////////////////////////
 
 function requestProjects () {
   return {
