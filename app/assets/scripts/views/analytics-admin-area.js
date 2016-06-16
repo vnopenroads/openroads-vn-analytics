@@ -7,7 +7,6 @@ import AAList from '../components/aa-list';
 import AAStats from '../components/aa-stats';
 import AAExtendedStats from '../components/aa-extended-stats';
 import AAMap from '../components/aa-map';
-import AATofixTasks from '../components/aa-tofix-tasks';
 import AAProjects from '../components/project-list';
 import AAErrors from '../components/aa-errors';
 
