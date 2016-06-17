@@ -17,7 +17,7 @@ var AAMap = React.createClass({
   map: null,
 
   setupMap: function () {
-    this.map = L.mapbox.map(this.refs.map, 'devseed.524e060f', { zoomControl: false, scrollWheelZoom: false })
+    this.map = L.mapbox.map(this.refs.map, 'openroads.fddb9509', { zoomControl: false, scrollWheelZoom: false })
       .setView(this.mapInitialView, this.mapInitialZoom);
 
     L.tileLayer(config.roadNetTileLayerUrl).addTo(this.map);
