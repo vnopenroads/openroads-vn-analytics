@@ -108,10 +108,11 @@ var ProjectTasks = React.createClass({
       <div className='aa-tofixtasks__contents'>
         <ul>
           {data.results.map(o => {
+            let projectType = o.type.replace(' ', '-').toLowerCase();
             return (
               <li key={o.id}>
-                <Link to={`editor/bbox=${o.bbox.join('/')}`} className='aa-tofixtasks__wrapper'>
-                  <p>Missin Road for project <strong>{o.id}</strong></p>
+                <Link to={`editor/bbox=${o.bbox.join('/')}&overlays=${projectType}`} className='aa-tofixtasks__wrapper'>
+                  <p>Missing Road for project <strong>{o.id}</strong></p>
                 </Link>
               </li>
             );
