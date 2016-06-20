@@ -183,6 +183,36 @@ const projects = function (state = projectsDefaultState, action) {
   return state;
 };
 
+const projectsMetaDefaultState = {
+  fetching: false,
+  fetched: false,
+  data: {
+    type: []
+  }
+};
+const projectsMeta = function (state = projectsMetaDefaultState, action) {
+  switch (action.type) {
+    case actions.REQUEST_PROJECTS_META:
+      console.log('REQUEST_PROJECTS_META');
+      state = _.cloneDeep(state);
+      state.error = null;
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_PROJECTS_META:
+      console.log('RECEIVE_PROJECTS_META');
+      state = _.cloneDeep(state);
+      if (action.error) {
+        state.error = action.error;
+      } else {
+        state.data = action.json;
+      }
+      state.fetching = false;
+      state.fetched = true;
+      break;
+  }
+  return state;
+};
+
 export default combineReducers({
   adminSubregions,
   search,
@@ -190,5 +220,6 @@ export default combineReducers({
   tofixtasks,
   projecttasks,
   projects,
+  projectsMeta,
   routing: routeReducer
 });

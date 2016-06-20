@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch';
+import _ from 'lodash';
 import * as actions from './action-types';
 import config from '../config';
 
@@ -232,14 +233,24 @@ function receiveProjects (json, error = null) {
   };
 }
 
-export function fetchProjects (aaid = null, page, limit) {
+export function fetchProjects (aaid = null, page, limit, filters) {
   return function (dispatch) {
     dispatch(requestProjects());
+    let qs = [];
+    _.forEach(filters, (v, k) => {
+      if (v && v !== '--') {
+        qs.push(`${k}=${v}`);
+      }
+    });
 
     // Note: `page` is 0 based, so subtract 1.
     let url = aaid === null
       ? `${config.api}/admin/0/projects?page=${--page}&limit=${limit}`
       : `${config.api}/admin/${aaid}/projects?page=${--page}&limit=${limit}`;
+
+    if (qs.length) {
+      url += '&' + qs.join('&');
+    }
     return fetch(url)
       .then(response => {
         if (response.status >= 400) {
@@ -253,6 +264,46 @@ export function fetchProjects (aaid = null, page, limit) {
       }, e => {
         console.log('e', e);
         return dispatch(receiveProjects(null, 'Data not available'));
+      });
+  };
+}
+
+// ////////////////////////////////////////////////////////////////
+//                         PROJECT META                          //
+// ////////////////////////////////////////////////////////////////
+
+function requestProjectsMeta () {
+  return {
+    type: actions.REQUEST_PROJECTS_META
+  };
+}
+
+function receiveProjectsMeta (json, error = null) {
+  return {
+    type: actions.RECEIVE_PROJECTS_META,
+    json: json,
+    error,
+    receivedAt: Date.now()
+  };
+}
+
+export function fetchProjectsMeta () {
+  return function (dispatch) {
+    dispatch(requestProjectsMeta());
+
+    return fetch(`${config.api}/meta/projects`)
+      .then(response => {
+        if (response.status >= 400) {
+          throw new Error('Bad response');
+        }
+        return response.json();
+      })
+      .then(json => {
+        // setTimeout(() => dispatch(receiveProjects(json)), 2000);
+        return dispatch(receiveProjectsMeta(json));
+      }, e => {
+        console.log('e', e);
+        return dispatch(receiveProjectsMeta(null, 'Data not available'));
       });
   };
 }
