@@ -1110,3 +1110,11 @@ a:active{
     }
   }
 }
+
+.projects-controls {
+  margin-bottom: 1rem;
+
+  .filter-select {
+    max-width: 15rem;
+  }
+}

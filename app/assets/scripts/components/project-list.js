@@ -1,6 +1,7 @@
 'use strict';
 import React from 'react';
 import { Link } from 'react-router';
+import _ from 'lodash';
 import { formatThousands, formatCurrency, formatTableText } from '../utils/format';
 
 var ProjectList = React.createClass({
@@ -12,10 +13,25 @@ var ProjectList = React.createClass({
     adminAreaId: React.PropTypes.number,
     adminAreaName: React.PropTypes.string,
     projects: React.PropTypes.array,
+    projectsMeta: React.PropTypes.object,
+    activeFilters: React.PropTypes.object,
     meta: React.PropTypes.object,
     error: React.PropTypes.string,
-    sliceList: React.PropTypes.bool
+    sliceList: React.PropTypes.bool,
+
+    // onFilterChange: React.PropTypes.func,
+    onFilterApply: React.PropTypes.func
   },
+
+  onFilterApply: function (e) {
+    let filters = _.clone(this.props.activeFilters);
+    filters.type = this.refs['filters-type'].value;
+    this.props.onFilterApply(filters);
+  },
+
+  // onFilterChange: function (fieldKey, e) {
+  //   this.props.onFilterChange(fieldKey, e.target.value);
+  // },
 
   renderViewAllLink: function () {
     if (!this.props.sliceList) return null;
@@ -35,7 +51,7 @@ var ProjectList = React.createClass({
     } else if (this.props.error) {
       content = <p className='aa-stats--empty'>Oops... An error occurred.</p>;
     } else if (!this.props.meta.total) {
-      content = <p className='aa-stats--empty'>No errors to show.</p>;
+      content = <p className='aa-stats--empty'>No projects to show.</p>;
     }
 
     if (content) {
@@ -90,6 +106,31 @@ var ProjectList = React.createClass({
     return <Link to={'/editor/' + url}>{o.code}</Link>;
   },
 
+  renderControls: function () {
+    if (this.props.sliceList || this.props.fetching) {
+      return null;
+    }
+
+    let filters = this.props.activeFilters;
+
+    return (
+      <div className='projects-controls'>
+        <div className='form-horizontal'>
+          <label htmlFor='filter-type' className='form-label'>Project type</label>
+          <select id='filter-type' className='form-control input-m filter-select' ref='filters-type' defaultValue={filters.type}>
+            <option value='--'>All</option>
+            {this.props.projectsMeta.type.map(o => {
+              return (
+                <option key={_.kebabCase(o)} value={o}>{o}</option>
+              );
+            })}
+          </select>
+        </div>
+        <button className='bttn-filter' onClick={this.onFilterApply}>Apply filter</button>
+      </div>
+    );
+  },
+
   render: function () {
     if (!this.props.fetched && !this.props.fetching) {
       return null;
@@ -103,6 +144,7 @@ var ProjectList = React.createClass({
     return (
       <div className='aa-stats--projects'>
         <h2 className='aa-stats__title'>{title}</h2>
+        {this.renderControls()}
         <div className='aa-stats__contents'>
           {this.renderContent()}
         </div>

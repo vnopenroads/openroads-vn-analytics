@@ -254,3 +254,9 @@ input[type=submit] {
     @extend .collecticons-magnifier-right;
   }
 }
+
+.bttn-filter {
+  @extend .bttn;
+  @extend .bttn-m;
+  @extend .bttn-base-light;
+}
