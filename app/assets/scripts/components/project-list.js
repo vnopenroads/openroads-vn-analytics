@@ -115,15 +115,18 @@ var ProjectList = React.createClass({
 
     return (
       <div className='projects-controls'>
-        <select ref='filters-type' defaultValue={filters.type}>
-          <option value='--'>All</option>
-          {this.props.projectsMeta.type.map(o => {
-            return (
-              <option key={_.kebabCase(o)} value={o}>{o}</option>
-            );
-          })}
-        </select>
-        <button onClick={this.onFilterApply}>Apply</button>
+        <div className='form-horizontal'>
+          <label htmlFor='filter-type' className='form-label'>Project type</label>
+          <select id='filter-type' className='form-control input-m filter-select' ref='filters-type' defaultValue={filters.type}>
+            <option value='--'>All</option>
+            {this.props.projectsMeta.type.map(o => {
+              return (
+                <option key={_.kebabCase(o)} value={o}>{o}</option>
+              );
+            })}
+          </select>
+        </div>
+        <button className='bttn-filter' onClick={this.onFilterApply}>Apply filter</button>
       </div>
     );
   },
