@@ -27,9 +27,7 @@ var AAErrors = React.createClass({
     <div className='aa-stats aa-stats--extent aa-errors'>
       <h2 className='aa-stats__title'>Errors Detected</h2>
       <div className='aa-stats__description'>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio reiciendis iste beatae laboriosam
-        aliquam molestiae incidunt repudiandae recusandae fugiat minus ullam eveniet, laborum dolorum!
-        Quisquam eaque ipsa aut illum. Doloremque!</p>
+        <p>Improve the quality of the road network data in OpenRoads by addressing the following errors.</p>
       </div>
       <div className='aa-stats__contents'>
         <ul className='aa-stats__list'>

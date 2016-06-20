@@ -129,9 +129,7 @@ var AAExtendedStats = React.createClass({
         <div className='aa-stats aa-stats--extent'>
           <h2 className='aa-stats__title'>Map Completeness</h2>
           <div className='aa-stats__description'>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio reiciendis iste beatae laboriosam
-            aliquam molestiae incidunt repudiandae recusandae fugiat minus ullam eveniet, laborum dolorum!
-            Quisquam eaque ipsa aut illum. Doloremque!</p>
+            <p>Completeness refers to measure of the extent of the road network that have been mapped, and the share of this network by length that has been assigned key attributes such as responsibility, surface type, ride quality.</p>
           </div>
           <div className='aa-stats__contents'>
             <ul className='aa-stats__list'>
