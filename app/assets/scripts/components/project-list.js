@@ -99,11 +99,13 @@ var ProjectList = React.createClass({
       return o.code;
     }
 
-    let url = bbox[0] === bbox[2] && bbox[1] === bbox[3]
+    let bboxUrl = bbox[0] === bbox[2] && bbox[1] === bbox[3]
       ? `map=14/${bbox[0]}/${bbox[1]}`
       : `bbox=${bbox.join('/')}`;
 
-    return <Link to={'/editor/' + url}>{o.code}</Link>;
+    let typeUrl = o.type.replace(' ', '-').toLowerCase();
+
+    return <Link to={'/editor/' + bboxUrl + '&overlays=' + typeUrl}>{o.code}</Link>;
   },
 
   renderControls: function () {
