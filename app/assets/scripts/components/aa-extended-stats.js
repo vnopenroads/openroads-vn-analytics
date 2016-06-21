@@ -125,6 +125,10 @@ var AAExtendedStats = React.createClass({
 
     let $editorLink = <Link to={`/editor/bbox=${this.props.bbox.join('/')}`} className='bttn-view-more'>Edit Roads</Link>;
 
+    // TMP. Hard-coding national extent to be 100%
+    estimated.national = extent.nationalKm;
+    extent.national.length = 1;
+
     return (
         <div className='aa-stats aa-stats--extent'>
           <h2 className='aa-stats__title'>Map Completeness</h2>
