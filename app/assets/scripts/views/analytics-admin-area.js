@@ -1,7 +1,7 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchAdminSubregions, fetchAdminStats, fetchTofixTasks, fetchProjects, fetchProjectTasks } from '../actions/action-creators';
+import { fetchAdminSubregions, fetchAdminStats, fetchTofixTasks, fetchProjects, fetchProjectTasks, fetchRoadNetworkStatus } from '../actions/action-creators';
 import PageHeader from '../components/page-header';
 import AAList from '../components/aa-list';
 import AAStats from '../components/aa-stats';
@@ -19,12 +19,14 @@ var AnalyticsAA = React.createClass({
     _fetchAdminStats: React.PropTypes.func,
     _fetchTofixTasks: React.PropTypes.func,
     _fetchProjectTasks: React.PropTypes.func,
+    _fetchRoadNetworkStatus: React.PropTypes.func,
     _fetchProjects: React.PropTypes.func,
     subregions: React.PropTypes.object,
     stats: React.PropTypes.object,
     tofixtasks: React.PropTypes.object,
     projecttasks: React.PropTypes.object,
     projects: React.PropTypes.object,
+    roadNetworkStatus: React.PropTypes.object,
     params: React.PropTypes.object
   },
 
@@ -34,6 +36,7 @@ var AnalyticsAA = React.createClass({
     this.props._fetchTofixTasks(this.props.params.aaId, 1, 10);
     this.props._fetchProjectTasks(this.props.params.aaId, 1, 10);
     this.props._fetchProjects(this.props.params.aaId, 1, 10);
+    this.props._fetchRoadNetworkStatus(this.props.params.aaId);
   },
 
   componentDidUpdate: function (prevProps, prevState) {
@@ -44,6 +47,7 @@ var AnalyticsAA = React.createClass({
       this.props._fetchTofixTasks(this.props.params.aaId, 1, 10);
       this.props._fetchProjectTasks(this.props.params.aaId, 1, 10);
       this.props._fetchProjects(this.props.params.aaId, 1, 10);
+      this.props._fetchRoadNetworkStatus(this.props.params.aaId);
     } else {
       console.log('AnalyticsAA componentDidUpdate', 'NOT update');
     }
@@ -55,6 +59,7 @@ var AnalyticsAA = React.createClass({
         <PageHeader
           adminAreaId={this.props.subregions.id}
           pageTitle={this.props.subregions.name}
+          roadNetworkStatus={this.props.roadNetworkStatus}
           bbox={this.props.subregions.bbox || []} />
 
         <div className='page__body aa'>
@@ -123,7 +128,8 @@ function selector (state) {
     stats: state.stats,
     tofixtasks: state.tofixtasks,
     projecttasks: state.projecttasks,
-    projects: state.projects
+    projects: state.projects,
+    roadNetworkStatus: state.roadNetworkStatus
   };
 }
 
@@ -133,7 +139,8 @@ function dispatcher (dispatch) {
     _fetchAdminStats: (aaid) => dispatch(fetchAdminStats(aaid)),
     _fetchTofixTasks: (aaid, page, limit) => dispatch(fetchTofixTasks(aaid, page, limit)),
     _fetchProjectTasks: (aaid, page, limit) => dispatch(fetchProjectTasks(aaid, page, limit)),
-    _fetchProjects: (aaid, page, limit) => dispatch(fetchProjects(aaid, page, limit))
+    _fetchProjects: (aaid, page, limit) => dispatch(fetchProjects(aaid, page, limit)),
+    _fetchRoadNetworkStatus: (aaid) => dispatch(fetchRoadNetworkStatus(aaid))
   };
 }
 

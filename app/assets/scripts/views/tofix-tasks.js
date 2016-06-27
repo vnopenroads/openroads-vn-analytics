@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 import ReactPaginate from 'react-paginate';
-import { fetchTofixTasks, fetchAdminSubregions } from '../actions/action-creators';
+import { fetchTofixTasks, fetchAdminSubregions, fetchRoadNetworkStatus } from '../actions/action-creators';
 import AATofixTasks from '../components/aa-tofix-tasks';
 import PageHeader from '../components/page-header';
 
@@ -15,10 +15,12 @@ var TofixTasks = React.createClass({
     children: React.PropTypes.object,
     _fetchTofixTasks: React.PropTypes.func,
     _fetchAdminSubregions: React.PropTypes.func,
+    _fetchRoadNetworkStatus: React.PropTypes.func,
     _push: React.PropTypes.func,
     subregions: React.PropTypes.object,
     params: React.PropTypes.object,
     location: React.PropTypes.object,
+    roadNetworkStatus: React.PropTypes.object,
     tofixtasks: React.PropTypes.object
   },
 
@@ -39,6 +41,7 @@ var TofixTasks = React.createClass({
     console.log('this.props.params.aaId', this.props.params.aaId);
     this.props._fetchAdminSubregions(this.props.params.aaId || null);
     this.props._fetchTofixTasks(this.props.params.aaId || null, this.getPage(), this.perPage);
+    this.props._fetchRoadNetworkStatus(this.props.params.aaId || null);
   },
 
   componentDidUpdate: function (prevProps, prevState) {
@@ -48,6 +51,7 @@ var TofixTasks = React.createClass({
       if (!this.props.subregions.fetching) {
         console.log('update subregions');
         this.props._fetchAdminSubregions(this.props.params.aaId);
+        this.props._fetchRoadNetworkStatus(this.props.params.aaId);
       }
       if (!this.props.tofixtasks.fetching) {
         console.log('update tofixtasks');
@@ -72,6 +76,7 @@ var TofixTasks = React.createClass({
       <PageHeader
         adminAreaId={this.props.subregions.id}
         pageTitle={this.props.subregions.name}
+        roadNetworkStatus={this.props.roadNetworkStatus}
         bbox={this.props.subregions.bbox || []} />
     );
   },
@@ -154,7 +159,8 @@ var TofixTasks = React.createClass({
 function selector (state) {
   return {
     subregions: state.adminSubregions,
-    tofixtasks: state.tofixtasks
+    tofixtasks: state.tofixtasks,
+    roadNetworkStatus: state.roadNetworkStatus
   };
 }
 
@@ -162,6 +168,7 @@ function dispatcher (dispatch) {
   return {
     _fetchAdminSubregions: (aaid) => dispatch(fetchAdminSubregions(aaid)),
     _fetchTofixTasks: (aaid, page, limit) => dispatch(fetchTofixTasks(aaid, page, limit)),
+    _fetchRoadNetworkStatus: (aaid) => dispatch(fetchRoadNetworkStatus(aaid)),
     _push: (loation) => dispatch(push(loation))
   };
 }

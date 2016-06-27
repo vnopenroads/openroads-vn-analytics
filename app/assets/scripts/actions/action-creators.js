@@ -108,7 +108,6 @@ export function fetchAdminStats (id = null) {
     dispatch(requestAdminStats());
     // return dispatch(receiveAdminStats(mock));
 
-    // TODO swap this out with real url once endpoint is ready
     let url = id === null ? `${config.api}/admin/0/stats` : `${config.api}/admin/${id}/stats`;
     return fetch(url)
       .then(response => {
@@ -304,6 +303,54 @@ export function fetchProjectsMeta () {
       }, e => {
         console.log('e', e);
         return dispatch(receiveProjectsMeta(null, 'Data not available'));
+      });
+  };
+}
+
+// ////////////////////////////////////////////////////////////////
+//                         ROAD NETWORK                          //
+// ////////////////////////////////////////////////////////////////
+
+function requestRoadNetworkStatus () {
+  return {
+    type: actions.REQUEST_ROAD_NETWORK_STATUS
+  };
+}
+
+function receiveRoadNetworkStatus (json, error = null) {
+  return {
+    type: actions.RECEIVE_ROAD_NETWORK_STATUS,
+    json: json,
+    error,
+    receivedAt: Date.now()
+  };
+}
+
+export function fetchRoadNetworkStatus (id = null) {
+  return function (dispatch) {
+    dispatch(requestRoadNetworkStatus());
+
+    let url = id === null ? `${config.api}/admin/0?roadNetwork=true` : `${config.api}/admin/${id}?roadNetwork=true`;
+    return fetch(url)
+      .then(response => {
+        return response.json();
+      })
+      .then(json => {
+        console.log('json', json);
+
+        if (json.statusCode === 400 && json.message.match(/greater than maximum/)) {
+          return {dataAvailable: false};
+        } else if (json.statusCode > 400) {
+          throw new Error('Bad response');
+        }
+        return {dataAvailable: true};
+      })
+      .then(json => {
+        // setTimeout(() => dispatch(receiveRoadNetworkStatus(json)), 2000);
+        return dispatch(receiveRoadNetworkStatus(json));
+      }, e => {
+        console.log('e', e);
+        return dispatch(receiveRoadNetworkStatus(null, 'Data not available'));
       });
   };
 }

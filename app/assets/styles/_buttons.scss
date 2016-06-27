@@ -228,6 +228,12 @@ input[type=submit] {
   @extend .bttn, .bttn-s, .bttn-primary;
 }
 
+.bttn-road-network {
+  @extend .bttn, .bttn-m, .bttn-secondary;
+  text-decoration: none;
+  box-shadow: none;
+}
+
 .bttn-stats-prev,
 .bttn-stats-next {
   @extend .bttn;
