@@ -18,7 +18,7 @@ var PageHeader = React.createClass({
     let {fetched, fetching, data, error} = this.props.roadNetworkStatus;
 
     if (!fetched || fetching) {
-      return <li><Link to='/' className='bttn-road-network disabled'>Donwload road network</Link></li>;
+      return <li><Link to='/' className='bttn-road-network disabled'>Checking download</Link></li>;
     }
 
     return data.dataAvailable ? (
