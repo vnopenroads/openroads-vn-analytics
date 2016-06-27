@@ -10,6 +10,8 @@ const Dropdown = React.createClass({
     triggerClassName: React.PropTypes.string,
     triggerText: React.PropTypes.string,
     closeDropdown: React.PropTypes.func,
+    evtClick: React.PropTypes.bool,
+    evtOverOut: React.PropTypes.bool,
     children: React.PropTypes.node
   },
 
@@ -42,7 +44,10 @@ const Dropdown = React.createClass({
 
       triggerTitle: '',
       triggerClassName: '',
-      triggerText: ''
+      triggerText: '',
+
+      evtClick: true,
+      evtOverOut: true
     };
   },
 
@@ -69,6 +74,13 @@ const Dropdown = React.createClass({
     this.setState({ open: !this.state.open });
   },
 
+  _onTriggerClick: function (e) {
+    e.preventDefault();
+    if (this.props.evtClick) {
+      this._toggleDropdown(e);
+    }
+  },
+
   render: function () {
     var klasses = ['drop'];
     if (this.state.open) {
@@ -78,9 +90,20 @@ const Dropdown = React.createClass({
       klasses.push(this.props.className);
     }
 
+    let events = {
+      onClick: this._onTriggerClick,
+      onMouseOver: this._toggleDropdown,
+      onMouseOut: this._toggleDropdown
+    };
+
+    if (!this.props.evtOverOut) {
+      delete events.onMouseOver;
+      delete events.onMouseOut;
+    }
+
     return (
       <this.props.element className={klasses.join(' ')} data-hook='dropdown' ref='dropdown'>
-        <a href='#' title={this.props.triggerTitle} className={this.props.triggerClassName} onClick={this._toggleDropdown} onMouseOver={this._toggleDropdown} onMouseOut={this._toggleDropdown}><span>{this.props.triggerText}</span></a>
+        <a href='#' title={this.props.triggerTitle} className={this.props.triggerClassName} {...events}><span>{this.props.triggerText}</span></a>
         <div className='drop-content popover-behavior'>
           {this.props.children}
         </div>
