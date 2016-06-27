@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import ID from '../utils/id';
 import Dropdown from '../components/dropdown';
+import config from '../config';
 
 var PageHeader = React.createClass({
   displayName: 'PageHeader',
@@ -22,9 +23,9 @@ var PageHeader = React.createClass({
     }
 
     return data.dataAvailable ? (
-      <li><Link to={`/admin/${this.props.adminAreaId}?roadNetwork=true`} className='bttn-road-network'>Donwload road network</Link></li>
+      <li><a href={`${config.api}/admin/${this.props.adminAreaId}?roadNetwork=true`} className='bttn-road-network' title='Download road network' target='_blank'>Download road network</a></li>
     ) : (
-      <Dropdown element='li' className='dropdown center' triggerClassName='bttn-road-network disabled' triggerText='Donwload road network' evtClick={false}>
+      <Dropdown element='li' className='dropdown center' triggerClassName='bttn-road-network disabled' triggerText='Download road network' evtClick={false}>
         <div className='drop-info'>
           {error ? (
             <p>There was an error with the server. Please contact an administrator.</p>
