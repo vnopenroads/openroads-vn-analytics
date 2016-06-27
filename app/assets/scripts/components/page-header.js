@@ -18,13 +18,13 @@ var PageHeader = React.createClass({
     let {fetched, fetching, data, error} = this.props.roadNetworkStatus;
 
     if (!fetched || fetching) {
-      return <Link to='/' className='bttn-road-network disabled'>Donwload road network</Link>;
+      return <li><Link to='/' className='bttn-road-network disabled'>Donwload road network</Link></li>;
     }
 
     return data.dataAvailable ? (
-      <Link to={`/admin/${this.props.adminAreaId}?roadNetwork=true`} className='bttn-road-network'>Donwload road network</Link>
+      <li><Link to={`/admin/${this.props.adminAreaId}?roadNetwork=true`} className='bttn-road-network'>Donwload road network</Link></li>
     ) : (
-      <Dropdown element='span' className='dropdown center' triggerClassName='bttn-road-network disabled' triggerText='Donwload road network' evtClick={false}>
+      <Dropdown element='li' className='dropdown center' triggerClassName='bttn-road-network disabled' triggerText='Donwload road network' evtClick={false}>
         <div className='drop-info'>
           {error ? (
             <p>There was an error with the server. Please contact an administrator.</p>
@@ -59,7 +59,7 @@ var PageHeader = React.createClass({
           <div className='page__actions'>
             <ul className='actions-menu'>
               <li><Link to={`/editor/bbox=${this.props.bbox.join('/')}`} className='bttn-edit'>Improve map</Link></li>
-              <li>{this.renderDownloaRoadNetwork()}</li>
+              {this.renderDownloaRoadNetwork()}
             </ul>
           </div>
         </div>
