@@ -448,7 +448,7 @@ a:active{
 
   .actions-menu {
     float: right;
-    white-space: nowrap;
+    // white-space: nowrap;
   }
 }
 
@@ -489,6 +489,13 @@ a:active{
       @extend .bttn-m, .bttn-secondary;
       text-decoration: none;
       box-shadow: none;
+    }
+    .bttn-road-network.disabled {
+      pointer-events: all;
+    }
+
+    .drop-info {
+      max-width: 10rem;
     }
   }
 

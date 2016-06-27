@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { fetchAdminSubregions } from '../actions/action-creators';
+import { fetchAdminSubregions, fetchRoadNetworkStatus } from '../actions/action-creators';
 import AAList from '../components/aa-list';
 import PageHeader from '../components/page-header';
 
@@ -12,18 +12,22 @@ var AdminAreas = React.createClass({
   propTypes: {
     children: React.PropTypes.object,
     _fetchAdminSubregions: React.PropTypes.func,
+    _fetchRoadNetworkStatus: React.PropTypes.func,
     subregions: React.PropTypes.object,
+    roadNetworkStatus: React.PropTypes.object,
     params: React.PropTypes.object
   },
 
   componentDidMount: function () {
     this.props._fetchAdminSubregions(this.props.params.aaId || null);
+    this.props._fetchRoadNetworkStatus(this.props.params.aaId || null);
   },
 
   componentDidUpdate: function (prevProps, prevState) {
     if (this.props.params.aaId !== prevProps.params.aaId && !this.props.subregions.fetching) {
       console.log('AdminAreas componentDidUpdate', 'update');
       this.props._fetchAdminSubregions(this.props.params.aaId);
+      this.props._fetchRoadNetworkStatus(this.props.params.aaId);
     } else {
       console.log('AdminAreas componentDidUpdate', 'NOT update');
     }
@@ -34,6 +38,7 @@ var AdminAreas = React.createClass({
       <PageHeader
         adminAreaId={this.props.subregions.id}
         pageTitle={this.props.subregions.name}
+        roadNetworkStatus={this.props.roadNetworkStatus}
         bbox={this.props.subregions.bbox || []} />
     );
   },
@@ -80,13 +85,15 @@ var AdminAreas = React.createClass({
 
 function selector (state) {
   return {
-    subregions: state.adminSubregions
+    subregions: state.adminSubregions,
+    roadNetworkStatus: state.roadNetworkStatus
   };
 }
 
 function dispatcher (dispatch) {
   return {
-    _fetchAdminSubregions: (aaid) => dispatch(fetchAdminSubregions(aaid))
+    _fetchAdminSubregions: (aaid) => dispatch(fetchAdminSubregions(aaid)),
+    _fetchRoadNetworkStatus: (aaid) => dispatch(fetchRoadNetworkStatus(aaid))
   };
 }
 

@@ -52,7 +52,7 @@ var AAStats = React.createClass({
               <li className='aa-stats__element'>
                 <div className='wrapper'>
                   <strong><span className='highlight'>{completeness}</span> Complete</strong>
-                  <Dropdown element='span' className='dropdown left' triggerClassName='bttn-info' triggerText='View additional info'>
+                  <Dropdown element='span' className='dropdown left' triggerClassName='bttn-info' triggerText='View additional info' evtClick={false}>
                     <div className='aa-stats-info'>
                       <p>Completeness of this area's road network, based on it's extent and number of issues.</p>
                     </div>

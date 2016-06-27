@@ -213,6 +213,36 @@ const projectsMeta = function (state = projectsMetaDefaultState, action) {
   return state;
 };
 
+const roadNetworkStatusDefaultState = {
+  fetching: false,
+  fetched: false,
+  data: {
+    dataAvailable: null
+  }
+};
+const roadNetworkStatus = function (state = roadNetworkStatusDefaultState, action) {
+  switch (action.type) {
+    case actions.REQUEST_ROAD_NETWORK_STATUS:
+      console.log('REQUEST_ROAD_NETWORK_STATUS');
+      state = _.cloneDeep(state);
+      state.error = null;
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_ROAD_NETWORK_STATUS:
+      console.log('RECEIVE_ROAD_NETWORK_STATUS');
+      state = _.cloneDeep(state);
+      if (action.error) {
+        state.error = action.error;
+      } else {
+        state.data = action.json;
+      }
+      state.fetching = false;
+      state.fetched = true;
+      break;
+  }
+  return state;
+};
+
 export default combineReducers({
   adminSubregions,
   search,
@@ -221,5 +251,6 @@ export default combineReducers({
   projecttasks,
   projects,
   projectsMeta,
+  roadNetworkStatus,
   routing: routeReducer
 });
