@@ -1,5 +1,5 @@
 # Openroads Analytics
-[![Build Status](https://magnum.travis-ci.com/opengovt/openroads-analytics.svg?token=d4tUG3NhuWNZYSxWndVL&branch=master)](https://magnum.travis-ci.com/opengovt/openroads-analytics)
+[![Build Status](https://travis-ci.org/orma/openroads-vn-analytics.svg?branch=develop)](https://travis-ci.org/orma/openroads-vn-analytics)
 
 ## Development environment
 To set up the development environment for this website, you'll need to install the following on your system:
