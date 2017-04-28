@@ -1,11 +1,10 @@
 language: node_js
 node_js:
-- '0.12'
+- '4.2.6'
 env:
   global:
   - PRODUCTION_BRANCH=master
   - STAGING_BRANCH=develop
-  - secure: gOr2+aMiSF/EoaJn0aRCYLEGC/frIqk71ZrzrcdgAn/Cs0D2a6CQ3lnlw33APPGABYxzYN58/pCcbyR4JUT4U3EjG/FsCl0edi0bSRO39i3Hs1wptfPtPt+yJtYCisdcWsGFX678cNkX39nvtvFeVPqgdvAcPtXLfY1Hi1+42Lc=
 cache:
   directories:
   - node_modules
@@ -14,25 +13,25 @@ before_install:
 - chmod +x ./.build_scripts/lint.sh
 before_script:
 - "./.build_scripts/lint.sh"
-- npm test
+- yarn test
 script:
-- npm run build
+- yarn run build
 deploy:
   - provider: s3
-    access_key_id: AKIAIAASN6DDRMPTSIGA
+    access_key_id: AKIAICNPLU4FERY7G7JQ
     secret_access_key:
-      secure: ojbLD8uKXDQiiQqDQwrRY+kkmaKdJLO/JRGcriLZg7cdQ6mVmslPl6gvjtDyd1cOIE+rs9aZNf15FZVn2V3rXmeCuCItRujV6LzZD0VkwpdBSEsEtk+OGlNDWItWhsaeeLThtDq9pLoiNqxCUaoJq81U5YRswiMGedCCRzDykKo=
-    bucket: openroads-staging
+      secure: "procJzeX/4zc7wzZS7TCpnkNxFebXVpjtIGY1ZqauLQwksq4YIKFH5C3JXQP6DVqNKHWg45M3aKW6BSDOR2QFtnnd9vCfhL1YmEuGBSRB3IGS7U6tPsYsQNIDCHfLdt81LC/hrWZd85mRmcChMiNJScY0E+aUAUkfxmF3yEOXm787+aep/sqUAcBoUleJN6PZReH1Iy+OH6GvchBnjPzq+mJqGpNSnyeTdsnX7GpCkx1OdheJ8oH1XHA5Ck9eKTEQY8kxtHlPEKQwd48mlGiux6oTgGMMhnEUbW9/Wb7qz0Ylrugk+1UNHh+uzO1LK+tFPO43ghaNgHOYxzdEEUow2y6NJx9ICmU1F50bDQVOI5RRHr+lvzTE64xeIS2XP7XbsUiuMracIFRUjrIahuqAwfqQCIB1wqYYt7C6RmgC3xTEmA/pjofMz2q7NXoN6B2Ny4UEBHnhmXcCCAxtHfKGA4p7/4pN1sXrXwf51QnV7TVUwSwqIVT+lt5e1WBmYHEqrAMJ1tRIB/cIRssAoHqJKpbHYyhfdBnBalcmNbE+UnZuU8MvRSUd7naC888HUdeRghL2mVzInOtdshbvKJs2cdkNPx1ApX3IlertCuChNAIbXjOnBucl7iOsiDZuA49lyaKvSSipRIaLPUojhAPKSREHWIXmVPgTOTbX0OMpeE="
+    bucket: openroads-vn-staging
     local-dir: dist
     acl: public_read
     skip_cleanup: true
     region: us-east-1
     on:
-      repo: opengovt/openroads-analytics
+      repo: orma/openroads-vn-analytics
       branch: ${STAGING_BRANCH}
   - provider: script
     skip_cleanup: true
     script: .build_scripts/deploy.sh
     on:
-      repo: opengovt/openroads-analytics
+      repo: orma/openroads-vn-analytics
       branch: ${PRODUCTION_BRANCH}
