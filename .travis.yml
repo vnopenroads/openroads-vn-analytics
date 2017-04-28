@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- '4.2.6'
+- 4.2.6
 env:
   global:
   - PRODUCTION_BRANCH=master
@@ -12,15 +12,16 @@ before_install:
 - chmod +x ./.build_scripts/deploy.sh
 - chmod +x ./.build_scripts/lint.sh
 before_script:
-- "./.build_scripts/lint.sh"
+- ./.build_scripts/lint.sh
 - yarn test
 script:
 - yarn run build
 deploy:
+  matrix:
   - provider: s3
-    access_key_id: AKIAICNPLU4FERY7G7JQ
+    access_key_id: AKIAISZNARCIKVQUX4CQ
     secret_access_key:
-      secure: "procJzeX/4zc7wzZS7TCpnkNxFebXVpjtIGY1ZqauLQwksq4YIKFH5C3JXQP6DVqNKHWg45M3aKW6BSDOR2QFtnnd9vCfhL1YmEuGBSRB3IGS7U6tPsYsQNIDCHfLdt81LC/hrWZd85mRmcChMiNJScY0E+aUAUkfxmF3yEOXm787+aep/sqUAcBoUleJN6PZReH1Iy+OH6GvchBnjPzq+mJqGpNSnyeTdsnX7GpCkx1OdheJ8oH1XHA5Ck9eKTEQY8kxtHlPEKQwd48mlGiux6oTgGMMhnEUbW9/Wb7qz0Ylrugk+1UNHh+uzO1LK+tFPO43ghaNgHOYxzdEEUow2y6NJx9ICmU1F50bDQVOI5RRHr+lvzTE64xeIS2XP7XbsUiuMracIFRUjrIahuqAwfqQCIB1wqYYt7C6RmgC3xTEmA/pjofMz2q7NXoN6B2Ny4UEBHnhmXcCCAxtHfKGA4p7/4pN1sXrXwf51QnV7TVUwSwqIVT+lt5e1WBmYHEqrAMJ1tRIB/cIRssAoHqJKpbHYyhfdBnBalcmNbE+UnZuU8MvRSUd7naC888HUdeRghL2mVzInOtdshbvKJs2cdkNPx1ApX3IlertCuChNAIbXjOnBucl7iOsiDZuA49lyaKvSSipRIaLPUojhAPKSREHWIXmVPgTOTbX0OMpeE="
+      secure: Y0pBhj/wC1O7p1eOKqRpiF1+fGB6HxPdDKz5ReBtiPp8BTsGgrEdoSiwR+KgA38ziiPmcrIqvwsXhJiBnjdzgfXfz/YfF/0pdJ29GNATgSOTf00HS3w6OLqn26Am1IsxLq7GA/gCPLFTgyWtHdgIS2yOacaHF24YlNSFhi68JQIxYrn7G6hZJSx/rUT+y7qH70Esq7z5/kzThzyceh6t/g53YZwWuHaWklkQ3r9l3WUKpWPbSjj0WsYHAjmyPpzOtKHIOmokIRPsvjhwE5O0RWZBnxovL8jCEc10I2LxTkED1snYO2ff8pirxyQWANGuF21bdCWrmkMRmqq3zC0tz2o/tumrl2u9efr3XfmJXycw+udqvNfmaQP4Lb31dlFl5EsWAusDUNZPUR85OY+wg+9mTVBvt9LHveq5YLOKqYBXZYzZXBRcDNocxUnaLQ/yPDyb36P7EWTSVjND5q0HKi/MXYdjyfMyaNDkORf3+Wsn96o8WUBJZSS5KjhWYEfh0X+bmfyCOuxJ4cxu2ZaeJqmkQTrCBiE/Ex48D7yBWEvGFoGCaA2H34TvEKYvZ+Ze8gmgvcnIdQQD9CGNEse3+yeyd5qp+q8niNug0Gk3j34lcXCDkAu13vh523YLa20T9MQk2gQ3VIsXVthjGwhS6QMddRNZQuh2caB/syjxW5g=
     bucket: openroads-vn-staging
     local-dir: dist
     acl: public_read
