@@ -23,6 +23,9 @@ var App = React.createClass({
       case undefined:
         klass = 'page--landing';
         break;
+      default:
+        klass = r.split('/')[0];
+        break;
     }
     return (
       <div className={klass}>

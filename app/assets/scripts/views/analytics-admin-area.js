@@ -2,13 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { fetchAdminSubregions, fetchAdminStats, fetchTofixTasks, fetchProjects, fetchProjectTasks, fetchRoadNetworkStatus } from '../actions/action-creators';
-import PageHeader from '../components/page-header';
-import AAList from '../components/aa-list';
-import AAStats from '../components/aa-stats';
-import AAExtendedStats from '../components/aa-extended-stats';
-import AAMap from '../components/aa-map';
-import AAProjects from '../components/project-list';
-import AAErrors from '../components/aa-errors';
+
 
 var AnalyticsAA = React.createClass({
   displayName: 'AnalyticsAA',
@@ -56,62 +50,9 @@ var AnalyticsAA = React.createClass({
   render: function () {
     return (
       <section className='page'>
-        <PageHeader
-          adminAreaId={this.props.subregions.id}
-          pageTitle={this.props.subregions.name}
-          roadNetworkStatus={this.props.roadNetworkStatus}
-          bbox={this.props.subregions.bbox || []} />
-
         <div className='page__body aa'>
           <div className='aa-main'>
-            <AAMap
-              bbox={this.props.subregions.bbox} />
-
-            <AAStats
-              stats={this.props.stats.stats}
-              tofixtasks={this.props.tofixtasks}
-              projecttasks={this.props.projecttasks}
-              adminAreas={this.props.subregions.adminAreas}
-              projects={this.props.projects} />
-
-            <div className='inner'>
-              <div className='col--main'>
-
-                <AAExtendedStats
-                  fetched={this.props.stats.fetched}
-                  fetching={this.props.stats.fetching}
-                  adminAreaId={this.props.stats.id}
-                  bbox={this.props.subregions.bbox || []}
-                  error={this.props.stats.error}
-                  stats={this.props.stats.stats} />
-
-                <AAErrors
-                  adminAreaId={this.props.stats.id}
-                  tofixtasks={this.props.tofixtasks}
-                  projecttasks={this.props.projecttasks} />
-
-                <AAProjects
-                  fetched={this.props.projects.fetched}
-                  fetching={this.props.projects.fetching}
-                  adminAreaId={Number(this.props.projects.data.id)}
-                  adminAreaName={this.props.projects.data.name}
-                  meta={this.props.projects.data.projects.meta}
-                  projects={this.props.projects.data.projects.results}
-                  error={this.props.projects.error}
-                  sliceList />
-              </div>
-
-              <div className='col--sec'>
-                <AAList
-                  fetched={this.props.subregions.fetched}
-                  fetching={this.props.subregions.fetching}
-                  adminAreaId={this.props.subregions.id}
-                  adminAreaName={this.props.subregions.name}
-                  adminAreas={this.props.subregions.adminAreas}
-                  sliceList />
-              </div>
-            </div>
-
+            NEW ANALYTICS PAGE
           </div>
         </div>
       </section>
