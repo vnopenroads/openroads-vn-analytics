@@ -264,7 +264,6 @@ const VProMMSids = function (state = VProMMSidsDefaultState, action) {
       if (action.error) {
         state.error = action.error;
       } else {
-        console.log(action.json);
         state.data = state.data.map(v => {
           return { id: v.id, inTheDatabase: action.json.includes(v.id) };
         });

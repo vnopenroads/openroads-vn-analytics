@@ -28,3 +28,10 @@
     }
   }
 }
+
+.analytics {
+  .aa-main {
+    @extend .row;
+    @extend .row--centered;
+  }
+}

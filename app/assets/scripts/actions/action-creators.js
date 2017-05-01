@@ -384,19 +384,12 @@ export function fetchVProMMSids () {
         return response.json();
       })
       .then(json => {
-        console.log('json', json);
         if (json.statusCode === 400) {
           return {dataAvailable: false};
         } else if (json.statusCode > 400) {
           throw new Error('Bad response');
         }
-        return {dataAvailable: true};
-      })
-      .then(json => {
-        return dispatch(receiveVProMMSids(json));
-      }, e => {
-        console.log('e', e);
-        return dispatch(receiveVProMMSids(null, 'Data not available'));
+        dispatch(receiveVProMMSids(json));
       });
   };
 }
