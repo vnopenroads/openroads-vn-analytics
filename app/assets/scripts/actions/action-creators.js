@@ -354,3 +354,49 @@ export function fetchRoadNetworkStatus (id = null) {
       });
   };
 }
+
+// ////////////////////////////////////////////////////////////////
+//                         VProMMS IDs                           //
+// ////////////////////////////////////////////////////////////////
+
+function requestVProMMSids () {
+  return {
+    type: actions.REQUEST_VPROMMS_IDS
+  };
+}
+
+function receiveVProMMSids (json, error = null) {
+  return {
+    type: actions.RECEIVE_VPROMMS_IDS,
+    json: json,
+    error,
+    receivedAt: Date.now()
+  };
+}
+
+export function fetchVProMMSids () {
+  return function (dispatch) {
+    dispatch(requestVProMMSids());
+
+    let url = `${config.api}/ids`;
+    return fetch(url)
+      .then(response => {
+        return response.json();
+      })
+      .then(json => {
+        console.log('json', json);
+        if (json.statusCode === 400) {
+          return {dataAvailable: false};
+        } else if (json.statusCode > 400) {
+          throw new Error('Bad response');
+        }
+        return {dataAvailable: true};
+      })
+      .then(json => {
+        return dispatch(receiveVProMMSids(json));
+      }, e => {
+        console.log('e', e);
+        return dispatch(receiveVProMMSids(null, 'Data not available'));
+      });
+  };
+}

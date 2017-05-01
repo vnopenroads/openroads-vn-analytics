@@ -1,7 +1,9 @@
 import _ from 'lodash';
 import { combineReducers } from 'redux';
 import { routeReducer } from 'react-router-redux';
+
 import * as actions from '../actions/action-types';
+import { VPROMMS_IDS } from '../constants';
 
 const adminSubregions = function (state = {adminAreas: [], fetching: false, fetched: false}, action) {
   switch (action.type) {
@@ -243,6 +245,37 @@ const roadNetworkStatus = function (state = roadNetworkStatusDefaultState, actio
   return state;
 };
 
+const VProMMSidsDefaultState = {
+  fetching: false,
+  fetched: false,
+  data: VPROMMS_IDS.map(id => {
+    return { id, inTheDatabase: false };
+  })
+};
+const VProMMSids = function (state = VProMMSidsDefaultState, action) {
+  switch (action.type) {
+    case actions.REQUEST_VPROMMS_IDS:
+      state = _.cloneDeep(state);
+      state.error = null;
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_VPROMMS_IDS:
+      state = _.cloneDeep(state);
+      if (action.error) {
+        state.error = action.error;
+      } else {
+        console.log(action.json);
+        state.data = state.data.map(v => {
+          return { id: v.id, inTheDatabase: action.json.includes(v.id) };
+        });
+      }
+      state.fetching = false;
+      state.fetched = true;
+      break;
+  }
+  return state;
+};
+
 export default combineReducers({
   adminSubregions,
   search,
@@ -252,5 +285,6 @@ export default combineReducers({
   projects,
   projectsMeta,
   roadNetworkStatus,
+  VProMMSids,
   routing: routeReducer
 });
