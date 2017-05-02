@@ -1,0 +1,37 @@
+.analytics .site-header,
+.editor .site-header {
+  .site__nav {
+    float: right;
+    .menu-wrapper {
+      @include col(12/12);
+      float: right;
+      overflow: auto;
+      visibility: visible;
+      opacity: 1;
+      max-height: 600rem;
+      text-align: right;
+    }
+    .global-menu {
+      float: right;
+      > li {
+        float: left;
+        margin: 0 ($global-padding / 2) 0 0;
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+    .toggle-menu,
+    .toggle-search,
+    .search-wrapper {
+      display: none;
+    }
+  }
+}
+
+.analytics {
+  .aa-main {
+    @extend .row;
+    @extend .row--centered;
+  }
+}

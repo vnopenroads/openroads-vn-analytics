@@ -11,7 +11,7 @@ var AAMap = React.createClass({
     bbox: React.PropTypes.array
   },
 
-  mapInitialView: [10.995, 122.267],
+  mapInitialView: [14.0583, 108.2772],
   mapInitialZoom: 6,
 
   map: null,

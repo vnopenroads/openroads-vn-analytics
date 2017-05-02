@@ -5,9 +5,6 @@ env:
   global:
   - PRODUCTION_BRANCH=master
   - STAGING_BRANCH=develop
-cache:
-  directories:
-  - node_modules
 before_install:
 - chmod +x ./.build_scripts/deploy.sh
 - chmod +x ./.build_scripts/lint.sh
