@@ -9,6 +9,7 @@ import { Router, Route, IndexRoute, hashHistory, Redirect } from 'react-router';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { syncHistory } from 'react-router-redux';
+import { createLogger } from 'redux-logger';
 import reducer from './reducers/reducer';
 import config from './config';
 
@@ -24,11 +25,19 @@ import TofixTasks from './views/tofix-tasks';
 import ProjectTasks from './views/project-tasks';
 import Projects from './views/projects';
 
+const logger = createLogger({
+  level: 'info',
+  collapsed: true,
+  predicate: (getState, action) => {
+    return (config.environment !== 'production');
+  }
+});
+
 // Sync dispatched route actions to the syncHistory
 const reduxRouterMiddleware = syncHistory(hashHistory);
 const finalCreateStore = compose(
   // Middleware you want to use in development:
-  applyMiddleware(reduxRouterMiddleware, thunkMiddleware)
+  applyMiddleware(reduxRouterMiddleware, logger, thunkMiddleware)
   // Required! Enable Redux DevTools with the monitors you chose.
   // DevTools.instrument()
 )(createStore);
