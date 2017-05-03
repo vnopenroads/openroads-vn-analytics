@@ -1,6 +1,7 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import _ from 'lodash';
 import { fetchVProMMSids } from '../actions/action-creators';
 
@@ -19,9 +20,8 @@ var AnalyticsAA = React.createClass({
   },
 
   render: function () {
-    const provinceData = this.props.VProMMSids.data;
     let accumulator = { done: 0, total: 0 };
-    const ids = _.map(provinceData, (data, id) => {
+    const provinceData = _.map(this.props.VProMMSids.data, (data, id) => {
       const name = data.provinceName;
       const done = data.vpromms.filter(v => v.inTheDatabase).length;
       const total = data.vpromms.length;
@@ -42,10 +42,17 @@ var AnalyticsAA = React.createClass({
         <div className='page__body aa'>
           <div className='aa-main'>
             <h2 className='complete'>{(accumulator.done / accumulator.total).toFixed(2)} % of VProMMS Ids added ({done.toLocaleString()} of {total.toLocaleString()})</h2>
+            <h3>Province Breakdown:</h3>
             <ul>
-              {/* {ids.map(v => {
-                return <li key={v.id}>{v.id}: {v.inTheDatabase ? 'added' : 'not added'}</li>;
-              })} */}
+              {_.map(provinceData, (province) => {
+                return (
+                  <li key={`province-${province.id}`}>
+                    <span className='province__name'><Link to={`province-${province.id}`}> {province.name}</Link></span>
+                    <span className='province__count'>{province.done}/{province.total}</span>
+                    <span>{!isNaN(province.done / province.total) ? (province.done / province.total).toFixed(2) : '0.00'}% Complete</span>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
