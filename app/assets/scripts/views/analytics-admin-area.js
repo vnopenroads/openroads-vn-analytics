@@ -1,7 +1,8 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
-import c from 'classnames';
+
+import AATable from '../components/aa-table-vpromms';
 
 import { fetchVProMMSids } from '../actions/action-creators';
 
@@ -30,33 +31,14 @@ var AnalyticsAA = React.createClass({
       <section className='page'>
         <div className='page__body aa'>
           <div className='aa-main'>
-            <h1>{data.provinceName} Province - VProMMS Edits</h1>
+            <h1>{data.provinceName} Province</h1>
             <div className='aa-main__status'>
-              <h2><strong>{completion.toFixed(2)}%</strong> of VProMMS IDs added ({done.toLocaleString()} of {total.toLocaleString()})</h2>
+              <h2><strong>{!total ? '100' : completion.toFixed(2)}%</strong> of VProMMS IDs added ({done.toLocaleString()} of {total.toLocaleString()})</h2>
               <div className='meter'>
                 <div className='meter__internal' style={{width: `${completion}%`}}></div>
               </div>
             </div>
-            <div className ='table'>
-              <table>
-                <thead>
-                  <tr>
-                    <th>VProMMS ID</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                {ids.map((v, i) => {
-                  return (
-                    <tr key={`vpromm-${v.id}`} className={c({'alt': i % 2})}>
-                      <td>{v.id}</td>
-                      <td>{v.inTheDatabase ? 'added' : 'not added'}</td>
-                    </tr>
-                  );
-                })}
-                </tbody>
-              </table>
-            </div>
+            {total ? <AATable data={ids} /> : ''}
           </div>
         </div>
       </section>

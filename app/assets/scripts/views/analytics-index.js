@@ -1,9 +1,10 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
-import c from 'classnames';
 import _ from 'lodash';
+
+import AATable from '../components/aa-table-index';
+
 import { fetchVProMMSids } from '../actions/action-creators';
 
 var AnalyticsIndex = React.createClass({
@@ -43,37 +44,14 @@ var AnalyticsIndex = React.createClass({
       <section className='page'>
         <div className='page__body aa'>
           <div className='aa-main'>
-            <h1>VProMMS Edits By Region</h1>
+            <h1>VProMMS Edits By Province</h1>
             <div className='aa-main__status'>
               <h2><strong>{completion.toFixed(2)}%</strong> of VProMMS Ids added ({done.toLocaleString()} of {total.toLocaleString()})</h2>
               <div className='meter'>
                 <div className='meter__internal' style={{width: `${completion}%`}}></div>
               </div>
             </div>
-            <div className='table'>
-              <table>
-                <thead>
-                  <tr key={1}>
-                    <th>Province</th>
-                    <th>Done</th>
-                    <th>Total</th>
-                    <th>% Complete</th>
-                  </tr>
-                </thead>
-                <tbody>
-                {_.map(provinceData, (province, i) => {
-                  return (
-                    <tr key={`province-${province.id}`} className={c({'alt': i % 2})}>
-                      <td><Link to={`analytics/${province.id}`}>{province.name}</Link></td>
-                      <td>{province.done}</td>
-                      <td>{province.total}</td>
-                      <td>{!isNaN(province.done / province.total) ? `${((province.done / province.total * 100)).toFixed(2)}% Complete` : '0.00% Complete'}</td>
-                    </tr>
-                  );
-                })}
-                </tbody>
-              </table>
-            </div>
+            <AATable data={provinceData} />
           </div>
         </div>
       </section>

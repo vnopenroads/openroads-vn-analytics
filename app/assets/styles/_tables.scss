@@ -1,9 +1,9 @@
 .table {
   background: #fff;
   overflow: hidden;
-  border: 1px solid lighten($primary-color, 10);
-  border-radius: 3px;
-  box-shadow: 0 0 5px #888;
+  border: 1px solid rgb(220, 220, 220);;
+  border-radius: $global-radius;
+  margin-bottom: 10rem;
   table {
     border-collapse: collapse;
     text-align: left;
@@ -12,41 +12,41 @@
       padding: 3px 10px;
     }
     thead th {
-      background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, lighten($primary-color, 10)), color-stop(0.75, $primary-color));
-      background: -moz-linear-gradient( center top, lighten($primary-color, 10), 20 5%, $primary-color 75%);
-      background: linear-gradient( center top, lighten($primary-color, 10) 5%, $primary-color 75%);
-      color: #fff;
-      height: 2.5rem;
-      letter-spacing: 1.5px;
-      vertical-align: middle;
+      background-color: $neutral;
+      color: $base-color;
+      height: 3.5rem;
+      vertical-align: bottom;
+      line-height: 2rem;
       font-size: 1rem;
       font-weight: 600;
-      border-left: 1px solid lighten($primary-color, 10);
+      border-left: 1px solid rgb(220, 220, 220);
+      border-bottom: 2px solid rgb(200, 200, 200);
+
       &:first-child {
-        border: none;
+        border-left: none;
       }
     }
     tbody {
       tr {
-        height: 1.8rem;
+        height: 2.75rem;
+        border-bottom: 1px solid rgb(220, 220, 220);;
         &:last-child td {
           border-bottom: none;
         }
       }
       td {
         vertical-align: middle;
-        color: $primary-color;
-        border-left: 1px solid #E1EEF4;
-        font-size: 0.8rem;
-        font-weight: 400;
+        font-size: 0.9rem;
+        font-weight: $base-font-light;
         :first-child {
-          font-weight: 600;
           border-left: none;
         }
-      }
-      .alt {
-        background: #E1EEF4;
-        color: $primary-color;
+        &.added {
+          color: $info-color;
+        }
+        &.not-added {
+          color: $alert-color;
+        }
       }
     }
   }
