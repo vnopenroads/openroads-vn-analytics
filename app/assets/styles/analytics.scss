@@ -40,41 +40,38 @@
     margin-top: 1.5rem;
   }
   .aa-main__status {
-    padding: 1rem;
+    min-height: 4.5rem;
+    padding: 0.5rem 1rem;
     margin: 1rem 0 2rem 0;
-    background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, lighten($primary-color, 10)), color-stop(0.35, $primary-color));
-    background: -moz-linear-gradient( center top, lighten($primary-color, 10), 20 5%, $primary-color 35%);
-    background: linear-gradient( center top, lighten($primary-color, 10) 5%, $primary-color 35%);
-    border-radius: 5px;
-    box-shadow: 0 0 5px #888;
+    border: 1px solid rgb(220, 220, 220);
+    border-radius: $global-radius;
+    background-color: #FFF;
+    position: relative;
+    display: block;
     h2 {
-      letter-spacing: 1px;
-      color: $secondary-color;
-      font-weight: 600;
-      margin: 0.35rem 0 0 0.5;
+      font-size: 0.8rem;
+      color: $base-color;
+      font-weight: 400;
+      margin: 0.2rem 1rem 0 0.2rem;
+      display: block;
       strong {
-        font-weight: 600;
-        font-size: 1.25rem;
-        color: #fff;
+        font-weight: 800;
+        font-size: 1rem;
+        color: $base-color;
       }
     }
   }
   .meter {
     width: 100%;
-    position: relative;
-    margin-bottom: 0.5rem;
-    height: 2rem;
-    border-radius: 3px;
-    background: -moz-linear-gradient(top,  #C91414 0%, #A00303 100%);
-    background: -webkit-linear-gradient(top,  #C91414 0%,#A00303 100%);
-    background: linear-gradient(to bottom,  #C91414 0%,#A00303 100%);
-    border: 1px solid #333;
+    margin: 0.4rem 0 0.5rem;
+    height: 1rem;
+    border-radius: $global-radius;
+    background-color: #D00;
+    border: 1px solid rgb(220, 220, 220);
     .meter__internal {
-      height: calc(2rem - 2px);
-      border-radius: 3px;
-      background: -moz-linear-gradient(top,  #22D815 0%, #2C9603 100%);
-      background: -webkit-linear-gradient(top,  #22D815 0%,#2C9603 100%);
-      background: linear-gradient(to bottom,  #22D815 0%,#2C9603 100%);
+      height: calc(1rem - 2px);
+      border-radius: $global-radius;
+      background-color: #2C9603;
     }
   }
   .collecticons {
