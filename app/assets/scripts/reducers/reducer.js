@@ -245,12 +245,15 @@ const roadNetworkStatus = function (state = roadNetworkStatusDefaultState, actio
   return state;
 };
 
+_.forEach(VPROMMS_IDS, (province) => {
+  province.vpromms = province.vpromms.map((id) => {
+    return { id, inTheDatabase: false };
+  });
+});
 const VProMMSidsDefaultState = {
   fetching: false,
   fetched: false,
-  data: VPROMMS_IDS.map(id => {
-    return { id, inTheDatabase: false };
-  })
+  data: VPROMMS_IDS
 };
 const VProMMSids = function (state = VProMMSidsDefaultState, action) {
   switch (action.type) {
@@ -264,8 +267,10 @@ const VProMMSids = function (state = VProMMSidsDefaultState, action) {
       if (action.error) {
         state.error = action.error;
       } else {
-        state.data = state.data.map(v => {
-          return { id: v.id, inTheDatabase: action.json.includes(v.id) };
+        _.forEach(state.data, (province) => {
+          province.vpromms = province.vpromms.map((v) => {
+            return { id: v.id, inTheDatabase: action.json.includes(v.id) };
+          });
         });
       }
       state.fetching = false;
