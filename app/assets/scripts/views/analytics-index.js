@@ -38,12 +38,18 @@ var AnalyticsIndex = React.createClass({
       };
     });
     const { done, total } = accumulator;
+    const completion = (accumulator.done / accumulator.total) * 100;
     return (
       <section className='page'>
         <div className='page__body aa'>
           <div className='aa-main'>
-            <h2 className='complete'>{((accumulator.done / accumulator.total) * 100).toFixed(2)} % of VProMMS Ids added ({done.toLocaleString()} of {total.toLocaleString()})</h2>
-            <h3>Province Breakdown:</h3>
+            <h1>VProMMS Edits By Region</h1>
+            <div className='aa-main__status'>
+              <h2><strong>{completion.toFixed(2)}%</strong> of VProMMS Ids added ({done.toLocaleString()} of {total.toLocaleString()})</h2>
+              <div className='meter'>
+                <div className='meter__internal' style={{width: `${completion}%`}}></div>
+              </div>
+            </div>
             <div className='table'>
               <table>
                 <thead>

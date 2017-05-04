@@ -34,12 +34,47 @@
     @extend .row;
     @extend .row--centered;
   }
-  .province__name {
-    display: inline-block;
-    width: 10rem;
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-top: 1.5rem;
   }
-  .province__count {
-    display: inline-block;
-    width: 7rem;
+  .aa-main__status {
+    padding: 1rem;
+    margin: 1rem 0 2rem 0;
+    background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, lighten($primary-color, 10)), color-stop(0.35, $primary-color));
+    background: -moz-linear-gradient( center top, lighten($primary-color, 10), 20 5%, $primary-color 35%);
+    background: linear-gradient( center top, lighten($primary-color, 10) 5%, $primary-color 35%);
+    border-radius: 5px;
+    box-shadow: 0 0 5px #888;
+    h2 {
+      letter-spacing: 1px;
+      color: $secondary-color;
+      font-weight: 600;
+      margin: 0.35rem 0 0 0.5;
+      strong {
+        font-weight: 600;
+        font-size: 1.25rem;
+        color: #fff;
+      }
+    }
+  }
+  .meter {
+    width: 100%;
+    position: relative;
+    margin-bottom: 0.5rem;
+    height: 2rem;
+    border-radius: 3px;
+    background: -moz-linear-gradient(top,  #C91414 0%, #A00303 100%);
+    background: -webkit-linear-gradient(top,  #C91414 0%,#A00303 100%);
+    background: linear-gradient(to bottom,  #C91414 0%,#A00303 100%);
+    border: 1px solid #333;
+    .meter__internal {
+      height: calc(2rem - 2px);
+      border-radius: 3px;
+      background: -moz-linear-gradient(top,  #22D815 0%, #2C9603 100%);
+      background: -webkit-linear-gradient(top,  #22D815 0%,#2C9603 100%);
+      background: linear-gradient(to bottom,  #22D815 0%,#2C9603 100%);
+    }
   }
 }
