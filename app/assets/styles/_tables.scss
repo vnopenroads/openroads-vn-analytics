@@ -1,81 +1,53 @@
-// GLOBAL
-
 .table {
-  width: 100%;
-  max-width: 100%;
-  margin-bottom: 1rem;
-  background-color: transparent;
-  border-spacing: 0;
-  border-collapse: collapse;
-  font-family: inherit;
-
-  td, th {
-    padding: 0;
-  }
-
-  th {
+  background: #fff;
+  overflow: hidden;
+  border: 1px solid rgb(220, 220, 220);;
+  border-radius: $global-radius;
+  margin-bottom: 10rem;
+  table {
+    border-collapse: collapse;
     text-align: left;
-  }
-
-  tr {
-    @include transition(all 0.2s ease 0s);
-  }
-
-  > thead > tr > th,
-  > tbody > tr > th,
-  > tfoot > tr > th,
-  > thead > tr > td,
-  > tbody > tr > td,
-  > tfoot > tr > td {
-    padding: 0.75rem 0.5rem;
-    vertical-align: top;
-    // box-shadow: inset 0 -1px 0 0 $brdr-rgba;
-  }
-
-  > thead > tr > th {
-    vertical-align: bottom !important;
-    box-shadow: inset 0 -2px 0 0 $brdr-rgba;
-  }
-
-  > thead > tr > th:first-child,
-  > tbody > tr > th:first-child,
-  > tfoot > tr > th:first-child,
-  > thead > tr > td:first-child,
-  > tbody > tr > td:first-child,
-  > tfoot > tr > td:first-child {
-    padding-left: 1rem;
-  }
-
-  > thead > tr > th:last-child,
-  > tbody > tr > th:last-child,
-  > tfoot > tr > th:last-child,
-  > thead > tr > td:last-child,
-  > tbody > tr > td:last-child,
-  > tfoot > tr > td:last-child {
-    padding-right: 1rem;
-  }
-
-  > thead > tr > th {
-    vertical-align: bottom;
-    a {
-      display: inline-block;
-      // &.sort:after {
-      //   font-size: 1rem;
-      //   margin-left: 0.25rem;
-      // }
-      // &.sort-none:after {
-      //   @extend .collecticon-sort-none;
-      // }
-      // &.sort-asc:after {
-      //   @extend .collecticon-sort-asc;
-        
-      // }
-      // &.sort-desc:after {
-      //   @extend .collecticon-sort-desc;
-      // }
+    width: 100%;
+    td, th {
+      padding: 3px 10px;
     }
-    a, a:visited, a:hover {
-      color: inherit;
+    thead th {
+      background-color: $neutral;
+      color: $base-color;
+      height: 3.5rem;
+      vertical-align: bottom;
+      line-height: 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-left: 1px solid rgb(220, 220, 220);
+      border-bottom: 2px solid rgb(200, 200, 200);
+
+      &:first-child {
+        border-left: none;
+      }
+    }
+    tbody {
+      tr {
+        height: 2.75rem;
+        border-bottom: 1px solid rgb(220, 220, 220);;
+        &:last-child td {
+          border-bottom: none;
+        }
+      }
+      td {
+        vertical-align: middle;
+        font-size: 0.9rem;
+        font-weight: $base-font-light;
+        :first-child {
+          border-left: none;
+        }
+        &.added {
+          color: $info-color;
+        }
+        &.not-added {
+          color: $alert-color;
+        }
+      }
     }
   }
 }

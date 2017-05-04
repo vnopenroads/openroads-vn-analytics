@@ -34,4 +34,45 @@
     @extend .row;
     @extend .row--centered;
   }
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-top: 1.5rem;
+  }
+  .aa-main__status {
+    min-height: 4.5rem;
+    padding: 0.5rem 1rem;
+    margin: 1rem 0 2rem 0;
+    border: 1px solid rgb(220, 220, 220);
+    border-radius: $global-radius;
+    background-color: #FFF;
+    h2 {
+      font-size: 0.8rem;
+      color: $base-color;
+      font-weight: 400;
+      margin: 0.2rem 1rem 0 0.2rem;
+      display: block;
+      strong {
+        font-weight: 800;
+        font-size: 1rem;
+        color: $base-color;
+      }
+    }
+  }
+  .meter {
+    width: 100%;
+    margin: 0.4rem 0 0.5rem;
+    height: 1rem;
+    border-radius: $global-radius;
+    background-color: $alert-color;
+    border: 1px solid rgb(220, 220, 220);
+    .meter__internal {
+      height: calc(1rem - 2px);
+      border-radius: $global-radius;
+      background-color: $info-color;
+    }
+  }
+  .collecticons {
+    margin-right: 0.25rem;
+  }
 }
