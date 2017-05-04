@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import c from 'classnames';
 import _ from 'lodash';
 import { fetchVProMMSids } from '../actions/action-creators';
 
@@ -43,17 +44,30 @@ var AnalyticsIndex = React.createClass({
           <div className='aa-main'>
             <h2 className='complete'>{((accumulator.done / accumulator.total) * 100).toFixed(2)} % of VProMMS Ids added ({done.toLocaleString()} of {total.toLocaleString()})</h2>
             <h3>Province Breakdown:</h3>
-            <ul>
-              {_.map(provinceData, (province) => {
-                return (
-                  <li key={`province-${province.id}`}>
-                    <span className='province__name'><Link to={`analytics/${province.id}`}>{province.name}</Link></span>
-                    <span className='province__count'>{province.done}/{province.total}</span>
-                    <span>{!isNaN(province.done / province.total) ? (province.done / province.total).toFixed(2) : '0.00'}% Complete</span>
-                  </li>
-                );
-              })}
-            </ul>
+            <div className='table'>
+              <table>
+                <thead>
+                  <tr key={1}>
+                    <th>Province</th>
+                    <th>Done</th>
+                    <th>Total</th>
+                    <th>% Complete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {_.map(provinceData, (province, i) => {
+                  return (
+                    <tr key={`province-${province.id}`} className={c({'alt': i % 2})}>
+                      <td><Link to={`analytics/${province.id}`}>{province.name}</Link></td>
+                      <td>{province.done}</td>
+                      <td>{province.total}</td>
+                      <td>{!isNaN(province.done / province.total) ? `${((province.done / province.total * 100)).toFixed(2)}% Complete` : '0.00% Complete'}</td>
+                    </tr>
+                  );
+                })}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </section>

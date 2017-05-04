@@ -1,6 +1,8 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
+import c from 'classnames';
+
 import { fetchVProMMSids } from '../actions/action-creators';
 
 var AnalyticsAA = React.createClass({
@@ -30,11 +32,26 @@ var AnalyticsAA = React.createClass({
           <div className='aa-main'>
             <h1>{data.provinceName} Edits</h1>
             <h2 className='complete'>{percentageComplete} % of VProMMS Ids added ({done.toLocaleString()} of {total.toLocaleString()})</h2>
-            <ul>
-              {ids.map(v => {
-                return <li key={v.id}>{v.id}: {v.inTheDatabase ? 'added' : 'not added'}</li>;
-              })}
-            </ul>
+            <div className ='table'>
+              <table>
+                <thead>
+                  <tr>
+                    <th>VProMMS ID</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {ids.map((v, i) => {
+                  return (
+                    <tr key={`vpromm-${v.id}`} className={c({'alt': i % 2})}>
+                      <td>{v.id}</td>
+                      <td>{v.inTheDatabase ? 'added' : 'not added'}</td>
+                    </tr>
+                  );
+                })}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </section>
