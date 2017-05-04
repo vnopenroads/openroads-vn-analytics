@@ -31,10 +31,10 @@ const AATable = React.createClass({
       <thead>
         <tr>
           {_.map(displayHeader, (d) => {
-            let c = classnames('sort-header', {
-              'collecticon-sort-none': this.state.sortState.field !== d.key,
-              'collecticon-sort-asc': this.state.sortState.field === d.key && this.state.sortState.order === 'asc',
-              'collecticon-sort-desc': this.state.sortState.field === d.key && this.state.sortState.order === 'desc'
+            let c = classnames('collecticons', {
+              'collecticons-sort-none': this.state.sortState.field !== d.key,
+              'collecticons-sort-asc': this.state.sortState.field === d.key && this.state.sortState.order === 'asc',
+              'collecticons-sort-desc': this.state.sortState.field === d.key && this.state.sortState.order === 'desc'
             });
             return (
               <th key={d.key} onClick={this.sortLinkClickHandler.bind(null, d.key)}>

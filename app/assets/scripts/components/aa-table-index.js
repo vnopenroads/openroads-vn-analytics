@@ -23,7 +23,7 @@ const AATable = React.createClass({
   getInitialState: function () {
     return {
       sortState: {
-        field: 'province',
+        field: 'name',
         order: 'asc'
       }
     };
@@ -34,14 +34,15 @@ const AATable = React.createClass({
       <thead>
         <tr>
           {_.map(displayHeader, (d) => {
-            let c = classnames('sort-header', {
-              'collecticon-sort-none': this.state.sortState.field !== d.key,
-              'collecticon-sort-asc': this.state.sortState.field === d.key && this.state.sortState.order === 'asc',
-              'collecticon-sort-desc': this.state.sortState.field === d.key && this.state.sortState.order === 'desc'
+            let c = classnames('collecticons', {
+              'collecticons-sort-none': this.state.sortState.field !== d.key,
+              'collecticons-sort-asc': this.state.sortState.field === d.key && this.state.sortState.order === 'asc',
+              'collecticons-sort-desc': this.state.sortState.field === d.key && this.state.sortState.order === 'desc'
             });
             return (
               <th key={d.key} onClick={this.sortLinkClickHandler.bind(null, d.key)}>
-                <span className={c}>{d.value}</span>
+                <i className={c}></i>
+                <span>{d.value}</span>
               </th>
             );
           })}
@@ -81,7 +82,7 @@ const AATable = React.createClass({
       <tbody>
         {_.map(sorted, (province, i) => {
           return (
-            <tr key={`province-${province.id}`} className={classnames({'alt': i % 2})}>
+            <tr key={`province-${province.id}`} className={classnames('collecticon-sort-asc', {'alt': i % 2})}>
               <td><Link to={`analytics/${province.id}`}>{province.name}</Link></td>
               <td>{province.done}</td>
               <td>{province.total}</td>
