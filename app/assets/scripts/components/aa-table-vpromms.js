@@ -38,7 +38,8 @@ const AATable = React.createClass({
             });
             return (
               <th key={d.key} onClick={this.sortLinkClickHandler.bind(null, d.key)}>
-                <span className={c}>{d.value}</span>
+                <i className={c}></i>
+                <span>{d.value}</span>
               </th>
             );
           })}

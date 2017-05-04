@@ -33,12 +33,12 @@ var AnalyticsAA = React.createClass({
           <div className='aa-main'>
             <h1>{data.provinceName} Province</h1>
             <div className='aa-main__status'>
-              <h2><strong>{completion.toFixed(2)}%</strong> of VProMMS IDs added ({done.toLocaleString()} of {total.toLocaleString()})</h2>
+              <h2><strong>{!total ? '100' : completion.toFixed(2)}%</strong> of VProMMS IDs added ({done.toLocaleString()} of {total.toLocaleString()})</h2>
               <div className='meter'>
                 <div className='meter__internal' style={{width: `${completion}%`}}></div>
               </div>
             </div>
-            <AATable data={ids} />
+            {total ? <AATable data={ids} /> : ''}
           </div>
         </div>
       </section>
