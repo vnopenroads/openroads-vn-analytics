@@ -44,7 +44,7 @@ var AnalyticsIndex = React.createClass({
       <section className='page'>
         <div className='page__body aa'>
           <div className='aa-main'>
-            <h1>VProMMS Edits By Region</h1>
+            <h1>VProMMS Edits By Province</h1>
             <div className='aa-main__status'>
               <h2><strong>{completion.toFixed(2)}%</strong> of VProMMS Ids added ({done.toLocaleString()} of {total.toLocaleString()})</h2>
               <div className='meter'>

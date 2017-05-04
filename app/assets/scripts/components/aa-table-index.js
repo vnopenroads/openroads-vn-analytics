@@ -10,7 +10,8 @@ const displayHeader = [
   {key: 'name', value: 'Province'},
   {key: 'done', value: 'Done'},
   {key: 'total', value: 'Total'},
-  {key: 'percentageComplete', value: '% Complete'}
+  {key: 'percentageComplete', value: '% Complete'},
+  {key: 'progress', value: 'Progress'}
 ];
 
 const AATable = React.createClass({
@@ -69,7 +70,11 @@ const AATable = React.createClass({
   },
 
   handleSort: function () {
-    let sorted = _(this.props.data).sortBy(this.state.sortState.field);
+    let sortField = this.state.sortState.field;
+    if (sortField === 'progress') {
+      sortField = 'percentageComplete';
+    }
+    let sorted = _(this.props.data).sortBy(sortField);
     if (this.state.sortState.order === 'desc') {
       sorted = sorted.reverse();
     }
@@ -86,7 +91,12 @@ const AATable = React.createClass({
               <td><Link to={`analytics/${province.id}`}>{province.name}</Link></td>
               <td>{province.done}</td>
               <td>{province.total}</td>
-              <td>{!isNaN(province.done / province.total) ? `${((province.done / province.total * 100)).toFixed(2)}% Complete` : '0.00% Complete'}</td>
+              <td>{!isNaN(province.done / province.total) ? `${((province.done / province.total * 100)).toFixed(2)}% Complete` : '100.00% Complete'}</td>
+              <td>
+                <div className='meter'>
+                  <div className='meter__internal' style={{width: `${province.done / province.total * 100}%`}}></div>
+                </div>
+              </td>
             </tr>
           );
         })}
