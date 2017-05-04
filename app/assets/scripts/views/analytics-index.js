@@ -41,7 +41,7 @@ var AnalyticsIndex = React.createClass({
       <section className='page'>
         <div className='page__body aa'>
           <div className='aa-main'>
-            <h2 className='complete'>{(accumulator.done / accumulator.total).toFixed(2)} % of VProMMS Ids added ({done.toLocaleString()} of {total.toLocaleString()})</h2>
+            <h2 className='complete'>{((accumulator.done / accumulator.total) * 100).toFixed(2)} % of VProMMS Ids added ({done.toLocaleString()} of {total.toLocaleString()})</h2>
             <h3>Province Breakdown:</h3>
             <ul>
               {_.map(provinceData, (province) => {

@@ -23,7 +23,7 @@ var AnalyticsAA = React.createClass({
     const ids = data.vpromms;
     const done = ids.filter(v => v.inTheDatabase).length;
     const total = ids.length;
-    const percentageComplete = (done / total).toFixed(2);
+    const percentageComplete = ((done / total) * 100).toFixed(2);
     return (
       <section className='page'>
         <div className='page__body aa'>
