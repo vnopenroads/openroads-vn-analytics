@@ -42,10 +42,10 @@
           border-left: none;
         }
         &.added {
-          color: $alert-color;
+          color: $info-color;
         }
         &.not-added {
-          color: $info-color;
+          color: $alert-color;
         }
       }
     }
