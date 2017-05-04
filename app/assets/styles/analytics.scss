@@ -46,8 +46,6 @@
     border: 1px solid rgb(220, 220, 220);
     border-radius: $global-radius;
     background-color: #FFF;
-    position: relative;
-    display: block;
     h2 {
       font-size: 0.8rem;
       color: $base-color;
@@ -66,12 +64,12 @@
     margin: 0.4rem 0 0.5rem;
     height: 1rem;
     border-radius: $global-radius;
-    background-color: #D00;
+    background-color: $alert-color;
     border: 1px solid rgb(220, 220, 220);
     .meter__internal {
       height: calc(1rem - 2px);
       border-radius: $global-radius;
-      background-color: #2C9603;
+      background-color: $info-color;
     }
   }
   .collecticons {

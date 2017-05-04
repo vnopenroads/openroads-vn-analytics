@@ -41,6 +41,12 @@
         :first-child {
           border-left: none;
         }
+        &.added {
+          color: $alert-color;
+        }
+        &.not-added {
+          color: $info-color;
+        }
       }
     }
   }

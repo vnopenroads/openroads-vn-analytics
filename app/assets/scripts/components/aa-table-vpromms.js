@@ -80,8 +80,8 @@ const AATable = React.createClass({
         {_.map(sorted, (vpromm, i) => {
           return (
             <tr key={`vpromm-${vpromm.id}`} className={classnames({'alt': i % 2})}>
-              <td>{vpromm.id}</td>
-              <td>{vpromm.inTheDatabase ? 'added' : 'not added'}</td>
+              <td><strong>{vpromm.id}</strong></td>
+              <td className={classnames({'added': vpromm.inTheDatabase, 'not-added': !vpromm.inTheDatabase})}>{vpromm.inTheDatabase ? 'added' : 'not added'}</td>
             </tr>
           );
         })}
