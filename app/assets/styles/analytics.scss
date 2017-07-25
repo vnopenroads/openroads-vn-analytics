@@ -34,10 +34,30 @@
     @extend .row;
     @extend .row--centered;
   }
-  h1 {
-    font-size: 1.75rem;
-    font-weight: 800;
-    margin-top: 1.5rem;
+  .aa-header {
+    display: flex;
+    justify-content: space-between;
+    h1, a {
+      display: inline-block
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      margin-top: 1.5rem;
+      text-align: left;
+    }
+    a {
+      text-align: right;
+      margin: auto 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    @media screen and (max-width: 500px) {
+      a {
+        font-size: 0.75rem;
+        padding: 0.2rem 0.6rem;
+      }
+    }
   }
   .aa-main__status {
     min-height: 4.5rem;
