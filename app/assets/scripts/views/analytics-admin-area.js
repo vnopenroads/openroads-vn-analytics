@@ -28,7 +28,7 @@ var AnalyticsAA = React.createClass({
     const total = ids.length;
     const completion = ((done / total) * 100);
     const bucket = 'https://s3.amazonaws.com/openroads-vn-dumps/by-province-name/';
-    const file = data.provinceName.match(/ /g) ? data.provinceName.replace(' ', '+') : data.provinceName
+    const file = data.provinceName.match(/ /g) ? data.provinceName.replace(' ', '+') : data.provinceName;
     return (
       <section className='page'>
         <div className='page__body aa'>
