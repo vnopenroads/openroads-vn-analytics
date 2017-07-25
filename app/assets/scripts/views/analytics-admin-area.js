@@ -27,11 +27,16 @@ var AnalyticsAA = React.createClass({
     const done = ids.filter(v => v.inTheDatabase).length;
     const total = ids.length;
     const completion = ((done / total) * 100);
+    const bucket = 'https://s3.amazonaws.com/openroads-vn-dumps/by-province-name/';
+    const file = data.provinceName.match(/ /g) ? data.provinceName.replace(' ', '+') : data.provinceName
     return (
       <section className='page'>
         <div className='page__body aa'>
           <div className='aa-main'>
+            <div className="aa-header">
             <h1>{data.provinceName} Province</h1>
+            { completion || total ? <a className='bttn-s bttn-road-network' href={bucket + file + '.geojson'}>Download Roads</a> : '' }
+            </div>
             <div className='aa-main__status'>
               <h2><strong>{!total ? '100' : completion.toFixed(2)}%</strong> of VProMMS IDs added ({done.toLocaleString()} of {total.toLocaleString()})</h2>
               <div className='meter'>
