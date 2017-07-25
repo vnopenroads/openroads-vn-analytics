@@ -43,10 +43,11 @@
 
   .page {
     &__header--landing {
+      @extend .antialiased;
       text-align: center;
       padding-top: 8rem;
       padding-bottom: 4rem;
-      background: url(../graphics/layout/background_map.png);
+      background: url(../graphics/layout/hero-bg.png);
       background-size: cover;
       position: relative;
       @include media(small-up) {
