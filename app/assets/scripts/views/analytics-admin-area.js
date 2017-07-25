@@ -34,7 +34,7 @@ var AnalyticsAA = React.createClass({
           <div className='aa-main'>
             <div className="aa-header">
             <h1>{data.provinceName} Province</h1>
-            { completion || total ? <a className='bttn-s bttn-road-network' href={config.s3Bucket + data.provinceName + '.geojson'}>Download Roads</a> : '' }
+            { completion ? <a className='bttn-s bttn-road-network' href={config.provinceDumpBaseUrl + data.provinceName + '.geojson'}>Download Roads</a> : '' }
             </div>
             <div className='aa-main__status'>
               <h2><strong>{!total ? '100' : completion.toFixed(2)}%</strong> of VProMMS IDs added ({done.toLocaleString()} of {total.toLocaleString()})</h2>

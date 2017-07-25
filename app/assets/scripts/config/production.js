@@ -10,5 +10,5 @@ module.exports = {
   mbToken: 'pk.eyJ1Ijoib3BlbnJvYWRzIiwiYSI6InJ0aUQ2N3MifQ.R3hdFqriZr6kEUr-j_FYpg',
   editorUrl: '//orma.github.io/openroads-vn-iD/',
   roadNetTileLayerUrl: 'http://50.16.162.86/dashboard/{z}/{x}/{y}.png',
-  s3Bucket: 'https://s3.amazonaws.com/openroads-vn-dumps/by-province-name/'
+  provinceDumpBaseUrl: 'https://s3.amazonaws.com/openroads-vn-dumps/by-province-name/'
 };
