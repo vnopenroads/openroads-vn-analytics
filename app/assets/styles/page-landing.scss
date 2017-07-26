@@ -59,6 +59,8 @@
 
     &__title--landing {
       position: relative;
+      margin-bottom: 1.25rem;
+
       img {
         width: auto;
         height: 2rem;
@@ -88,14 +90,24 @@
           font-size: 1.5rem;
         }
       }
+
+      @include media(medium-up) {
+        margin-bottom: 2rem;
+      }
     }
 
     &__description--landing {
       width: 100%;
-      max-width: 30rem;
+      
       padding: 0 $global-padding;
       margin: 0 auto;
       font-weight: $base-font-bold;
+      font-size: 1rem;
+
+      @include media(medium-up) {
+        font-size: 1.5rem;
+        max-width: 48rem;
+      }
     }
 
     &__body--landing {
