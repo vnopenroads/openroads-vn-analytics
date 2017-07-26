@@ -11,7 +11,7 @@ var Home = React.createClass({
         <header className='page__header--landing'>
           <div className='page__headline--landing'>
             <h1 className='page__title--landing'><img src='assets/graphics/layout/openroads-vn-logo-hor-neg.svg' width='736' height='96' alt='OpenRoads Vietnam logo' /><span>OpenRoads</span> <strong>Vietnam</strong></h1>
-            <p className='page__description--landing'>Mapping, tracking and visualizing road projects in Vietnam for inclusive growth.</p>
+            <p className='page__description--landing'>Mapping, tracking and visualizing road assets in Vietnam for inclusive growth.</p>
           </div>
         </header>
 
