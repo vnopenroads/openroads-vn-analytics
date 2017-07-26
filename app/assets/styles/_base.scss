@@ -190,14 +190,12 @@ a:active{
   .site {
     &__headline {
       float: left;
+      line-height: 1.25rem;
+      padding: 0.325rem 0;
 
       * {
-        vertical-align: middle;
+        vertical-align: top;
         display: inline-block;
-      }
-
-      .site__title {
-        
       }
 
       img {
@@ -212,7 +210,6 @@ a:active{
 
     &__title {
       margin: 0;
-      line-height: 1.25rem;
 
       strong {
         display: inline-block;
@@ -222,6 +219,7 @@ a:active{
         background: rgba($secondary-color, 0.64);
         border-radius: $global-radius;
         margin-left: 0.5rem;
+        line-height: 1.25rem;
       }
     }
 
