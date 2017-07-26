@@ -10,7 +10,7 @@ var Home = React.createClass({
       <section>
         <header className='page__header--landing'>
           <div className='page__headline--landing'>
-            <h1 className='page__title--landing'><img src='assets/graphics/layout/openroads-logo-hor-neg.svg' width='736' height='96' alt='OpenRoads — Vietnam logo' /><span>OpenRoads — Vietnam</span></h1>
+            <h1 className='page__title--landing'><img src='assets/graphics/layout/openroads-vietnam-logo-hor-neg.svg' width='736' height='96' alt='OpenRoads — Vietnam logo' /><span>OpenRoads — Vietnam</span></h1>
             <p className='page__description--landing'>Mapping, tracking and visualizing road projects in Vietnam for inclusive growth</p>
           </div>
         </header>
