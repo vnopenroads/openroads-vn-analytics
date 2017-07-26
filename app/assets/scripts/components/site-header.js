@@ -62,7 +62,7 @@ var SiteHeader = React.createClass({
       <header className='site-header'>
         <div className='inner'>
           <div className='site__headline'>
-            <h1 className='site__title'><Link to='/'><img src='assets/graphics/layout/openroads-vietnam-logo-hor-neg.svg' width='736' height='96' alt='OpenRoads — Vietnam logo' /><span>OpenRoads — Vietnam</span></Link></h1>
+            <h1 className='site__title'><Link to='/'><img src='assets/graphics/layout/openroads-vn-logo-hor-neg.svg' width='736' height='96' alt='OpenRoads Vietnam logo' /><span>OpenRoads</span> <strong>Vietnam</strong></Link></h1>
           </div>
 
           <nav className='site__nav' role='navigation' ref='nav'>
