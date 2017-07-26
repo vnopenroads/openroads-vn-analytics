@@ -20,7 +20,8 @@ var Home = React.createClass({
             <h2>Access and improve Road Networks</h2>
             <p className='description'></p>
             <p className='description'>Work with the OpenRoads project to close this critical information gap and create a comprehensive road network map of Vietnam.</p>
-            <Link to='/analytics' className='bttn-explore'>Explore</Link>
+            <Link to='/analytics' className='bttn-explore'>View analytics</Link>
+            <Link to='/explore' className='bttn-explore'>Explore on map</Link>
           </div>
         </div>
       </section>

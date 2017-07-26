@@ -1,0 +1,26 @@
+.analytics .site-header,
+.editor .site-header,
+.explore .site-header {
+  .site__nav {
+    .menu-wrapper {
+      overflow: auto;
+      visibility: visible;
+      opacity: 1;
+      max-height: 600rem;
+    }
+
+    .toggle-menu,
+    .toggle-search,
+    .search-wrapper {
+      display: none;
+    }
+  }
+}
+
+
+.explore {
+  #map {
+    height: calc(100vh - 3.5rem);
+    width: 100%;
+  }
+}
