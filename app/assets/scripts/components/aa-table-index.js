@@ -69,9 +69,6 @@ const AATable = React.createClass({
     });
   },
 
-  handlePercDone: function(province) {
-  },
-
   handleSort: function () {
     let sortField = this.state.sortState.field;
     if (sortField === 'progress') {
@@ -90,14 +87,14 @@ const AATable = React.createClass({
       <tbody>
         {_.map(sorted, (province, i) => {
           let percText;
-          if(!isNaN(province.total)) {
+          if (!isNaN(province.total)) {
             if (province.total > 0) {
-              percText = `${((province.done / province.total * 100)).toFixed(2)}% Complete`
+              percText = `${((province.done / province.total * 100)).toFixed(2)}% Complete`;
             } else {
-              percText = ''
+              percText = '';
             }
           } else {
-            percText = '100.00% Complete'
+            percText = '100.00% Complete';
           }
           return (
             <tr key={`province-${province.id}`} className={classnames('collecticon-sort-asc', {'alt': i % 2})}>
