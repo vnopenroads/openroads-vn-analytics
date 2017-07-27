@@ -27,7 +27,7 @@ var AnalyticsAA = React.createClass({
     const ids = data.vpromms;
     const done = ids.filter(v => v.inTheDatabase).length;
     const total = ids.length;
-    const completion = ((done / total) * 100);
+    const completion = total !== 0 ? ((done / total) * 100) : 0;
     return (
       <section className='page'>
         <div className='page__body aa'>
@@ -37,7 +37,7 @@ var AnalyticsAA = React.createClass({
             { completion ? <a className='bttn-s bttn-road-network' href={config.provinceDumpBaseUrl + data.provinceName + '.geojson'}>Download Roads</a> : '' }
             </div>
             <div className='aa-main__status'>
-              <h2><strong>{!total ? '100' : completion.toFixed(2)}%</strong> of VProMMS IDs added ({done.toLocaleString()} of {total.toLocaleString()})</h2>
+              <h2><strong>{!total ? '0' : completion.toFixed(2)}%</strong> of VProMMS IDs added ({done.toLocaleString()} of {total.toLocaleString()})</h2>
               <div className='meter'>
                 <div className='meter__internal' style={{width: `${completion}%`}}></div>
               </div>

@@ -69,6 +69,9 @@ const AATable = React.createClass({
     });
   },
 
+  handlePercDone: function(province) {
+  },
+
   handleSort: function () {
     let sortField = this.state.sortState.field;
     if (sortField === 'progress') {
@@ -86,15 +89,25 @@ const AATable = React.createClass({
     return (
       <tbody>
         {_.map(sorted, (province, i) => {
+          let percText;
+          if(!isNaN(province.total)) {
+            if (province.total > 0) {
+              percText = `${((province.done / province.total * 100)).toFixed(2)}% Complete`
+            } else {
+              percText = ''
+            }
+          } else {
+            percText = '100.00% Complete'
+          }
           return (
             <tr key={`province-${province.id}`} className={classnames('collecticon-sort-asc', {'alt': i % 2})}>
               <td><Link to={`analytics/${province.id}`}>{province.name}</Link></td>
               <td>{province.done}</td>
               <td>{province.total}</td>
-              <td>{!isNaN(province.done / province.total) ? `${((province.done / province.total * 100)).toFixed(2)}% Complete` : '100.00% Complete'}</td>
+              <td>{percText}</td>
               <td>
                 <div className='meter'>
-                  <div className='meter__internal' style={{width: `${province.done / province.total * 100}%`}}></div>
+                  <div className='meter__internal' style={ province.total > 0 ? {width: `${province.done / province.total * 100}%`} : {width: 0}}></div>
                 </div>
               </td>
             </tr>
