@@ -33,7 +33,7 @@ var Explore = React.createClass({
           type: 'vector',
           url: 'mapbox://openroads.vietnam-conflated'
         },
-        'source-layer': 'conflatedgeojson',
+        'source-layer': 'conflated',
         paint: {
           'line-color': {
             property: 'iri',
@@ -54,7 +54,32 @@ var Explore = React.createClass({
 
   render: function () {
     return (
-      <div id='map'></div>
+      <div className='map-container'>
+        <div id='map'></div>
+
+        <div className='map-options'>
+          <div className='input-group'>
+            <input type='checkbox' id='show-no-vpromms' className='map-options-checkbox' />
+            <label htmlFor='show-no-vpromms' className='map-options-label'>Show roads without VPRoMMS ID (these will have no properties)</label>
+          </div>
+
+          <div className='input-group'>
+            <p className='map-options-label'>Select visualized variable</p>
+            <select>
+              <option value='iri'>IRI</option>
+              <option value='or_width'>Width</option>
+              <option value='or_condition'>Condition</option>
+              <option value='or_surface'>Surface</option>
+            </select>
+          </div>
+        </div>
+
+        <div className='map-legend'>
+          <div className='map-legend-scale'></div>
+          <p className='map-legend-label'>Best</p>
+          <p className='map-legend-label'>Worst</p>
+        </div>
+      </div>
     );
   }
 });
