@@ -41,10 +41,10 @@
         :first-child {
           border-left: none;
         }
-        &.added {
+        &.added, &.exists {
           color: $info-color;
         }
-        &.not-added {
+        &.not-added, &.not-exists {
           color: rgba($base-color, 0.64);
         }
       }
