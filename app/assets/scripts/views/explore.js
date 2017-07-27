@@ -3,6 +3,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import mapboxgl from 'mapbox-gl';
 import config from '../config';
+import lineColors from '../utils/line-colors';
+
+var map;
 
 var Explore = React.createClass({
   displayName: 'Explore',
@@ -15,7 +18,7 @@ var Explore = React.createClass({
   componentDidMount: () => {
     mapboxgl.accessToken = config.mbToken;
 
-    const map = new mapboxgl.Map({
+    map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/light-v9',
       failIfMajorPerformanceCaveat: false
@@ -34,22 +37,32 @@ var Explore = React.createClass({
           url: 'mapbox://openroads.vietnam-conflated'
         },
         'source-layer': 'conflated',
-        paint: {
-          'line-color': {
-            property: 'iri',
-            type: 'exponential',
-            colorSpace: 'lab',
-            stops: [
-              [2, '#8CCA1B'],
-              [20, '#DA251D']
-            ]
-          },
-          'line-width': 4
-        },
-        'line-cap': 'round',
-        filter: ['has', 'or_vpromms']
-      });
+        paint: { 'line-width': 4 },
+        'line-cap': 'round'
+      }).setPaintProperty(
+        'conflated',
+        'line-color',
+        lineColors['iri']
+      ).setFilter('conflated', ['has', 'or_vpromms']);
     });
+  },
+
+  handleLayerChange: function (e) {
+    const property = e.target.value;
+    map.setPaintProperty(
+      'conflated',
+      'line-color',
+      lineColors[property]
+    );
+  },
+
+  handleShowNoVpromms: function (e) {
+    const show = e.target.checked;
+    if (show) {
+      map.setFilter('conflated', null);
+    } else {
+      map.setFilter('conflated', ['has', 'or_vpromms']);
+    }
   },
 
   render: function () {
@@ -59,13 +72,13 @@ var Explore = React.createClass({
 
         <div className='map-options'>
           <div className='input-group'>
-            <input type='checkbox' id='show-no-vpromms' className='map-options-checkbox' />
+            <input type='checkbox' id='show-no-vpromms' className='map-options-checkbox' onChange={this.handleShowNoVpromms}/>
             <label htmlFor='show-no-vpromms' className='map-options-label'>Show roads without VPRoMMS ID (these will have no properties)</label>
           </div>
 
           <div className='input-group'>
             <p className='map-options-label'>Select visualized variable</p>
-            <select>
+            <select onChange={this.handleLayerChange}>
               <option value='iri'>IRI</option>
               <option value='or_width'>Width</option>
               <option value='or_condition'>Condition</option>
@@ -76,8 +89,8 @@ var Explore = React.createClass({
 
         <div className='map-legend'>
           <div className='map-legend-scale'></div>
-          <p className='map-legend-label'>Best</p>
-          <p className='map-legend-label'>Worst</p>
+          <p className='map-legend-label'>2</p>
+          <p className='map-legend-label'>20</p>
         </div>
       </div>
     );
