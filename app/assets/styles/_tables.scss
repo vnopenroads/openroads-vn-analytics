@@ -41,6 +41,9 @@
         :first-child {
           border-left: none;
         }
+        a {
+          color: $info-color;
+        }
         &.added {
           color: $info-color;
         }
