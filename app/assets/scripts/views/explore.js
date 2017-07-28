@@ -54,6 +54,8 @@ var Explore = React.createClass({
       'line-color',
       lineColors[property]
     );
+
+    // TO-DO: Add code to update legend
   },
 
   handleShowNoVpromms: function (e) {
