@@ -393,3 +393,21 @@ export function fetchVProMMSids () {
       });
   };
 }
+
+// ////////////////////////////////////////////////////////////////
+//                         Explore Map                           //
+// ////////////////////////////////////////////////////////////////
+
+export function selectExploreMapLayer (layer) {
+  return {
+    type: actions.SELECT_EXPLORE_MAP_LAYER,
+    layer
+  };
+}
+
+export function exploreMapShowNoVpromms (bool) {
+  return {
+    type: actions.EXPLORE_MAP_SHOW_NO_VPROMMS,
+    bool
+  };
+}

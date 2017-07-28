@@ -302,6 +302,23 @@ const VProMMSids = function (state = VProMMSidsDefaultState, action) {
   return state;
 };
 
+const exploreMapDefaultState = {
+  layer: 'iri',
+  showNoVpromms: false
+};
+const exploreMap = function (state = exploreMapDefaultState, action) {
+  const newState = _.cloneDeep(state);
+  switch (action.type) {
+    case actions.SELECT_EXPLORE_MAP_LAYER:
+      newState.layer = action.layer;
+      break;
+    case actions.EXPLORE_MAP_SHOW_NO_VPROMMS:
+      newState.showNoVpromms = action.bool;
+      break;
+  }
+  return newState;
+};
+
 export default combineReducers({
   adminSubregions,
   search,
@@ -312,5 +329,6 @@ export default combineReducers({
   projectsMeta,
   roadNetworkStatus,
   VProMMSids,
+  exploreMap,
   routing: routeReducer
 });
