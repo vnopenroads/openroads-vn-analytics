@@ -7,7 +7,9 @@ import classnames from 'classnames';
 
 const displayHeader = [
   {key: 'id', value: 'VProMMS ID'},
-  {key: 'inTheDatabase', value: 'Status'}
+  {key: 'inTheDatabase', value: 'Status'},
+  {key: 'RouteShoot', value: 'RouteShoot'},
+  {key: 'RoadLab', value: 'RoadLabPro'}
 ];
 
 const AATable = React.createClass({
@@ -82,6 +84,8 @@ const AATable = React.createClass({
             <tr key={`vpromm-${vpromm.id}`} className={classnames({'alt': i % 2})}>
               <td><strong>{vpromm.id}</strong></td>
               <td className={classnames({'added': vpromm.inTheDatabase, 'not-added': !vpromm.inTheDatabase})}>{vpromm.inTheDatabase ? 'added' : 'not added'}</td>
+              <td className={classnames({'added': vpromm.RouteShoot, 'not-added': !vpromm.RouteShoot})}>{vpromm.RouteShoot ? <a href={vpromm.RouteShootUrl}>link</a> : ''}</td>
+              <td className={classnames({'added': vpromm.RoadLabPro, 'not-added': !vpromm.RoadLabPro})}>{vpromm.RoadLabPro ? 'added' : 'not added'}</td>
             </tr>
           );
         })}

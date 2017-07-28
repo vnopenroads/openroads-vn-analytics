@@ -19,6 +19,7 @@ import UhOh from './views/uhoh';
 import App from './views/app';
 import Home from './views/home';
 import Editor from './views/editor';
+import Explore from './views/explore';
 import AnalyticsIndex from './views/analytics-index';
 import AnalyticsAA from './views/analytics-admin-area';
 
@@ -50,6 +51,7 @@ render((
       <Route path='/' component={App}>
         <Route path='editor' component={Editor} />
         <Route path='editor/*' component={Editor} />
+        <Route path='explore' component={Explore} />
         <Route path='analytics' component={AnalyticsIndex} />
         <Route path='analytics/:aaId' component={AnalyticsAA} />
         <IndexRoute component={Home}/>

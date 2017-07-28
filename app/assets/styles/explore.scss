@@ -1,0 +1,88 @@
+.analytics .site-header,
+.editor .site-header,
+.explore .site-header {
+  .site__nav {
+    .menu-wrapper {
+      overflow: auto;
+      visibility: visible;
+      opacity: 1;
+      max-height: 600rem;
+    }
+
+    .toggle-menu,
+    .toggle-search,
+    .search-wrapper {
+      display: none;
+    }
+  }
+}
+
+
+.explore {
+  .map-container {
+    height: calc(100vh - 3.5rem);
+    width: 100%;
+  }
+  #map {
+    height: 100%;
+    width: 100%;
+  }
+
+  .map-options {
+    position: absolute;
+    background-color: lighten($neutral, 5%);
+    border-radius: $global-radius;
+    width: 250px;
+    top: $global-padding + 3.5rem;
+    right: $global-padding;
+    padding: $global-padding;
+  }
+
+  .input-group {
+    float: left;
+    margin-bottom: $global-padding;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .map-options-checkbox {
+    float: left;
+    margin-right: $global-padding * 0.5;
+  }
+
+  .map-options-label {
+    float: left;
+    width: 80%;
+    font-size: 0.75rem;
+    font-weight: $base-font-regular;
+    line-height: 1rem;
+  }
+
+  select {
+    font-size: 0.75rem;
+  }
+
+  .map-legend {
+    position: absolute;
+    background-color: lighten($neutral, 5%);
+    border-radius: $global-radius;
+    width: 250px;
+    bottom: $global-padding * 2;
+    right: $global-padding;
+    padding: $global-padding;
+  }
+
+  .map-legend-scale {
+    height: 15px;
+    background-image: linear-gradient(to right, #8CCA1B, #DA251D);
+  }
+
+  .map-legend-label {
+    float: left;
+    &:last-child {
+      float: right;
+    }
+    font-size: 0.75rem;
+  }
+}

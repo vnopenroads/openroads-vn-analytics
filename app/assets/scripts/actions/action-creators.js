@@ -378,7 +378,7 @@ export function fetchVProMMSids () {
   return function (dispatch) {
     dispatch(requestVProMMSids());
 
-    let url = `${config.api}/ids`;
+    let url = `${config.api}/properties?keys=iri_mean,rs_url`;
     return fetch(url)
       .then(response => {
         return response.json();
