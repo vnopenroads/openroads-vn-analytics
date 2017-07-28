@@ -90,6 +90,7 @@ var Explore = React.createClass({
         </div>
 
         <div className='map-legend'>
+          <p className='map-legend-title'>IRI</p>
           <div className='map-legend-scale'></div>
           <p className='map-legend-label'>2</p>
           <p className='map-legend-label'>20</p>
