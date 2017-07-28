@@ -29,9 +29,13 @@ Compile the sass files, javascript... Use this instead of `npm run serve` if you
 $ npm run build
 ```
 
-### Uploading data to the platform
+## Architecture
 
-#### Uploading RoadLabPro data
+![orma-vn-architecture](https://user-images.githubusercontent.com/4959135/28737988-0d3e5e1c-73bf-11e7-91c3-0c3e645b3566.jpg)
+
+## Uploading data to the platform
+
+### Uploading RoadLabPro data
 
 Follow the instructions in the `orma/roadlabpro-clean` repository, to process your directory of raw RoadLabPro files into standardized, cleaned shapefiles and GeoJSON.
 
@@ -61,17 +65,17 @@ aws s3 cp \
 	s3://openroads-vn-properties/roadlabpro/ThachThanhSamples.zip
 ```
 
-#### Uploading RouteShoot data
+### Uploading RouteShoot data
 
 A standard process for ingesting RouteShoot geometries and properties is forthcoming in the next phase of work.
 
-#### Uploading arbitrary road geometry data
+### Uploading arbitrary road geometry data
 
 Using the steps documented above for uploading (cleaned) RoadLabPro data, you can upload other road geometries. That is, take your arbitrary road geometry, create an OSM changeset of it, and upload the changeset to the API at `https://openroads-vn-api.herokuapp.com/upload/${your changeset number here}`.
 
 Keep in mind that, per the VPRoMMS road ID specification, these should have ten-character road IDs. The ID value should be in the field `or_vpromms`. Without a VPRoMMS road ID, these geometries will not be matched with any of the point-property data.
 
-#### Uploading arbitrary road property data, as points
+### Uploading arbitrary road property data, as points
 
 Similarly, you can upload point-property data, following steps like in the RoadLabPro point upload to Amazon S3.
 
