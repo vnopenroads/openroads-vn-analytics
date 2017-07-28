@@ -247,7 +247,13 @@ const roadNetworkStatus = function (state = roadNetworkStatusDefaultState, actio
 
 _.forEach(VPROMMS_IDS, (province) => {
   province.vpromms = province.vpromms.map((id) => {
-    return { id, inTheDatabase: false, RoadLab: false, RouteShootPro: false };
+    return {
+      id,
+      inTheDatabase: false,
+      RoadLab: false,
+      RouteShootUrl: '',
+      RouteShootPro: false
+    };
   });
 });
 const VProMMSidsDefaultState = {
@@ -275,6 +281,7 @@ const VProMMSids = function (state = VProMMSidsDefaultState, action) {
                 id: v.id,
                 inTheDatabase: keys.includes(v.id),
                 RoadLabPro: Boolean(action.json[v.id]['iri_mean']),
+                RouteShootUrl: action.json[v.id]['rs_url'] ? action.json[v.id]['rs_url'] : '',
                 RouteShoot: Boolean(action.json[v.id]['rs_url'])
               };
             }
@@ -282,6 +289,7 @@ const VProMMSids = function (state = VProMMSidsDefaultState, action) {
               id: v.id,
               inTheDatabase: keys.includes(v.id),
               RoadLabPro: false,
+              RouteShootUrl: '',
               RouteShoot: false
             };
           });
