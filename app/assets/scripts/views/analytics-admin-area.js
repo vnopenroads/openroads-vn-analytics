@@ -27,7 +27,7 @@ var AnalyticsAA = React.createClass({
     const ids = data.vpromms;
     const done = ids.filter(v => v.inTheDatabase).length;
     const total = ids.length;
-    const completion = ((done / total) * 100);
+    const completion = total !== 0 ? ((done / total) * 100) : 0;
     let completionMainText;
     let completionTailText = 'Information on VPRoMMS roads is not available';
     if (total !== 0) {

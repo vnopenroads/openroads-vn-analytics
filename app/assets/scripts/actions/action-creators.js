@@ -378,7 +378,7 @@ export function fetchVProMMSids () {
   return function (dispatch) {
     dispatch(requestVProMMSids());
 
-    let url = `${config.api}/ids`;
+    let url = `${config.api}/properties?keys=iri_mean,rs_url`;
     return fetch(url)
       .then(response => {
         return response.json();
@@ -391,5 +391,23 @@ export function fetchVProMMSids () {
         }
         dispatch(receiveVProMMSids(json));
       });
+  };
+}
+
+// ////////////////////////////////////////////////////////////////
+//                         Explore Map                           //
+// ////////////////////////////////////////////////////////////////
+
+export function selectExploreMapLayer (layer) {
+  return {
+    type: actions.SELECT_EXPLORE_MAP_LAYER,
+    layer
+  };
+}
+
+export function exploreMapShowNoVpromms (bool) {
+  return {
+    type: actions.EXPLORE_MAP_SHOW_NO_VPROMMS,
+    bool
   };
 }

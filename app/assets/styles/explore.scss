@@ -69,10 +69,15 @@
     position: absolute;
     background-color: lighten($neutral, 5%);
     border-radius: $global-radius;
-    width: 250px;
+    width: 200px;
     bottom: $global-padding * 2;
     right: $global-padding;
     padding: $global-padding;
+  }
+
+  .map-legend-title {
+    font-weight: bold;
+    font-size: 0.75rem;
   }
 
   .map-legend-scale {
