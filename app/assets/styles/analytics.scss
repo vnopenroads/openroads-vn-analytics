@@ -1,4 +1,4 @@
-.analytics, .site-header,
+.analytics, .analytics-aa .site-header,
 .editor .site-header,
 .explore .site-header  {
   .site__nav {
@@ -17,7 +17,7 @@
   }
 }
 
-.analytics, .main, .aaId {
+.analytics, .analytics-aa {
   .aa-main {
     @extend .row;
     @extend .row--centered;
