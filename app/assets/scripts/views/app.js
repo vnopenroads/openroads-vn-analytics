@@ -18,6 +18,7 @@ var App = React.createClass({
 
   render: function () {
     let r = _.last(this.props.routes).path;
+    console.log(this.props);
     let klass;
     switch (r) {
       case undefined:

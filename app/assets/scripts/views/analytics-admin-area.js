@@ -28,6 +28,12 @@ var AnalyticsAA = React.createClass({
     const done = ids.filter(v => v.inTheDatabase).length;
     const total = ids.length;
     const completion = ((done / total) * 100);
+    let completionMainText;
+    let completionTailText = 'Information on VPRoMMS roads is not available';
+    if (total !== 0) {
+      completionMainText = completion.toFixed(2);
+      completionTailText = `% of vPRoMMS IDs added ${done.toLocaleString()} of ${total.toLocaleString()}`;
+    }
     return (
     <div>
       <div className="aa-header">
@@ -35,7 +41,7 @@ var AnalyticsAA = React.createClass({
         { completion ? <a className='bttn-s bttn-road-network' href={config.provinceDumpBaseUrl + data.provinceName + '.geojson'}>Download Roads</a> : '' }
       </div>
       <div className='aa-main__status'>
-        <h2><strong>{!total ? '100' : completion.toFixed(2)}%</strong> of VProMMS IDs added ({done.toLocaleString()} of {total.toLocaleString()})</h2>
+        <h2><strong>{completionMainText}</strong>{completionTailText}</h2>
         <div className='meter'>
          <div className='meter__internal' style={{width: `${completion}%`}}></div>
         </div>
