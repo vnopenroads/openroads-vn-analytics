@@ -35,24 +35,19 @@ var AnalyticsAA = React.createClass({
       completionTailText = `% of vPRoMMS IDs added ${done.toLocaleString()} of ${total.toLocaleString()}`;
     }
     return (
-      <section className='page'>
-        <div className='page__body aa'>
-          <div className='aa-main'>
-            <div className="aa-header">
-            <h1>{data.provinceName} Province</h1>
-            { completion ? <a className='bttn-s bttn-road-network' href={config.provinceDumpBaseUrl + provinceId + '.geojson'}>Download Roads</a> : '' }
-            </div>
-            <div className='aa-main__status'>
-              <h2><strong>{completionMainText}</strong>{completionTailText}</h2>
-              <div className='meter'>
-                <div className='meter__internal' style={{width: `${completion}%`}}></div>
-              </div>
-            </div>
-            {total ? <AATable data={ids} /> : ''}
-          </div>
-        {total ? <AATable data={ids} /> : ''}
+    <div>
+      <div className="aa-header">
+        <h1>{data.provinceName} Province</h1>
+        { completion ? <a className='bttn-s bttn-road-network' href={config.provinceDumpBaseUrl + data.provinceName + '.geojson'}>Download Roads</a> : '' }
+      </div>
+      <div className='aa-main__status'>
+        <h2><strong>{completionMainText}</strong>{completionTailText}</h2>
+        <div className='meter'>
+         <div className='meter__internal' style={{width: `${completion}%`}}></div>
         </div>
-      </section>
+        {total ? <AATable data={ids} /> : ''}
+      </div>
+    </div>
     );
   }
 });
