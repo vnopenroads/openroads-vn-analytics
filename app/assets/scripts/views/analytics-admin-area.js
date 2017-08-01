@@ -50,10 +50,9 @@ var AnalyticsAA = React.createClass({
             </div>
             {total ? <AATable data={ids} /> : ''}
           </div>
-        </div>
         {total ? <AATable data={ids} /> : ''}
-      </div>
-    </div>
+        </div>
+      </section>
     );
   }
 });

@@ -1,20 +1,10 @@
 'use strict';
-
 import React from 'react';
 import { connect } from 'react-redux';
 import mapboxgl from 'mapbox-gl';
 
 import { updateGlobalZoom } from '../actions/action-creators';
 import config from '../config';
-import lineColors from '../utils/line-colors';
-import {
-  selectExploreMapLayer,
-  exploreMapShowNoVpromms
-} from '../actions/action-creators';
-import MapOptions from '../components/map-options';
-import MapLegend from '../components/map-legend';
-
-var map;
 
 var Explore = React.createClass({
   displayName: 'Explore',
@@ -25,9 +15,6 @@ var Explore = React.createClass({
     dispatch: React.PropTypes.func,
     _updateGlobalZoom: React.PropTypes.func,
     globZoom: React.PropTypes.object
-    layer: React.PropTypes.string,
-    showNoVpromms: React.PropTypes.bool,
-    dispatch: React.PropTypes.func
   },
 
   componentDidMount: function () {
@@ -38,8 +25,6 @@ var Explore = React.createClass({
     };
     mapboxgl.accessToken = config.mbToken;
     const map = new mapboxgl.Map({
-
-    map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/light-v9',
       center: [
@@ -69,34 +54,22 @@ var Explore = React.createClass({
           url: 'mapbox://openroads.vietnam-conflated'
         },
         'source-layer': 'conflated',
-        paint: { 'line-width': 4 },
-        layout: { 'line-cap': 'round' }
-      }).setPaintProperty(
-        'conflated',
-        'line-color',
-        lineColors['iri']
-      ).setFilter('conflated', ['has', 'or_vpromms']);
+        paint: {
+          'line-color': {
+            property: 'iri',
+            type: 'exponential',
+            colorSpace: 'lab',
+            stops: [
+              [2, '#8CCA1B'],
+              [20, '#DA251D']
+            ]
+          },
+          'line-width': 4
+        },
+        'line-cap': 'round',
+        filter: ['has', 'or_vpromms']
+      });
     });
-  },
-
-  handleLayerChange: function (e) {
-    const property = e.target.value;
-    this.props.dispatch(selectExploreMapLayer(property));
-    map.setPaintProperty(
-      'conflated',
-      'line-color',
-      lineColors[property]
-    );
-  },
-
-  handleShowNoVpromms: function (e) {
-    const show = e.target.checked;
-    this.props.dispatch(exploreMapShowNoVpromms(show));
-    if (show) {
-      map.setFilter('conflated', null);
-    } else {
-      map.setFilter('conflated', ['has', 'or_vpromms']);
-    }
   },
 
   render: function () {
@@ -104,14 +77,28 @@ var Explore = React.createClass({
       <div className='map-container'>
         <div id='map'></div>
 
-        <MapOptions
-          handleLayerChange={ this.handleLayerChange }
-          handleShowNoVpromms={ this.handleShowNoVpromms }
-        />
+        <div className='map-options'>
+          <div className='input-group'>
+            <input type='checkbox' id='show-no-vpromms' className='map-options-checkbox' />
+            <label htmlFor='show-no-vpromms' className='map-options-label'>Show roads without VPRoMMS ID (these will have no properties)</label>
+          </div>
 
-        <MapLegend
-          layer={this.props.layer}
-        />
+          <div className='input-group'>
+            <p className='map-options-label'>Select visualized variable</p>
+            <select>
+              <option value='iri'>IRI</option>
+              <option value='or_width'>Width</option>
+              <option value='or_condition'>Condition</option>
+              <option value='or_surface'>Surface</option>
+            </select>
+          </div>
+        </div>
+
+        <div className='map-legend'>
+          <div className='map-legend-scale'></div>
+          <p className='map-legend-label'>Best</p>
+          <p className='map-legend-label'>Worst</p>
+        </div>
       </div>
     );
   }

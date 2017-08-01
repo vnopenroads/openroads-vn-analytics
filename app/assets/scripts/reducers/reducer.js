@@ -330,6 +330,7 @@ const globZoom = function (state = globZoomDefaultState, action) {
       break;
   }
   return state;
+};
 
 const exploreMapDefaultState = {
   layer: 'iri',
