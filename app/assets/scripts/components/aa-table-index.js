@@ -115,5 +115,4 @@ const AATable = React.createClass({
     );
   }
 });
-
 export default AATable;

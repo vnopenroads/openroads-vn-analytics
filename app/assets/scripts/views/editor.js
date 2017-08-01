@@ -2,6 +2,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { push, replace } from 'react-router-redux';
+
+import { updateGlobalZoom } from '../actions/action-creators';
 import config from '../config';
 
 var Editor = React.createClass({
@@ -9,7 +11,9 @@ var Editor = React.createClass({
 
   propTypes: {
     params: React.PropTypes.object,
-    dispatch: React.PropTypes.func
+    dispatch: React.PropTypes.func,
+    _updateGlobalZoom: React.PropTypes.func,
+    globZoom: React.PropTypes.object
   },
 
   // /////////////////////////////////////////////////////////////////////////////
@@ -42,6 +46,7 @@ var Editor = React.createClass({
         case 'or-editor':
           var hash = this.cleanUrl(e.data.url, config.editorUrl);
           this.props.dispatch(replace(`/editor/${hash}`));
+          this.props._updateGlobalZoom(hash);
           break;
       }
     } else if (e.data.type === 'navigate') {
@@ -66,11 +71,25 @@ var Editor = React.createClass({
   },
 
   render: function () {
-    var path = config.editorUrl + (this.props.params.splat ? `#${this.props.params.splat}` : '');
+    var globZoomHash = 'map=' + this.props.globZoom.data.z + '/' + this.props.globZoom.data.x + '/' + this.props.globZoom.data.y;
+    var path = config.editorUrl + `#${globZoomHash}`;
     return (
        <iframe src={path} id='main-frame' name='main-frame'></iframe>
     );
   }
 });
 
-module.exports = connect()(Editor);
+function selector (state) {
+  return {
+    globZoom: state.globZoom
+  };
+}
+
+function dispatcher (dispatch) {
+  return {
+    dispatch,
+    _updateGlobalZoom: (url) => dispatch(updateGlobalZoom(url))
+  };
+}
+
+module.exports = connect(selector, dispatcher)(Editor);

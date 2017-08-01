@@ -2,29 +2,49 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import mapboxgl from 'mapbox-gl';
+
+import { updateGlobalZoom } from '../actions/action-creators';
 import config from '../config';
 
 var Explore = React.createClass({
   displayName: 'Explore',
 
   propTypes: {
+    children: React.PropTypes.object,
     params: React.PropTypes.object,
-    dispatch: React.PropTypes.func
+    dispatch: React.PropTypes.func,
+    _updateGlobalZoom: React.PropTypes.func,
+    globZoom: React.PropTypes.object
   },
 
-  componentDidMount: () => {
+  componentDidMount: function () {
+    const makeXYZobj = function () {
+      const xyzObj = map.getCenter();
+      xyzObj['zoom'] = map.getZoom();
+      return xyzObj;
+    };
     mapboxgl.accessToken = config.mbToken;
-
     const map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/light-v9',
+      center: [
+        this.props.globZoom.data.x,
+        this.props.globZoom.data.y
+      ],
+      zoom: this.props.globZoom.data.z,
       failIfMajorPerformanceCaveat: false
-    }).fitBounds([
-      [102.1, 7.3],
-      [109.4, 23.4]
-    ], {padding: 15, animate: false});
+    });
+
+    map.on('zoom', () => {
+      this.props._updateGlobalZoom(makeXYZobj());
+    });
+
+    map.on('move', () => {
+      this.props._updateGlobalZoom(makeXYZobj());
+    });
 
     map.on('load', () => {
+      this.props._updateGlobalZoom(makeXYZobj());
       // Load all roads with VPRoMMS values, and color by IRI
       map.addLayer({
         id: 'conflated',
@@ -84,4 +104,16 @@ var Explore = React.createClass({
   }
 });
 
-module.exports = connect()(Explore);
+function selector (state) {
+  return {
+    globZoom: state.globZoom
+  };
+}
+
+function dispatcher (dispatch) {
+  return {
+    _updateGlobalZoom: (xyzObj) => dispatch(updateGlobalZoom(xyzObj))
+  };
+}
+
+module.exports = connect(selector, dispatcher)(Explore);

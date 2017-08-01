@@ -393,3 +393,48 @@ export function fetchVProMMSids () {
       });
   };
 }
+
+// ////////////////////////////////////////////////////////////////
+//                           Global Zoom                         //
+// ////////////////////////////////////////////////////////////////
+
+function requestGlobZoom () {
+  return {
+    type: actions.REQUEST_GLOB_ZOOM
+  };
+}
+
+function receiveGlobZoom (json, error = null) {
+  return {
+    type: actions.RECEIVE_GLOB_ZOOM,
+    json: json,
+    error,
+    receivedAt: Date.now()
+  };
+}
+
+export function updateGlobalZoom (zoomSource) {
+  return function (dispatch) {
+    dispatch(requestGlobZoom());
+    let json;
+    if (typeof zoomSource === 'string') {
+      zoomSource = zoomSource
+        .split(/map=/)[1]
+        .split(/&/)[0]
+        .split('/');
+      json = {
+        z: zoomSource[0],
+        x: zoomSource[1],
+        y: zoomSource[2]
+      };
+    } else {
+      json = {
+        z: zoomSource.zoom,
+        x: zoomSource.lng,
+        y: zoomSource.lat
+      };
+    }
+    return dispatch(receiveGlobZoom(json));
+  };
+}
+
