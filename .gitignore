@@ -14,3 +14,7 @@ npm-debug.log
 ## Locals
 app/assets/scripts/config/local.js
 .resources/
+
+## no swaps
+*/**/*.swp
+*/**/*.swo

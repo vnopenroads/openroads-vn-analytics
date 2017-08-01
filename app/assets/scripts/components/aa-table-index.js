@@ -98,7 +98,7 @@ const AATable = React.createClass({
           }
           return (
             <tr key={`province-${province.id}`} className={classnames('collecticon-sort-asc', {'alt': i % 2})}>
-              <td><Link to={`analytics/${province.id}`}>{province.name}</Link></td>
+              <td><Link to={`/analytics/${province.id}`}>{province.name}</Link></td>
               <td>{province.done}</td>
               <td>{province.total}</td>
               <td>{percText}</td>
@@ -125,5 +125,4 @@ const AATable = React.createClass({
     );
   }
 });
-
 export default AATable;
