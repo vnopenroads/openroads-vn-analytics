@@ -29,7 +29,7 @@ const MapLegend = React.createClass({
     }
 
     return (
-      <div className='map-legend'>
+      <div className='map-legend map-panel'>
         <p className='map-legend-title'>{ title }</p>
         { continuous
           ? <div>
@@ -38,12 +38,15 @@ const MapLegend = React.createClass({
             <p className='map-legend-label'>{ worstColorLabel }</p>
           </div>
           : <div>
+              <p className='empty'>No available data.</p>
+            {/*
             {stops.map(s =>
               <div id={s[0]}>
                 <p>{ String(s[0]) }</p>
                 <div style={{ 'background-color': s[1], width: '20px', height: '20px' }}></div>
               </div>
             )}
+            */}
           </div>
         }
       </div>

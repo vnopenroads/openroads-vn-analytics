@@ -11,14 +11,17 @@ const MapOptions = React.createClass({
 
   render: function () {
     return (
-      <div className='map-options'>
-        <div className='input-group'>
-          <input type='checkbox' id='show-no-vpromms' className='map-options-checkbox' onChange={ e => this.props.handleShowNoVpromms(e) }/>
-          <label htmlFor='show-no-vpromms' className='map-options-label'>Show roads without VPRoMMS ID (these will have no properties)</label>
+      <div className='map-options map-panel'>
+        <div className='form-group'>
+          <label className='form__option form__option--custom-checkbox' htmlFor='show-no-vpromms'>
+            <input type='checkbox' name='show-no-vpromms' id='show-no-vpromms' value='show-no-vpromms' onChange={ e => this.props.handleShowNoVpromms(e) } />
+            <span className='form__option__text' data-title='These will have no properties.'>Show roads without VPRoMMS ID</span>
+            <span className='form__option__ui'></span>
+          </label>
         </div>
 
-        <div className='input-group'>
-          <p className='map-options-label'>Select visualized variable</p>
+        <div className='form-group'>
+          <label className='map-options-label'>Select visualized variable</label>
           <select onChange={ e => this.props.handleLayerChange(e) }>
             <option value='iri'>IRI</option>
             <option value='or_width'>Width</option>
