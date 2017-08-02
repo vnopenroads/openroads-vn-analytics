@@ -12,9 +12,12 @@ const MapOptions = React.createClass({
   render: function () {
     return (
       <div className='map-options'>
-        <div className='form-group'>
-          <input type='checkbox' id='show-no-vpromms' className='map-options-checkbox' onChange={ e => this.props.handleShowNoVpromms(e) }/>
-          <label htmlFor='show-no-vpromms' className='map-options-label'>Show roads without VPRoMMS ID (these will have no properties)</label>
+        <div className='form-group'>        
+          <label className='form__option form__option--custom-checkbox' htmlFor='show-no-vpromms'>
+            <input type='checkbox' name='show-no-vpromms' id='show-no-vpromms' value='show-no-vpromms' onChange={ e => this.props.handleShowNoVpromms(e) } />
+            <span className='form__option__text'>Show roads without VPRoMMS ID (these will have no properties)</span>
+            <span className='form__option__ui'></span>
+          </label>
         </div>
 
         <div className='form-group'>

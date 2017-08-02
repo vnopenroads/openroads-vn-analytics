@@ -34,39 +34,44 @@
     position: absolute;
     background-color: lighten($neutral, 5%);
     border-radius: $global-radius;
-    width: 250px;
+    width: 16rem;
     top: $global-padding + 3.5rem;
     right: $global-padding;
     padding: $global-padding;
-  }
 
-  // .input-group {
-  //   float: left;
-  //   margin-bottom: $global-padding;
-  //   &:last-child {
-  //     margin-bottom: 0;
-  //   }
-  // }
+    > *:last-child {
+      margin-bottom: 0;
+    }
+  }
 
   .map-options-checkbox {
     float: left;
     margin-right: $global-padding * 0.5;
   }
 
-  .map-options-label {
-    float: left;
-    width: 80%;
-    font-size: 0.75rem;
-    font-weight: $base-font-regular;
+  .form__option {
+    margin: 0;
+    padding-left: $global-spacing * 1.25;
+
+    .form__option__ui {
+      top: 0;
+      height: 1rem;
+      width: 1rem;
+    }
+  }
+
+  label {
     line-height: 1rem;
+    font-size: 0.75rem;
+    min-height: auto;
   }
 
   select {
     display: block;
     width: 100%;
     padding: 0.25rem 0.5rem;
-    font-size: 1rem;
-    line-height: 1.5rem;
+    font-size: 0.875rem;
+    line-height: 1rem;
     color: $link-color;
     background: #fff;
     border: 0;
@@ -119,7 +124,7 @@
 
   .map-legend-label {
     float: left;
-    
+
     &:last-child {
       float: right;
     }
