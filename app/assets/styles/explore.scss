@@ -40,13 +40,13 @@
     padding: $global-padding;
   }
 
-  .input-group {
-    float: left;
-    margin-bottom: $global-padding;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
+  // .input-group {
+  //   float: left;
+  //   margin-bottom: $global-padding;
+  //   &:last-child {
+  //     margin-bottom: 0;
+  //   }
+  // }
 
   .map-options-checkbox {
     float: left;
@@ -62,7 +62,39 @@
   }
 
   select {
-    font-size: 0.75rem;
+    display: block;
+    width: 100%;
+    padding: 0.25rem 0.5rem;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    color: $link-color;
+    background: #fff;
+    border: 0;
+    border-radius: 0;
+    font-family: inherit;
+    font-weight: $base-font-bold;
+    box-shadow: inset 0 0 0 2px $link-color;
+    border-radius: $global-radius;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 1.5rem;
+    cursor: pointer;
+    background: #fff url('data:image/svg+xml;utf8,' + urlencode('<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="10px" height="5px" viewBox="0 0 10 5" enable-background="new 0 0 10 5" xml:space="preserve"><g><polygon fill="#{$link-color}" points="5,5 0,0 10,0  "/></g></svg>')) calc(100% - 0.5rem) center no-repeat;
+    transition: all 0.24s ease 0s;
+
+    &:hover,
+    &:focus,
+    &:active {
+      @extend .antialiased;
+      outline: 0;
+      color: #fff;
+      background: $link-color url('data:image/svg+xml;utf8,' + urlencode('<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="10px" height="5px" viewBox="0 0 10 5" enable-background="new 0 0 10 5" xml:space="preserve"><g><polygon fill="#FFF" points="5,5 0,0 10,0  "/></g></svg>')) calc(100% - 0.5rem) center no-repeat;
+    }
+
+    /* Animation */
+    transition: all 0.24s ease 0s;
   }
 
   .map-legend {
@@ -87,6 +119,7 @@
 
   .map-legend-label {
     float: left;
+    
     &:last-child {
       float: right;
     }

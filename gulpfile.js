@@ -15,6 +15,7 @@ var gutil = require('gulp-util');
 var exit = require('gulp-exit');
 var rev = require('gulp-rev');
 var revReplace = require('gulp-rev-replace');
+var SassString = require('node-sass').types.String;
 var notifier = require('node-notifier');
 var cp = require('child_process');
 
@@ -201,6 +202,13 @@ gulp.task('styles', function () {
     .pipe($.sass({
       outputStyle: 'expanded',
       precision: 10,
+      functions: {
+        'urlencode($url)': function (url) {
+          var v = new SassString();
+          v.setValue(encodeURIComponent(url.getValue()));
+          return v;
+        }
+      },
       includePaths: require('node-bourbon').with(['node_modules/jeet/scss'])
     }))
     .pipe($.sourcemaps.write())
