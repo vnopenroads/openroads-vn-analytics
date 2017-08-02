@@ -306,7 +306,7 @@ const globZoomDefaultState = {
   fetching: false,
   fetched: false,
   data: {
-    z: 14,
+    z: 6,
     x: 105.73,
     y: 20.029232336299856
   }

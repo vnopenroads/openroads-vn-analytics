@@ -70,6 +70,10 @@ var Editor = React.createClass({
     window.removeEventListener('message', this.messageListener, false);
   },
 
+  shouldComponentUpdate: function () {
+    return false;
+  },
+
   render: function () {
     var globZoomHash = 'map=' + this.props.globZoom.data.z + '/' + this.props.globZoom.data.x + '/' + this.props.globZoom.data.y;
     var path = config.editorUrl + `#${globZoomHash}`;
