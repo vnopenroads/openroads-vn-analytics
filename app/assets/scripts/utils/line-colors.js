@@ -4,7 +4,7 @@ module.exports = {
     type: 'exponential',
     colorSpace: 'lab',
     stops: [
-      [2, '#8CCA1B'],
+      [2, '#FFFF00'],
       [20, '#DA251D']
     ]
   },
