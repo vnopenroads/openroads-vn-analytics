@@ -118,8 +118,15 @@
     &:last-child {
       float: right;
     }
-    
+
     font-size: 0.75rem;
+  }
+
+  .empty {
+    font-style: italic;
+    opacity: 0.64;
+    font-size: 0.875rem;
+    line-height: 1rem;
   }
 }
 
