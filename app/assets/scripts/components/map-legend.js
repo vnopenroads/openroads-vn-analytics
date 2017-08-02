@@ -39,7 +39,7 @@ const MapLegend = React.createClass({
           </div>
           : <div>
               <p className='empty'>No available data.</p>
-            {/* 
+            {/*
             {stops.map(s =>
               <div id={s[0]}>
                 <p>{ String(s[0]) }</p>
