@@ -29,7 +29,7 @@ const MapLegend = React.createClass({
     }
 
     return (
-      <div className='map-legend'>
+      <div className='map-legend map-panel'>
         <p className='map-legend-title'>{ title }</p>
         { continuous
           ? <div>

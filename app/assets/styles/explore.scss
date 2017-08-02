@@ -31,13 +31,8 @@
   }
 
   .map-options {
-    position: absolute;
-    background-color: lighten($neutral, 5%);
-    border-radius: $global-radius;
-    width: 16rem;
     top: $global-padding + 3.5rem;
     right: $global-padding;
-    padding: $global-padding;
 
     > *:last-child {
       margin-bottom: 0;
@@ -103,13 +98,8 @@
   }
 
   .map-legend {
-    position: absolute;
-    background-color: lighten($neutral, 5%);
-    border-radius: $global-radius;
-    width: 200px;
     bottom: $global-padding * 2;
     right: $global-padding;
-    padding: $global-padding;
   }
 
   .map-legend-title {
@@ -128,6 +118,17 @@
     &:last-child {
       float: right;
     }
+    
     font-size: 0.75rem;
   }
+}
+
+.map-panel {
+  position: absolute;
+  z-index: 10;
+  border-radius: $base-border-radius;
+  width: 16rem;
+  padding: $global-spacing;
+  background: #fff;
+  // box-shadow: 0 0 4px 4px rgba($base-color, 0.04);
 }
