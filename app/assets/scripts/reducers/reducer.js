@@ -302,6 +302,36 @@ const VProMMSids = function (state = VProMMSidsDefaultState, action) {
   return state;
 };
 
+const globZoomDefaultState = {
+  fetching: false,
+  fetched: false,
+  data: {
+    z: 6,
+    x: 105.73,
+    y: 20.029232336299856
+  }
+};
+const globZoom = function (state = globZoomDefaultState, action) {
+  switch (action.type) {
+    case actions.REQUEST_GLOB_ZOOM:
+      state = _.cloneDeep(state);
+      state.error = null;
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_GLOB_ZOOM:
+      state = _.cloneDeep(state);
+      if (action.error) {
+        state.error = action.error;
+      } else {
+        state.data = action.json;
+      }
+      state.fetching = false;
+      state.fetched = false;
+      break;
+  }
+  return state;
+};
+
 const exploreMapDefaultState = {
   layer: 'iri',
   showNoVpromms: false
@@ -329,6 +359,7 @@ export default combineReducers({
   projectsMeta,
   roadNetworkStatus,
   VProMMSids,
+  globZoom,
   exploreMap,
   routing: routeReducer
 });

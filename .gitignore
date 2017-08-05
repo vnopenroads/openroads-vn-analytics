@@ -16,5 +16,5 @@ app/assets/scripts/config/local.js
 .resources/
 
 ## no swaps
-*/**/*.swp
-*/**/*.swo
+/**/*.swp
+/**/*.swo

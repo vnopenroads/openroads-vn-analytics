@@ -1,42 +1,50 @@
 'use strict';
-
 import React from 'react';
 import { connect } from 'react-redux';
 import mapboxgl from 'mapbox-gl';
 
+import { updateGlobalZoom } from '../actions/action-creators';
 import config from '../config';
-import lineColors from '../utils/line-colors';
-import {
-  selectExploreMapLayer,
-  exploreMapShowNoVpromms
-} from '../actions/action-creators';
-import MapOptions from '../components/map-options';
-import MapLegend from '../components/map-legend';
-
-var map;
 
 var Explore = React.createClass({
   displayName: 'Explore',
 
   propTypes: {
-    layer: React.PropTypes.string,
-    showNoVpromms: React.PropTypes.bool,
-    dispatch: React.PropTypes.func
+    children: React.PropTypes.object,
+    params: React.PropTypes.object,
+    dispatch: React.PropTypes.func,
+    _updateGlobalZoom: React.PropTypes.func,
+    globZoom: React.PropTypes.object
   },
 
-  componentDidMount: () => {
+  componentDidMount: function () {
+    const makeXYZobj = function () {
+      const xyzObj = map.getCenter();
+      xyzObj['zoom'] = map.getZoom();
+      return xyzObj;
+    };
     mapboxgl.accessToken = config.mbToken;
-
-    map = new mapboxgl.Map({
+    const map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/light-v9',
+      center: [
+        this.props.globZoom.data.x,
+        this.props.globZoom.data.y
+      ],
+      zoom: this.props.globZoom.data.z,
       failIfMajorPerformanceCaveat: false
-    }).fitBounds([
-      [102.1, 7.3],
-      [109.4, 23.4]
-    ], {padding: 15, animate: false});
+    });
+
+    map.on('zoom', () => {
+      this.props._updateGlobalZoom(makeXYZobj());
+    });
+
+    map.on('move', () => {
+      this.props._updateGlobalZoom(makeXYZobj());
+    });
 
     map.on('load', () => {
+      this.props._updateGlobalZoom(makeXYZobj());
       // Load all roads with VPRoMMS values, and color by IRI
       map.addLayer({
         id: 'conflated',
@@ -46,34 +54,22 @@ var Explore = React.createClass({
           url: 'mapbox://openroads.vietnam-conflated'
         },
         'source-layer': 'conflated',
-        paint: { 'line-width': 4 },
-        layout: { 'line-cap': 'round' }
-      }).setPaintProperty(
-        'conflated',
-        'line-color',
-        lineColors['iri']
-      ).setFilter('conflated', ['has', 'or_vpromms']);
+        paint: {
+          'line-color': {
+            property: 'iri',
+            type: 'exponential',
+            colorSpace: 'lab',
+            stops: [
+              [2, '#8CCA1B'],
+              [20, '#DA251D']
+            ]
+          },
+          'line-width': 4
+        },
+        'line-cap': 'round',
+        filter: ['has', 'or_vpromms']
+      });
     });
-  },
-
-  handleLayerChange: function (e) {
-    const property = e.target.value;
-    this.props.dispatch(selectExploreMapLayer(property));
-    map.setPaintProperty(
-      'conflated',
-      'line-color',
-      lineColors[property]
-    );
-  },
-
-  handleShowNoVpromms: function (e) {
-    const show = e.target.checked;
-    this.props.dispatch(exploreMapShowNoVpromms(show));
-    if (show) {
-      map.setFilter('conflated', null);
-    } else {
-      map.setFilter('conflated', ['has', 'or_vpromms']);
-    }
   },
 
   render: function () {
@@ -81,14 +77,28 @@ var Explore = React.createClass({
       <div className='map-container'>
         <div id='map'></div>
 
-        <MapOptions
-          handleLayerChange={ this.handleLayerChange }
-          handleShowNoVpromms={ this.handleShowNoVpromms }
-        />
+        <div className='map-options'>
+          <div className='input-group'>
+            <input type='checkbox' id='show-no-vpromms' className='map-options-checkbox' />
+            <label htmlFor='show-no-vpromms' className='map-options-label'>Show roads without VPRoMMS ID (these will have no properties)</label>
+          </div>
 
-        <MapLegend
-          layer={this.props.layer}
-        />
+          <div className='input-group'>
+            <p className='map-options-label'>Select visualized variable</p>
+            <select>
+              <option value='iri'>IRI</option>
+              <option value='or_width'>Width</option>
+              <option value='or_condition'>Condition</option>
+              <option value='or_surface'>Surface</option>
+            </select>
+          </div>
+        </div>
+
+        <div className='map-legend'>
+          <div className='map-legend-scale'></div>
+          <p className='map-legend-label'>Best</p>
+          <p className='map-legend-label'>Worst</p>
+        </div>
       </div>
     );
   }
@@ -96,7 +106,14 @@ var Explore = React.createClass({
 
 function selector (state) {
   return {
-    layer: state.exploreMap.layer
+    globZoom: state.globZoom
   };
 }
-module.exports = connect(selector)(Explore);
+
+function dispatcher (dispatch) {
+  return {
+    _updateGlobalZoom: (xyzObj) => dispatch(updateGlobalZoom(xyzObj))
+  };
+}
+
+module.exports = connect(selector, dispatcher)(Explore);
