@@ -302,6 +302,53 @@ const VProMMSids = function (state = VProMMSidsDefaultState, action) {
   return state;
 };
 
+const globZoomDefaultState = {
+  fetching: false,
+  fetched: false,
+  data: {
+    z: 6,
+    x: 105.73,
+    y: 20.029232336299856
+  }
+};
+const globZoom = function (state = globZoomDefaultState, action) {
+  switch (action.type) {
+    case actions.REQUEST_GLOB_ZOOM:
+      state = _.cloneDeep(state);
+      state.error = null;
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_GLOB_ZOOM:
+      state = _.cloneDeep(state);
+      if (action.error) {
+        state.error = action.error;
+      } else {
+        state.data = action.json;
+      }
+      state.fetching = false;
+      state.fetched = false;
+      break;
+  }
+  return state;
+};
+
+const exploreMapDefaultState = {
+  layer: 'iri',
+  showNoVpromms: false
+};
+const exploreMap = function (state = exploreMapDefaultState, action) {
+  const newState = _.cloneDeep(state);
+  switch (action.type) {
+    case actions.SELECT_EXPLORE_MAP_LAYER:
+      newState.layer = action.layer;
+      break;
+    case actions.EXPLORE_MAP_SHOW_NO_VPROMMS:
+      newState.showNoVpromms = action.bool;
+      break;
+  }
+  return newState;
+};
+
 export default combineReducers({
   adminSubregions,
   search,
@@ -312,5 +359,7 @@ export default combineReducers({
   projectsMeta,
   roadNetworkStatus,
   VProMMSids,
+  globZoom,
+  exploreMap,
   routing: routeReducer
 });

@@ -14,6 +14,8 @@ $info-color: #44BAB8;                   // Teal
 // background for titles
 $neutral: #F2F2F2;                      // Gray
 
+$link-color: $secondary-color;
+
 /* ==========================================================================
    Typography
    ========================================================================== */
@@ -40,6 +42,11 @@ $code-font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 $global-radius: 0.25rem;
 $semi-radius: $global-radius/2;
 $global-rounded: 60rem;
+
+// Future-proof
+
+$base-border-radius: 0.25rem; // to replace $global-radius
+$full-border-radius: 100vh; // to replace $global-rounded
 
 /* Shadowing */
 
@@ -73,3 +80,8 @@ $screen: "only screen";
 /* Paddings */
 
 $global-padding: 1rem;
+
+
+/* Spacing */
+
+$global-spacing: 1rem;

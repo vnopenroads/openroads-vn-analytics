@@ -136,23 +136,30 @@
           }
         }
       }
+
       .description {
         width: 100%;
         max-width: 40rem;
         margin: 0 auto 2rem auto;
       }
+
       .bttn-explore {
         @extend .bttn, .bttn-l;
         text-decoration: none;
-        // Specific variation outline:
         box-shadow: 0 0 0 2px $secondary-color;
         border-radius: 0;
         width: 12rem;
+        border-radius: $global-radius;
+        margin: 0 1rem;
+        transition: all 0.24s ease 0s;
+
+        &:hover,
         &:active {
-          box-shadow: 0 0 0 2px $secondary-color;
+          @extend .antialiased;
+          color: #fff;
+          background: $link-color;
+          opacity: 1;
         }
-        margin-left: 1rem;
-        margin-right: 1rem;
       }
     }
   }

@@ -199,28 +199,26 @@
 *[data-title]:hover,
 *[data-title].zc-hover {
   &:after {
+    @extend .antialiased, .truncated;
     content: attr(data-title);
     position: absolute;
     left: 50%;
-    top: 100%;
+    bottom: 100%;
     z-index: 1400;
     width: auto;
-    max-width: 12rem;
+    max-width: 14rem;
     padding: 0 0.5rem;
     background: rgba($base-color, 0.8);
     border-radius: $global-radius;
-    margin-top: 0.25rem;
-    @include transform(translate(-50%, 0));
+    margin-bottom: 0.25rem;
+    transform: translate(-50%, 0);
     font-size: 0.75rem;
     line-height: 1.5rem;
     color: #fff;
-    @extend .truncated;
     text-align: center;
-    @extend .antialiased;
     font-family: $base-font-family;
     font-weight: $base-font-regular;
     font-style: $base-font-style;
-    text-transform: uppercase;
   }
 }
 

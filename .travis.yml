@@ -14,21 +14,22 @@ before_script:
 script:
 - yarn run build
 deploy:
-- provider: s3
-  access_key_id: AKIAISZNARCIKVQUX4CQ
-  secret_access_key:
-    secure: Y0pBhj/wC1O7p1eOKqRpiF1+fGB6HxPdDKz5ReBtiPp8BTsGgrEdoSiwR+KgA38ziiPmcrIqvwsXhJiBnjdzgfXfz/YfF/0pdJ29GNATgSOTf00HS3w6OLqn26Am1IsxLq7GA/gCPLFTgyWtHdgIS2yOacaHF24YlNSFhi68JQIxYrn7G6hZJSx/rUT+y7qH70Esq7z5/kzThzyceh6t/g53YZwWuHaWklkQ3r9l3WUKpWPbSjj0WsYHAjmyPpzOtKHIOmokIRPsvjhwE5O0RWZBnxovL8jCEc10I2LxTkED1snYO2ff8pirxyQWANGuF21bdCWrmkMRmqq3zC0tz2o/tumrl2u9efr3XfmJXycw+udqvNfmaQP4Lb31dlFl5EsWAusDUNZPUR85OY+wg+9mTVBvt9LHveq5YLOKqYBXZYzZXBRcDNocxUnaLQ/yPDyb36P7EWTSVjND5q0HKi/MXYdjyfMyaNDkORf3+Wsn96o8WUBJZSS5KjhWYEfh0X+bmfyCOuxJ4cxu2ZaeJqmkQTrCBiE/Ex48D7yBWEvGFoGCaA2H34TvEKYvZ+Ze8gmgvcnIdQQD9CGNEse3+yeyd5qp+q8niNug0Gk3j34lcXCDkAu13vh523YLa20T9MQk2gQ3VIsXVthjGwhS6QMddRNZQuh2caB/syjxW5g=
-  bucket: openroads-vn-staging
-  local-dir: dist
-  acl: public_read
-  skip_cleanup: true
-  region: us-east-1
-  on:
-    repo: orma/openroads-vn-analytics
-    branch: ${STAGING_BRANCH}
-- provider: script
-  skip_cleanup: true
-  script: .build_scripts/deploy.sh
-  on:
-    repo: orma/openroads-vn-analytics
-    branch: ${PRODUCTION_BRANCH}
+  matrix:
+  - provider: s3
+    access_key_id: AKIAISZNARCIKVQUX4CQ
+    secret_access_key:
+      secure: Y0pBhj/wC1O7p1eOKqRpiF1+fGB6HxPdDKz5ReBtiPp8BTsGgrEdoSiwR+KgA38ziiPmcrIqvwsXhJiBnjdzgfXfz/YfF/0pdJ29GNATgSOTf00HS3w6OLqn26Am1IsxLq7GA/gCPLFTgyWtHdgIS2yOacaHF24YlNSFhi68JQIxYrn7G6hZJSx/rUT+y7qH70Esq7z5/kzThzyceh6t/g53YZwWuHaWklkQ3r9l3WUKpWPbSjj0WsYHAjmyPpzOtKHIOmokIRPsvjhwE5O0RWZBnxovL8jCEc10I2LxTkED1snYO2ff8pirxyQWANGuF21bdCWrmkMRmqq3zC0tz2o/tumrl2u9efr3XfmJXycw+udqvNfmaQP4Lb31dlFl5EsWAusDUNZPUR85OY+wg+9mTVBvt9LHveq5YLOKqYBXZYzZXBRcDNocxUnaLQ/yPDyb36P7EWTSVjND5q0HKi/MXYdjyfMyaNDkORf3+Wsn96o8WUBJZSS5KjhWYEfh0X+bmfyCOuxJ4cxu2ZaeJqmkQTrCBiE/Ex48D7yBWEvGFoGCaA2H34TvEKYvZ+Ze8gmgvcnIdQQD9CGNEse3+yeyd5qp+q8niNug0Gk3j34lcXCDkAu13vh523YLa20T9MQk2gQ3VIsXVthjGwhS6QMddRNZQuh2caB/syjxW5g=
+    bucket: openroads-vn-staging
+    local-dir: dist
+    acl: public_read
+    skip_cleanup: true
+    region: us-east-1
+    on:
+      repo: orma/openroads-vn-analytics
+      branch: ${STAGING_BRANCH}
+  - provider: script
+    skip_cleanup: true
+    script: .build_scripts/deploy.sh
+    on:
+      repo: orma/openroads-vn-analytics
+      branch: ${PRODUCTION_BRANCH}

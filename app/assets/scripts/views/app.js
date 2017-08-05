@@ -23,9 +23,14 @@ var App = React.createClass({
       case undefined:
         klass = 'page--landing';
         break;
+      case 'main':
+        klass = 'analytics';
+        break;
+      case ':aaId':
+        klass = 'analytics-aa';
+        break;
       default:
         klass = r.split('/')[0];
-        break;
     }
     return (
       <div className={klass}>

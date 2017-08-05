@@ -20,6 +20,7 @@ import App from './views/app';
 import Home from './views/home';
 import Editor from './views/editor';
 import Explore from './views/explore';
+import Analytics from './views/analytics';
 import AnalyticsIndex from './views/analytics-index';
 import AnalyticsAA from './views/analytics-admin-area';
 
@@ -52,8 +53,10 @@ render((
         <Route path='editor' component={Editor} />
         <Route path='editor/*' component={Editor} />
         <Route path='explore' component={Explore} />
-        <Route path='analytics' component={AnalyticsIndex} />
-        <Route path='analytics/:aaId' component={AnalyticsAA} />
+        <Route path='analytics' component={Analytics}>
+          <IndexRoute path='main' component={AnalyticsIndex} />
+          <Route path=':aaId' component={AnalyticsAA} />
+        </Route>
         <IndexRoute component={Home}/>
       </Route>
       <Route path='*' component={UhOh}/>
