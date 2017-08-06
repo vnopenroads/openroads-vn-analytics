@@ -76,7 +76,7 @@ var Explore = React.createClass({
     return (
       <div className='map-container'>
         <div id='map'></div>
-
+        {/*
         <div className='map-options'>
           <div className='input-group'>
             <input type='checkbox' id='show-no-vpromms' className='map-options-checkbox' />
@@ -99,6 +99,7 @@ var Explore = React.createClass({
           <p className='map-legend-label'>Best</p>
           <p className='map-legend-label'>Worst</p>
         </div>
+        */}
       </div>
     );
   }
