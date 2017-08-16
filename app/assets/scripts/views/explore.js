@@ -31,10 +31,12 @@ var Explore = React.createClass({
       container: 'map',
       style: 'mapbox://styles/mapbox/light-v9',
       failIfMajorPerformanceCaveat: false
-    }).fitBounds([
-      [102.1, 7.3],
-      [109.4, 23.4]
-    ], {padding: 15, animate: false});
+    }).fitBounds(
+      [
+        [102.1, 7.3],
+        [109.4, 23.4]
+      ], {padding: 15, animate: false}
+    ).addControl(new mapboxgl.NavigationControl(), 'bottom-left');
 
     map.on('load', () => {
       // Load all roads with VPRoMMS values, and color by IRI
