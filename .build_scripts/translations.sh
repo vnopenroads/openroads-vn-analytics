@@ -2,31 +2,34 @@
 
 # create then source a virtual environemnt
 
-echo "---\nSetting up python environment for transifex client\n---\n"
+echo "---Setting up python environment for transifex client---"
 
 pip install virtualenv
 virtualenv ~/env
 source ~/env/bin/activate
 
 # download transifex client
-echo "\n---\nDownloading Transifex Client\n---\n"
+echo ""
+echo "---Downloading Transifex Client\n---"
 
 pip install transifex-client
 
 # generate .transifexrc
-echo "\n---\nLinking repo with Transifex Project\n---\n"
+echo ""
+echo "---Linking repo with Transifex Project---"
 
-sudo echo $'[https://www.transifex.com]\nhostname = https://www.transifex.com\nusername = '"$TRANSIFEX_USER"$'\npassword = '"$TRANSIFEX_PASSWORD"$'\ntoken = \n' > ~/.transifexrc
+echo $'[https://www.transifex.com]\nhostname = https://www.transifex.com\nusername = '"$TRANSIFEX_USER"$'\npassword = '"$TRANSIFEX_PASSWORD"$'\ntoken = \n' > ~/.transifexrc
 
 echo "repo linked to project!"
 
 # push any new changes from translation source
-echo "\n---\nPushing any changes to translation source file\n---\n"
+echo ""
+echo "---Pushing any changes to translation source file---"
 
 tx push -s
 
 # map most recent translations from transifex to translation files
-echo "\n---\nPulling any new translations from into project\n---\n"
+echo ""
+echo "---Pulling any new translations from into project---"
 
 tx pull
-
