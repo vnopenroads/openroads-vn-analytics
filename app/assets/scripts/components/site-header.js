@@ -2,8 +2,8 @@
 import React from 'react';
 import _ from 'lodash';
 import Search from './search';
+import { getLanguage } from '../utils/i18n';
 import { Link } from 'react-router';
-
 var SiteHeader = React.createClass({
   displayName: 'SiteHeader',
 
@@ -84,13 +84,12 @@ var SiteHeader = React.createClass({
             <h2 className='toggle-menu'><a href='#global-menu' title='Show menu' ref='toggleMenu'><span>Menu</span></a></h2>
             <div className='menu-wrapper'>
               <ul className='global-menu' id='global-menu'>
-                <li><Link to='/analytics/' className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}><span>Analytics</span></Link></li>
-                <li><Link to='/explore' className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}><span>Explore</span></Link></li>
-                <li><Link to='/editor' className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}><span>Editor</span></Link></li>
+                <li><Link to={`/${getLanguage()}/analytics/`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}><span>Analytics</span></Link></li>
+                <li><Link to={`/${getLanguage()}/explore`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}><span>Explore</span></Link></li>
+                <li><Link to={`/${getLanguage()}/editor`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}><span>Editor</span></Link></li>
               </ul>
             </div>
           </nav>
-
         </div>
       </header>
     );

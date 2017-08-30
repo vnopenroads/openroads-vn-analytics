@@ -18,8 +18,5 @@
     "Select visualized variable": "Select visualized variable",
     "Width": "Width",
     "Condition": "Condition",
-    "Surface": "Surface",
-    "Height": "Height",
-    "Length": "Length",
-    "IRI": "IRI"
+    "Surface": "Surface"
 }

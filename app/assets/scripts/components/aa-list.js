@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import classnames from 'classnames';
+import { getLanguage } from '../utils/i18n';
 import ID from '../utils/id';
 
 var AAList = React.createClass({
@@ -39,7 +40,7 @@ var AAList = React.createClass({
 
     return (
       <tr key={`adminArea${i}`}>
-        <td colSpan='2'><Link to={`/analytics/${o.id}`}>{o.name}</Link>
+        <td colSpan='2'><Link to={`${getLanguage()}/analytics/${o.id}`}>{o.name}</Link>
           <ul className={classnames('progress-bar progress-bar--inline', colorCoding)}><li style={{width: `${val}`}}><span className='value'>{val}</span></li></ul>
         </td>
       </tr>
@@ -90,8 +91,8 @@ var AAList = React.createClass({
     }
 
     return this.props.adminAreaId
-      ? <Link to={`/analytics/${this.props.adminAreaId}/admin-areas`} className='bttn-view-more'>View all {this.ID.getChildDisplayType(true)}</Link>
-      : <Link to='/analytics/admin-areas' className='bttn-view-more'>View all {this.ID.getChildDisplayType(true)}</Link>;
+      ? <Link to={`${getLanguage()}/analytics/${this.props.adminAreaId}/admin-areas`} className='bttn-view-more'>View all {this.ID.getChildDisplayType(true)}</Link>
+      : <Link to={`${getLanguage()}/analytics/admin-areas`} className='bttn-view-more'>View all {this.ID.getChildDisplayType(true)}</Link>;
   },
 
   renderLoadingPlaceholder: function () {

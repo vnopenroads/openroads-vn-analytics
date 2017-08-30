@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { Link } from 'react-router';
+import { getLanguage } from '../utils/i18n';
 import _ from 'lodash';
 import classnames from 'classnames';
 
@@ -98,7 +99,7 @@ const AATable = React.createClass({
           }
           return (
             <tr key={`province-${province.id}`} className={classnames('collecticon-sort-asc', {'alt': i % 2})}>
-              <td><Link to={`/analytics/${province.id}`}>{province.name}</Link></td>
+              <td><Link to={`${getLanguage()}/analytics/${province.id}`}>{province.name}</Link></td>
               <td>{province.done}</td>
               <td>{province.total}</td>
               <td>{percText}</td>

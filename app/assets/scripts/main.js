@@ -5,13 +5,14 @@ import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, Route, IndexRoute, hashHistory } from 'react-router';
+import { Router, Route, Redirect, IndexRoute, hashHistory } from 'react-router';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { syncHistory } from 'react-router-redux';
 import { createLogger } from 'redux-logger';
 import reducer from './reducers/reducer';
 import config from './config';
+import { isValidLanguage, setLanguage } from './utils/i18n';
 
 L.mapbox.accessToken = config.mbToken;
 
@@ -43,13 +44,23 @@ const finalCreateStore = compose(
 
 const store = finalCreateStore(reducer);
 
+// check if link target is one of the languages in the i18n file
+// if it is, set that as the language
+function validateLanguage (nextState, replace) {
+  if (isValidLanguage(nextState.params.lang)) {
+    setLanguage(nextState.params.lang)
+  } else {
+    replace('/en/404')
+  }
+}
+
 // Required for replaying actions from devtools to work
 // reduxRouterMiddleware.listenForReplays(store);
 
 render((
   <Provider store={store}>
     <Router history={hashHistory}>
-      <Route path='/' component={App}>
+      <Route path='/:lang' component={App} onEnter={validateLanguage}>
         <Route path='editor' component={Editor} />
         <Route path='editor/*' component={Editor} />
         <Route path='explore' component={Explore} />
@@ -58,8 +69,9 @@ render((
           <Route path=':aaId' component={AnalyticsAA} />
         </Route>
         <IndexRoute component={Home}/>
+        <Route path='*' component={UhOh}/>
       </Route>
-      <Route path='*' component={UhOh}/>
+      <Redirect from='/' to='/en' />
     </Router>
   </Provider>
 ), document.querySelector('.site-canvas'));
