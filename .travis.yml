@@ -8,9 +8,11 @@ env:
 before_install:
 - chmod +x ./.build_scripts/deploy.sh
 - chmod +x ./.build_scripts/lint.sh
+- chmod +x ./.build_scripts/translations.sh
 before_script:
 - ./.build_scripts/lint.sh
 - yarn test
+- ./.build_scripts/translations.sh
 script:
 - yarn run build
 deploy:
