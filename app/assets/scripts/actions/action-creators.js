@@ -411,3 +411,14 @@ export function exploreMapShowNoVpromms (bool) {
     bool
   };
 }
+
+// ////////////////////////////////////////////////////////////////
+//                       Set Global Zoom                         //
+// ////////////////////////////////////////////////////////////////
+
+export function setGlobalZoom (json) {
+  return {
+    type: actions.SET_GLOBAL_ZOOM,
+    json: json
+  }
+}

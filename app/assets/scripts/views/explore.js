@@ -8,7 +8,8 @@ import config from '../config';
 import lineColors from '../utils/line-colors';
 import {
   selectExploreMapLayer,
-  exploreMapShowNoVpromms
+  exploreMapShowNoVpromms,
+  setGlobalZoom
 } from '../actions/action-creators';
 import MapOptions from '../components/map-options';
 import MapLegend from '../components/map-legend';
@@ -24,19 +25,15 @@ var Explore = React.createClass({
     dispatch: React.PropTypes.func
   },
 
-  componentDidMount: () => {
+  componentDidMount: function () {
     mapboxgl.accessToken = config.mbToken;
-
     map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/light-v9',
-      failIfMajorPerformanceCaveat: false
-    }).fitBounds(
-      [
-        [102.1, 7.3],
-        [109.4, 23.4]
-      ], {padding: 15, animate: false}
-    ).addControl(new mapboxgl.NavigationControl(), 'bottom-left');
+      failIfMajorPerformanceCaveat: false,
+      center: [this.props.globX, this.props.globY],
+      zoom: this.props.globZ
+    }).addControl(new mapboxgl.NavigationControl(), 'bottom-left');
 
     map.on('load', () => {
       // Load all roads with VPRoMMS values, and color by IRI
@@ -98,7 +95,17 @@ var Explore = React.createClass({
 
 function selector (state) {
   return {
-    layer: state.exploreMap.layer
+    layer: state.exploreMap.layer,
+    globX: state.globZoom.x,
+    globY: state.globZoom.y,
+    globZ: state.globZoom.z
   };
 }
+
+function dispatcher (dispatch) {
+  return {
+    _setGlobZoom: function (xyzObj) {dispatch(setGlobalZoom(xyzObj))}
+  }
+}
+
 module.exports = connect(selector)(Explore);

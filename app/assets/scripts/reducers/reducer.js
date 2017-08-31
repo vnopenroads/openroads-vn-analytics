@@ -319,6 +319,22 @@ const exploreMap = function (state = exploreMapDefaultState, action) {
   return newState;
 };
 
+const globZoomDefault = {
+  x: 105.73,
+  y: 20.029232336299856,
+  z: 6
+}
+
+const globZoom = function (state = globZoomDefault, action) {
+  switch (action.type) {
+    case actions.SET_GLOBAL_ZOOM:
+      state = _.cloneDeep(state)
+      state.globZoom = action.json
+      break;
+  }
+  return state;
+}
+
 export default combineReducers({
   adminSubregions,
   search,
@@ -330,5 +346,6 @@ export default combineReducers({
   roadNetworkStatus,
   VProMMSids,
   exploreMap,
-  routing: routeReducer
+  routing: routeReducer,
+  globZoom
 });
