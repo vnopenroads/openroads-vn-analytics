@@ -5,14 +5,27 @@
         @extend .visually-hidden;
       }
 
-      &__nav {
+      &__title, &__nav, &__lang {
         float: none;
-        display: block;
+        display: inline-block;
         margin: 0 auto;
-        overflow: visible;
+      }
 
+      &__control {
+        text-align: center;
+      }
+
+      &__lang {
+        height: inherit;
+        margin-left: .5rem;
+        .drop-toggle {
+          text-decoration: none;
+        }
+      }
+
+      &__nav {
         .menu-wrapper {
-          overflow: visible;
+          overflow: hidden;
           visibility: visible;
           opacity: 1;
           max-height: 600rem;

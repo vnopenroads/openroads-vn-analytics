@@ -8,11 +8,11 @@ import _ from 'lodash';
 import classnames from 'classnames';
 
 const displayHeader = [
-  {key: 'name', value: 'Province'},
-  {key: 'done', value: 'Done'},
-  {key: 'total', value: 'Total'},
+  {key: 'name', value: t('Province')},
+  {key: 'done', value: t('Done')},
+  {key: 'total', value: t('Total')},
   {key: 'percentageComplete', value: '% ' + t('Complete')},
-  {key: 'progress', value: 'Progress'}
+  {key: 'progress', value: t('Progress')}
 ];
 
 const AATable = React.createClass({

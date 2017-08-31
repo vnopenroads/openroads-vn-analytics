@@ -193,11 +193,6 @@ a:active{
       line-height: 1.25rem;
       padding: 0.325rem 0;
 
-      * {
-        vertical-align: top;
-        display: inline-block;
-      }
-
       img {
         width: auto;
         height: 1.25rem;
@@ -205,6 +200,10 @@ a:active{
 
       span {
         @extend .visually-hidden;
+      }
+      strong {
+        line-height: 1.25rem;
+        margin-top: 0;
       }
     }
 
@@ -225,13 +224,13 @@ a:active{
 
     /* Main navigation */
     &__nav {
-      overflow: visible;
       float: left;
       clear: both;
       text-align: center;
       margin-top: 1rem;
+      margin: auto 0;
       white-space: nowrap;
-
+      display: block;
       &.show-menu,
       &.show-search {
         margin-top: 1rem;
@@ -370,18 +369,14 @@ a:active{
         max-height: 600rem;
       }
       // ^^ Search.
+      .drop {
+        display: inline-block;
+        a {
+          text-decoration: none;
+        }
+      }
     }
     /* END Main navigation */
-
-    /* Language dropdown */
-    &__lang {
-      float: left;
-      clear: both;
-      text-align: center;
-      display: inline-block;
-      white-space: nowrap;
-    }
-    /* End Language dropdown */
 
     &__search {
       // @include col(5/12);

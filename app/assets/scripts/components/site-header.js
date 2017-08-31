@@ -2,7 +2,7 @@
 import React from 'react';
 import _ from 'lodash';
 import Search from './search';
-import Dropdown from './dropdown';
+import Langdrop from './langdrop';
 import c from 'classnames';
 import { t, getAvailableLanguages, getLanguage } from '../utils/i18n';
 import { Link } from 'react-router';
@@ -66,72 +66,69 @@ var SiteHeader = React.createClass({
           <div className='site__headline'>
             <h1 className='site__title'><Link to={`/${getLanguage()}`}><img src='assets/graphics/layout/openroads-vn-logo-hor-neg.svg' width='736' height='96' alt='OpenRoads Vietnam logo' /><span>OpenRoads</span> <strong>Vietnam</strong></Link></h1>
           </div>
-          <nav className='site__nav' role='navigation' ref='nav'>
-            <h2 className='toggle-search'><a href='#global-search' title='Show search' ref='toggleSearch'><span>{t('Search')}</span></a></h2>
-            <div className='search-wrapper'>
-              <div className='site__search'>
-                <Search
-                  fetchSearchResults={this.props.fetchSearchResults}
-                  cleanSearchResults={this.props.cleanSearchResults}
-                  onResultClick={this.closeSearch}
-                  results={this.props.search.results}
-                  query={this.props.search.query}
-                  isEditor={last === 'editor/*' || last === 'editor'}
-                  fetching={this.props.search.fetching}
-                  searching={this.props.search.searching} />
+            <nav className='site__nav' role='navigation' ref='nav'>
+              <h2 className='toggle-search'><a href='#global-search' title='Show search' ref='toggleSearch'><span>{t('Search')}</span></a></h2>
+              <div className='search-wrapper'>
+                <div className='site__search'>
+                  <Search
+                    fetchSearchResults={this.props.fetchSearchResults}
+                    cleanSearchResults={this.props.cleanSearchResults}
+                    onResultClick={this.closeSearch}
+                    results={this.props.search.results}
+                    query={this.props.search.query}
+                    isEditor={last === 'editor/*' || last === 'editor'}
+                    fetching={this.props.search.fetching}
+                    searching={this.props.search.searching} />
+                </div>
               </div>
-            </div>
-            <h2 className='toggle-menu'><a href='#global-menu' title='Show menu' ref='toggleMenu'><span>Menu</span></a></h2>
-            <div className='menu-wrapper'>
-              <ul className='global-menu' id='global-menu'>
-                <li>
-                  <Link to={`/${getLanguage()}/analytics`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
-                    <span>{t('Analytics')}</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to={`/${getLanguage()}/explore`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
-                    <span>{t('Explore')}</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to={`/${getLanguage()}/editor`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
-                    <span>{t('Editor')}</span>
-                  </Link>
-                </li>
-                <li>
-                  <Dropdown
-                    id='lang-switcher'
-                    triggerClassName='drop-toggle'
-                    className='global-menu-item'
-                    triggerActiveClassName='active'
-                    triggerText={t('Language')}
-                    triggerElement='a'
-                    direction='down'
-                    alignment='left'>
-                    <ul className='drop-menu drop-menu--select' role='menu'>
-                    {
-                      getAvailableLanguages().map(l => {
-                        let cl = c('drop__menu-item', {
-                          'drop-menu-item--active': l.key === getLanguage()
-                        });
-                        let url = this.props.pathname.replace(`/${getLanguage()}`, `/${l.key}`);
-                        return (
-                          <li key={l.key}>
-                            <Link to={url}
-                              title={t('Select language')}
-                              className={cl} data-hook='dropdown:close'>
-                              {l.name}
-                            </Link>
-                          </li>
-                        );
-                      })
-                      }
-                    </ul>
-                  </Dropdown>
-                </li>
-              </ul>
-            </div>
+              <h2 className='toggle-menu'><a href='#global-menu' title='Show menu' ref='toggleMenu'><span>Menu</span></a></h2>
+              <div className='menu-wrapper'>
+                <ul className='global-menu' id='global-menu'>
+                  <li>
+                    <Link to={`/${getLanguage()}/analytics`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
+                      <span>{t('Analytics')}</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to={`/${getLanguage()}/explore`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
+                      <span>{t('Explore')}</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to={`/${getLanguage()}/editor`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
+                      <span>{t('Editor')}</span>
+                    </Link>
+                  </li>
+                </ul>
+                </div>
+                <Langdrop
+                  id='lang-switcher'
+                  triggerClassName='drop-toggle site__lang'
+                  className='global-menu-item'
+                  triggerText={t('Language')}
+                  triggerElement='a'
+                  direction='down'
+                  alignment='left'>
+                  <ul className='drop-menu drop-menu--select' role='menu'>
+                  {
+                    getAvailableLanguages().map(l => {
+                      let cl = c('drop-menu-item', {
+                        'drop-menu-item--active': l.key === getLanguage()
+                      });
+                      let url = this.props.pathname.replace(`/${getLanguage()}`, `/${l.key}`);
+                      return (
+                        <li key={l.key}>
+                          <Link to={url}
+                            title={t('Select language')}
+                            className={cl} data-hook='dropdown:close'>
+                            {l.name}
+                          </Link>
+                        </li>
+                      );
+                    })
+                    }
+                  </ul>
+              </Langdrop>
           </nav>
         </div>
       </header>
