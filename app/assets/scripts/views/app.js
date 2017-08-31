@@ -13,7 +13,8 @@ var App = React.createClass({
     _cleanSearchResults: React.PropTypes.func,
     search: React.PropTypes.object,
     routes: React.PropTypes.array,
-    children: React.PropTypes.object
+    children: React.PropTypes.object,
+    location: React.PropTypes.object
   },
 
   render: function () {
@@ -35,6 +36,7 @@ var App = React.createClass({
     return (
       <div className={klass}>
         <SiteHeader
+          pathname={this.props.location.pathname}
           fetchSearchResults={this.props._fetchSearchResults}
           cleanSearchResults={this.props._cleanSearchResults}
           routes={this.props.routes}

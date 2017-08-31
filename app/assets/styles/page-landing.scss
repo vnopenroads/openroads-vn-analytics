@@ -9,10 +9,10 @@
         float: none;
         display: block;
         margin: 0 auto;
-        overflow: hidden;
+        overflow: visible;
 
         .menu-wrapper {
-          overflow: auto;
+          overflow: visible;
           visibility: visible;
           opacity: 1;
           max-height: 600rem;
@@ -27,7 +27,9 @@
             }
           }
         }
-
+        .drop > a {
+          text-decoration: none;
+        }
         .toggle-menu,
         .toggle-search,
         .search-wrapper {
@@ -98,7 +100,7 @@
 
     &__description--landing {
       width: 100%;
-      
+
       padding: 0 $global-padding;
       margin: 0 auto;
       font-weight: $base-font-bold;

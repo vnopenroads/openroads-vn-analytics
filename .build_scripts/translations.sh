@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-# create then source a virtual environemnt
-
-echo "---Setting up python environment for transifex client---"
-
-pip install virtualenv
-virtualenv ~/env
-source ~/env/bin/activate
-
 # download transifex client
 echo ""
 echo "---Downloading Transifex Client\n---"

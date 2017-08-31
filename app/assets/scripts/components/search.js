@@ -4,6 +4,7 @@ import _ from 'lodash';
 import classNames from 'classnames';
 import { Link } from 'react-router';
 import ID from '../utils/id';
+import { t } from '../utils/i18n';
 import { isDescendent } from '../utils/dom';
 
 var Search = React.createClass({
@@ -119,7 +120,7 @@ var Search = React.createClass({
           <div className='input-group'>
             <input type='search' className='form-control input-search' placeholder='Search administrative area' ref='searchBox' onChange={_.debounce(this.onSearchQueryChange, 300)} />
             <span className='input-group-bttn'>
-              <a href='#' className='bttn-search' onClick={this.searchClick}><span>Search</span></a>
+              <a href='#' className='bttn-search' onClick={this.searchClick}><span>{t('Search')}</span></a>
             </span>
           </div>
           <div className='drop-content search-results'>

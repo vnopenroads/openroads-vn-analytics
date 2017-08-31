@@ -1,5 +1,6 @@
 import React from 'react';
 import lineColors from '../utils/line-colors';
+import { t } from '../utils/i18n';
 
 const MapLegend = React.createClass({
   displayName: 'MapLegend',
@@ -38,7 +39,7 @@ const MapLegend = React.createClass({
             <p className='map-legend-label'>{ worstColorLabel }</p>
           </div>
           : <div>
-              <p className='empty'>No available data.</p>
+              <p className='empty'>{t('No available data.')}</p>
             {/*
             {stops.map(s =>
               <div id={s[0]}>

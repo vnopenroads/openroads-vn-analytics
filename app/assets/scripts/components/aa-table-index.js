@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Link } from 'react-router';
-import { getLanguage } from '../utils/i18n';
+import { t, getLanguage } from '../utils/i18n';
 import _ from 'lodash';
 import classnames from 'classnames';
 
@@ -11,7 +11,7 @@ const displayHeader = [
   {key: 'name', value: 'Province'},
   {key: 'done', value: 'Done'},
   {key: 'total', value: 'Total'},
-  {key: 'percentageComplete', value: '% Complete'},
+  {key: 'percentageComplete', value: '% ' + t('Complete')},
   {key: 'progress', value: 'Progress'}
 ];
 

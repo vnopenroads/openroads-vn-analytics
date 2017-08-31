@@ -1,6 +1,7 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
+import { t } from '../utils/i18n';
 
 import AATable from '../components/aa-table-vpromms';
 
@@ -37,8 +38,8 @@ var AnalyticsAA = React.createClass({
     return (
     <div>
       <div className="aa-header">
-        <h1>{data.provinceName} Province</h1>
-        { completion ? <a className='bttn-s bttn-road-network' href={config.provinceDumpBaseUrl + provinceId + '.geojson'}>Download Roads</a> : '' }
+        <h1>{data.provinceName} {t('Province')}</h1>
+        { completion ? <a className='bttn-s bttn-road-network' href={config.provinceDumpBaseUrl + provinceId + '.geojson'}>{t('Download Roads')}</a> : '' }
       </div>
       <div className='aa-main__status'>
         <h2><strong>{completionMainText}</strong>{completionTailText}</h2>

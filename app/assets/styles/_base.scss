@@ -225,6 +225,7 @@ a:active{
 
     /* Main navigation */
     &__nav {
+      overflow: visible;
       float: left;
       clear: both;
       text-align: center;
@@ -276,8 +277,6 @@ a:active{
       .menu-wrapper {
         display: inline-block;
         vertical-align: top;
-        overflow: hidden;
-        visibility: hidden;
         opacity: 0;
         max-height: 0;
         transition: opacity 0.16s ease 0s, max-height 0.16s ease 0s, visibility 0.16s linear 0s;
@@ -285,7 +284,7 @@ a:active{
 
       .global-menu {
         @extend .clearfix;
-        overflow: hidden;
+        * {overflow: visible}
         list-style: none;
         margin: 0;
         padding: 0;
@@ -374,7 +373,15 @@ a:active{
     }
     /* END Main navigation */
 
-
+    /* Language dropdown */
+    &__lang {
+      float: left;
+      clear: both;
+      text-align: center;
+      display: inline-block;
+      white-space: nowrap;
+    }
+    /* End Language dropdown */
 
     &__search {
       // @include col(5/12);
@@ -403,7 +410,6 @@ a:active{
         max-width: 25rem;
 
         .drop-menu-sectitle {
-          overflow: hidden;
           strong {
             @extend .truncated;
             max-width: 22rem;
