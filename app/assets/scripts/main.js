@@ -48,9 +48,9 @@ const store = finalCreateStore(reducer);
 // if it is, set that as the language
 function validateLanguage (nextState, replace) {
   if (isValidLanguage(nextState.params.lang)) {
-    setLanguage(nextState.params.lang)
+    setLanguage(nextState.params.lang);
   } else {
-    replace('/en/404')
+    replace('/en/404');
   }
 }
 

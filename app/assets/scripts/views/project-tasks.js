@@ -1,12 +1,13 @@
 'use strict';
+
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 import ReactPaginate from 'react-paginate';
+import { t } from '../utils/i18n';
 import { fetchProjectTasks, fetchAdminSubregions, fetchRoadNetworkStatus } from '../actions/action-creators';
 import PageHeader from '../components/page-header';
-import { t } from '../utils/i18n';
 
 var ProjectTasks = React.createClass({
   displayName: 'ProjectTasks',
@@ -84,7 +85,7 @@ var ProjectTasks = React.createClass({
 
   renderBackLink: function () {
     return (
-      <Link to={`/analytics/${this.props.subregions.id}`}>{t('Back to overview')</Link>
+      <Link to={`/analytics/${this.props.subregions.id}`}>{t('Back to overview')}</Link>
     );
   },
 
@@ -103,7 +104,7 @@ var ProjectTasks = React.createClass({
     } else if (data.error) {
       content = <p className='aa-tofixtasks--empty'>{t('Oops... An error occurred.')}</p>;
     } else if (!data.meta.total) {
-      content = <p className='aa-tofixtasks--empty'>{t('Nothing to show.')</p>;
+      content = <p className='aa-tofixtasks--empty'>{t('Nothing to show.')}</p>;
     }
 
     if (content) {
