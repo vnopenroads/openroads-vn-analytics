@@ -64,7 +64,8 @@ var SiteHeader = React.createClass({
       <header className='site-header'>
         <div className='inner'>
           <div className='site__headline'>
-            <h1 className='site__title'><Link to={`/${getLanguage()}`}><img src='assets/graphics/layout/openroads-vn-logo-hor-neg.svg' width='736' height='96' alt='OpenRoads Vietnam logo' /><span>OpenRoads</span> <strong>Vietnam</strong></Link></h1>
+            <h1 className='site__title'><Link to={`/${getLanguage()}`}>
+              <img src='assets/graphics/layout/openroads-vn-logo-hor-neg.svg' width='736' height='96' alt='OpenRoads Vietnam logo' /><span>OpenRoads</span> <strong>Vietnam</strong></Link></h1>
           </div>
             <nav className='site__nav' role='navigation' ref='nav'>
               <h2 className='toggle-search'><a href='#global-search' title='Show search' ref='toggleSearch'><span>{t('Search')}</span></a></h2>

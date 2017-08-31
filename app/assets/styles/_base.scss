@@ -209,7 +209,6 @@ a:active{
 
     &__title {
       margin: 0;
-
       strong {
         display: inline-block;
         font-size: 0.75rem;
@@ -274,6 +273,10 @@ a:active{
       }
 
       .menu-wrapper {
+        overflow: hidden;
+        visibility: visible;
+        opacity: 1;
+        max-height: 600rem;
         display: inline-block;
         vertical-align: top;
         opacity: 0;
@@ -283,7 +286,6 @@ a:active{
 
       .global-menu {
         @extend .clearfix;
-        * {overflow: visible}
         list-style: none;
         margin: 0;
         padding: 0;
@@ -291,7 +293,7 @@ a:active{
         > li {
           margin: 0 ($global-padding / 2) 0 0;
           float: left;
-
+          overflow: hidden;
           &:last-child {
             margin-right: 0;
           }
