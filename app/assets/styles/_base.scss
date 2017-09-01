@@ -283,6 +283,12 @@ a:active{
           margin-left: $global-spacing / 2;
           box-shadow: -1px 0 0 0 rgba(#fff, 0.16);
         }
+
+        .drop-content {
+          left: auto;
+          right: 0;
+          margin-top: $global-spacing / 4;
+        }
       }
 
       .change-lang-button {

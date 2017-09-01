@@ -113,7 +113,7 @@ var SiteHeader = React.createClass({
                 triggerText={t('Language')}
                 triggerElement='a'
                 direction='down'
-                alignment='left'>
+                alignment='right'>
                 <ul className='drop-menu drop-menu--select' role='menu'>
                 {
                   getAvailableLanguages().map(l => {
