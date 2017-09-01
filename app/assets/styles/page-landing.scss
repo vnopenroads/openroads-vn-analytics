@@ -25,13 +25,6 @@
       }
 
       &__nav {
-        .menu-wrapper {
-          overflow: hidden;
-          visibility: visible;
-          opacity: 1;
-          max-height: 600rem;
-        }
-
         .drop > a {
           text-decoration: none;
         }

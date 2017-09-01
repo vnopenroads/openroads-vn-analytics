@@ -9,14 +9,18 @@
 }
 
 .drop-toggle {
+  vertical-align: center;
+
   &.caret {
-    &:after {
-      @extend .collecticons-sm-chevron-down;
+    &::after {
+      @extend %collecticons-sm-chevron-down;
       opacity: 0.32;
       font-size: 1rem;
       margin-left: 0.25rem;
+      line-height: inherit;
     }
   }
+
   &:focus {
     outline: 0;
   }
@@ -34,10 +38,11 @@
   opacity: 0;
   padding: 1rem;
   visibility: hidden;
+
   * {
     color: $primary-color;
-    margin-left: .2rem;
   }
+
   @include transform(translate3d(0, 0, 0));
   @include transition(opacity 0.16s ease 0s, margin 0.16s ease 0s, visibility 0.16s linear 0s);
   &:before {
