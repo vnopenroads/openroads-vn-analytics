@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { push, replace } from 'react-router-redux';
 import { setGlobalZoom } from '../actions/action-creators';
+import { getLanguage } from '../utils/i18n';
 import config from '../config';
 
 var Editor = React.createClass({
@@ -46,8 +47,8 @@ var Editor = React.createClass({
       switch (e.data.id) {
         case 'or-editor':
           var hash = this.cleanUrl(e.data.url, config.editorUrl);
-          this.props.dispatch(replace(`/editor/${hash}`));
           this.props._setGlobalZoom(hash);
+          this.props.dispatch(replace(`/${getLanguage()}/editor/${hash}`));
           break;
       }
     } else if (e.data.type === 'navigate') {
@@ -76,6 +77,7 @@ var Editor = React.createClass({
   },
 
   render: function () {
+    console.log(this.props);
     var globalZoomHash = `map=${this.props.globZ.toString()}/${this.props.globX.toString()}/${this.props.globY.toString()}`;
     var path = config.editorUrl + `#${globalZoomHash}`;
     console.log(path);
