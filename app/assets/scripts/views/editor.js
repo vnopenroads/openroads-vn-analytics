@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { push, replace } from 'react-router-redux';
+import { setGlobalZoom } from '../actions/action-creators';
 import config from '../config';
 
 var Editor = React.createClass({
@@ -9,7 +10,11 @@ var Editor = React.createClass({
 
   propTypes: {
     params: React.PropTypes.object,
-    dispatch: React.PropTypes.func
+    dispatch: React.PropTypes.func,
+    _setGlobalZoom: React.PropTypes.func,
+    globX: React.PropTypes.number,
+    globY: React.PropTypes.number,
+    globZ: React.PropTypes.number
   },
 
   // /////////////////////////////////////////////////////////////////////////////
@@ -42,6 +47,7 @@ var Editor = React.createClass({
         case 'or-editor':
           var hash = this.cleanUrl(e.data.url, config.editorUrl);
           this.props.dispatch(replace(`/editor/${hash}`));
+          this.props._setGlobalZoom(hash);
           break;
       }
     } else if (e.data.type === 'navigate') {
@@ -65,12 +71,33 @@ var Editor = React.createClass({
     window.removeEventListener('message', this.messageListener, false);
   },
 
+  shouldComponentUpdate: function () {
+    return false;
+  },
+
   render: function () {
-    var path = config.editorUrl + (this.props.params.splat ? `#${this.props.params.splat}` : '');
+    var globalZoomHash = `map=${this.props.globZ.toString()}/${this.props.globX.toString()}/${this.props.globY.toString()}`;
+    var path = config.editorUrl + `#${globalZoomHash}`;
+    console.log(path);
     return (
        <iframe src={path} id='main-frame' name='main-frame'></iframe>
     );
   }
 });
 
-module.exports = connect()(Editor);
+function selector (state) {
+  return {
+    globX: state.globZoom.x,
+    globY: state.globZoom.y,
+    globZ: state.globZoom.z
+  };
+}
+
+function dispatcher (dispatch) {
+  return {
+    dispatch,
+    _setGlobalZoom: function (url) { dispatch(setGlobalZoom(url)); }
+  };
+}
+
+module.exports = connect(selector, dispatcher)(Editor);

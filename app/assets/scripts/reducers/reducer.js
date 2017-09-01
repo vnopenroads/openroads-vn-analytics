@@ -320,20 +320,20 @@ const exploreMap = function (state = exploreMapDefaultState, action) {
 };
 
 const globZoomDefault = {
-  x: 105.73,
   y: 20.029232336299856,
+  x: 105.73,
   z: 6
-}
+};
 
 const globZoom = function (state = globZoomDefault, action) {
   switch (action.type) {
     case actions.SET_GLOBAL_ZOOM:
-      state = _.cloneDeep(state)
-      state.globZoom = action.json
+      state = _.cloneDeep(state);
+      state = action.json;
       break;
   }
   return state;
-}
+};
 
 export default combineReducers({
   adminSubregions,

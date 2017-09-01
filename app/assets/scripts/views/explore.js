@@ -22,18 +22,36 @@ var Explore = React.createClass({
   propTypes: {
     layer: React.PropTypes.string,
     showNoVpromms: React.PropTypes.bool,
-    dispatch: React.PropTypes.func
+    dispatch: React.PropTypes.func,
+    _setGlobalZoom: React.PropTypes.func,
+    globX: React.PropTypes.number,
+    globY: React.PropTypes.number,
+    globZ: React.PropTypes.number
   },
 
   componentDidMount: function () {
     mapboxgl.accessToken = config.mbToken;
-    map = new mapboxgl.Map({
+    const map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/light-v9',
       failIfMajorPerformanceCaveat: false,
       center: [this.props.globX, this.props.globY],
       zoom: this.props.globZ
     }).addControl(new mapboxgl.NavigationControl(), 'bottom-left');
+
+    let makeXYZ = function () {
+      const xyz = map.getCenter();
+      xyz.zoom = map.getZoom();
+      return xyz;
+    };
+
+    map.on('zoom', () => {
+      this.props._setGlobalZoom(makeXYZ());
+    });
+
+    map.on('move', () => {
+      this.props._setGlobalZoom(makeXYZ());
+    });
 
     map.on('load', () => {
       // Load all roads with VPRoMMS values, and color by IRI
@@ -104,8 +122,8 @@ function selector (state) {
 
 function dispatcher (dispatch) {
   return {
-    _setGlobZoom: function (xyzObj) {dispatch(setGlobalZoom(xyzObj))}
-  }
+    _setGlobalZoom: function (xyzObj) { dispatch(setGlobalZoom(xyzObj)); }
+  };
 }
 
-module.exports = connect(selector)(Explore);
+module.exports = connect(selector, dispatcher)(Explore);
