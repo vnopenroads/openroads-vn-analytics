@@ -1,5 +1,6 @@
 'use strict';
 import React from 'react';
+import { t } from '../utils/i18n';
 
 var UhOh = React.createClass({
   displayName: 'UhOh',
@@ -8,7 +9,7 @@ var UhOh = React.createClass({
     return (
       <div>
         <h2>404 Not found</h2>
-        <p>UhOh that is a bummer.</p>
+        <p>{t('UhOh that is a bummer.')}</p>
       </div>
     );
   }

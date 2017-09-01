@@ -2,8 +2,10 @@
 import React from 'react';
 import _ from 'lodash';
 import Search from './search';
+import Langdrop from './langdrop';
+import c from 'classnames';
+import { t, getAvailableLanguages, getLanguage } from '../utils/i18n';
 import { Link } from 'react-router';
-
 var SiteHeader = React.createClass({
   displayName: 'SiteHeader',
 
@@ -11,7 +13,8 @@ var SiteHeader = React.createClass({
     fetchSearchResults: React.PropTypes.func,
     cleanSearchResults: React.PropTypes.func,
     routes: React.PropTypes.array,
-    search: React.PropTypes.object
+    search: React.PropTypes.object,
+    pathname: React.PropTypes.string
   },
 
   toggleMenuHandler: function (e) {
@@ -55,18 +58,20 @@ var SiteHeader = React.createClass({
     this.refs.toggleSearch.removeEventListener('click', this.toggleSearchHandler);
     window.removeEventListener('resize', this.resizeHandler);
   },
-
   render: function () {
     let last = _.last(this.props.routes).path;
     return (
       <header className='site-header'>
         <div className='inner'>
           <div className='site__headline'>
-            <h1 className='site__title'><Link to='/'><img src='assets/graphics/layout/openroads-vn-logo-hor-neg.svg' width='736' height='96' alt='OpenRoads Vietnam logo' /><span>OpenRoads</span> <strong>Vietnam</strong></Link></h1>
+            <h1 className='site__title'>
+              <Link to={`/${getLanguage()}`}>
+                <img src='assets/graphics/layout/openroads-vn-logo-hor-neg.svg' width='736' height='96' alt='OpenRoads Vietnam logo' /><span>OpenRoads</span> <strong>Vietnam</strong>
+              </Link>
+            </h1>
           </div>
-
           <nav className='site__nav' role='navigation' ref='nav'>
-            <h2 className='toggle-search'><a href='#global-search' title='Show search' ref='toggleSearch'><span>Search</span></a></h2>
+            <h2 className='toggle-search'><a href='#global-search' title='Show search' ref='toggleSearch'><span>{t('Search')}</span></a></h2>
             <div className='search-wrapper'>
               <div className='site__search'>
                 <Search
@@ -80,17 +85,57 @@ var SiteHeader = React.createClass({
                   searching={this.props.search.searching} />
               </div>
             </div>
-
             <h2 className='toggle-menu'><a href='#global-menu' title='Show menu' ref='toggleMenu'><span>Menu</span></a></h2>
             <div className='menu-wrapper'>
               <ul className='global-menu' id='global-menu'>
-                <li><Link to='/analytics/' className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}><span>Analytics</span></Link></li>
-                <li><Link to='/explore' className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}><span>Explore</span></Link></li>
-                <li><Link to='/editor' className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}><span>Editor</span></Link></li>
+                <li>
+                  <Link to={`/${getLanguage()}/analytics`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
+                    <span>{t('Analytics')}</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to={`/${getLanguage()}/explore`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
+                    <span>{t('Explore')}</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to={`/${getLanguage()}/editor`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
+                    <span>{t('Editor')}</span>
+                  </Link>
+                </li>
               </ul>
             </div>
+            <div className='menu-wrapper'>
+              <Langdrop
+                id='lang-switcher'
+                triggerClassName='drop-toggle caret change-lang-button site__lang'
+                className=''
+                triggerText={t('Language')}
+                triggerElement='a'
+                direction='down'
+                alignment='right'>
+                <ul className='drop-menu drop-menu--select' role='menu'>
+                {
+                  getAvailableLanguages().map(l => {
+                    let cl = c('drop-menu-item', {
+                      'drop-menu-item--active': l.key === getLanguage()
+                    });
+                    let url = this.props.pathname.replace(`/${getLanguage()}`, `/${l.key}`);
+                    return (
+                      <li key={l.key}>
+                        <Link to={url}
+                          title={t('Select language')}
+                          className={cl} data-hook='dropdown:close'>
+                          {l.name}
+                        </Link>
+                      </li>
+                    );
+                  })
+                  }
+                </ul>
+              </Langdrop>
+            </div>
           </nav>
-
         </div>
       </header>
     );

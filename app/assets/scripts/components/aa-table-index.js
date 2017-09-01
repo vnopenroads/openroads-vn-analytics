@@ -3,15 +3,16 @@
 
 import React from 'react';
 import { Link } from 'react-router';
+import { t, getLanguage } from '../utils/i18n';
 import _ from 'lodash';
 import classnames from 'classnames';
 
 const displayHeader = [
-  {key: 'name', value: 'Province'},
-  {key: 'done', value: 'Done'},
-  {key: 'total', value: 'Total'},
-  {key: 'percentageComplete', value: '% Complete'},
-  {key: 'progress', value: 'Progress'}
+  {key: 'name', value: t('Province')},
+  {key: 'done', value: t('Done')},
+  {key: 'total', value: t('Total')},
+  {key: 'percentageComplete', value: '% ' + t('Complete')},
+  {key: 'progress', value: t('Progress')}
 ];
 
 const AATable = React.createClass({
@@ -98,7 +99,7 @@ const AATable = React.createClass({
           }
           return (
             <tr key={`province-${province.id}`} className={classnames('collecticon-sort-asc', {'alt': i % 2})}>
-              <td><Link to={`/analytics/${province.id}`}>{province.name}</Link></td>
+              <td><Link to={`${getLanguage()}/analytics/${province.id}`}>{province.name}</Link></td>
               <td>{province.done}</td>
               <td>{province.total}</td>
               <td>{percText}</td>

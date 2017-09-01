@@ -18,3 +18,8 @@ app/assets/scripts/config/local.js
 ## no swaps
 */**/*.swp
 */**/*.swo
+
+## transifex env / python virtualenv
+.env
+env
+.transifexrc

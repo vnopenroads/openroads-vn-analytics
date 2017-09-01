@@ -180,6 +180,12 @@ a:active{
 
   a {
     color: inherit;
+    display: block;
+
+    > * {
+      vertical-align: top;
+      display: inline-block;
+    }
   }
 
   > .inner {
@@ -193,14 +199,10 @@ a:active{
       line-height: 1.25rem;
       padding: 0.325rem 0;
 
-      * {
-        vertical-align: top;
-        display: inline-block;
-      }
-
       img {
         width: auto;
         height: 1.25rem;
+        vertical-align: baseline;
       }
 
       span {
@@ -228,9 +230,8 @@ a:active{
       float: left;
       clear: both;
       text-align: center;
-      margin-top: 1rem;
-      white-space: nowrap;
-
+      margin: 1rem 0 0 0;
+      display: block;
       &.show-menu,
       &.show-search {
         margin-top: 1rem;
@@ -276,27 +277,53 @@ a:active{
       .menu-wrapper {
         display: inline-block;
         vertical-align: top;
-        overflow: hidden;
-        visibility: hidden;
-        opacity: 0;
-        max-height: 0;
-        transition: opacity 0.16s ease 0s, max-height 0.16s ease 0s, visibility 0.16s linear 0s;
+
+        &:last-child {
+          padding-left: $global-spacing * 1.25;
+          margin-left: $global-spacing / 2;
+          box-shadow: -1px 0 0 0 rgba(#fff, 0.16);
+        }
+
+        .drop-content {
+          left: auto;
+          right: 0;
+          margin-top: $global-spacing / 4;
+        }
+      }
+
+      .change-lang-button {
+        display: block;
+        line-height: 1.25rem;
+        padding: 0 0.5rem;
+        color: #fff;
+        font-weight: normal;
+        text-decoration: none;
+        background: rgba($link-color, 0.24);
+        border-radius: $global-radius;
+        font-size: 0.875rem;
+        margin: 0.25rem 0;
+        font-weight: $base-font-bold;
+
+        > span,
+        &::after {
+          vertical-align: center;
+        }
+
+        &::after {
+          font-size: inherit;
+        }
       }
 
       .global-menu {
         @extend .clearfix;
-        overflow: hidden;
         list-style: none;
         margin: 0;
         padding: 0;
 
         > li {
-          margin: 0 ($global-padding / 2) 0 0;
+          margin: 0;
           float: left;
-
-          &:last-child {
-            margin-right: 0;
-          }
+          overflow: hidden;
         }
       }
 
@@ -306,7 +333,7 @@ a:active{
         line-height: 2rem;
         padding: 0 $global-padding;
         color: #fff;
-        font-weight: normal;
+        font-weight: $base-font-bold;
         text-decoration: none;
         &, &:visited {
           color: #fff;
@@ -371,10 +398,14 @@ a:active{
         max-height: 600rem;
       }
       // ^^ Search.
+      .drop {
+        display: inline-block;
+        a {
+          text-decoration: none;
+        }
+      }
     }
     /* END Main navigation */
-
-
 
     &__search {
       // @include col(5/12);
@@ -403,7 +434,6 @@ a:active{
         max-width: 25rem;
 
         .drop-menu-sectitle {
-          overflow: hidden;
           strong {
             @extend .truncated;
             max-width: 22rem;

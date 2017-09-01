@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import { t } from '../utils/i18n';
 
 import AATable from '../components/aa-table-index';
 
@@ -42,9 +43,9 @@ var AnalyticsIndex = React.createClass({
     const completion = (accumulator.done / accumulator.total) * 100;
     return (
       <div>
-      <h1>VProMMS Edits By Province</h1>
+      <h1>{t('VProMMS Edits By Province')}</h1>
         <div className='aa-main__status'>
-          <h2><strong>{completion.toFixed(2)}%</strong> of VProMMS Ids added ({done.toLocaleString()} of {total.toLocaleString()})</h2>
+          <h2><strong>{completion.toFixed(2)}%</strong>{t('of VProMMS Ids added')} ({done.toLocaleString()} of {total.toLocaleString()})</h2>
           <div className='meter'>
             <div className='meter__internal' style={{width: `${completion}%`}}></div>
           </div>

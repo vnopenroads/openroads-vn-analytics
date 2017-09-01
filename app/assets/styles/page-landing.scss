@@ -1,33 +1,33 @@
 .page--landing {
   .site-header {
+    text-align: center;
     .site {
       &__title {
         @extend .visually-hidden;
       }
 
-      &__nav {
+      &__title, &__nav, &__lang {
         float: none;
-        display: block;
+        display: inline-block;
         margin: 0 auto;
-        overflow: hidden;
+      }
 
-        .menu-wrapper {
-          overflow: auto;
-          visibility: visible;
-          opacity: 1;
-          max-height: 600rem;
+      &__control {
+        text-align: center;
+      }
+
+      &__lang {
+        height: inherit;
+        margin-left: .5rem;
+        .drop-toggle {
+          text-decoration: none;
         }
+      }
 
-        .global-menu {
-          > li {
-            float: left;
-            margin: 0 ($global-padding / 2) 0 0;
-            &:last-child {
-              margin-right: 0;
-            }
-          }
+      &__nav {
+        .drop > a {
+          text-decoration: none;
         }
-
         .toggle-menu,
         .toggle-search,
         .search-wrapper {
@@ -98,7 +98,7 @@
 
     &__description--landing {
       width: 100%;
-      
+
       padding: 0 $global-padding;
       margin: 0 auto;
       font-weight: $base-font-bold;
