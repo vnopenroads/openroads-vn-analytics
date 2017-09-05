@@ -178,6 +178,40 @@ a:active{
   position: relative;
   z-index: 99999;
 
+  .search-wrapper {
+    display: inline-block !important;
+    margin-right: .8rem;
+    overflow: visible;
+    max-height: 0;
+    transition: opacity 0.16s ease 0s, max-height 0.16s ease 0s, visibility 0.16s linear 0s;
+    visibility: visible;
+    opacity: 1;
+    max-height: 600rem;
+    .search-button {
+      display: block;
+      line-height: 1.4rem;
+      padding: 0 0.5rem;
+      color: #fff;
+      font-weight: normal;
+      text-decoration: none;
+      background: rgba($link-color, 0.24);
+      border-radius: $global-radius;
+      font-size: 0.9rem;
+      margin: 0.3rem 0;
+      font-weight: $base-font-bold;
+      margin-top: -1rem;
+      > span,
+      &::after {
+        vertical-align: center;
+      }
+  }
+
+
+    &::after {
+      font-size: inherit;
+    }
+  }
+
   a {
     color: inherit;
     display: block;
@@ -269,9 +303,6 @@ a:active{
           right: $global-padding * 2;
         }
 
-        @include media(large-up) {
-          display: none;
-        }
       }
 
       .menu-wrapper {
@@ -291,7 +322,8 @@ a:active{
         }
       }
 
-      .change-lang-button {
+      .change-lang-button,
+      .change-search-button {
         display: block;
         line-height: 1.25rem;
         padding: 0 0.5rem;
@@ -312,6 +344,10 @@ a:active{
         &::after {
           font-size: inherit;
         }
+      }
+
+      .change-search-button {
+        margin-left: .8rem;
       }
 
       .global-menu {
@@ -346,15 +382,9 @@ a:active{
       // ^^ Menu.
 
       // vv Search.
-      .toggle-search {
-        position: absolute;
-        font-size: 1rem;
-        line-height: 1rem;
-        margin: 0;
-        top: 1rem;
-        right: $global-padding + 2rem;
-        z-index: 1;
-
+      .search-toggle {
+        display: inline-block;
+        margin-left: 1rem;
         a {
           color: #fff;
           text-decoration: none;
@@ -362,41 +392,14 @@ a:active{
             @extend .collecticons-magnifier-right;
           }
         }
-
-        span {
-          @extend .visually-hidden;
-        }
-
         @include media(small-up) {
           right: $global-padding * 2 + 2rem;
         }
-        @include media(large-up) {
-          display: none;
+        a:before {
+          content: none;
         }
       }
-      .search-wrapper {
-        overflow: hidden;
-        visibility: hidden;
-        opacity: 0;
-        max-height: 0;
-        transition: opacity 0.16s ease 0s, max-height 0.16s ease 0s, visibility 0.16s linear 0s;
-        @include media(large-up) {
-          @include col(4/8);
-          display: block;
-          overflow: visible;
-          visibility: visible;
-          opacity: 1;
-          max-height: 600rem;
-          text-align: right;
-        }
-      }
-      &.show-search .search-wrapper {
-        display: block;
-        overflow: visible;
-        visibility: visible;
-        opacity: 1;
-        max-height: 600rem;
-      }
+
       // ^^ Search.
       .drop {
         display: inline-block;
@@ -405,6 +408,7 @@ a:active{
         }
       }
     }
+
     /* END Main navigation */
 
     &__search {
@@ -420,6 +424,9 @@ a:active{
       }
 
       .bttn-search {
+        &::before {
+          @extend .collecticons-circle-information;
+        }
         text-decoration: none;
       }
 
@@ -460,7 +467,6 @@ a:active{
     }
   }
 }
-
 .actions-menu {
   @extend .clearfix;
   /* Inline helper */

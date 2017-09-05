@@ -437,3 +437,21 @@ export function setGlobalZoom (zoomSource) {
     json: json
   };
 }
+
+// ////////////////////////////////////////////////////////////////
+//                             Search                            //
+// ////////////////////////////////////////////////////////////////
+
+export function showSearch (bool) {
+  return {
+    type: actions.DISPLAY_SEARCH,
+    bool: bool
+  };
+}
+
+export function setSearchType (text) {
+  return {
+    type: actions.SET_SEARCH_TYPE,
+    text: text
+  };
+}

@@ -17,7 +17,8 @@ var Search = React.createClass({
     results: React.PropTypes.array,
     searching: React.PropTypes.bool,
     isEditor: React.PropTypes.bool,
-    fetching: React.PropTypes.bool
+    fetching: React.PropTypes.bool,
+    searchType: React.PropTypes.func
   },
 
   onSearchQueryChange: function () {
@@ -113,16 +114,23 @@ var Search = React.createClass({
     );
   },
 
+  searchType: function () {
+    const searchPlaceHolder = this.props.searchType === 'Admin' ? 'Search by administrative area' : 'Search by VProMMs ID';
+    return (
+      <div className='input-group'>
+        <input type='search' className='form-control input-search' placeholder={searchPlaceHolder} ref='searchBox' onChange={_.debounce(this.onSearchQueryChange, 300)} />
+        <span className='input-group-bttn'>
+          <a href='#' className='bttn-search' onClick={this.searchClick}><span>{t('Search')}</span></a>
+        </span>
+      </div>
+    );
+  },
+
   render: function () {
     return (
       <form className='form-search' ref='searchForm'>
         <div className={classNames('drop dropdown center', {open: this.props.searching})}>
-          <div className='input-group'>
-            <input type='search' className='form-control input-search' placeholder='Search administrative area' ref='searchBox' onChange={_.debounce(this.onSearchQueryChange, 300)} />
-            <span className='input-group-bttn'>
-              <a href='#' className='bttn-search' onClick={this.searchClick}><span>{t('Search')}</span></a>
-            </span>
-          </div>
+          {this.searchType()}
           <div className='drop-content search-results'>
             {this.renderResults()}
           </div>

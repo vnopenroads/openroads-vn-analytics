@@ -335,6 +335,34 @@ const globZoom = function (state = globZoomDefault, action) {
   return state;
 };
 
+const searchDisplayDefault = {
+  show: false
+};
+
+const searchDisplay = function (state = searchDisplayDefault, action) {
+  switch (action.type) {
+    case actions.DISPLAY_SEARCH:
+      state = _.cloneDeep(state);
+      state.show = action.bool;
+      break;
+  }
+  return state;
+};
+
+const defaultSearchType = {
+  searchType: ''
+};
+
+const setSearchType = function (state = defaultSearchType, action) {
+  switch (action.type) {
+    case actions.SET_SEARCH_TYPE:
+      state = _.cloneDeep(state);
+      state.searchType = action.text;
+      break;
+  }
+  return state;
+};
+
 export default combineReducers({
   adminSubregions,
   search,
@@ -347,5 +375,7 @@ export default combineReducers({
   VProMMSids,
   exploreMap,
   routing: routeReducer,
-  globZoom
+  globZoom,
+  searchDisplay,
+  setSearchType
 });
