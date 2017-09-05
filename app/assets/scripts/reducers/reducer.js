@@ -256,12 +256,38 @@ _.forEach(VPROMMS_IDS, (province) => {
     };
   });
 });
+
 const VProMMSidsDefaultState = {
+  ids: []
+};
+
+const VProMMSids = function (state = VProMMSidsDefaultState, action) {
+  switch (action.type) {
+    case actions.REQUEST_VPROMMS_IDS:
+      state = _.cloneDeep(state);
+      state.error = null;
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_VPROMMS_IDS:
+      state = _.cloneDeep(state);
+      if (action.error) {
+        state.error = action.error;
+      } else {
+        state.ids = action.json;
+      }
+      state.fetching = false;
+      state.fetched = true;
+      break;
+  }
+  return state;
+};
+
+const VProMMSidsAnalyticsDefaultState = {
   fetching: false,
   fetched: false,
   data: VPROMMS_IDS
 };
-const VProMMSids = function (state = VProMMSidsDefaultState, action) {
+const VProMMSidsAnalytics = function (state = VProMMSidsAnalyticsDefaultState, action) {
   switch (action.type) {
     case actions.REQUEST_VPROMMS_IDS:
       state = _.cloneDeep(state);
@@ -363,6 +389,16 @@ const setSearchType = function (state = defaultSearchType, action) {
   return state;
 };
 
+const setFilteredVProMMs = function (state = {filteredVProMMs: []}, action) {
+  switch (action.type) {
+    case actions.SET_FILTERED_VPROMMS:
+      state = _.cloneDeep(state);
+      state.filteredVProMMs = action.array;
+      break;
+  }
+  return state;
+};
+
 export default combineReducers({
   adminSubregions,
   search,
@@ -373,9 +409,11 @@ export default combineReducers({
   projectsMeta,
   roadNetworkStatus,
   VProMMSids,
+  VProMMSidsAnalytics,
   exploreMap,
   routing: routeReducer,
   globZoom,
   searchDisplay,
-  setSearchType
+  setSearchType,
+  setFilteredVProMMs
 });

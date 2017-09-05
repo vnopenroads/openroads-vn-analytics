@@ -439,7 +439,11 @@ a:active{
         color: $base-color;
         width: 80%;
         max-width: 25rem;
-
+        &-show {
+          visibility: visible;
+          opacity: 1;
+          margin-top: .5rem;
+        }
         .drop-menu-sectitle {
           strong {
             @extend .truncated;
@@ -451,6 +455,7 @@ a:active{
             float: right;
           }
         }
+
         .drop-menu-result a {
           @extend .truncated;
         }

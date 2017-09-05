@@ -25,13 +25,13 @@ var Analytics = React.createClass({
 
 function selector (state) {
   return {
-    VProMMSids: state.VProMMSids
+    VProMMSids: state.VProMMSidsAnalytics
   };
 }
 
 function dispatcher (dispatch) {
   return {
-    _fetchVProMMSids: (aaid) => dispatch(fetchVProMMSids())
+    _fetchVProMMSids: (use) => dispatch(fetchVProMMSids(use))
   };
 }
 

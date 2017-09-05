@@ -84,6 +84,8 @@ export function fetchSearchResults (searchQuery) {
   };
 }
 
+
+
 // ////////////////////////////////////////////////////////////////
 //                         ADMIN STATS                           //
 // ////////////////////////////////////////////////////////////////
@@ -374,11 +376,11 @@ function receiveVProMMSids (json, error = null) {
   };
 }
 
-export function fetchVProMMSids () {
+export function fetchVProMMSids (use) {
   return function (dispatch) {
     dispatch(requestVProMMSids());
-
-    let url = `${config.api}/properties?keys=iri_mean,rs_url`;
+    const route = use === 'search' ? '/ids' : '/properties?keys=iri_mean,rs_url';
+    let url = `${config.api}${route}`;
     return fetch(url)
       .then(response => {
         return response.json();
@@ -453,5 +455,12 @@ export function setSearchType (text) {
   return {
     type: actions.SET_SEARCH_TYPE,
     text: text
+  };
+}
+
+export function setFilteredVProMMs (array) {
+  return {
+    type: actions.SET_FILTERED_VPROMMS,
+    array: array
   };
 }

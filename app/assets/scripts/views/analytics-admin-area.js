@@ -19,7 +19,7 @@ var AnalyticsAA = React.createClass({
   },
 
   componentDidMount: function () {
-    this.props._fetchVProMMSids();
+    this.props._fetchVProMMSids('analytics');
   },
 
   render: function () {
@@ -58,13 +58,13 @@ var AnalyticsAA = React.createClass({
 
 function selector (state) {
   return {
-    VProMMSids: state.VProMMSids
+    VProMMSids: state.VProMMSidsAnalytics
   };
 }
 
 function dispatcher (dispatch) {
   return {
-    _fetchVProMMSids: (aaid) => dispatch(fetchVProMMSids())
+    _fetchVProMMSids: (use) => dispatch(fetchVProMMSids(use))
   };
 }
 
