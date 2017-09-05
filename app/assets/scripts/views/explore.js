@@ -38,14 +38,6 @@ var Explore = React.createClass({
       zoom: this.props.globZ
     }).addControl(new mapboxgl.NavigationControl(), 'bottom-left');
 
-    this.map.on('zoom', () => {
-      // this.props._setGlobalZoom(this.makeXYZ());
-    });
-
-    this.map.on('move', () => {
-      // this.props._setGlobalZoom(this.makeXYZ());
-    });
-
     this.map.on('load', () => {
       // Load all roads with VPRoMMS values, and color by IRI
       this.map.addLayer({
@@ -92,15 +84,18 @@ var Explore = React.createClass({
     }
   },
 
+  componentWillUnmount () {
+    this.props._setGlobalZoom(this.makeXYZ());
+  },
+
   componentWillReceiveProps: function (nextProps) {
     const bounds = nextProps.vprommsBbox[Object.keys(nextProps.vprommsBbox)[0]];
     this.map.fitBounds(bounds);
-    console.log(this.map);
   },
 
   render: function () {
     return (
-      <div className='map-container'>
+      <div className='map-container' >
         <div id='map'></div>
 
         <MapOptions

@@ -46,9 +46,8 @@ var Editor = React.createClass({
     if (e.data.type === 'urlchange') {
       switch (e.data.id) {
         case 'or-editor':
-          var hash = this.cleanUrl(e.data.url, config.editorUrl);
-          this.props._setGlobalZoom(hash);
-          this.props.dispatch(replace(`/${getLanguage()}/editor/${hash}`));
+          this.hash = this.cleanUrl(e.data.url, config.editorUrl);
+          this.props.dispatch(replace(`/${getLanguage()}/editor/${this.hash}`));
           break;
       }
     } else if (e.data.type === 'navigate') {
@@ -65,11 +64,15 @@ var Editor = React.createClass({
   },
 
   componentDidMount: function () {
+    this.hash = '';
     window.addEventListener('message', this.messageListener, false);
   },
 
   componentWillUnmount: function () {
     window.removeEventListener('message', this.messageListener, false);
+    if (this.hash.length) {
+      this.props._setGlobalZoom(this.hash);
+    }
   },
 
   shouldComponentUpdate: function () {
