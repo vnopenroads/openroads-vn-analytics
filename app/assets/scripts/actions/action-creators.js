@@ -376,7 +376,7 @@ function receiveVProMMSids (json, error = null) {
   };
 }
 
-export function fetchVProMMSids (use) {
+export function fetchVProMMsids (use) {
   return function (dispatch) {
     dispatch(requestVProMMSids());
     const route = use === 'search' ? '/ids' : '/properties?keys=iri_mean,rs_url';
@@ -415,7 +415,7 @@ export function exploreMapShowNoVpromms (bool) {
 }
 
 // ////////////////////////////////////////////////////////////////
-//                       Set Global Zoom                         //
+//                              Set Zoom                         //
 // ////////////////////////////////////////////////////////////////
 
 export function setGlobalZoom (zoomSource) {
@@ -437,6 +437,37 @@ export function setGlobalZoom (zoomSource) {
   return {
     type: actions.SET_GLOBAL_ZOOM,
     json: json
+  };
+}
+
+function requestVProMMsBbox () {
+  return {
+    type: actions.REQUEST_VPROMMS_BBOX
+  };
+}
+
+function recieveVProMMsBbox (json) {
+  return {
+    type: actions.RECIEVE_VPROMMS_BBOX,
+    json: json
+  };
+}
+export function fetchVProMMsBbox (vprommsId) {
+  return function (dispatch) {
+    dispatch(requestVProMMsBbox());
+    let url = `${config.api}/way/${vprommsId}/bbox`;
+    return fetch(url)
+    .then(response => {
+      return response.json();
+    })
+    .then(json => {
+      if (json.statusCode === 400) {
+        return {dataAvailable: false};
+      } else if (json.statusCode > 400) {
+        throw new Error('Bad response');
+      }
+      dispatch(recieveVProMMsBbox(json));
+    });
   };
 }
 

@@ -258,7 +258,9 @@ _.forEach(VPROMMS_IDS, (province) => {
 });
 
 const VProMMSidsDefaultState = {
-  ids: []
+  fetching: false,
+  fetched: false,
+  data: []
 };
 
 const VProMMSids = function (state = VProMMSidsDefaultState, action) {
@@ -273,7 +275,7 @@ const VProMMSids = function (state = VProMMSidsDefaultState, action) {
       if (action.error) {
         state.error = action.error;
       } else {
-        state.ids = action.json;
+        state.data = action.json;
       }
       state.fetching = false;
       state.fetched = true;
@@ -287,6 +289,7 @@ const VProMMSidsAnalyticsDefaultState = {
   fetched: false,
   data: VPROMMS_IDS
 };
+
 const VProMMSidsAnalytics = function (state = VProMMSidsAnalyticsDefaultState, action) {
   switch (action.type) {
     case actions.REQUEST_VPROMMS_IDS:
@@ -324,6 +327,28 @@ const VProMMSidsAnalytics = function (state = VProMMSidsAnalyticsDefaultState, a
       state.fetching = false;
       state.fetched = true;
       break;
+  }
+  return state;
+};
+
+const VProMMsWayBboxDefaultState = {
+  fetching: false,
+  fetched: false,
+  data: []
+};
+
+const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
+  switch (action.type) {
+    case actions.REQUEST_VPROMMS_IDS:
+      state = _.cloneDeep(state);
+      state.error = null;
+      state.fetching = true;
+      break;
+    case actions.RECIEVE_VPROMMS_BBOX:
+      state = _.cloneDeep(state);
+      state.fetching = false;
+      state.fetched = true;
+      state.data = action.json;
   }
   return state;
 };
@@ -410,6 +435,7 @@ export default combineReducers({
   roadNetworkStatus,
   VProMMSids,
   VProMMSidsAnalytics,
+  VProMMsWayBbox,
   exploreMap,
   routing: routeReducer,
   globZoom,

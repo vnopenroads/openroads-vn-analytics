@@ -7,7 +7,11 @@ import { connect } from 'react-redux';
 import ID from '../utils/id';
 import { t } from '../utils/i18n';
 import { isDescendent } from '../utils/dom';
-import { fetchVProMMSids, setFilteredVProMMs } from '../actions/action-creators';
+import {
+  fetchVProMMsids,
+  fetchVProMMsBbox,
+  setFilteredVProMMs
+} from '../actions/action-creators';
 
 var Search = React.createClass({
   displayName: 'Search',
@@ -25,7 +29,8 @@ var Search = React.createClass({
     vpromms: React.PropTypes.array,
     _setFilteredVProMMs: React.PropTypes.func,
     filteredVProMMs: React.PropTypes.array,
-    _fetchVProMMSids: React.PropTypes.func
+    _fetchVProMMsids: React.PropTypes.func,
+    _fetchVProMMsBbox: React.PropTypes.func
   },
 
   onSearchQueryChange: function () {
@@ -53,7 +58,7 @@ var Search = React.createClass({
   },
 
   searchVProMMsID: function (VProMMsID) {
-
+    this.props._fetchVProMMsBbox(VProMMsID);
   },
 
   searchClick: function (e) {
@@ -64,7 +69,7 @@ var Search = React.createClass({
         if (this.props.searchType === 'Admin') {
           this.props.fetchSearchResults(searchVal);
         } else {
-          this.searchVProMMsID(searchVal);
+          this.searchVProMMsID(this.props.filteredVProMMs[0]);
         }
       }
     }
@@ -89,6 +94,12 @@ var Search = React.createClass({
     }
   },
 
+  _handleKeyPress: function (e) {
+    if (e.key === 'Enter') {
+      this.props._fetchVProMMsBbox(this.props.filteredVProMMs[0]);
+    }
+  },
+
   onResultClick: function (e) {
     this.resetSearchResults();
     if (this.props.onResultClick) {
@@ -104,7 +115,7 @@ var Search = React.createClass({
   componentDidMount: function () {
     document.addEventListener('click', this.onDocumentClick, false);
     document.addEventListener('keyup', this.onKeyup, false);
-    this.props._fetchVProMMSids('search');
+    this.props._fetchVProMMsids('search');
   },
 
   componentWillUnmount: function () {
@@ -117,10 +128,6 @@ var Search = React.createClass({
       return (<p className='info'>Loading...</p>);
     }
     if (this.props.searchType === 'Admin' && this.props.results.length === 0) {
-      return (<p className='info'>No results available. Please refine your search.</p>);
-    }
-
-    if (this.props.searchType === 'VProMMs' && this.props.filteredVProMMs.length === 0) {
       return (<p className='info'>No results available. Please refine your search.</p>);
     }
 
@@ -143,7 +150,11 @@ var Search = React.createClass({
       });
     } else {
       _.forEach(g, (o, k) => {
-        results.push(<dt key={`aa-type-${k}`} className='drop-menu-sectitle' onClick={(e) => { console.log('df'); }}><strong>{o}</strong></dt>);
+        results.push(<dt key={`aa-type-${k}`} className='drop-menu-sectitle'
+        onClick={(e) => {
+          const vprommsId = e.target.textContent;
+          this.searchVProMMsID(vprommsId);
+        }}><strong>{o}</strong></dt>);
       });
     }
 
@@ -158,15 +169,22 @@ var Search = React.createClass({
     const searchPlaceHolder = this.props.searchType === 'Admin' ? 'Search by administrative area' : 'Search by VProMMs ID';
     return (
       <div className='input-group'>
-        <input type='search' className='form-control input-search' placeholder={searchPlaceHolder} ref='searchBox' onChange={_.debounce(this.onSearchQueryChange, 300)} />
+        <input type='search' className='form-control input-search'
+          placeholder={searchPlaceHolder} ref='searchBox'
+          onChange={_.debounce(this.onSearchQueryChange, 300)}
+          onKeyPress={this._handleKeyPress} />
         <span className='input-group-bttn'>
-          <a href='#' className='bttn-search' onClick={this.searchClick}><span>{t('Search')}</span></a>
+          <a href='#' className='bttn-search'
+            onClick={this.searchClick}>
+            <span>{t('Search')}</span>
+          </a>
         </span>
       </div>
     );
   },
 
   render: function () {
+    console.log(this.props);
     const resultsExist = this.props.results.length > 0 || this.props.filteredVProMMs.length > 0;
     const searchResultsClasses = classNames({
       'drop-content': true,
@@ -188,14 +206,15 @@ var Search = React.createClass({
 
 function selector (state) {
   return {
-    vpromms: state.VProMMSids.ids,
+    vpromms: state.VProMMSids.data,
     filteredVProMMs: state.setFilteredVProMMs.filteredVProMMs
   };
 }
 
 function dispatcher (dispatch) {
   return {
-    _fetchVProMMSids: (use) => dispatch(fetchVProMMSids(use)),
+    _fetchVProMMsids: (use) => dispatch(fetchVProMMsids(use)),
+    _fetchVProMMsBbox: (vprommsId) => dispatch(fetchVProMMsBbox(vprommsId)),
     _setFilteredVProMMs: (filteredVProMMs) => dispatch(setFilteredVProMMs(filteredVProMMs))
   };
 }

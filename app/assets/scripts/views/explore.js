@@ -26,12 +26,13 @@ var Explore = React.createClass({
     _setGlobalZoom: React.PropTypes.func,
     globX: React.PropTypes.number,
     globY: React.PropTypes.number,
-    globZ: React.PropTypes.number
+    globZ: React.PropTypes.number,
+    vprommsBbox: React.PropTypes.object
   },
 
   componentDidMount: function () {
     mapboxgl.accessToken = config.mbToken;
-    const map = new mapboxgl.Map({
+    this.map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/light-v9',
       failIfMajorPerformanceCaveat: false,
@@ -39,23 +40,17 @@ var Explore = React.createClass({
       zoom: this.props.globZ
     }).addControl(new mapboxgl.NavigationControl(), 'bottom-left');
 
-    let makeXYZ = function () {
-      const xyz = map.getCenter();
-      xyz.zoom = map.getZoom();
-      return xyz;
-    };
-
-    map.on('zoom', () => {
-      this.props._setGlobalZoom(makeXYZ());
+    this.map.on('zoom', () => {
+      // this.props._setGlobalZoom(this.makeXYZ());
     });
 
-    map.on('move', () => {
-      this.props._setGlobalZoom(makeXYZ());
+    this.map.on('move', () => {
+      // this.props._setGlobalZoom(this.makeXYZ());
     });
 
-    map.on('load', () => {
+    this.map.on('load', () => {
       // Load all roads with VPRoMMS values, and color by IRI
-      map.addLayer({
+      this.map.addLayer({
         id: 'conflated',
         type: 'line',
         source: {
@@ -73,10 +68,16 @@ var Explore = React.createClass({
     });
   },
 
+  makeXYZ: function () {
+    const xyz = this.map.getCenter();
+    xyz.zoom = this.map.getZoom();
+    return xyz;
+  },
+
   handleLayerChange: function (e) {
     const property = e.target.value;
     this.props.dispatch(selectExploreMapLayer(property));
-    map.setPaintProperty(
+    this.map.setPaintProperty(
       'conflated',
       'line-color',
       lineColors[property]
@@ -87,10 +88,16 @@ var Explore = React.createClass({
     const show = e.target.checked;
     this.props.dispatch(exploreMapShowNoVpromms(show));
     if (show) {
-      map.setFilter('conflated', null);
+      this.map.setFilter('conflated', null);
     } else {
-      map.setFilter('conflated', ['has', 'or_vpromms']);
+      this.map.setFilter('conflated', ['has', 'or_vpromms']);
     }
+  },
+
+  componentWillReceiveProps: function (nextProps) {
+    const bounds = nextProps.vprommsBbox[Object.keys(nextProps.vprommsBbox)[0]];
+    this.map.fitBounds(bounds);
+    console.log(this.map);
   },
 
   render: function () {
@@ -116,7 +123,8 @@ function selector (state) {
     layer: state.exploreMap.layer,
     globX: state.globZoom.x,
     globY: state.globZoom.y,
-    globZ: state.globZoom.z
+    globZ: state.globZoom.z,
+    vprommsBbox: state.VProMMsWayBbox.data
   };
 }
 
