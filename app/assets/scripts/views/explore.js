@@ -14,8 +14,6 @@ import {
 import MapOptions from '../components/map-options';
 import MapLegend from '../components/map-legend';
 
-var map;
-
 var Explore = React.createClass({
   displayName: 'Explore',
 
