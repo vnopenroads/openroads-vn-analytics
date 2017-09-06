@@ -2,7 +2,6 @@
 import React from 'react';
 import { getLanguage, t } from '../utils/i18n';
 import { Link } from 'react-router';
-
 var Home = React.createClass({
   displayName: 'Home',
 
