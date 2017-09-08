@@ -4,13 +4,6 @@ import { connect } from 'react-redux';
 import { push, replace } from 'react-router-redux';
 import { setGlobalZoom } from '../actions/action-creators';
 import { getLanguage } from '../utils/i18n';
-import {
-  transformGeoToPixel,
-  pixelDistances,
-  makeNewZoom,
-  makeCenterpoint,
-  makeNWSE
-} from '../utils/zoom';
 import config from '../config';
 
 var Editor = React.createClass({
