@@ -4,6 +4,13 @@ import { connect } from 'react-redux';
 import { push, replace } from 'react-router-redux';
 import { setGlobalZoom } from '../actions/action-creators';
 import { getLanguage } from '../utils/i18n';
+import {
+  transformGeoToPixel,
+  pixelDistances,
+  makeNewZoom,
+  makeCenterpoint,
+  makeNWSE
+} from '../utils/zoom';
 import config from '../config';
 
 var Editor = React.createClass({
@@ -63,6 +70,10 @@ var Editor = React.createClass({
     return url.replace(new RegExp(`(http:|https:)?${base}/?#?`), '');
   },
 
+  makeNewZoom: function (bbox) {
+
+  },
+
   componentDidMount: function () {
     this.hash = '';
     window.addEventListener('message', this.messageListener, false);
@@ -73,6 +84,10 @@ var Editor = React.createClass({
     if (this.hash.length) {
       this.props._setGlobalZoom(this.hash);
     }
+  },
+
+  componentWillReceiveProps: function (nextProps) {
+    this.makeNewZoom(nextProps.vprommsBbox);
   },
 
   shouldComponentUpdate: function () {
@@ -94,7 +109,8 @@ function selector (state) {
   return {
     globX: state.globZoom.x,
     globY: state.globZoom.y,
-    globZ: state.globZoom.z
+    globZ: state.globZoom.z,
+    vprommsBbox: state.VProMMsWayBbox.data
   };
 }
 
