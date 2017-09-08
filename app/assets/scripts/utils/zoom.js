@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 // Leaflet inspired implementation of extracting a midpoint and zoom level from a set of bounds //
 var globMerc = require('global-mercator');
@@ -17,8 +17,7 @@ exports.mercatorTransformation = {
 /**
  * calculates tranformed pixel point from coordinate point
  * @param {object} geoCoordinate A geographic coordinate
- * @param {number} scaleFactor scale factor for geographic to pixel coord
- * @param {object} transformation The transformation object specifc to the mercator projection
+ * @param {number} zoom current map zoom
  * @return {object} tranformed pixel coordinate
  */
 exports.transformGeoToPixel = function (geoCoordinate, zoom) {
@@ -29,7 +28,6 @@ exports.transformGeoToPixel = function (geoCoordinate, zoom) {
     y: pixelCrd[1]
   };
 };
-
 
 /**
  * generates object with pixel reprentation of distances between bounds' latitude and longitude extrema

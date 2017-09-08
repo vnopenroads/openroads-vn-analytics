@@ -1,5 +1,4 @@
 var chai = require('chai');
-var globMerc = require('global-mercator');
 var expect = chai.expect;
 var zoom = require('../app/assets/scripts/utils/zoom');
 var bounds = [-77.1906280518, 38.9994422096, -76.8761444092, 38.7781755178];
