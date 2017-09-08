@@ -2,17 +2,6 @@
 
 // Leaflet inspired implementation of extracting a midpoint and zoom level from a set of bounds //
 var globMerc = require('global-mercator');
-/**
- * transformation object neccessary for mercator to pixel conversion
- * calculations and params are thanks to the below
- * https://github.com/Leaflet/Leaflet/blob/703ae02aa8cbd0b87be5b01e77754b83ad732267/src/geo/crs/CRS.EPSG3395.js
- */
-exports.mercatorTransformation = {
-  a: 2.495320233665337e-8,
-  b: 0.5,
-  c: -2.495320233665337e-8,
-  d: 0.5
-};
 
 /**
  * calculates tranformed pixel point from coordinate point
