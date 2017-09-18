@@ -4,6 +4,14 @@ import { connect } from 'react-redux';
 import { push, replace } from 'react-router-redux';
 import { setGlobalZoom } from '../actions/action-creators';
 import { getLanguage } from '../utils/i18n';
+import { 
+  transformGeoToPixel,
+  pixelDistances,
+  newZoomScale,
+  makeNewZoom,
+  makeCenterpoint,
+  makeNWSE
+} from '../utils/zoom';
 import config from '../config';
 
 var Editor = React.createClass({
@@ -15,7 +23,8 @@ var Editor = React.createClass({
     _setGlobalZoom: React.PropTypes.func,
     globX: React.PropTypes.number,
     globY: React.PropTypes.number,
-    globZ: React.PropTypes.number
+    globZ: React.PropTypes.number,
+    vprommsBbox: React.PropTypes.object
   },
 
   // /////////////////////////////////////////////////////////////////////////////
@@ -63,8 +72,31 @@ var Editor = React.createClass({
     return url.replace(new RegExp(`(http:|https:)?${base}/?#?`), '');
   },
 
-  makeNewZoom: function (bbox) {
+  makeNewXYZ: function (bounds, zoom) {
+    // grab bbox bounds from its returned obj.
+    // make NWSE object
+    const NWSE = makeNWSE(bounds);
+    // make nw and se pixel location objects;
+    const nw = transformGeoToPixel(NWSE.nw, zoom);
+    const se = transformGeoToPixel(NWSE.se, zoom);
+    // pixel distance between nw and se x points & nw and se y points
+    const distances = pixelDistances(nw, se);
+    // scale factor used to generate new zoom
+    const zoomScale = newZoomScale(distances);
+    // new zoom, using zoomScale and zoom
+    const newZoom = makeNewZoom(zoomScale, zoom);
+    // centerpoint for new zoom object
+    const cp = makeCenterpoint(bounds);
+    // return a zoom object with new x,y, and z!
+    return {
+      x: cp.x,
+      y: cp.y,
+      z: newZoom
+    };
+  },
 
+  makeIdHash: function (newXYZ) {
+    return `//orma.github.io/openroads-vn-iD/#map=${newXYZ.z}/${newXYZ.x}/${newXYZ.y}/`;
   },
 
   componentDidMount: function () {
@@ -80,7 +112,19 @@ var Editor = React.createClass({
   },
 
   componentWillReceiveProps: function (nextProps) {
-    this.makeNewZoom(nextProps.vprommsBbox);
+    // get zoom from iframe src url
+    const zoom = document.getElementById('main-frame')
+      .getAttribute('src')
+      .split('#map=')[1].split('/')[0];
+    let bounds;
+    // grab bounds from correct property of newProps
+    if (nextProps.vprommsBbox !== this.props.vprommsBbox) {
+      bounds = nextProps.vprommsBbox[Object.keys(nextProps.vprommsBbox)[0]];
+    }
+    const newXYZ = this.makeNewXYZ(bounds, zoom);
+    const newIdSource = this.makeIdHash(newXYZ);
+    console.log(newIdSource);
+    document.getElementById('main-frame').setAttribute('src', newIdSource);
   },
 
   shouldComponentUpdate: function () {
