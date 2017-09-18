@@ -122,12 +122,13 @@ var Editor = React.createClass({
       bounds = nextProps.vprommsBbox[Object.keys(nextProps.vprommsBbox)[0]];
     }
     const newXYZ = this.makeNewXYZ(bounds, zoom);
-    const newIdSource = this.makeIdHash(newXYZ);
-    console.log(newIdSource);
-    document.getElementById('main-frame').setAttribute('src', newIdSource);
+    const newiDSource = this.makeIdHash(newXYZ);
+    this.hash = this.cleanUrl(newiDSource, config.editorUrl);
+    this.props.dispatch(replace(`/${getLanguage()}/editor/${this.hash}`));
+    document.getElementById('main-frame').setAttribute('src', newiDSource);
   },
 
-  shouldComponentUpdate: function () {
+  shouldComponentUpdate: function (nextProps) {
     return false;
   },
 

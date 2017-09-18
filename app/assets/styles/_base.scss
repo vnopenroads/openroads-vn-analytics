@@ -179,8 +179,6 @@ a:active{
   z-index: 99999;
 
   .search-wrapper {
-    display: inline-block !important;
-    margin-right: .8rem;
     overflow: visible;
     max-height: 0;
     transition: opacity 0.16s ease 0s, max-height 0.16s ease 0s, visibility 0.16s linear 0s;
@@ -424,8 +422,9 @@ a:active{
       }
 
       .bttn-search {
+        height: 33px;
         &::before {
-          @extend .collecticons-circle-information;
+          @extend .collecticons-magnifier-right;
         }
         text-decoration: none;
       }
