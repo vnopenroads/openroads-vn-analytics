@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { push, replace } from 'react-router-redux';
 import { setGlobalZoom } from '../actions/action-creators';
 import { getLanguage } from '../utils/i18n';
-import { 
+import {
   transformGeoToPixel,
   pixelDistances,
   newZoomScale,
