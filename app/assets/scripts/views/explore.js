@@ -25,6 +25,7 @@ var Explore = React.createClass({
     globX: React.PropTypes.number,
     globY: React.PropTypes.number,
     globZ: React.PropTypes.number,
+    adminBbox: React.PropTypes.array,
     vprommsBbox: React.PropTypes.object
   },
 
@@ -89,8 +90,15 @@ var Explore = React.createClass({
   },
 
   componentWillReceiveProps: function (nextProps) {
-    const bounds = nextProps.vprommsBbox[Object.keys(nextProps.vprommsBbox)[0]];
-    this.map.fitBounds(bounds);
+    let bounds;
+    if (nextProps.adminBbox !== this.props.adminBbox) {
+      bounds = nextProps.adminBbox;
+      return this.map.fitBounds(bounds);
+    }
+    if (nextProps.vprommsBbox !== this.props.vprommsBbox) {
+      bounds = nextProps.vprommsBbox[Object.keys(nextProps.vprommsBbox)[0]];
+      return this.map.fitBounds(bounds);
+    }
   },
 
   render: function () {
@@ -117,7 +125,8 @@ function selector (state) {
     globX: state.globZoom.x,
     globY: state.globZoom.y,
     globZ: state.globZoom.z,
-    vprommsBbox: state.VProMMsWayBbox.data
+    vprommsBbox: state.VProMMsWayBbox.data,
+    adminBbox: state.adminBbox.bbox
   };
 }
 

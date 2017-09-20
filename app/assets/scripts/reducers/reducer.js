@@ -5,17 +5,40 @@ import { routeReducer } from 'react-router-redux';
 import * as actions from '../actions/action-types';
 import { VPROMMS_IDS } from '../constants';
 
-const adminSubregions = function (state = {adminAreas: [], fetching: false, fetched: false}, action) {
+const admins = function (state = {units: [], fetching: false, fetched: false}, action) {
   switch (action.type) {
-    case actions.REQUEST_ADMIN_SUBREGIONS:
-      console.log('REQUEST_ADMIN_SUBREGIONS');
+    case actions.REQUEST_ADMINS:
+      console.log('REQUEST_ADMINS');
       state = _.cloneDeep(state);
       state.fetching = true;
       break;
-    case actions.RECEIVE_ADMIN_SUBREGIONS:
-      console.log('RECEIVE_ADMIN_SUBREGIONS');
+    case actions.RECEIVE_ADMINS:
+      console.log('RECEIVE_ADMINS');
       state = _.cloneDeep(state);
-      state = action.json;
+      state.units = action.json;
+      state.fetching = false;
+      state.fetched = true;
+      break;
+  }
+  return state;
+};
+
+const adminBboxDefaultState = {
+  fetching: false,
+  fetched: false,
+  bbox: []
+};
+const adminBbox = function (state = adminBboxDefaultState, action) {
+  switch (action.type) {
+    case actions.REQUEST_ADMIN_BBOX:
+      console.log('REQUEST_ADMIN_BBOX');
+      state = _.cloneDeep(state);
+      state.fetching = true;
+      state.fetched = false;
+      break;
+    case actions.RECEIVE_ADMIN_BBOX:
+      console.log('RECEIVE_ADMIN_BBOX');
+      state.bbox = action.json.bbox;
       state.fetching = false;
       state.fetched = true;
       break;
@@ -425,7 +448,8 @@ const setFilteredVProMMs = function (state = {filteredVProMMs: []}, action) {
 };
 
 export default combineReducers({
-  adminSubregions,
+  admins,
+  adminBbox,
   search,
   stats,
   tofixtasks,
