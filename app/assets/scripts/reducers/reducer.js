@@ -430,7 +430,7 @@ const searchResultsDisplay = function (state = {show: false}, action) {
       break;
   }
   return state;
-}
+};
 
 const defaultSearchType = {
   searchType: ''
