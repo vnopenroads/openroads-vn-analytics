@@ -19,6 +19,10 @@ const admins = function (state = {units: [], fetching: false, fetched: false}, a
       state.fetching = false;
       state.fetched = true;
       break;
+    case actions.CLEAR_ADMINS:
+      state = _.cloneDeep(state);
+      state.units = [];
+      break;
   }
   return state;
 };
@@ -45,7 +49,6 @@ const adminBbox = function (state = adminBboxDefaultState, action) {
   }
   return state;
 };
-
 const search = function (state = {results: [], fetching: false, fetched: false, query: '', searching: false}, action) {
   switch (action.type) {
     case actions.REQUEST_SEARCH_RESULTS:
@@ -409,11 +412,7 @@ const globZoom = function (state = globZoomDefault, action) {
   return state;
 };
 
-const searchDisplayDefault = {
-  show: false
-};
-
-const searchDisplay = function (state = searchDisplayDefault, action) {
+const searchDisplay = function (state = {show: false}, action) {
   switch (action.type) {
     case actions.DISPLAY_SEARCH:
       state = _.cloneDeep(state);
@@ -422,6 +421,16 @@ const searchDisplay = function (state = searchDisplayDefault, action) {
   }
   return state;
 };
+
+const searchResultsDisplay = function (state = {show: false}, action) {
+  switch (action.type) {
+    case actions.DISPLAY_SEARCH_RESULTS:
+      state = _.cloneDeep(state);
+      state.show = action.bool;
+      break;
+  }
+  return state;
+}
 
 const defaultSearchType = {
   searchType: ''
@@ -437,11 +446,11 @@ const setSearchType = function (state = defaultSearchType, action) {
   return state;
 };
 
-const setFilteredVProMMs = function (state = {filteredVProMMs: []}, action) {
+const setFilteredVProMMs = function (state = [], action) {
   switch (action.type) {
     case actions.SET_FILTERED_VPROMMS:
       state = _.cloneDeep(state);
-      state.filteredVProMMs = action.array;
+      state = action.array;
       break;
   }
   return state;
@@ -464,6 +473,7 @@ export default combineReducers({
   routing: routeReducer,
   globZoom,
   searchDisplay,
+  searchResultsDisplay,
   setSearchType,
   setFilteredVProMMs
 });

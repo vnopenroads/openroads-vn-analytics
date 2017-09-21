@@ -314,9 +314,8 @@ a:active{
         }
 
         .drop-content {
-          left: auto;
-          right: 0;
           margin-top: $global-spacing / 4;
+          width: 100%;
         }
       }
 
@@ -358,6 +357,10 @@ a:active{
           margin: 0;
           float: left;
           overflow: hidden;
+        }
+
+        .search {
+          overflow: visible;
         }
       }
 
@@ -424,7 +427,8 @@ a:active{
       .bttn-search {
         height: 33px;
         &::before {
-          @extend .collecticons-magnifier-right;
+          line-height: inherit;
+          @extend %collecticons-magnifier-right;
         }
         text-decoration: none;
       }
@@ -437,7 +441,10 @@ a:active{
         z-index: 9999;
         color: $base-color;
         width: 80%;
-        max-width: 25rem;
+        max-width: 321px;
+        &::before {
+          display: none;
+        }
         &-show {
           visibility: visible;
           opacity: 1;
@@ -447,16 +454,14 @@ a:active{
           strong {
             @extend .truncated;
             max-width: 22rem;
-            font-weight: inherit;
-            float: left;
-          }
-          small {
-            float: right;
+            font-weight: bolder;
           }
         }
 
-        .drop-menu-result a {
-          @extend .truncated;
+        .drop-menu-result {
+          a {
+            @extend .truncated;
+          }
         }
 
         i {

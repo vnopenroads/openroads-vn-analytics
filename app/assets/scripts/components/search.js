@@ -10,7 +10,9 @@ import {
   fetchVProMMsBbox,
   setFilteredVProMMs,
   fetchAdmins,
-  fetchAdminBbox
+  clearAdmins,
+  fetchAdminBbox,
+  showSearchResults
 } from '../actions/action-creators';
 
 var Search = React.createClass({
@@ -26,26 +28,33 @@ var Search = React.createClass({
     fetching: React.PropTypes.bool,
     fetchSearchResults: React.PropTypes.func,
     searchType: React.PropTypes.string,
+    searchDisplay: React.PropTypes.bool,
+    searchResultsDisplay: React.PropTypes.bool,
     vpromms: React.PropTypes.array,
     filteredVProMMs: React.PropTypes.array,
     _setFilteredVProMMs: React.PropTypes.func,
     _fetchVProMMsids: React.PropTypes.func,
     _fetchVProMMsBbox: React.PropTypes.func,
-    _fetchAdmin: React.PropTypes.func,
-    _fetchAdminBbox: React.PropTypes.func
+    _fetchAdmins: React.PropTypes.func,
+    _clearAdmins: React.PropTypes.func,
+    _fetchAdminBbox: React.PropTypes.func,
+    _showSearchResults: React.PropTypes.func
   },
 
   onSearchQueryChange: function () {
     this.searchVal = _.trim(this.refs.searchBox.value);
     if (this.props.searchType === 'Admin') {
-      if (this.searchVal.length >= 3) {
-        this.props._fetchAdmin(this.searchVal);
+      if (this.searchVal.length > 0) {
+        this.props._fetchAdmins(this.searchVal);
+        this.props._showSearchResults(true);
+        this.refs.results.classList.add('search-results-show');
       } else {
-        this.props.cleanSearchResults();
+        this.props._clearAdmins();
       }
     } else {
       if (this.searchVal.length >= 2) {
         this.filterVProMMs(this.searchVal);
+        this.props.results.classList.add('search-results-show');
       } else {
         this.props._setFilteredVProMMs([]);
       }
@@ -69,14 +78,20 @@ var Search = React.createClass({
 
   searchClick: function (e) {
     e.preventDefault();
+    this.fireSearch();
+  },
+
+  fireSearch: function () {
     if (!this.props.fetching) {
       this.searchVal = _.trim(this.refs.searchBox.value);
       if (this.searchVal.length) {
         if (this.props.searchType === 'Admin') {
-          this.props.fetchSearchResults(this.searchVal);
+          this.searchAdminArea(this.props.admins[0].id);
+          this.refs.searchBox.value = this.props.admins[0].name_en;
         } else {
           this.searchVProMMsID(this.props.filteredVProMMs[0]);
         }
+        this.refs.results.classList.remove('search-results-show');
       }
     }
   },
@@ -102,7 +117,7 @@ var Search = React.createClass({
 
   _handleKeyPress: function (e) {
     if (e.key === 'Enter') {
-      this.props._fetchVProMMsBbox(this.props.filteredVProMMs[0]);
+      this.fireSearch();
     }
   },
 
@@ -140,25 +155,33 @@ var Search = React.createClass({
     var results = [];
     if (this.props.searchType === 'Admin') {
       if (!g.length) {
-        return (<p className='info'>No results available. Please refine your search.</p>);
+        if (/^(?![\s\S])/.test(this.searchVal)) {
+          results.push(<p className='info'>Please search for an Admin Area</p>);
+        } else {
+          results.push(<p className='info'>No results available. Please refine your search.</p>);
+        }
+      } else {
+        g = _.groupBy(g, (o) => o.level);
+        _.forEach(g, (l, k) => {
+          results.push(
+            <dt key={`aa-type-${k}`} className='drop-menu-sectitle'>
+              <strong>Admin Level - {k}</strong>
+            </dt>
+          );
+          _.forEach(l, (o, i) => {
+            results.push(
+              <dd key={`aa-type-${k}-${i}`} className='drop-menu-result'
+              onClick={(e) => {
+                const adminArea = this.props.admins.find(o => o.name_en === e.target.textContent).id;
+                this.refs.results.classList.remove('search-results-show');
+                this.searchAdminArea(adminArea);
+              }}>
+              <small><a>{o.name_en}</a></small>
+            </dd>
+            );
+          });
+        });
       }
-      results.push(
-        <dt key={`aa-type-0`} className='drop-menu-sectitle'>
-          <strong>{g[0].level}</strong>;
-        </dt>
-      );
-      _.forEach(g, (o, k) => {
-        results.push(
-          <dd key={`aa-type-0-${k}`} className='drop-menu-result'
-            onClick={(e) => {
-              const adminArea = g.find(o => o.name_en === e.target.textContent).id;
-              this.searchAdminArea(adminArea);
-            }}
-            >
-            <small>{o.name_en}</small>
-          </dd>
-        );
-      });
     } else {
       _.forEach(g, (o, k) => {
         results.push(
@@ -166,6 +189,7 @@ var Search = React.createClass({
           onClick={(e) => {
             const vprommsId = e.target.textContent;
             this.searchVProMMsID(vprommsId);
+            this.props._showSearchResults(false);
           }}>
           <strong>{o}</strong>
         </dt>);
@@ -179,7 +203,7 @@ var Search = React.createClass({
   },
 
   searchBar: function () {
-    const searchPlaceHolder = this.props.searchType === 'Admin' ? 'Search by administrative area' : 'Search by VProMMs ID';
+    const searchPlaceHolder = this.props.searchType === 'Admin' ? 'Search by Administrative Area' : 'Search by VProMMs ID';
     return (
       <div className='input-group'>
         <input type='search' className='form-control input-search'
@@ -197,17 +221,16 @@ var Search = React.createClass({
   },
 
   render: function () {
-    const resultsExist = this.props.admins[0] || this.props.filteredVProMMs.length > 0;
     const searchResultsClasses = classNames({
       'drop-content': true,
       'search-results': true,
-      'search-results-show': resultsExist
+      'search-results-show': this.props.searchResultsDisplay
     });
     return (
       <form className='form-search' ref='searchForm'>
         <div className={classNames('drop dropdown center', {open: this.props.searching})}>
           {this.searchBar()}
-          <div className={searchResultsClasses}>
+          <div className={searchResultsClasses} ref='results'>
             {this.renderResults()}
           </div>
         </div>
@@ -220,7 +243,8 @@ function selector (state) {
   return {
     admins: state.admins.units,
     vpromms: state.VProMMSids.data,
-    filteredVProMMs: state.setFilteredVProMMs.filteredVProMMs
+    filteredVProMMs: state.setFilteredVProMMs,
+    searchResultsDisplay: state.searchResultsDisplay.show
   };
 }
 
@@ -229,8 +253,10 @@ function dispatcher (dispatch) {
     _fetchVProMMsids: (use) => dispatch(fetchVProMMsids(use)),
     _fetchVProMMsBbox: (vprommsId) => dispatch(fetchVProMMsBbox(vprommsId)),
     _setFilteredVProMMs: (filteredVProMMs) => dispatch(setFilteredVProMMs(filteredVProMMs)),
-    _fetchAdmin: (id) => dispatch(fetchAdmins(id)),
-    _fetchAdminBbox: (id) => dispatch(fetchAdminBbox(id))
+    _clearAdmins: () => dispatch(clearAdmins()),
+    _fetchAdmins: (id) => dispatch(fetchAdmins(id)),
+    _fetchAdminBbox: (id) => dispatch(fetchAdminBbox(id)),
+    _showSearchResults: (bool) => dispatch(showSearchResults(bool))
   };
 }
 

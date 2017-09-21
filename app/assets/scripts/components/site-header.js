@@ -63,10 +63,8 @@ var SiteHeader = React.createClass({
   },
 
   displaySearchBar: function () {
-    let last = _.last(this.props.routes).path;
-    if (this.props.displaySearch === true) {
+    if (this.props.displaySearch) {
       return (
-        <div className='search-wrapper' ref="search">
           <div className='site__search'>
             <Search
               searchType={this.props.searchType}
@@ -75,11 +73,9 @@ var SiteHeader = React.createClass({
               onResultClick={this.closeSearch}
               results={this.props.search.results}
               query={this.props.search.query}
-              isEditor={last === 'editor/*' || last === 'editor'}
               fetching={this.props.search.fetching}
               searching={this.props.search.searching} />
           </div>
-        </div>
       );
     } else {
       return (<div/>);
@@ -115,6 +111,9 @@ var SiteHeader = React.createClass({
                   <Link to={`/${getLanguage()}/editor`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
                     <span>{t('Editor')}</span>
                   </Link>
+                </li>
+                <li className='search'>
+                  {this.displaySearchBar()}
                 </li>
               </ul>
             </div>
@@ -172,7 +171,6 @@ var SiteHeader = React.createClass({
               </Headerdrop>
             </div>
           </nav>
-          {this.displaySearchBar()}
         </div>
       </header>
     );

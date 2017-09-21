@@ -30,7 +30,7 @@ export function fetchAdmins (id = null) {
 
     // In this case, we return a promise to wait for.
     // This is not required by thunk middleware, but it is convenient for us.
-    let url = `${config.api}/admin/units?name=${id}&limit=20`;
+    let url = `${config.api}/admin/units?name=${id}&limit=10`;
     console.log(url);
     console.time('fetch subregions');
     return fetch(url)
@@ -40,6 +40,12 @@ export function fetchAdmins (id = null) {
         dispatch(receiveAdmins(json));
       });
       // catch any error in the network call.
+  };
+}
+
+export function clearAdmins () {
+  return {
+    type: actions.CLEAR_ADMINS
   };
 }
 
@@ -512,6 +518,13 @@ export function showSearch (bool) {
   };
 }
 
+export function showSearchResults (bool) {
+  return {
+    type: actions.DISPLAY_SEARCH_RESULTS,
+    bool: bool
+  };
+}
+
 export function setSearchType (text) {
   return {
     type: actions.SET_SEARCH_TYPE,
@@ -525,3 +538,4 @@ export function setFilteredVProMMs (array) {
     array: array
   };
 }
+
