@@ -24,7 +24,8 @@ var Editor = React.createClass({
     globX: React.PropTypes.number,
     globY: React.PropTypes.number,
     globZ: React.PropTypes.number,
-    vprommsBbox: React.PropTypes.object
+    vprommsBbox: React.PropTypes.object,
+    adminBbox: React.PropTypes.array
   },
 
   // /////////////////////////////////////////////////////////////////////////////
@@ -112,16 +113,25 @@ var Editor = React.createClass({
   },
 
   componentWillReceiveProps: function (nextProps) {
-    // get zoom from iframe src url
+    // the props this component recieves are only the bounds of either a new admin or vpromms bbox
+    // this bbox needs to be converted to a new centerpoint & zoom level.
+
+    // to do this, first grab the current zoom
     const zoom = document.getElementById('main-frame')
       .getAttribute('src')
       .split('#map=')[1].split('/')[0];
     let bounds;
-    // grab bounds from correct property of newProps
+    // then grab a bounding box provided by a user search in the search component
     if (nextProps.vprommsBbox !== this.props.vprommsBbox) {
       bounds = nextProps.vprommsBbox[Object.keys(nextProps.vprommsBbox)[0]];
     }
+    if (nextProps.adminBbox !== this.props.adminBbox) {
+      bounds = nextProps.adminBbox;
+    }
+    // then generate a new centerpoint and zoom level with these bounds and zoom level
     const newXYZ = this.makeNewXYZ(bounds, zoom);
+    // translate that xyz object into a url hash that when given to the iframe will
+    // change the zoom level of iD
     const newiDSource = this.makeIdHash(newXYZ);
     this.hash = this.cleanUrl(newiDSource, config.editorUrl);
     this.props.dispatch(replace(`/${getLanguage()}/editor/${this.hash}`));
@@ -148,7 +158,9 @@ function selector (state) {
     globX: state.globZoom.x,
     globY: state.globZoom.y,
     globZ: state.globZoom.z,
-    vprommsBbox: state.VProMMsWayBbox.data
+    vprommsBbox: state.VProMMsWayBbox.bbox,
+    adminBbox: state.adminBbox.bbox
+
   };
 }
 

@@ -125,7 +125,7 @@ function selector (state) {
     globX: state.globZoom.x,
     globY: state.globZoom.y,
     globZ: state.globZoom.z,
-    vprommsBbox: state.VProMMsWayBbox.data,
+    vprommsBbox: state.VProMMsWayBbox.bbox,
     adminBbox: state.adminBbox.bbox
   };
 }

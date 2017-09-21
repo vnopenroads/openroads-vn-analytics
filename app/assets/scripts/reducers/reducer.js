@@ -357,7 +357,7 @@ const VProMMSidsAnalytics = function (state = VProMMSidsAnalyticsDefaultState, a
 const VProMMsWayBboxDefaultState = {
   fetching: false,
   fetched: false,
-  data: []
+  bbox: []
 };
 
 const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
@@ -371,7 +371,7 @@ const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
       state = _.cloneDeep(state);
       state.fetching = false;
       state.fetched = true;
-      state.data = action.json;
+      state.bbox = action.json;
   }
   return state;
 };

@@ -2,7 +2,6 @@
 import React from 'react';
 import _ from 'lodash';
 import classNames from 'classnames';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { t } from '../utils/i18n';
 import { isDescendent } from '../utils/dom';
@@ -221,7 +220,7 @@ function selector (state) {
   return {
     admins: state.admins.units,
     vpromms: state.VProMMSids.data,
-    filteredVProMMs: state.setFilteredVProMMs.filteredVProMMs,
+    filteredVProMMs: state.setFilteredVProMMs.filteredVProMMs
   };
 }
 

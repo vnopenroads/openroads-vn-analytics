@@ -498,7 +498,7 @@ export function fetchAdminBbox (id) {
       }
       dispatch(receiveAdminBbox(json));
     });
-  }
+  };
 }
 
 // ////////////////////////////////////////////////////////////////
