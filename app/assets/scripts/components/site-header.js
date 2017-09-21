@@ -62,6 +62,15 @@ var SiteHeader = React.createClass({
     window.removeEventListener('resize', this.resizeHandler);
   },
 
+  // for the analytics and home page, hide search if open.
+  setSearchDisplay: function () {
+    let isExplore = new RegExp(/explore/).test(this.props.pathname);
+    let isEditor = new RegExp(/editor/).test(this.props.pathname);
+    if (!isEditor && !isExplore) {
+      this.props._showSearch(false);
+    }
+  },
+
   displaySearchBar: function () {
     if (this.props.displaySearch) {
       return (
@@ -83,6 +92,7 @@ var SiteHeader = React.createClass({
   },
 
   render: function () {
+    this.setSearchDisplay();
     return (
       <header className='site-header' ref={(header) => this.header = header }>
         <div className='inner'>
@@ -146,28 +156,28 @@ var SiteHeader = React.createClass({
                 </ul>
               </Headerdrop>
               <Headerdrop
-                id='search-selector'
-                triggerClassName='drop-toggle caret change-search-button site__lang'
-                triggerText={t('Search')}
-                triggerElement='a'
-                direction='down'
-                alignment='right'>
-                <ul className='drop-menu drop-menu--select' role='menu'>
-                {
-                  ['Admin', 'VProMMs'].map((l, i) => {
-                    let cl = 'drop-menu-item';
-                    return (
-                      <li key={i}>
-                        <a onClick={(e) => {
-                          this.props._setSearchType(l);
-                          this.props._showSearch(true);
-                        }}
-                          className={cl} data-hook='dropdown:close'>{l}</a>
-                      </li>
-                    );
-                  })
-                  }
-                </ul>
+              id='search-selector'
+              triggerClassName='drop-toggle caret change-search-button site__lang'
+              triggerText={t('Search')}
+              triggerElement='a'
+              direction='down'
+              alignment='right'>
+              <ul className='drop-menu drop-menu--select' role='menu'>
+              {
+                ['Admin', 'VProMMs'].map((l, i) => {
+                  let cl = 'drop-menu-item';
+                  return (
+                    <li key={i}>
+                      <a onClick={(e) => {
+                        this.props._setSearchType(l);
+                        this.props._showSearch(true);
+                      }}
+                        className={cl} data-hook='dropdown:close'>{l}</a>
+                    </li>
+                  );
+                })
+                }
+              </ul>
               </Headerdrop>
             </div>
           </nav>

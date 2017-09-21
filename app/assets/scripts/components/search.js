@@ -11,8 +11,7 @@ import {
   setFilteredVProMMs,
   fetchAdmins,
   clearAdmins,
-  fetchAdminBbox,
-  showSearchResults
+  fetchAdminBbox
 } from '../actions/action-creators';
 
 var Search = React.createClass({
@@ -255,8 +254,7 @@ function dispatcher (dispatch) {
     _setFilteredVProMMs: (filteredVProMMs) => dispatch(setFilteredVProMMs(filteredVProMMs)),
     _clearAdmins: () => dispatch(clearAdmins()),
     _fetchAdmins: (id) => dispatch(fetchAdmins(id)),
-    _fetchAdminBbox: (id) => dispatch(fetchAdminBbox(id)),
-    _showSearchResults: (bool) => dispatch(showSearchResults(bool))
+    _fetchAdminBbox: (id) => dispatch(fetchAdminBbox(id))
   };
 }
 
