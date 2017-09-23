@@ -31,6 +31,10 @@ const AATable = React.createClass({
     };
   },
 
+  componentDidMount: function() {
+    console.log(this.props.sources);
+  },
+
   renderTableHead: function () {
     return (
       <thead>
@@ -79,7 +83,7 @@ const AATable = React.createClass({
   },
 
   makeFieldData: function (id) {
-    return (<a href={`${api}/${id}/geometries?full`}>Download</a>);
+    return (<a href={`${api}/field/${id}/geometries?grouped=false&download=true`}>Download</a>);
   },
 
   renderTableBody: function () {
@@ -93,7 +97,7 @@ const AATable = React.createClass({
               <td className={classnames({'added': vpromm.inTheDatabase, 'not-added': !vpromm.inTheDatabase})}>{vpromm.inTheDatabase ? 'added' : 'not added'}</td>
               <td className={classnames({'added': vpromm.RouteShoot, 'not-added': !vpromm.RouteShoot})}>{vpromm.RouteShoot ? <a href={vpromm.RouteShootUrl}>link</a> : ''}</td>
               <td className={classnames({'added': vpromm.RoadLabPro, 'not-added': !vpromm.RoadLabPro})}>{vpromm.RoadLabPro ? 'added' : 'not added'}</td>
-              <td className={classnames({'added': this.props.sources[vpromm.id], 'not-added': !this.props.sources[vpromm.id]})}>{this.props.sources[vpromm.id] ? this.makeFieldData(this.props.sources[vpromm.id]) : 'not added'}</td>
+              <td className={classnames({'added': this.props.sources[vpromm.id], 'not-added': !this.props.sources[vpromm.id]})}>{this.props.sources[vpromm.id] ? this.makeFieldData(vpromm.id) : 'not added'}</td>
             </tr>
           );
         })}

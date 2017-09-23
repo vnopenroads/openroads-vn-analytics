@@ -17,8 +17,7 @@ var AnalyticsAA = React.createClass({
     _fetchVProMMSids: React.PropTypes.func,
     _fetchVProMMSidsSources: React.PropTypes.func,
     VProMMSids: React.PropTypes.object,
-    VProMMSidsSources: React.PropTypes.array,
-    VProMMSidsSourcesFetched: React.PropTypes.bool
+    VProMMSidsSources: React.PropTypes.object
   },
 
   componentDidMount: function () {
@@ -28,7 +27,8 @@ var AnalyticsAA = React.createClass({
   },
 
   render: function () {
-    if (this.props.VProMMSidsSources.length) {
+    // only render the table if the  VProMMSidsSource have been fetched, denoted by them === true when casted to a boolean
+    if (this.props.VProMMSidsSources) {
       let provinceId = this.props.routeParams.aaId;
       let data = this.props.VProMMSids[provinceId];
       let ids = data.vpromms;
