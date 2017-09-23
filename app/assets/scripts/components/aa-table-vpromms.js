@@ -31,7 +31,7 @@ const AATable = React.createClass({
     };
   },
 
-  componentDidMount: function() {
+  componentDidMount: function () {
     console.log(this.props.sources);
   },
 
