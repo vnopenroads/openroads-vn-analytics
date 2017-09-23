@@ -4,19 +4,22 @@
 import React from 'react';
 import _ from 'lodash';
 import classnames from 'classnames';
+import { api } from '../config';
 
 const displayHeader = [
   {key: 'id', value: 'VProMMS ID'},
   {key: 'inTheDatabase', value: 'Status'},
   {key: 'RouteShoot', value: 'RouteShoot'},
-  {key: 'RoadLab', value: 'RoadLabPro'}
+  {key: 'RoadLab', value: 'RoadLabPro'},
+  {key: 'FieldData', value: 'Field Data'}
 ];
 
 const AATable = React.createClass({
   displayName: 'AATable',
 
   propTypes: {
-    data: React.PropTypes.array
+    data: React.PropTypes.array,
+    sources: React.PropTypes.array
   },
 
   getInitialState: function () {
@@ -75,6 +78,10 @@ const AATable = React.createClass({
     return sorted.value();
   },
 
+  makeFieldData: function (id) {
+    return (<a href={`${api}/${id}/geometries?full`}>Download</a>);
+  },
+
   renderTableBody: function () {
     const sorted = this.handleSort(this.props.data);
     return (
@@ -86,6 +93,7 @@ const AATable = React.createClass({
               <td className={classnames({'added': vpromm.inTheDatabase, 'not-added': !vpromm.inTheDatabase})}>{vpromm.inTheDatabase ? 'added' : 'not added'}</td>
               <td className={classnames({'added': vpromm.RouteShoot, 'not-added': !vpromm.RouteShoot})}>{vpromm.RouteShoot ? <a href={vpromm.RouteShootUrl}>link</a> : ''}</td>
               <td className={classnames({'added': vpromm.RoadLabPro, 'not-added': !vpromm.RoadLabPro})}>{vpromm.RoadLabPro ? 'added' : 'not added'}</td>
+              <td className={classnames({'added': this.props.sources[vpromm.id], 'not-added': !this.props.sources[vpromm.id]})}>{this.props.sources[vpromm.id] ? this.makeFieldData(this.props.sources[vpromm.id]) : 'not added'}</td>
             </tr>
           );
         })}

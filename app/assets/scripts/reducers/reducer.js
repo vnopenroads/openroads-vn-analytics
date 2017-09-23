@@ -317,7 +317,6 @@ const VProMMSidsSources = function (state = defaultVProMMSidsSources, action) {
       break;
     case actions.RECEIVE_VPROMMS_IDS_SOURCES:
       console.log('RECEIVE_VPROMMS_IDS_SOURCES');
-      console.log(action);
       state = _.cloneDeep(state);
       state.sources = action.json;
       state.fetching = false;

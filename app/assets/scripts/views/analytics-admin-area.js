@@ -22,44 +22,37 @@ var AnalyticsAA = React.createClass({
   },
 
   componentDidMount: function () {
-    this.provinceId = this.props.routeParams.aaId;
-    this.data = this.props.VProMMSids[this.provinceId];
-    this.ids = this.data.vpromms;
-    const vpromms = this.ids.map(road => road.id);
+    const vpromms = this.props.VProMMSids[this.props.routeParams.aaId].vpromms.map(road => road.id);
     // fire request for source data
-    this.done = this.ids.filter(v => v.inTheDatabase).length;
-    this.total = this.ids.length;
     this.props._fetchVProMMSidsSources(vpromms);
-  },
-
-  componentWillReceiveProps: function (nextProps) {
-    this.mergeIds();
-  },
-
-  mergeIds: function () {
   },
 
   render: function () {
     if (this.props.VProMMSidsSources.length) {
-      const completion = this.total !== 0 ? ((this.done / this.total) * 100) : 0;
+      let provinceId = this.props.routeParams.aaId;
+      let data = this.props.VProMMSids[provinceId];
+      let ids = data.vpromms;
+      let done = ids.filter(v => v.inTheDatabase).length;
+      let total = ids.length;
+      const completion = total !== 0 ? ((done / total) * 100) : 0;
       let completionMainText;
       let completionTailText = 'Information on VPRoMMS roads is not available';
-      if (this.total !== 0) {
+      if (total !== 0) {
         completionMainText = completion.toFixed(2);
-        completionTailText = `% of vPRoMMS IDs added ${this.done.toLocaleString()} of ${this.total.toLocaleString()}`;
+        completionTailText = `% of vPRoMMS IDs added ${done.toLocaleString()} of ${total.toLocaleString()}`;
       }
       return (
       <div>
         <div className="aa-header">
-          <h1>{this.data.provinceName} {t('Province')}</h1>
-          { completion ? <a className='bttn-s bttn-road-network' href={config.provinceDumpBaseUrl + this.provinceId + '.geojson'}>{t('Download Roads')}</a> : '' }
+          <h1>{data.provinceName} {t('Province')}</h1>
+          { completion ? <a className='bttn-s bttn-road-network' href={config.provinceDumpBaseUrl + provinceId + '.geojson'}>{t('Download Roads')}</a> : '' }
         </div>
         <div className='aa-main__status'>
           <h2><strong>{completionMainText}</strong>{completionTailText}</h2>
           <div className='meter'>
            <div className='meter__internal' style={{width: `${completion}%`}}></div>
           </div>
-          {this.total ? <AATable data={this.ids} /> : ''}
+          {total ? <AATable data={ids} sources={this.props.VProMMSidsSources}/> : ''}
         </div>
       </div>
       );
