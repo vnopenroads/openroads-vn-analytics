@@ -1,6 +1,5 @@
 'use strict';
 import React from 'react';
-import mapboxgl from 'mapbox-gl';
 
 var AAFieldMap = React.createClass({
   displayName: 'AAFieldMap',
