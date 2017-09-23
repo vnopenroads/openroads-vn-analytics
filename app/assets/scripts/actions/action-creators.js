@@ -395,6 +395,43 @@ export function fetchVProMMSids () {
 }
 
 // ////////////////////////////////////////////////////////////////
+//                   VProMMS IDs Source Data                     //
+// ////////////////////////////////////////////////////////////////
+
+function requestVProMMSidsSources (json) {
+  return {
+    type: actions.REQUEST_VPROMMS_IDS_SOURCES,
+    json: json,
+    receivedAt: Date.now()
+  };
+}
+
+function receiveVProMMSidsSources (json) {
+  return {
+    type: actions.RECEIVE_VPROMMS_IDS_SOURCES,
+    json: json
+  };
+}
+
+export function fetchVProMMSidsSources (ids) {
+  return function (dispatch) {
+    dispatch(requestVProMMSidsSources());
+    let idsQuery = ids.join(',');
+    let url = `${config.api}/field/${idsQuery}/exists`;
+    return fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      if (json.statusCode === 400) {
+        return {dataAvailable: false};
+      } else if (json.statusCode > 400) {
+        throw new Error('Bad response');
+      }
+      dispatch(receiveVProMMSidsSources(json));
+    });
+  };
+}
+
+// ////////////////////////////////////////////////////////////////
 //                         Explore Map                           //
 // ////////////////////////////////////////////////////////////////
 

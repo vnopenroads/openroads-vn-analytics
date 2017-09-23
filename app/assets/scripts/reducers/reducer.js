@@ -302,6 +302,31 @@ const VProMMSids = function (state = VProMMSidsDefaultState, action) {
   return state;
 };
 
+const defaultVProMMSidsSources = {
+  fetching: false,
+  fetched: false,
+  sources: []
+};
+
+const VProMMSidsSources = function (state = defaultVProMMSidsSources, action) {
+  switch (action.type) {
+    case actions.REQUEST_VPROMMS_IDS_SOURCES:
+      console.log('REQUEST_VPROMMS_IDS_SOURCES');
+      state = _.cloneDeep(state);
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_VPROMMS_IDS_SOURCES:
+      console.log('RECEIVE_VPROMMS_IDS_SOURCES');
+      console.log(action);
+      state = _.cloneDeep(state);
+      state.sources = action.json;
+      state.fetching = false;
+      state.fetched = true;
+      break;
+  }
+  return state;
+};
+
 const exploreMapDefaultState = {
   layer: 'iri',
   showNoVpromms: false
@@ -345,6 +370,7 @@ export default combineReducers({
   projectsMeta,
   roadNetworkStatus,
   VProMMSids,
+  VProMMSidsSources,
   exploreMap,
   routing: routeReducer,
   globZoom
