@@ -52,7 +52,7 @@ var AnalyticsAA = React.createClass({
           <div className='meter'>
            <div className='meter__internal' style={{width: `${completion}%`}}></div>
           </div>
-          {total ? <AATable data={ids} sources={this.props.VProMMSidsSources}/> : ''}
+          {total ? <AATable data={ids} sources={this.props.VProMMSidsSources} province={this.props.routeParams.aaId}/> : ''}
         </div>
       </div>
       );

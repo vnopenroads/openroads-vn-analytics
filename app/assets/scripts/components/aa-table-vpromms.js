@@ -5,6 +5,7 @@ import React from 'react';
 import _ from 'lodash';
 import classnames from 'classnames';
 import { api } from '../config';
+import { Link } from 'react-router';
 
 const displayHeader = [
   {key: 'id', value: 'VProMMS ID'},
@@ -19,7 +20,7 @@ const AATable = React.createClass({
 
   propTypes: {
     data: React.PropTypes.array,
-    sources: React.PropTypes.array
+    sources: React.PropTypes.object
   },
 
   getInitialState: function () {
@@ -29,10 +30,6 @@ const AATable = React.createClass({
         order: 'desc'
       }
     };
-  },
-
-  componentDidMount: function () {
-    console.log(this.props.sources);
   },
 
   renderTableHead: function () {
@@ -87,13 +84,14 @@ const AATable = React.createClass({
   },
 
   renderTableBody: function () {
-    const sorted = this.handleSort(this.props.data);
+    const sorted = this.handleSort(this.props);
+    const provinceId = this.props.routeParams.aaId;
     return (
       <tbody>
         {_.map(sorted, (vpromm, i) => {
           return (
             <tr key={`vpromm-${vpromm.id}`} className={classnames({'alt': i % 2})}>
-              <td><strong>{vpromm.id}</strong></td>
+              <td><strong><Link to={`${provinceId}/${vpromm.id}`}>{vpromm.id}</Link></strong></td>
               <td className={classnames({'added': vpromm.inTheDatabase, 'not-added': !vpromm.inTheDatabase})}>{vpromm.inTheDatabase ? 'added' : 'not added'}</td>
               <td className={classnames({'added': vpromm.RouteShoot, 'not-added': !vpromm.RouteShoot})}>{vpromm.RouteShoot ? <a href={vpromm.RouteShootUrl}>link</a> : ''}</td>
               <td className={classnames({'added': vpromm.RoadLabPro, 'not-added': !vpromm.RoadLabPro})}>{vpromm.RoadLabPro ? 'added' : 'not added'}</td>
