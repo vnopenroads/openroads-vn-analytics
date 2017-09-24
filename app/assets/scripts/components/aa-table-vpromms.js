@@ -20,7 +20,9 @@ const AATable = React.createClass({
 
   propTypes: {
     data: React.PropTypes.array,
-    sources: React.PropTypes.object
+    sources: React.PropTypes.object,
+    routeParams: React.PropTypes.object,
+    aaId: React.PropTypes.number
   },
 
   getInitialState: function () {
