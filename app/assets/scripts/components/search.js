@@ -3,7 +3,7 @@ import React from 'react';
 import _ from 'lodash';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
-import { t } from '../utils/i18n';
+import { t, getLanguage } from '../utils/i18n';
 import { isDescendent } from '../utils/dom';
 import {
   fetchVProMMsids,
@@ -36,8 +36,7 @@ var Search = React.createClass({
     _fetchVProMMsBbox: React.PropTypes.func,
     _fetchAdmins: React.PropTypes.func,
     _clearAdmins: React.PropTypes.func,
-    _fetchAdminBbox: React.PropTypes.func,
-    _showSearchResults: React.PropTypes.func
+    _fetchAdminBbox: React.PropTypes.func
   },
 
   onSearchQueryChange: function () {
@@ -45,7 +44,6 @@ var Search = React.createClass({
     if (this.props.searchType === 'Admin') {
       if (this.searchVal.length > 0) {
         this.props._fetchAdmins(this.searchVal);
-        this.props._showSearchResults(true);
         this.refs.results.classList.add('search-results-show');
       } else {
         this.props._clearAdmins();
@@ -153,9 +151,13 @@ var Search = React.createClass({
     var g = this.props.searchType === 'Admin' ? this.props.admins : this.props.filteredVProMMs;
     var results = [];
     if (this.props.searchType === 'Admin') {
+      // if no results are shown, prompt user with one of the two messages.
       if (!g.length) {
+        // in the case the search value is just a blank space (denoting nothing is searche for)
+        // provide a message that prompts users to search
         if (/^(?![\s\S])/.test(this.searchVal)) {
           results.push(<p className='info'>Please search for an Admin Area</p>);
+          // if the search term used does not have a db match, then let users
         } else {
           results.push(<p className='info'>No results available. Please refine your search.</p>);
         }
@@ -175,7 +177,7 @@ var Search = React.createClass({
                 this.refs.results.classList.remove('search-results-show');
                 this.searchAdminArea(adminArea);
               }}>
-              <small><a>{o.name_en}</a></small>
+              <small><a>{getLanguage() === 'en' ? o.name_en : o.name_vn}</a></small>
             </dd>
             );
           });
@@ -188,7 +190,6 @@ var Search = React.createClass({
           onClick={(e) => {
             const vprommsId = e.target.textContent;
             this.searchVProMMsID(vprommsId);
-            this.props._showSearchResults(false);
           }}>
           <strong>{o}</strong>
         </dt>);
