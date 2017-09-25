@@ -68,7 +68,7 @@ render((
         <Route path='analytics' component={Analytics}>
           <IndexRoute path='main' component={AnalyticsIndex} />
           <Route path=':aaId' component={AnalyticsAA} />
-          <Route path=':aaId/:vpromm' component={AAFieldMap} />
+          <Route path=':vpromm' component={AAFieldMap} />
         </Route>
         <IndexRoute component={Home}/>
         <Route path='*' component={UhOh}/>

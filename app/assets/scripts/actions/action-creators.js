@@ -398,18 +398,17 @@ export function fetchVProMMSids () {
 //                   VProMMS IDs Source Data                     //
 // ////////////////////////////////////////////////////////////////
 
-function requestVProMMSidsSources (json) {
+function requestVProMMSidsSources () {
   return {
-    type: actions.REQUEST_VPROMMS_IDS_SOURCES,
-    json: json,
-    receivedAt: Date.now()
+    type: actions.REQUEST_VPROMMS_IDS_SOURCES
   };
 }
 
 function receiveVProMMSidsSources (json) {
   return {
     type: actions.RECEIVE_VPROMMS_IDS_SOURCES,
-    json: json
+    json: json,
+    recievedAt: Date.now()
   };
 }
 
@@ -427,6 +426,38 @@ export function fetchVProMMSidsSources (ids) {
         throw new Error('Bad response');
       }
       dispatch(receiveVProMMSidsSources(json));
+    });
+  };
+}
+
+function requestVProMMSidSourceGeoJSON () {
+  return {
+    type: actions.REQUEST_VPROMMS_SOURCE_GEOJSON
+  };
+}
+
+function recieveVPRoMMSidSourceGeoJSON (json) {
+  return {
+    type: actions.RECIEVE_VPROMMS_SOURCE_GEOJSON,
+    json: json,
+    recievedAt: Date.now()
+  };
+}
+
+export function fetchVProMMsidSourceGeoJSON (vprommId) {
+  return function (dispatch) {
+    dispatch(requestVProMMSidSourceGeoJSON());
+    // hit the grouped field geometries endpoint. do not download it.
+    let url = `${config.url}/field/${vprommId}/geometries?grouped=true`;
+    return fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      if (json.statusCode === 400) {
+        return { dataAvailable: false };
+      } else if (json.statusCode > 400) {
+        throw new Error('Bad Response');
+      }
+      dispatch(recieveVPRoMMSidSourceGeoJSON(json));
     });
   };
 }

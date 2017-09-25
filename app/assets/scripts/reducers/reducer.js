@@ -326,6 +326,30 @@ const VProMMSidsSources = function (state = defaultVProMMSidsSources, action) {
   return state;
 };
 
+const defaultVProMMSidSourceGeoJSON = {
+  fetching: false,
+  fetched: false,
+  geoJSON: {}
+};
+
+const VProMMSidSourceGeoJSON = function (state = defaultVProMMSidSourceGeoJSON, action) {
+  switch (action.type) {
+    case actions.REQUEST_VPROMMS_SOURCE_GEOJSON:
+      console.log('REQUEST_VPROMMS_SOURCE_GEOJSON');
+      state = _.cloneDeep(state);
+      state.fetching = true;
+      break;
+    case actions.RECIEVE_VPROMMS_SOURCE_GEOJSON:
+      console.log('RECIEVE_VPROMMS_SOURCE_GEOJSON');
+      state = _.cloneDeep(state);
+      state.geoJSON = action.json;
+      state.fetching = false;
+      state.fetched = true;
+      break;
+  }
+  return state;
+};
+
 const exploreMapDefaultState = {
   layer: 'iri',
   showNoVpromms: false
@@ -370,6 +394,7 @@ export default combineReducers({
   roadNetworkStatus,
   VProMMSids,
   VProMMSidsSources,
+  VProMMSidSourceGeoJSON,
   exploreMap,
   routing: routeReducer,
   globZoom
