@@ -1,5 +1,6 @@
 
 import bbox from '@turf/bbox';
+
 /**
  * given a feature collection, returns a mapboxgl geojson feature collection object
  * @func generateSourceFC
@@ -24,10 +25,15 @@ export function generateSourceFC (fc) {
  * @return {object} layer object used to add layers to mapboxgl map
  */
 export function generateLayer (sourceId, fieldDataSource, vprommId) {
+  console.log(fieldDataSource);
   return {
     'id': `${vprommId}-${fieldDataSource}-field-data`,
-    'type': 'point',
+    'type': 'circle',
     'source': sourceId,
+    'paint': {
+      'circle-radius': 6,
+      'circle-color': sourceId === 'RoadLabPro' ? 'red' : 'green'
+    },
     'filter': ['==', 'source', fieldDataSource]
   };
 }
@@ -38,6 +44,7 @@ export function generateLayer (sourceId, fieldDataSource, vprommId) {
  * @return {array} bounding box array
  */
 export function generateBbox (fc) {
-  console.log(fc);
-  return bbox(fc);
+  var bounds = bbox(fc);
+  console.log(bounds);
+  return bounds;
 }
