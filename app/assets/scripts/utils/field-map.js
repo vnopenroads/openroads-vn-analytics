@@ -12,7 +12,7 @@ export function generateSourceFC (fc) {
     'type': 'geojson',
     'data': fc
   };
-};
+}
 
 /**
  * given a source id, fieldDataSOurce, and vprommsId, generate a unique mapboxgl layer object used to add given feature
@@ -30,7 +30,7 @@ export function generateLayer (sourceId, fieldDataSource, vprommId) {
     'source': sourceId,
     'filter': ['==', 'source', fieldDataSource]
   };
-};
+}
 
 /**
  * given a feature collection, returns boudns used to set field data map zoom

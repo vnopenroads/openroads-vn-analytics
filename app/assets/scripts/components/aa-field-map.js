@@ -4,9 +4,7 @@ import React from 'react';
 import mapboxgl from 'mapbox-gl';
 import config from '../config';
 import {
-  generateBbox,
-  generateLayer,
-  generateSourceFC
+  generateBbox
 } from '../utils/field-map';
 // import { t } from '../utils/i18n';
 
