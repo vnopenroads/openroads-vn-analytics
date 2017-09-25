@@ -30,6 +30,9 @@ var App = React.createClass({
       case ':aaId':
         klass = 'analytics-aa';
         break;
+      case ':vpromm':
+        klass = 'analytics-aa';
+        break;
       default:
         klass = r.split('/')[0];
     }

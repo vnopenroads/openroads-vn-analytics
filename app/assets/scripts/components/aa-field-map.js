@@ -41,6 +41,7 @@ var AAFieldMap = React.createClass({
       });
     });
   },
+
   render: function () {
     const vprommId = this.props.road.vprommId;
     const provinceName = this.props.road.provinceName;
@@ -49,7 +50,7 @@ var AAFieldMap = React.createClass({
         <div className="aa-header">
           <h1>{`${provinceName} - Road # ${vprommId}`}</h1>
         </div>
-        <div className='aa-main__status'>
+        <div className="aa-main__status">
           <div className='aa-map-wrapper'>
             <div id='aa-map' className='aa-map'></div>
           </div>

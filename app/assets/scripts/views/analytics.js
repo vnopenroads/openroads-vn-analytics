@@ -10,6 +10,7 @@ var Analytics = React.createClass({
     children: React.PropTypes.object,
     params: React.PropTypes.object
   },
+
   render: function () {
     return (
       <section classNmae='page'>

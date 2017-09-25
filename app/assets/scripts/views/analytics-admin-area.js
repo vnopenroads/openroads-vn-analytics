@@ -15,13 +15,14 @@ var AnalyticsAA = React.createClass({
   propTypes: {
     children: React.PropTypes.object,
     routeParams: React.PropTypes.object,
+    params: React.PropTypes.object,
+    vpromm: React.PropTypes.string,
     _fetchVProMMSids: React.PropTypes.func,
     _fetchVProMMSidsSources: React.PropTypes.func,
     VProMMSids: React.PropTypes.object,
     VProMMSidsSources: React.PropTypes.object,
-    VProMMSidsSourcesFetched: React.PropTypes.bool,
     VProMMSidSourceGeoJSON: React.PropTypes.object,
-    VProMMSidSourceGeoJSONFetched: React.PropTypes.bool
+    VProMMSidSourceGeoJSONisFetched: React.PropTypes.bool
   },
 
   componentDidMount: function () {
@@ -33,6 +34,7 @@ var AnalyticsAA = React.createClass({
   renderTable: function () {
     let provinceId = this.props.routeParams.aaId;
     let data = this.props.VProMMSids[provinceId];
+    let provinceName = data.provinceName;
     let ids = data.vpromms;
     let done = ids.filter(v => v.inTheDatabase).length;
     let total = ids.length;
@@ -46,7 +48,7 @@ var AnalyticsAA = React.createClass({
     return (
     <div>
       <div className="aa-header">
-        <h1>{this.provinceName} {t('Province')}</h1>
+        <h1>{provinceName} {t('Province')}</h1>
         { completion ? <a className='bttn-s bttn-road-network' href={config.provinceDumpBaseUrl + provinceId + '.geojson'}>{t('Download Roads')}</a> : '' }
       </div>
       <div className='aa-main__status'>
@@ -69,15 +71,15 @@ var AnalyticsAA = React.createClass({
   },
 
   render: function () {
-    // only render the table if
-    // 1) VProMMSidsSource have been fetched, denoted by them === true when casted to a boolean
-    // 2) source geojsons have not been added to the store via an api query
-    if (this.props.VProMMSidsSourcesFetched) {
-      if (!this.props.VProMMSidSourceGeoJSONFetched) {
-        return this.renderTable();
-      } else {
-        return this.renderFieldMap();
-      }
+    console.log(this.props);
+    const vprommsParam = Boolean(this.props.params.vpromm);
+    const fetchedVProMMsGeoJSON = this.props.VProMMSidSourceGeoJSONisFetched;
+    // if there there is not a vprommId in the route path parameters, which === the hash being located at the admin-area-analytics view, only render the table
+    if (!vprommsParam) {
+      return this.renderTable();
+      // if there is a vpromms id in the route path, render the map.
+    } else if (vprommsParam && fetchedVProMMsGeoJSON) {
+      return this.renderFieldMap();
     }
     return (<div/>);
   }
@@ -90,9 +92,8 @@ function selector (state) {
   return {
     VProMMSids: state.VProMMSids.data,
     VProMMSidsSources: state.VProMMSidsSources.sources,
-    VProMMSidsSourcesFetched: state.VProMMSidsSources.fetched,
     VProMMSidSourceGeoJSON: state.VProMMSidSourceGeoJSON,
-    VProMMSidSourceGeoJSONFetched: state.VProMMSidSourceGeoJSON.fetched
+    VProMMSidSourceGeoJSONisFetched: state.VProMMSidSourceGeoJSON.fetched
   };
 }
 

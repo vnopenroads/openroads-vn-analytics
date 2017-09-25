@@ -23,6 +23,7 @@ const AATable = React.createClass({
 
   propTypes: {
     data: React.PropTypes.array,
+    province: React.PropTypes.string,
     provinceName: React.PropTypes.string,
     sources: React.PropTypes.object,
     _fetchVProMMsidSourceGeoJSON: React.PropTypes.func
@@ -90,8 +91,9 @@ const AATable = React.createClass({
 
   makeFieldMapLink: function (vprommExists, roadId) {
     const provinceName = this.props.provinceName;
+    const provinceId = this.props.province;
     return vprommExists ? (
-      <Link to={`${getLanguage()}/analytics/${roadId}`}
+      <Link to={`${getLanguage()}/analytics/${provinceId}/${roadId}/`}
         onClick={(e) => {
           this.props._fetchVProMMsidSourceGeoJSON(roadId, provinceName);
         } }>{roadId}</Link>

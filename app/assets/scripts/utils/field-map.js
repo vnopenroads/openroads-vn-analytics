@@ -44,7 +44,5 @@ export function generateLayer (sourceId, fieldDataSource, vprommId) {
  * @return {array} bounding box array
  */
 export function generateBbox (fc) {
-  var bounds = bbox(fc);
-  console.log(bounds);
-  return bounds;
+  return bbox(fc);
 }
