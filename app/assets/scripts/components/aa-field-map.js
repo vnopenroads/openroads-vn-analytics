@@ -2,7 +2,16 @@
 
 import React from 'react';
 import mapboxgl from 'mapbox-gl';
+import { flatten } from 'lodash';
 import config from '../config';
+import {
+  makeNWSE,
+  makeNewZoom,
+  makeCenterpoint,
+  newZoomScale,
+  pixelDistances,
+  transformGeoToPixel
+} from '../utils/zoom';
 import {
   generateBbox,
   generateSourceFC,
@@ -15,19 +24,46 @@ var AAFieldMap = React.createClass({
   propTypes: {
     road: React.PropTypes.object
   },
+
+  generateMap: function () {
+
+  },
+
+  generateLngLatZoom: function (featureCollection) {
+    var bounds = flatten(generateBbox(featureCollection));
+    var NWSE = makeNWSE(bounds);
+    var dummyZoom = 10;
+    var nw = transformGeoToPixel(NWSE.nw, dummyZoom);
+    var se = transformGeoToPixel(NWSE.se, dummyZoom);
+    var distances = pixelDistances(nw, se);
+    var adminAreaMapDiv = document.getElementById('aa-map');
+    var dimensions = { x: adminAreaMapDiv.offsetWidth, y: adminAreaMapDiv.offsetHeight };
+    console.log(dimensions);
+    var zoomScale = newZoomScale(distances, dimensions);
+    var newZoom = makeNewZoom(zoomScale, dummyZoom);
+    var cp = makeCenterpoint(bounds);
+    return {
+      lng: cp.x,
+      lat: cp.y,
+      zoom: newZoom - 2
+    };
+  },
+
   componentDidMount: function () {
     // pull featureCollections from the road props object
     const vprommId = this.props.road.vprommId;
     const featureCollection = this.props.road.geoJSON[0][vprommId][0];
     // generate the bounding box used to set initial zoom of gl map
-    var fieldDataBbox = generateBbox(featureCollection);
+    var lngLatZoom = this.generateLngLatZoom(featureCollection);
     mapboxgl.accessToken = config.mbToken;
     // add the map to the 'aa-map' canvas
     var map = new mapboxgl.Map({
       container: 'aa-map',
+      center: [lngLatZoom.lng, lngLatZoom.lat],
+      zoom: lngLatZoom.zoom,
       style: 'mapbox://styles/mapbox/light-v9',
       failIfMajorPerformanceCaveat: false
-    }).fitBounds(fieldDataBbox, { padding: 10 });
+    });
     map.on('load', () => {
       // add the feature collection source to the gl map
       var sourceId = `${vprommId}-field-data`;
