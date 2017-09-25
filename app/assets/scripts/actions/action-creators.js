@@ -436,19 +436,21 @@ function requestVProMMSidSourceGeoJSON () {
   };
 }
 
-function recieveVPRoMMSidSourceGeoJSON (json) {
+function recieveVPRoMMSidSourceGeoJSON (json, vprommId, provinceName) {
   return {
     type: actions.RECIEVE_VPROMMS_SOURCE_GEOJSON,
     json: json,
+    vprommId: vprommId,
+    provinceName: provinceName,
     recievedAt: Date.now()
   };
 }
 
-export function fetchVProMMsidSourceGeoJSON (vprommId) {
+export function fetchVProMMsidSourceGeoJSON (vprommId, provinceName) {
   return function (dispatch) {
     dispatch(requestVProMMSidSourceGeoJSON());
     // hit the grouped field geometries endpoint. do not download it.
-    let url = `${config.url}/field/${vprommId}/geometries?grouped=true`;
+    let url = `${config.api}/field/${vprommId}/geometries?grouped=true`;
     return fetch(url)
     .then(response => response.json())
     .then(json => {
@@ -457,7 +459,7 @@ export function fetchVProMMsidSourceGeoJSON (vprommId) {
       } else if (json.statusCode > 400) {
         throw new Error('Bad Response');
       }
-      dispatch(recieveVPRoMMSidSourceGeoJSON(json));
+      dispatch(recieveVPRoMMSidSourceGeoJSON(json, vprommId, provinceName));
     });
   };
 }

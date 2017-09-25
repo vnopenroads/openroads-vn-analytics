@@ -329,7 +329,9 @@ const VProMMSidsSources = function (state = defaultVProMMSidsSources, action) {
 const defaultVProMMSidSourceGeoJSON = {
   fetching: false,
   fetched: false,
-  geoJSON: {}
+  geoJSON: [],
+  vprommId: '',
+  provinceName: ''
 };
 
 const VProMMSidSourceGeoJSON = function (state = defaultVProMMSidSourceGeoJSON, action) {
@@ -343,6 +345,8 @@ const VProMMSidSourceGeoJSON = function (state = defaultVProMMSidSourceGeoJSON, 
       console.log('RECIEVE_VPROMMS_SOURCE_GEOJSON');
       state = _.cloneDeep(state);
       state.geoJSON = action.json;
+      state.vprommId = action.vprommId;
+      state.provinceName = action.provinceName;
       state.fetching = false;
       state.fetched = true;
       break;

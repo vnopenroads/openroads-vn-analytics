@@ -26,7 +26,6 @@ var AnalyticsAA = React.createClass({
 
   componentDidMount: function () {
     const vpromms = this.props.VProMMSids[this.props.routeParams.aaId].vpromms.map(road => road.id);
-    this.provinceName = '';
     // fire request for source data
     this.props._fetchVProMMSidsSources(vpromms);
   },
@@ -35,7 +34,6 @@ var AnalyticsAA = React.createClass({
     let provinceId = this.props.routeParams.aaId;
     let data = this.props.VProMMSids[provinceId];
     let ids = data.vpromms;
-    this.provinceName = data.provinceName;
     let done = ids.filter(v => v.inTheDatabase).length;
     let total = ids.length;
     const completion = total !== 0 ? ((done / total) * 100) : 0;
@@ -56,7 +54,7 @@ var AnalyticsAA = React.createClass({
         <div className='meter'>
          <div className='meter__internal' style={{width: `${completion}%`}}></div>
         </div>
-        {total ? <AATable data={ids} sources={this.props.VProMMSidsSources} province={this.props.routeParams.aaId}/> : ''}
+        {total ? <AATable data={ids} sources={this.props.VProMMSidsSources} provinceName={data.provinceName} province={this.props.routeParams.aaId}/> : ''}
       </div>
     </div>
     );
@@ -65,12 +63,7 @@ var AnalyticsAA = React.createClass({
   renderFieldMap: function () {
     return (
       <div>
-        <div className="aa-header">
-          <h1>{`${this.provinceName} ${t('Province')} - Road`}</h1>
-        </div>
-        <div className='aa-main__status'>
-          <AAFieldMap/>
-        </div>
+        <AAFieldMap road={this.props.VProMMSidSourceGeoJSON}/>
       </div>
      );
   },
@@ -98,7 +91,7 @@ function selector (state) {
     VProMMSids: state.VProMMSids.data,
     VProMMSidsSources: state.VProMMSidsSources.sources,
     VProMMSidsSourcesFetched: state.VProMMSidsSources.fetched,
-    VProMMSidSourceGeoJSON: state.VProMMSidSourceGeoJSON.geoJSON,
+    VProMMSidSourceGeoJSON: state.VProMMSidSourceGeoJSON,
     VProMMSidSourceGeoJSONFetched: state.VProMMSidSourceGeoJSON.fetched
   };
 }

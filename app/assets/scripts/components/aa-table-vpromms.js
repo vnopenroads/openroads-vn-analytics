@@ -23,6 +23,7 @@ const AATable = React.createClass({
 
   propTypes: {
     data: React.PropTypes.array,
+    provinceName: React.PropTypes.string,
     sources: React.PropTypes.object,
     _fetchVProMMsidSourceGeoJSON: React.PropTypes.func
   },
@@ -87,18 +88,29 @@ const AATable = React.createClass({
     return (<a href={`${api}/field/${id}/geometries?grouped=false&download=true`}>Download</a>);
   },
 
+  makeFieldMapLink: function (vprommExists, roadId) {
+    const provinceName = this.props.provinceName;
+    return vprommExists ? (
+      <Link to={`${getLanguage()}/analytics/${roadId}`}
+        onClick={(e) => {
+          this.props._fetchVProMMsidSourceGeoJSON(roadId, provinceName);
+        } }>{roadId}</Link>
+    ) : roadId;
+  },
+
   renderTableBody: function () {
     const sorted = this.handleSort(this.props);
     return (
       <tbody>
         {_.map(sorted, (vpromm, i) => {
+          const vprommExists = this.props.sources[vpromm.id];
           return (
             <tr key={`vpromm-${vpromm.id}`} className={classnames({'alt': i % 2})}>
-              <td><strong><Link to={`${getLanguage()}/analytics/${vpromm.id}`} onClick={(e) => { this.props._fetchVProMMsidSourceGeoJSON(vpromm.id); } }>{vpromm.id}</Link></strong></td>
+              <td><strong>{this.makeFieldMapLink(vprommExists, vpromm.id)}</strong></td>
               <td className={classnames({'added': vpromm.inTheDatabase, 'not-added': !vpromm.inTheDatabase})}>{vpromm.inTheDatabase ? 'added' : 'not added'}</td>
               <td className={classnames({'added': vpromm.RouteShoot, 'not-added': !vpromm.RouteShoot})}>{vpromm.RouteShoot ? <a href={vpromm.RouteShootUrl}>link</a> : ''}</td>
               <td className={classnames({'added': vpromm.RoadLabPro, 'not-added': !vpromm.RoadLabPro})}>{vpromm.RoadLabPro ? 'added' : 'not added'}</td>
-              <td className={classnames({'added': this.props.sources[vpromm.id], 'not-added': !this.props.sources[vpromm.id]})}>{this.props.sources[vpromm.id] ? this.makeFieldDataLink(vpromm.id) : 'not added'}</td>
+              <td className={classnames({'added': vprommExists, 'not-added': !vprommExists})}>{vprommExists ? this.makeFieldDataLink(vpromm.id) : 'not added'}</td>
             </tr>
           );
         })}
@@ -124,7 +136,7 @@ function selector (state) {
 
 function dispatcher (dispatch) {
   return {
-    _fetchVProMMsidSourceGeoJSON: (vprommId) => { dispatch(fetchVProMMsidSourceGeoJSON(vprommId)); }
+    _fetchVProMMsidSourceGeoJSON: (vprommId, provinceName) => dispatch(fetchVProMMsidSourceGeoJSON(vprommId, provinceName))
   };
 }
 
