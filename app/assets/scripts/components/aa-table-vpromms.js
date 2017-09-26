@@ -7,8 +7,6 @@ import classnames from 'classnames';
 import { api } from '../config';
 import { Link } from 'react-router';
 import { getLanguage } from '../utils/i18n';
-import { connect } from 'react-redux';
-import { fetchVProMMsidSourceGeoJSON } from '../actions/action-creators';
 
 const displayHeader = [
   {key: 'id', value: 'VProMMS ID'},
@@ -25,8 +23,7 @@ const AATable = React.createClass({
     data: React.PropTypes.array,
     province: React.PropTypes.string,
     provinceName: React.PropTypes.string,
-    sources: React.PropTypes.object,
-    _fetchVProMMsidSourceGeoJSON: React.PropTypes.func
+    sources: React.PropTypes.object
   },
 
   getInitialState: function () {
@@ -90,16 +87,14 @@ const AATable = React.createClass({
   },
 
   makeFieldMapLink: function (vprommExists, roadId) {
-    const provinceName = this.props.provinceName;
     const provinceId = this.props.province;
     return vprommExists ? (
-      <Link to={`${getLanguage()}/analytics/${provinceId}/${roadId}/`}
-        onClick={(e) => {
-          this.props._fetchVProMMsidSourceGeoJSON(roadId, provinceName);
-        } }>{roadId}</Link>
+      <Link to={`${getLanguage()}/analytics/${provinceId}/${roadId}/`}>{roadId}</Link>
     ) : roadId;
   },
 
+  // in renderTableBody, vrpommExists represents if a given vpromms id has a field data source attached to it.
+  // it used to decide whether to make a link to the AAFieldMap component in the first column and to a road data dump in the last column
   renderTableBody: function () {
     const sorted = this.handleSort(this.props);
     return (
@@ -132,14 +127,4 @@ const AATable = React.createClass({
   }
 });
 
-function selector (state) {
-  return {};
-}
-
-function dispatcher (dispatch) {
-  return {
-    _fetchVProMMsidSourceGeoJSON: (vprommId, provinceName) => dispatch(fetchVProMMsidSourceGeoJSON(vprommId, provinceName))
-  };
-}
-
-export default connect(selector, dispatcher)(AATable);
+export default AATable;

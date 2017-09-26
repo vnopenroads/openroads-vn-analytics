@@ -464,6 +464,13 @@ export function fetchVProMMsidSourceGeoJSON (vprommId, provinceName) {
   };
 }
 
+export function removeVProMMsSourceGeoJSON () {
+  return {
+    type: actions.REMOVE_VPROMMS_SOURCE_GEOJSON,
+    receivedAt: Date.now()
+  };
+}
+
 // ////////////////////////////////////////////////////////////////
 //                         Explore Map                           //
 // ////////////////////////////////////////////////////////////////

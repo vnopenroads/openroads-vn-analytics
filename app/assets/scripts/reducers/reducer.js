@@ -350,6 +350,11 @@ const VProMMSidSourceGeoJSON = function (state = defaultVProMMSidSourceGeoJSON, 
       state.fetching = false;
       state.fetched = true;
       break;
+    case actions.REMOVE_VPROMMS_SOURCE_GEOJSON:
+      console.log('REMOVE_SOURCE_GEOJSON');
+      state = _.cloneDeep(state);
+      state = defaultVProMMSidSourceGeoJSON;
+      break;
   }
   return state;
 };
