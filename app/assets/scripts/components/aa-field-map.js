@@ -17,7 +17,7 @@ import {
   generateSourceFC,
   generateLayer
 } from '../utils/field-map';
-// import { t } from '../utils/i18n';
+import AAFieldMapLegend from './aa-field-map-legend';
 
 var AAFieldMap = React.createClass({
   displayName: 'AAFieldMap',
@@ -38,7 +38,6 @@ var AAFieldMap = React.createClass({
     var distances = pixelDistances(nw, se);
     var adminAreaMapDiv = document.getElementById('aa-map');
     var dimensions = { x: adminAreaMapDiv.offsetWidth, y: adminAreaMapDiv.offsetHeight };
-    console.log(dimensions);
     var zoomScale = newZoomScale(distances, dimensions);
     var newZoom = makeNewZoom(zoomScale, dummyZoom);
     var cp = makeCenterpoint(bounds);
@@ -81,6 +80,8 @@ var AAFieldMap = React.createClass({
   render: function () {
     const vprommId = this.props.road.vprommId;
     const provinceName = this.props.road.provinceName;
+    // grab layer sources from road geojson and pass it down to the legend
+    const layers = this.props.road.geoJSON[0][vprommId][0].features.map(feature => feature.properties.source);
     return (
       <div>
         <div className="aa-header">
@@ -89,6 +90,7 @@ var AAFieldMap = React.createClass({
         <div className="aa-main__status">
           <div className='aa-map-wrapper'>
             <div id='aa-map' className='aa-map'></div>
+            <AAFieldMapLegend layers={layers}/>
           </div>
         </div>
       </div>

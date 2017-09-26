@@ -645,6 +645,24 @@ a:active{
         top: 0;
         bottom: 0;
         width: 100%;
+        &-legend {
+          position: absolute;
+          z-index: 10;
+          border: .1rem solid $frame-rgba;
+          border-radius: $base-border-radius;
+          width: 16rem;
+          padding: $global-spacing;
+          background: #fff;
+          margin: 1rem;
+        }
+        &-legend-title {
+          font-weight: bold;
+          margin-bottom: .5rem;
+        }
+        &-legend-label {
+          margin-top: -.5rem;
+          font-size: 0.80rem;
+        }
       }
     }
 
