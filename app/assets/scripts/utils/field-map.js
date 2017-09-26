@@ -1,5 +1,6 @@
 
 import bbox from '@turf/bbox';
+import lineColors from './line-colors';
 
 /**
  * given a feature collection, returns a mapboxgl geojson feature collection object
@@ -28,11 +29,11 @@ export function generateLayer (sourceId, fieldDataSource, vprommId) {
   console.log(fieldDataSource);
   return {
     'id': `${vprommId}-${fieldDataSource}-field-data`,
-    'type': 'circle',
+    'type': 'line',
     'source': sourceId,
     'paint': {
-      'circle-radius': 6,
-      'circle-color': sourceId === 'RoadLabPro' ? 'red' : 'green'
+      'line-width': 2,
+      'line-color': lineColors[fieldDataSource].stops[1]
     },
     'filter': ['==', 'source', fieldDataSource]
   };
