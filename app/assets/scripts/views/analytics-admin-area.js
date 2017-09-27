@@ -30,7 +30,7 @@ var AnalyticsAA = React.createClass({
     const total = ids.length;
     const completion = total !== 0 ? ((done / total) * 100) : 0;
     let completionMainText;
-    let completionTailText = 'Information on VPRoMMS roads is not available';
+    let completionTailText = t('Information on VPRoMMS roads is not available');
     if (total !== 0) {
       completionMainText = completion.toFixed(2);
       completionTailText = `% ${t('of VProMMS Ids added')} ${done.toLocaleString()} of ${total.toLocaleString()}`;
