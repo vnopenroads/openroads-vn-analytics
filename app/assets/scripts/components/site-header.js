@@ -103,6 +103,11 @@ var SiteHeader = React.createClass({
                     <span>{t('Editor')}</span>
                   </Link>
                 </li>
+                <li>
+                  <Link to={`/${getLanguage()}/tasks`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
+                    <span>{t('Tasks')}</span>
+                  </Link>
+                </li>
               </ul>
             </div>
             <div className='menu-wrapper'>

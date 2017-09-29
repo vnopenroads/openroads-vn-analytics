@@ -20,6 +20,7 @@ import UhOh from './views/uhoh';
 import App from './views/app';
 import Home from './views/home';
 import Editor from './views/editor';
+import Tasks from './views/tasks';
 import Explore from './views/explore';
 import Analytics from './views/analytics';
 import AnalyticsIndex from './views/analytics-index';
@@ -63,9 +64,10 @@ render((
       <Route path='/:lang' component={App} onEnter={validateLanguage}>
         <Route path='editor' component={Editor} />
         <Route path='editor/*' component={Editor} />
+        <Route path='tasks' component={Tasks} />
         <Route path='explore' component={Explore} />
         <Route path='analytics' component={Analytics}>
-          <IndexRoute path='main' component={AnalyticsIndex} />
+          <IndexRoute component={AnalyticsIndex} />
           <Route path=':aaId' component={AnalyticsAA} />
         </Route>
         <IndexRoute component={Home}/>
