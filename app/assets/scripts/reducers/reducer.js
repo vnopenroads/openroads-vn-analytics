@@ -74,35 +74,33 @@ const stats = function (state = {fetching: false, fetched: false, data: null}, a
   return state;
 };
 
-const tofixtasksDefaultState = {
+const waytasksDefaultState = {
   fetching: false,
   fetched: false,
   data: {
-    tasks: {
-      meta: {
-        page: null,
-        limit: null,
-        total: null
-      },
-      results: []
-    }
+    taskIds: null,
+    currentTask: null
   }
 };
-const tofixtasks = function (state = tofixtasksDefaultState, action) {
+const waytasks = function (state = waytasksDefaultState, action) {
   switch (action.type) {
-    case actions.REQUEST_TOFIX_TASKS:
-      console.log('REQUEST_TOFIX_TASKS');
+    case actions.REQUEST_WAY_TASKS:
+      console.log('REQUEST_WAY_TASKS');
       state = _.cloneDeep(state);
       state.error = null;
       state.fetching = true;
       break;
-    case actions.RECEIVE_TOFIX_TASKS:
-      console.log('RECEIVE_TOFIX_TASKS');
+    case actions.RECEIVE_WAY_TASKS:
+      console.log('RECEIVE_WAY_TASKS');
       state = _.cloneDeep(state);
       if (action.error) {
         state.error = action.error;
       } else {
-        state.data = action.json;
+        if (Array.isArray(action.json)) {
+          state.data.taskIds = action.json
+        } else if (action.json.hasOwnProperty('properties')) {
+          state.data.currentTask = action.json
+        }
       }
       state.fetching = false;
       state.fetched = true;
@@ -339,7 +337,7 @@ export default combineReducers({
   adminSubregions,
   search,
   stats,
-  tofixtasks,
+  waytasks,
   projecttasks,
   projects,
   projectsMeta,
