@@ -1,3 +1,4 @@
+import url from 'url';
 import fetch from 'isomorphic-fetch';
 import _ from 'lodash';
 import * as actions from './action-types';
@@ -129,30 +130,27 @@ export function fetchAdminStats (id = null) {
 //                          WAYTASKS                             //
 // ////////////////////////////////////////////////////////////////
 
-function requestTofixTasks () {
+function requestWayTasks () {
   return {
-    type: actions.REQUEST_TOFIX_TASKS
+    type: actions.REQUEST_WAY_TASKS
   };
 }
 
-function receiveTofixTasks (json, error = null) {
+function receiveWayTasks (json, error = null) {
   return {
-    type: actions.RECEIVE_TOFIX_TASKS,
+    type: actions.RECEIVE_WAY_TASKS,
     json: json,
     error,
     receivedAt: Date.now()
   };
 }
 
-export function fetchTofixTasks (aaid = null, page, limit) {
+export function fetchWayTasks (taskId) {
   return function (dispatch) {
-    dispatch(requestTofixTasks());
+    dispatch(requestWayTasks());
 
-    // Note: `page` is 0 based, so subtract 1.
-    let url = aaid === null
-      ? `${config.api}/admin/0/waytasks?page=${--page}&limit=${limit}`
-      : `${config.api}/admin/${aaid}/waytasks?page=${--page}&limit=${limit}`;
-    return fetch(url)
+    let path = taskId ? `collision/${taskId}` : 'collisions';
+    return fetch(url.resolve('http://localhost:3010', path))
       .then(response => {
         if (response.status >= 400) {
           throw new Error('Bad response');
@@ -160,11 +158,10 @@ export function fetchTofixTasks (aaid = null, page, limit) {
         return response.json();
       })
       .then(json => {
-        // setTimeout(() => dispatch(receiveTofixTasks(json)), 2000);
-        return dispatch(receiveTofixTasks(json));
+        return dispatch(receiveWayTasks(json));
       }, e => {
         console.log('e', e);
-        return dispatch(receiveTofixTasks(null, 'Data not available'));
+        return dispatch(receiveWayTasks(null, 'Data not available'));
       });
   };
 }
