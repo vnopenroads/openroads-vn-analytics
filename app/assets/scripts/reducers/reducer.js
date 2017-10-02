@@ -42,6 +42,7 @@ const adminBbox = function (state = adminBboxDefaultState, action) {
       break;
     case actions.RECEIVE_ADMIN_BBOX:
       console.log('RECEIVE_ADMIN_BBOX');
+      state = _.cloneDeep(state);
       state.bbox = action.json.bbox;
       state.fetching = false;
       state.fetched = true;

@@ -85,7 +85,7 @@ var Explore = React.createClass({
     }
   },
 
-  componentWillUnmount () {
+  componentWillUnmount: function () {
     this.props._setGlobalZoom(this.makeXYZ());
   },
 

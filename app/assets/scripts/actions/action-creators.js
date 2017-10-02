@@ -465,10 +465,8 @@ export function fetchVProMMsBbox (vprommsId) {
       return response.json();
     })
     .then(json => {
-      if (json.statusCode === 400) {
-        return {dataAvailable: false};
-      } else if (json.statusCode > 400) {
-        throw new Error('Bad response');
+      if (json.statusCode >= 400) {
+        return dispatch(recieveVProMMsBbox({}));
       }
       dispatch(recieveVProMMsBbox(json));
     });

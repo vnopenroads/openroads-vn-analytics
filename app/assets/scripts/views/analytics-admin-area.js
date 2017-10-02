@@ -5,7 +5,7 @@ import { t } from '../utils/i18n';
 
 import AATable from '../components/aa-table-vpromms';
 
-import { fetchVProMMSids } from '../actions/action-creators';
+import { fetchVProMMsids } from '../actions/action-creators';
 import config from '../config';
 
 var AnalyticsAA = React.createClass({
@@ -14,12 +14,12 @@ var AnalyticsAA = React.createClass({
   propTypes: {
     children: React.PropTypes.object,
     routeParams: React.PropTypes.object,
-    _fetchVProMMSids: React.PropTypes.func,
+    _fetchVProMMsids: React.PropTypes.func,
     VProMMSids: React.PropTypes.object
   },
 
   componentDidMount: function () {
-    this.props._fetchVProMMSids('analytics');
+    this.props._fetchVProMMsids('analytics');
   },
 
   render: function () {
@@ -64,7 +64,7 @@ function selector (state) {
 
 function dispatcher (dispatch) {
   return {
-    _fetchVProMMSids: (use) => dispatch(fetchVProMMSids(use))
+    _fetchVProMMsids: (use) => dispatch(fetchVProMMsids(use))
   };
 }
 
