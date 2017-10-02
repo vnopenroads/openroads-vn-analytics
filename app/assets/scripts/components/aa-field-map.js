@@ -105,7 +105,7 @@ var AAFieldMap = React.createClass({
   },
 
   renderHeader: function (provinceName) {
-    return (<h1>{`${provinceName} Province - Road # ${this.props.roadId}`}</h1>);
+    return (<h1>${provinceName} Province - Road # ${this.props.roadId}</h1>);
   },
 
   render: function () {

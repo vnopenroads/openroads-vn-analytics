@@ -454,9 +454,7 @@ export function fetchVProMMsidSourceGeoJSON (vprommId, provinceName) {
     return fetch(url)
     .then(response => response.json())
     .then(json => {
-      if (json.statusCode === 400) {
-        return { dataAvailable: false };
-      } else if (json.statusCode > 400) {
+      if (json.statusCode >= 400) {
         throw new Error('Bad Response');
       }
       dispatch(recieveVPRoMMSidSourceGeoJSON(json, vprommId, provinceName));

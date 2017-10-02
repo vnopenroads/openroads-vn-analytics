@@ -90,7 +90,7 @@ var AnalyticsAA = React.createClass({
     const vprommsParam = this.props.params.vpromm;
     if (!vprommsParam) {
       return this.renderTable();
-    } else if (vprommsParam) {
+    } else {
       return this.renderFieldMap(vprommsParam);
     }
     return (<div/>);

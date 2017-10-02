@@ -93,8 +93,10 @@ const AATable = React.createClass({
     ) : roadId;
   },
 
-  // in renderTableBody, vrpommExists represents if a given vpromms id has a field data source attached to it.
-  // it used to decide whether to make a link to the AAFieldMap component in the first column and to a road data dump in the last column
+  // in renderTableBody, vprommExists represents if a given vpromms id has a field data source attached to it.
+  // it is used to decide whether:
+  // 1. make a link to the AAFieldMap component in the first column of the table.
+  // 2. to a road data dump in the last column
   renderTableBody: function () {
     const sorted = this.handleSort(this.props);
     return (

@@ -77,10 +77,8 @@ var Editor = React.createClass({
   },
 
   render: function () {
-    console.log(this.props);
     var globalZoomHash = `map=${this.props.globZ.toString()}/${this.props.globX.toString()}/${this.props.globY.toString()}`;
     var path = config.editorUrl + `#${globalZoomHash}`;
-    console.log(path);
     return (
        <iframe src={path} id='main-frame' name='main-frame'></iframe>
     );
