@@ -10,6 +10,8 @@
   }
 }
 
+.tasks .site-header .site__nav .search-wrapper { display: none; }
+
 .analytics, .analytics-aa {
   .aa-main {
     @extend .row;
