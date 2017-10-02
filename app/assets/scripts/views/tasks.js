@@ -11,19 +11,48 @@ import {
 } from '../actions/action-creators';
 
 const source = 'collisions';
+const roadHoverId = 'road-hover';
+const collisionHoverId = 'collision-hover';
 const layers = [{
   id: 'road',
   type: 'line',
-  paint: { 'line-width': 4 },
+  paint: {
+    'line-width': 6,
+    'line-opacity': 0.8,
+    'line-color': '#FCF009'
+  },
   layout: { 'line-cap': 'round' },
-  filter: ['has', '_collisions']
+  filter: ['has', '_main']
 }, {
-  id: 'collisions',
+  id: 'collision',
   type: 'line',
-  paint: { 'line-width': 4 },
+  paint: {
+    'line-width': 4,
+    'line-opacity': 0.2
+  },
   layout: { 'line-cap': 'round' },
-  filter: ['!has', '_collisions']
+  filter: ['!has', '_main']
+}, {
+  id: roadHoverId,
+  type: 'line',
+  paint: {
+    'line-width': 8,
+    'line-opacity': 0.9,
+    'line-color': '#FCF009'
+  },
+  layout: { 'line-cap': 'round' },
+  filter: ['all', ['has', 'main'], ['==', '_id', '']]
+}, {
+  id: collisionHoverId,
+  type: 'line',
+  paint: {
+    'line-width': 6,
+    'line-opacity': 0.9
+  },
+  layout: { 'line-cap': 'round' },
+  filter: ['all', ['!has', 'main'], ['==', '_id', '']]
 }].map(layer => Object.assign({source}, layer));
+
 const layerIds = layers.map(layer => layer.id);
 
 var Tasks = React.createClass({
@@ -58,14 +87,22 @@ var Tasks = React.createClass({
 
     this.onMapLoaded(() => {
       map.on('mousemove', (e) => {
+        // toggle cursor and hover filters on mouseover
         let features = map.queryRenderedFeatures(e.point, { layers: layerIds });
         if (features.length) {
           map.getCanvas().style.cursor = 'pointer';
+          this.setHoverFilter(features[0].properties._id);
         } else {
           map.getCanvas().style.cursor = '';
+          this.setHoverFilter('');
         }
       });
     });
+  },
+
+  setHoverFilter: function (id) {
+    this.map.setFilter(collisionHoverId, ['all', ['!has', '_main'], ['==', '_id', id]]);
+    this.map.setFilter(roadHoverId, ['all', ['has', '_main'], ['==', '_id', id]]);
   },
 
   componentWillReceiveProps: function ({meta, taskIds, currentTask}) {
@@ -107,9 +144,16 @@ var Tasks = React.createClass({
   },
 
   featureCollectionFromTask: function (task) {
+    // For setting interaction filters, apply _main property to the road,
+    // and make sure the _id property is present at feature.properties.
+    task.properties._main = true;
+    const features = Array.concat.apply([], [[task], task._collisions]);
+    features.forEach(feature => {
+      feature.properties._id = feature._id;
+    });
     return {
       type: 'FeatureCollection',
-      features: Array.concat.apply([], [[task], task._collisions])
+      features
     };
   },
 
