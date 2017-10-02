@@ -24,7 +24,6 @@ var AnalyticsIndex = React.createClass({
 
   render: function () {
     let accumulator = { done: 0, total: 0 };
-    console.log(this.props.VProMMSids);
     const provinceData = _.map(this.props.VProMMSids.data, (data, id) => {
       const name = data.provinceName;
       const done = data.vpromms.filter(v => v.inTheDatabase).length;
