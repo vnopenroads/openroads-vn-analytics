@@ -15,15 +15,6 @@
 
 
 .explore {
-  .map-container {
-    height: calc(100vh - 3.5rem);
-    width: 100%;
-  }
-  #map {
-    height: 100%;
-    width: 100%;
-  }
-
   .map-options {
     top: $global-padding + 3.5rem;
     right: $global-padding;
