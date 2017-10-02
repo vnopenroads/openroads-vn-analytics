@@ -4,6 +4,7 @@
 import React from 'react';
 import _ from 'lodash';
 import classnames from 'classnames';
+import { t } from '../utils/i18n';
 
 const displayHeader = [
   {key: 'id', value: 'VProMMS ID'},
@@ -41,7 +42,7 @@ const AATable = React.createClass({
             return (
               <th key={d.key} onClick={this.sortLinkClickHandler.bind(null, d.key)}>
                 <i className={c}></i>
-                <span>{d.value}</span>
+                <span>{t(d.value)}</span>
               </th>
             );
           })}
@@ -83,9 +84,9 @@ const AATable = React.createClass({
           return (
             <tr key={`vpromm-${vpromm.id}`} className={classnames({'alt': i % 2})}>
               <td><strong>{vpromm.id}</strong></td>
-              <td className={classnames({'added': vpromm.inTheDatabase, 'not-added': !vpromm.inTheDatabase})}>{vpromm.inTheDatabase ? 'added' : 'not added'}</td>
+              <td className={classnames({'added': vpromm.inTheDatabase, 'not-added': !vpromm.inTheDatabase})}>{vpromm.inTheDatabase ? t('added') : t('not added')}</td>
               <td className={classnames({'added': vpromm.RouteShoot, 'not-added': !vpromm.RouteShoot})}>{vpromm.RouteShoot ? <a href={vpromm.RouteShootUrl}>link</a> : ''}</td>
-              <td className={classnames({'added': vpromm.RoadLabPro, 'not-added': !vpromm.RoadLabPro})}>{vpromm.RoadLabPro ? 'added' : 'not added'}</td>
+              <td className={classnames({'added': vpromm.RoadLabPro, 'not-added': !vpromm.RoadLabPro})}>{vpromm.RoadLabPro ? t('added') : t('not added')}</td>
             </tr>
           );
         })}
