@@ -308,8 +308,32 @@
   position: absolute;
   text-align: center;
   top: 40%;
-  padding: 2em;
+  padding: 2rem;
   margin: 0 auto;
   width: 100%;
   background-color: #FFF;
+}
+
+.properties__overlay {
+  font-size: 0.75rem;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  padding: 1.2rem;
+  background-color: #fff;
+  border-radius: $global-radius;
+
+  dt, dd {
+    display: inline;
+  }
+  dt:after {
+    content: ':';
+  }
+  dt {
+    margin-right: 0.2em;
+  }
+  dd:after {
+    content: '\A';
+    white-space: pre;
+  }
 }

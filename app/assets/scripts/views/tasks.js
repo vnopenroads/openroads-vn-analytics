@@ -60,7 +60,9 @@ var Tasks = React.createClass({
     return {
       currentTaskId: null,
       currentTaskStatus: null,
-      currentTask: null
+      currentTask: null,
+
+      hoverId: null
     };
   },
 
@@ -89,12 +91,14 @@ var Tasks = React.createClass({
       map.on('mousemove', (e) => {
         // toggle cursor and hover filters on mouseover
         let features = map.queryRenderedFeatures(e.point, { layers: layerIds });
-        if (features.length) {
+        if (features.length && features[0].properties._id) {
           map.getCanvas().style.cursor = 'pointer';
           this.setHoverFilter(features[0].properties._id);
+          this.setState({hoverId: features[0].properties._id});
         } else {
           map.getCanvas().style.cursor = '';
           this.setHoverFilter('');
+          this.setState({hoverId: null});
         }
       });
     });
@@ -186,14 +190,32 @@ var Tasks = React.createClass({
     );
   },
 
+  renderPropertiesOverlay: function () {
+    const { currentTaskId, currentTask, hoverId } = this.state;
+    const properties = hoverId === currentTaskId ? currentTask.properties
+      : currentTask._collisions.find(c => hoverId === c._id).properties;
+    const displayList = Object.keys(properties).map(key => key.charAt(0) === '_' ? null : [
+      <dt key={`${key}-key`}><strong>{key}</strong></dt>,
+      <dd key={`${key}-value`}>{properties[key] || '--'}</dd>
+    ]).filter(Boolean);
+    return (
+      <aside className='properties__overlay'>
+        <dl>
+          {displayList}
+        </dl>
+      </aside>
+    );
+  },
+
   render: function () {
-    const { currentTaskId } = this.state;
+    const { currentTaskId, hoverId } = this.state;
     return (
       <div className='task-container'>
         <div className='map-container'>
           <div id='map' />
         </div>
         {!currentTaskId ? this.renderPlaceholder() : null}
+        {hoverId ? this.renderPropertiesOverlay() : null}
       </div>
     );
   }
