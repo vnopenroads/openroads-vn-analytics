@@ -110,7 +110,7 @@ var SiteHeader = React.createClass({
             <div className='menu-wrapper'>
               <ul className='global-menu' id='global-menu'>
                 <li>
-                  <Link to={`/${getLanguage()}/analytics`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
+                  <Link to={`/${getLanguage()}/analytics/main`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
                     <span>{t('Analytics')}</span>
                   </Link>
                 </li>
@@ -124,13 +124,41 @@ var SiteHeader = React.createClass({
                     <span>{t('Editor')}</span>
                   </Link>
                 </li>
-                <li className='search'>
-                  {this.displaySearchBar()}
+                <li>
+                  <div className='search dropdown-menu-item'>
+                    {this.displaySearchBar()}
+                  </div>
                 </li>
               </ul>
             </div>
-            <div className='menu-wrapper'>
+            <div className='menu-wrapper dropdown-menu'>
               <Headerdrop
+              className='dropdown-menu-item'
+              id='search-selector'
+              triggerClassName='drop-toggle caret change-search-button site__lang'
+              triggerText={t('Search')}
+              triggerElement='a'
+              direction='down'
+              alignment='right'>
+              <ul className='drop-menu drop-menu--select' role='menu'>
+              {
+                ['Admin', 'VProMMs'].map((l, i) => {
+                  let cl = 'drop-menu-item';
+                  return (
+                    <li key={i}>
+                      <a onClick={(e) => {
+                        this.props._setSearchType(l);
+                        this.props._showSearch(true);
+                      }}
+                        className={cl} data-hook='dropdown:close'>{l}</a>
+                    </li>
+                  );
+                })
+                }
+              </ul>
+              </Headerdrop>
+              <Headerdrop
+                className='dropdown-menu-item'
                 id='lang-switcher'
                 triggerClassName='drop-toggle caret change-lang-button site__lang'
                 triggerText={t('Language')}
@@ -156,30 +184,6 @@ var SiteHeader = React.createClass({
                   })
                   }
                 </ul>
-              </Headerdrop>
-              <Headerdrop
-              id='search-selector'
-              triggerClassName='drop-toggle caret change-search-button site__lang'
-              triggerText={t('Search')}
-              triggerElement='a'
-              direction='down'
-              alignment='right'>
-              <ul className='drop-menu drop-menu--select' role='menu'>
-              {
-                ['Admin', 'VProMMs'].map((l, i) => {
-                  let cl = 'drop-menu-item';
-                  return (
-                    <li key={i}>
-                      <a onClick={(e) => {
-                        this.props._setSearchType(l);
-                        this.props._showSearch(true);
-                      }}
-                        className={cl} data-hook='dropdown:close'>{l}</a>
-                    </li>
-                  );
-                })
-                }
-              </ul>
               </Headerdrop>
             </div>
           </nav>

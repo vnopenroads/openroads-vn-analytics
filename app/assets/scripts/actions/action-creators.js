@@ -466,7 +466,7 @@ export function fetchVProMMsBbox (vprommsId) {
     })
     .then(json => {
       if (json.statusCode >= 400) {
-        return dispatch(recieveVProMMsBbox({}));
+        throw new Error('Bad response');
       }
       dispatch(recieveVProMMsBbox(json));
     });
@@ -495,9 +495,8 @@ export function fetchAdminBbox (id) {
       return response.json();
     })
     .then(json => {
-      if (json.statusCode === 400) {
-        return { dataAvailable: false };
-      } else if (json.statusCode > 400) {
+      // if not found, throw an error.
+      if (json.statusCode >= 400) {
         throw new Error('Bad response');
       }
       dispatch(receiveAdminBbox(json));
