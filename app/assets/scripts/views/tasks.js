@@ -134,12 +134,22 @@ var Tasks = React.createClass({
     });
   },
 
+  renderPlaceholder: function () {
+    return (
+      <div className='placeholder__fullscreen'>
+        <h3 className='placeholder__message'>Loading your first task...</h3>
+      </div>
+    );
+  },
+
   render: function () {
+    const { currentTaskId } = this.state;
     return (
       <div className='task-container'>
         <div className='map-container'>
           <div id='map' />
         </div>
+        {!currentTaskId ? this.renderPlaceholder() : null}
       </div>
     );
   }

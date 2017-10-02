@@ -294,3 +294,22 @@
   line-height: 1.25rem;
   font-family: $base-font-family;
 }
+
+.placeholder__fullscreen {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #FFF;
+}
+
+.placeholder__message {
+  position: absolute;
+  text-align: center;
+  top: 40%;
+  padding: 2em;
+  margin: 0 auto;
+  width: 100%;
+  background-color: #FFF;
+}
