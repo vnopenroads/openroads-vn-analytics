@@ -60,10 +60,10 @@ var Tasks = React.createClass({
   getInitialState: function () {
     return {
       currentTaskId: null,
-      currentTaskStatus: null,
       currentTask: null,
-
-      hoverId: null
+      mode: null,
+      hoverId: null,
+      selectedIds: []
     };
   },
 
@@ -102,6 +102,11 @@ var Tasks = React.createClass({
           this.setState({hoverId: null});
         }
       });
+
+      map.on('click', (e) => {
+        // TODO add selected road IDs to state, and render them with a selected appearance.
+        // Probably need to make new style layers for this.
+      });
     });
   },
 
@@ -112,17 +117,21 @@ var Tasks = React.createClass({
 
   componentWillReceiveProps: function ({meta, taskIds, currentTask}) {
     if (taskIds) {
-      const { currentTaskId, currentTaskStatus } = this.state;
-      if ((!currentTask || currentTaskStatus === 'done') && !meta.fetching) {
+      const { currentTaskId } = this.state;
+      if (!currentTask && !meta.fetching) {
         // Current task is done (or there's no current task), query the next task
-        let nextTask = this.getNextTask(currentTaskId, taskIds);
-        return nextTask ? this.props._fetchWayTask(nextTask) : null;
+        this.fetchNextTask(currentTaskId, taskIds);
       } else if (currentTask && currentTaskId !== currentTask._id) {
         // We've queried and received a new task
         this.setNewTask(currentTask);
         return this.onMapLoaded(() => this.syncMapToTask(currentTask));
       }
     }
+  },
+
+  fetchNextTask: function (currentTaskId, taskIds) {
+    let nextTask = this.getNextTask(currentTaskId, taskIds);
+    return nextTask ? this.props._fetchWayTask(nextTask) : null;
   },
 
   getNextTask: function (currentTaskId, taskIds) {
@@ -138,7 +147,6 @@ var Tasks = React.createClass({
   setNewTask: function (task) {
     this.setState({
       currentTaskId: task._id,
-      currentTaskStatus: 'new',
       currentTask: task
     });
   },
@@ -225,6 +233,73 @@ var Tasks = React.createClass({
     );
   },
 
+  renderInstrumentPanel: function () {
+    const { mode } = this.state;
+    return (
+      <div className='map-options map-panel'>
+        <div className='form-group'>
+          <label className='map-options-label'>{t('Select an action')}</label>
+          <select className='map__options--select' onChange={this.enterMode} value={mode}>
+            <option value=''></option>
+            <option value='merge'>Merge line geometries</option>
+            <option value='join'>Join at intersection</option>
+          </select>
+        </div>
+        { mode === 'merge' ? this.renderMergeMode() : null }
+        { mode === 'join' ? this.renderJoinMode() : null }
+        <div className='form-group'>
+          {/* TODO if we've already completed an action, don't show the skip button */}
+          <button className='bttn bttn-m bttn-primary' type='button' onClick={this.skip}>Skip</button>
+          <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.done}>Done</button>
+        </div>
+      </div>
+    );
+  },
+
+  skip: function () {
+    this.fetchNextTask(this.state.currentTaskId, this.props.taskIds);
+  },
+
+  done: function () {
+    // TODO post an API call to mark the current task ID as 'in progress'
+    this.fetchNextTask(this.state.currentTaskId, this.props.taskIds);
+  },
+
+  enterMode: function (e) {
+    const mode = e.currentTarget.value;
+    this.setState({ mode, selectedIds: [] });
+  },
+
+  renderMergeMode: function () {
+    return (
+      <div className='form-group'>
+        <label className='map-options-label'>Select a group of roads to merge.</label>
+        {this.renderSelectedIds()}
+      </div>
+    );
+  },
+
+  renderJoinMode: function () {
+    return (
+      <div className='form-group'>
+        <label className='map-options-label'>Select two roads to join with an intersection.</label>
+        {this.renderSelectedIds()}
+      </div>
+    );
+  },
+
+  renderSelectedIds: function () {
+    const { selectedIds } = this.state;
+    if (!selectedIds.length) {
+      return <p className='empty'>No roads selected yet. Click a road to select it.</p>;
+    }
+    return (
+      <ul className='map__options--selected'>
+        {/* TODO render selected road ids. We should try to get the vprom id or name if it's available */}
+      </ul>
+    );
+  },
+
   render: function () {
     const { currentTaskId, hoverId } = this.state;
     return (
@@ -234,6 +309,7 @@ var Tasks = React.createClass({
         </div>
         {!currentTaskId ? this.renderPlaceholder() : null}
         {hoverId ? this.renderPropertiesOverlay() : null}
+        {this.renderInstrumentPanel()}
         {this.renderMapLegend()}
       </div>
     );
