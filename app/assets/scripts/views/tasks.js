@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import mapboxgl from 'mapbox-gl';
 import config from '../config';
 import getExtent from 'turf-extent';
+import { t } from '../utils/i18n';
 
 import {
   fetchWayTasks
@@ -207,6 +208,23 @@ var Tasks = React.createClass({
     );
   },
 
+  renderMapLegend: function () {
+    return (
+      <div className='map-legend map-panel'>
+        <ul className='map__legend--split'>
+          <li>
+            <span className='legend__line legend__line--primary' />
+            <p className='legend__label'>{t('Current Road')}</p>
+          </li>
+          <li>
+            <span className='legend__line legend__line--secondary' />
+            <p className='legend__label'>{t('Intersecting Road')}</p>
+          </li>
+        </ul>
+      </div>
+    );
+  },
+
   render: function () {
     const { currentTaskId, hoverId } = this.state;
     return (
@@ -216,6 +234,7 @@ var Tasks = React.createClass({
         </div>
         {!currentTaskId ? this.renderPlaceholder() : null}
         {hoverId ? this.renderPropertiesOverlay() : null}
+        {this.renderMapLegend()}
       </div>
     );
   }

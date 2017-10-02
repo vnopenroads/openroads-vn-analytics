@@ -82,45 +82,10 @@
     transition: all 0.24s ease 0s;
   }
 
-  .map-legend {
-    bottom: $global-padding * 2;
-    right: $global-padding;
-  }
-
-  .map-legend-title {
-    font-weight: bold;
-    font-size: 0.75rem;
-  }
-
-  .map-legend-scale {
-    height: 15px;
-    background-image: linear-gradient(to right, #FFFF00, #DA251D);
-  }
-
-  .map-legend-label {
-    float: left;
-
-    &:last-child {
-      float: right;
-    }
-
-    font-size: 0.75rem;
-  }
-
   .empty {
     font-style: italic;
     opacity: 0.64;
     font-size: 0.875rem;
     line-height: 1rem;
   }
-}
-
-.map-panel {
-  position: absolute;
-  z-index: 10;
-  border-radius: $base-border-radius;
-  width: 16rem;
-  padding: $global-spacing;
-  background: #fff;
-  // box-shadow: 0 0 4px 4px rgba($base-color, 0.04);
 }

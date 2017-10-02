@@ -7,3 +7,68 @@
     width: 100%;
   }
 }
+
+.map-legend {
+  bottom: $global-padding * 2;
+  right: $global-padding;
+}
+
+.map-legend-title {
+  font-weight: bold;
+  font-size: 0.75rem;
+}
+
+.map-legend-scale {
+  height: 15px;
+  background-image: linear-gradient(to right, #FFFF00, #DA251D);
+}
+
+.map-legend-label {
+  float: left;
+
+  &:last-child {
+    float: right;
+  }
+
+  font-size: 0.75rem;
+}
+
+.map-panel {
+  position: absolute;
+  z-index: 10;
+  border-radius: $base-border-radius;
+  width: 16rem;
+  padding: $global-spacing;
+  background: #fff;
+}
+
+.map__legend--split {
+  font-size: 0.75rem;
+
+  li {
+    width: 50%;
+    display: inline-block;
+    text-align: center;
+  }
+}
+
+.legend__line {
+  display: inline-block;
+  margin-bottom: 0.5em;
+  width: 50%;
+  height: 3px;
+}
+
+.legend__line--primary {
+  opacity: 0.8;
+  background-color: #FCF009;
+}
+
+.legend__line--secondary {
+  opacity: 0.2;
+  background-color: #000;
+}
+
+.legend__label {
+  font-weight: bold;
+}
