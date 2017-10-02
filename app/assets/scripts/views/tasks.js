@@ -10,7 +10,21 @@ import {
   fetchWayTasks
 } from '../actions/action-creators';
 
-const SOURCE = 'collisions';
+const source = 'collisions';
+const layers = [{
+  id: 'road',
+  type: 'line',
+  paint: { 'line-width': 4 },
+  layout: { 'line-cap': 'round' },
+  filter: ['has', '_collisions']
+}, {
+  id: 'collisions',
+  type: 'line',
+  paint: { 'line-width': 4 },
+  layout: { 'line-cap': 'round' },
+  filter: ['!has', '_collisions']
+}].map(layer => Object.assign({source}, layer));
+const layerIds = layers.map(layer => layer.id);
 
 var Tasks = React.createClass({
   getInitialState: function () {
@@ -36,11 +50,22 @@ var Tasks = React.createClass({
 
   componentDidMount: function () {
     mapboxgl.accessToken = config.mbToken;
-    this.map = new mapboxgl.Map({
+    const map = this.map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/light-v9',
       failIfMajorPerformanceCaveat: false
     }).addControl(new mapboxgl.NavigationControl(), 'bottom-left');
+
+    this.onMapLoaded(() => {
+      map.on('mousemove', (e) => {
+        let features = map.queryRenderedFeatures(e.point, { layers: layerIds });
+        if (features.length) {
+          map.getCanvas().style.cursor = 'pointer';
+        } else {
+          map.getCanvas().style.cursor = '';
+        }
+      });
+    });
   },
 
   componentWillReceiveProps: function ({meta, taskIds, currentTask}) {
@@ -89,18 +114,24 @@ var Tasks = React.createClass({
   },
 
   syncMapToTask: function (task) {
-    console.log(task);
+    const { map } = this;
     const features = this.featureCollectionFromTask(task);
-    const source = this.map.getSource(SOURCE);
-    if (!source) {
-      this.map.addSource(SOURCE, {
+    const existingSource = map.getSource(source);
+    if (!existingSource) {
+      map.addSource(source, {
         type: 'geojson',
         data: features
       });
+      layers.forEach(layer => {
+        map.addLayer(layer);
+      });
     } else {
-      source.setData(features);
+      existingSource.setData(features);
     }
-    this.map.fitBounds(getExtent(features), { linear: true });
+    map.fitBounds(getExtent(features), {
+      linear: true,
+      padding: 25
+    });
   },
 
   render: function () {
