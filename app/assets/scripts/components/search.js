@@ -40,17 +40,17 @@ var Search = React.createClass({
   },
 
   onSearchQueryChange: function () {
-    this.searchVal = _.trim(this.refs.searchBox.value);
+    var searchVal = _.trim(this.refs.searchBox.value);
     if (this.props.searchType === 'Admin') {
-      if (this.searchVal.length > 0) {
-        this.props._fetchAdmins(this.searchVal);
+      if (searchVal.length > 0) {
+        this.props._fetchAdmins(searchVal);
         this.refs.results.classList.add('search-results-show');
       } else {
         this.props._clearAdmins();
       }
     } else {
-      if (this.searchVal.length >= 2) {
-        this.filterVProMMs(this.searchVal);
+      if (searchVal.length >= 2) {
+        this.filterVProMMs(searchVal);
         this.props.results.classList.add('search-results-show');
       } else {
         this.props._setFilteredVProMMs([]);
@@ -80,8 +80,8 @@ var Search = React.createClass({
 
   fireSearch: function () {
     if (!this.props.fetching) {
-      this.searchVal = _.trim(this.refs.searchBox.value);
-      if (this.searchVal.length) {
+      var searchVal = _.trim(this.refs.searchBox.value);
+      if (searchVal.length) {
         if (this.props.searchType === 'Admin') {
           this.searchAdminArea(this.props.admins[0].id);
           this.refs.searchBox.value = this.props.admins[0].name_en;
@@ -131,11 +131,8 @@ var Search = React.createClass({
   },
 
   componentDidMount: function () {
-    // searchVal is used throughout the component methods, so setting it to the `this` obj to make it available throughout
-    this.searchVal = '';
     document.addEventListener('click', this.onDocumentClick, false);
     document.addEventListener('keyup', this.onKeyup, false);
-    // this.props._fetchVProMMsids('search');
   },
 
   componentWillUnmount: function () {
@@ -155,11 +152,14 @@ var Search = React.createClass({
       if (!g.length) {
         // in the case the search value is just a blank space (denoting nothing is searche for)
         // provide a message that prompts users to search
-        if (/^(?![\s\S])/.test(this.searchVal)) {
-          results.push(<p className='info'>Please search for an Admin Area</p>);
-          // if the search term used does not have a db match, then let users
-        } else {
-          results.push(<p className='info'>No results available. Please refine your search.</p>);
+        if (this.refs.searchBox) {
+          var searchVal = _.trim(this.refs.searchBox.value);
+          if (/^(?![\s\S])/.test(searchVal)) {
+            results.push(<p className='info'>Please search for an Admin Area</p>);
+            // if the search term used does not have a db match, then let users
+          } else {
+            results.push(<p className='info'>No results available. Please refine your search.</p>);
+          }
         }
       } else {
         g = _.groupBy(g, (o) => o.level);
