@@ -45,7 +45,7 @@ var AnalyticsIndex = React.createClass({
       <div>
       <h1>{t('VProMMS Edits By Province')}</h1>
         <div className='aa-main__status'>
-          <h2><strong>{completion.toFixed(2)}%</strong>{t('of VProMMS Ids added')} ({done.toLocaleString()} of {total.toLocaleString()})</h2>
+          <h2><strong>{completion.toFixed(2)}%</strong> {t('of VProMMS Ids added')} ({done.toLocaleString()} of {total.toLocaleString()})</h2>
           <div className='meter'>
             <div className='meter__internal' style={{width: `${completion}%`}}></div>
           </div>
