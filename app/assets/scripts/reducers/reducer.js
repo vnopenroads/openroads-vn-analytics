@@ -97,9 +97,9 @@ const waytasks = function (state = waytasksDefaultState, action) {
         state.error = action.error;
       } else {
         if (Array.isArray(action.json)) {
-          state.data.taskIds = action.json
+          state.data.taskIds = action.json;
         } else if (action.json.hasOwnProperty('properties')) {
-          state.data.currentTask = action.json
+          state.data.currentTask = action.json;
         }
       }
       state.fetching = false;

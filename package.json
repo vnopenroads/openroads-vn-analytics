@@ -103,6 +103,7 @@
     "redux-thunk": "^1.0.3",
     "titlecase": "^1.1.2",
     "transifex": "^1.5.0",
-    "transifex-api-es6": "^0.2.3"
+    "transifex-api-es6": "^0.2.3",
+    "turf-extent": "^1.0.4"
   }
 }
