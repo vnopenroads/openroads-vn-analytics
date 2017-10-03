@@ -4,6 +4,7 @@
 echo ""
 echo "---Downloading Transifex Client---"
 
+pip install 'requests[security]'
 pip install transifex-client
 
 # generate .transifexrc
