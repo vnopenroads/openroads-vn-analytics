@@ -10,7 +10,8 @@ import c from 'classnames';
 import intersect from '@turf/line-intersect';
 
 import {
-  fetchWayTasks
+  fetchWayTasks,
+  setGlobalZoom
 } from '../actions/action-creators';
 
 const source = 'collisions';
@@ -82,6 +83,7 @@ var Tasks = React.createClass({
   propTypes: {
     _fetchWayTasks: React.PropTypes.func,
     _fetchWayTask: React.PropTypes.func,
+    _setGlobalZoom: React.PropTypes.func,
 
     meta: React.PropTypes.object,
     currentTask: React.PropTypes.object,
@@ -101,6 +103,20 @@ var Tasks = React.createClass({
     }).addControl(new mapboxgl.NavigationControl(), 'bottom-left');
 
     this.onMapLoaded(() => {
+      let makeXYZ = function () {
+        const xyz = map.getCenter();
+        xyz.zoom = map.getZoom();
+        return xyz;
+      };
+
+      map.on('zoom', () => {
+        this.props._setGlobalZoom(makeXYZ());
+      });
+
+      map.on('moveend', () => {
+        this.props._setGlobalZoom(makeXYZ());
+      });
+
       map.on('mousemove', (e) => {
         // toggle cursor and hover filters on mouseover
         let features = map.queryRenderedFeatures(e.point, { layers: layerIds });
@@ -356,7 +372,8 @@ function selector (state) {
 function dispatcher (dispatch) {
   return {
     _fetchWayTask: function (id) { dispatch(fetchWayTasks(id)); },
-    _fetchWayTasks: function () { dispatch(fetchWayTasks()); }
+    _fetchWayTasks: function () { dispatch(fetchWayTasks()); },
+    _setGlobalZoom: function (...args) { dispatch(setGlobalZoom(...args)); }
   };
 }
 
