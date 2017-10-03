@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { t } from '../utils/i18n';
 
 import AATable from '../components/aa-table-vpromms';
+import Headerdrop from '../components/headerdrop';
 
 import { fetchVProMMSids } from '../actions/action-creators';
 import config from '../config';
@@ -20,6 +21,32 @@ var AnalyticsAA = React.createClass({
 
   componentDidMount: function () {
     this.props._fetchVProMMSids();
+  },
+
+  renderDataDumpLinks: function (provinceId) {
+    return (
+        <Headerdrop
+          id='datadump-selector'
+          className='drop-road-network'
+          triggerClassName='drop-toggle drop-road-network caret bttn bttn-secondary bttn-road-network'
+          triggerText={`${t('Download')} ${t('Roads')}`}
+          triggerElement='a'
+          direction='down'
+          alignment='right'>
+          <ul className='drop-menu drop-menu--select' role='menu'>
+            {
+            ['CSV', 'GeoJSON'].map((type, i) => {
+              let cl = 'drop-menu-item bttn bttn-m bttn-base-light bttn-road-network bttn-road-network-drop';
+              return (
+                <a className={cl} href={`${config.provinceDumpBaseUrl}${provinceId}.${type.toLowerCase()}`}>
+                  {`${t('Download')} ${type}`}
+                </a>
+              );
+            })
+            }
+          </ul>
+        </Headerdrop>
+    );
   },
 
   render: function () {
@@ -39,7 +66,7 @@ var AnalyticsAA = React.createClass({
     <div>
       <div className="aa-header">
         <h1>{data.provinceName} {t('Province')}</h1>
-        { completion ? <a className='bttn-s bttn-road-network' href={config.provinceDumpBaseUrl + provinceId + '.geojson'}>{t('Download Roads')}</a> : '' }
+        { completion ? this.renderDataDumpLinks(provinceId) : '' }
       </div>
       <div className='aa-main__status'>
         <h2><strong>{completionMainText}</strong>{completionTailText}</h2>

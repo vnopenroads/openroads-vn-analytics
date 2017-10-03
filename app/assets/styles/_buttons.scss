@@ -225,13 +225,16 @@ input[type=submit] {
 }
 
 .bttn-edit {
-  @extend .bttn, .bttn-s, .bttn-primary;
+  @extend .bttn; 
+  @extend .bttn-s;
+  @extend .bttn-primary;
 }
 
 .bttn-road-network {
-  @extend .bttn, .bttn-m, .bttn-secondary;
   text-decoration: none;
   box-shadow: none;
+  display: block;
+  margin: 1rem;
 }
 
 .bttn-stats-prev,
