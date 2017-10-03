@@ -36,7 +36,7 @@ var AnalyticsAA = React.createClass({
           <ul className='drop-menu drop-menu--select' role='menu'>
             {
             ['CSV', 'GeoJSON'].map((type, i) => {
-              let cl = 'drop-menu-item bttn bttn-m bttn-base-light bttn-road-network bttn-road-network-drop';
+              let cl = 'drop-menu-item bttn bttn-m bttn-base-light bttn-road-network';
               return (
                 <a className={cl} href={`${config.provinceDumpBaseUrl}${provinceId}.${type.toLowerCase()}`}>
                   {`${t('Download')} ${type}`}
