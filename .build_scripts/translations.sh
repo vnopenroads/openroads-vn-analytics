@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+echo ""
+echo "---Setup Virtual Environment for Transifex Client"
+pip install virtualenv
+virtualenv ~/env
+source ~/env/bin/activate
+
 # download transifex client
 echo ""
 echo "---Downloading Transifex Client---"
