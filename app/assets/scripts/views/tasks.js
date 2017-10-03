@@ -6,6 +6,8 @@ import mapboxgl from 'mapbox-gl';
 import config from '../config';
 import getExtent from 'turf-extent';
 import { t } from '../utils/i18n';
+import c from 'classnames';
+import intersect from '@turf/line-intersect';
 
 import {
   fetchWayTasks
@@ -14,6 +16,7 @@ import {
 const source = 'collisions';
 const roadHoverId = 'road-hover';
 const collisionHoverId = 'collision-hover';
+const roadSelected = 'road-selected';
 const layers = [{
   id: 'road',
   type: 'line',
@@ -52,6 +55,16 @@ const layers = [{
   },
   layout: { 'line-cap': 'round' },
   filter: ['all', ['!has', 'main'], ['==', '_id', '']]
+}, {
+  id: roadSelected,
+  type: 'line',
+  paint: {
+    'line-width': 6,
+    'line-opacity': 0.9,
+    'line-color': '#FF0000'
+  },
+  layout: { 'line-cap': 'round' },
+  filter: ['all', ['!has', 'main'], ['==', '_id', '']]
 }].map(layer => Object.assign({source}, layer));
 
 const layerIds = layers.map(layer => layer.id);
@@ -61,7 +74,6 @@ var Tasks = React.createClass({
     return {
       currentTaskId: null,
       currentTask: null,
-      mode: null,
       hoverId: null,
       selectedIds: []
     };
@@ -104,8 +116,22 @@ var Tasks = React.createClass({
       });
 
       map.on('click', (e) => {
-        // TODO add selected road IDs to state, and render them with a selected appearance.
-        // Probably need to make new style layers for this.
+        let features = map.queryRenderedFeatures(e.point, { layers: [ roadHoverId, collisionHoverId ] });
+        if (features.length && features[0].properties._id) {
+          let featId = features[0].properties._id;
+          // Clone the selected array.
+          let selectedIds = [].concat(this.state.selectedIds);
+          let idx = findIndex(selectedIds, o => o === featId);
+
+          if (idx === -1) {
+            selectedIds.push(featId);
+          } else {
+            selectedIds.splice(idx, 1);
+          }
+
+          this.map.setFilter(roadSelected, ['all', ['in', '_id'].concat(selectedIds)]);
+          this.setState({ selectedIds });
+        }
       });
     });
   },
@@ -234,58 +260,62 @@ var Tasks = React.createClass({
   },
 
   renderInstrumentPanel: function () {
-    const { mode } = this.state;
+    let taskIds = this.props.taskIds || [];
+    let currId = this.props.currentTask ? this.props.currentTask._id : null;
+    let currTaskIdx = findIndex(taskIds, o => o === currId);
+
     return (
       <div className='map-options map-panel'>
+        <h2>Task {currTaskIdx + 1} of {taskIds.length}</h2>
         <div className='form-group'>
-          <label className='map-options-label'>{t('Select an action')}</label>
-          <select className='map__options--select' onChange={this.enterMode} value={mode}>
-            <option value=''></option>
-            <option value='merge'>Merge line geometries</option>
-            <option value='join'>Join at intersection</option>
-          </select>
+          <p>1. Select the roads to fix</p>
+          {this.renderSelectedIds()}
         </div>
-        { mode === 'merge' ? this.renderMergeMode() : null }
-        { mode === 'join' ? this.renderJoinMode() : null }
+        <div className={c('form-group', {disabled: this.state.selectedIds.length < 2})}>
+          <p>2. Select the action</p>
+          <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.onMerge}>Merge Geometries</button>
+          <button className={c('bttn bttn-m bttn-secondary', {disabled: this.state.selectedIds.length > 2})} type='button' onClick={this.onJoin}>Join Intersection</button>
+        </div>
         <div className='form-group'>
-          {/* TODO if we've already completed an action, don't show the skip button */}
-          <button className='bttn bttn-m bttn-primary' type='button' onClick={this.skip}>Skip</button>
-          <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.done}>Done</button>
+          <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.next}>Next task</button>
         </div>
       </div>
     );
   },
 
-  skip: function () {
+  onJoin: function () {
+    // Get the 2 selected roads. There's a strict maximum of 2 for intersection.
+    let roadA = this.props.currentTask._collisions.find(o => o._id === this.state.selectedIds[0]);
+    let roadB = this.props.currentTask._collisions.find(o => o._id === this.state.selectedIds[1]);
+
+    let intersection = intersect(roadA, roadB);
+
+    if (!intersection.features.length) {
+      alert('Error: Roads do not intersect.');
+    }
+
+    // - Create the appropriate structure from ALL the intersecting points in
+    // intersection.features
+    // - Submit to the API
+    // - The UI should be refreshed to show the changes. (re-retch the
+    // same task?)
+    console.log('intersection', intersection);
+  },
+
+  onMerge: function () {
+    // - Get the selected roads.
+    // - Merge them?
+    // - Create the appropriate structure
+    // - Submit to the API
+    // - The UI should be refreshed to show the changes. (re-retch the
+    // same task?)
+  },
+
+  next: function () {
+    // Deselect roads.
+    this.map.setFilter(roadSelected, ['all', ['in', '_id', '']]);
+    this.setState({ selectedIds: [] });
     this.fetchNextTask(this.state.currentTaskId, this.props.taskIds);
-  },
-
-  done: function () {
-    // TODO post an API call to mark the current task ID as 'in progress'
-    this.fetchNextTask(this.state.currentTaskId, this.props.taskIds);
-  },
-
-  enterMode: function (e) {
-    const mode = e.currentTarget.value;
-    this.setState({ mode, selectedIds: [] });
-  },
-
-  renderMergeMode: function () {
-    return (
-      <div className='form-group'>
-        <label className='map-options-label'>Select a group of roads to merge.</label>
-        {this.renderSelectedIds()}
-      </div>
-    );
-  },
-
-  renderJoinMode: function () {
-    return (
-      <div className='form-group'>
-        <label className='map-options-label'>Select two roads to join with an intersection.</label>
-        {this.renderSelectedIds()}
-      </div>
-    );
   },
 
   renderSelectedIds: function () {
@@ -293,11 +323,10 @@ var Tasks = React.createClass({
     if (!selectedIds.length) {
       return <p className='empty'>No roads selected yet. Click a road to select it.</p>;
     }
-    return (
-      <ul className='map__options--selected'>
-        {/* TODO render selected road ids. We should try to get the vprom id or name if it's available */}
-      </ul>
-    );
+    if (selectedIds.length === 1) {
+      return <p>1 road selected. Select at least another one.</p>;
+    }
+    return <p>{selectedIds.length} roads selected.</p>;
   },
 
   render: function () {
@@ -332,3 +361,16 @@ function dispatcher (dispatch) {
 }
 
 module.exports = connect(selector, dispatcher)(Tasks);
+
+function findIndex (haystack, fn) {
+  let idx = -1;
+  haystack.some((o, i) => {
+    if (fn(o)) {
+      idx = i;
+      return true;
+    }
+    return false;
+  });
+
+  return idx;
+}
