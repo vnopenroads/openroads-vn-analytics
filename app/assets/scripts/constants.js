@@ -114,4 +114,4 @@ export const ADMIN_MAP = {
     '823': {'type': 'province', 'name_en': 'Ca Mau'}
   },
   district: {}
-}
+};
