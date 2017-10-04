@@ -67,12 +67,13 @@ render((
         <Route path='explore' component={Explore} />
         <Route path='analytics' component={Analytics}>
           <IndexRoute path='main' component={AnalyticsIndex} />
-          <Route path=':aaId' component={AnalyticsAA}>
-            <Route path=':vpromm' component={AAFieldMap} />
-          </Route>
+          <Route path=':aaId' component={AnalyticsAA} />
         </Route>
         <IndexRoute component={Home}/>
         <Route path='*' component={UhOh}/>
+      </Route>
+      <Route path=':vpromm' component={Analytics} >
+        <IndexRoute component={AAFieldMap} />
       </Route>
       <Redirect from='/' to='/en' />
     </Router>

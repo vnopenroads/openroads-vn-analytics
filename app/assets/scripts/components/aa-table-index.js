@@ -2,10 +2,13 @@
 // (combine aa-table-index.js and aa-table-vromms.js into single component)
 
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { t, getLanguage } from '../utils/i18n';
 import _ from 'lodash';
 import classnames from 'classnames';
+
+import { setAdmin } from '../actions/action-creators';
 
 const displayHeader = [
   {key: 'name', value: t('Province')},
@@ -19,6 +22,7 @@ const AATable = React.createClass({
   displayName: 'AATable',
 
   propTypes: {
+    _setAdmin: React.PropTypes.func,
     data: React.PropTypes.array
   },
 
@@ -99,7 +103,7 @@ const AATable = React.createClass({
           }
           return (
             <tr key={`province-${province.id}`} className={classnames('collecticon-sort-asc', {'alt': i % 2})}>
-              <td><Link to={`${getLanguage()}/analytics/${province.id}`}>{province.name}</Link></td>
+              <td><Link onClick={(e) => { this.props._setAdmin({ id: province.id, name: province.name }); } }to={`${getLanguage()}/analytics/${province.id}`}>{province.name}</Link></td>
               <td>{province.done}</td>
               <td>{province.total}</td>
               <td>{percText}</td>
@@ -126,4 +130,13 @@ const AATable = React.createClass({
     );
   }
 });
-export default AATable;
+
+function selector (state) { return {}; }
+
+function dispatcher (dispatch) { 
+  return {
+    _setAdmin: (admin) => dispatch(setAdmin(admin))
+  }
+}
+
+export default connect(selector, dispatcher)(AATable);

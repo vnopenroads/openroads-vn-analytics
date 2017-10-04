@@ -392,6 +392,19 @@ const globZoom = function (state = globZoomDefault, action) {
   return state;
 };
 
+const defaultAdmin = { id: '', name: '' };
+
+const admin = function (state = defaultAdmin, action) {
+  switch (action.type) {
+    case actions.SET_ADMIN:
+      state = _.cloneDeep(state);
+      state.id = action.id;
+      state.name = action.name;
+      break;
+  }
+  return state;
+}
+
 export default combineReducers({
   adminSubregions,
   search,
@@ -406,5 +419,6 @@ export default combineReducers({
   VProMMSidSourceGeoJSON,
   exploreMap,
   routing: routeReducer,
-  globZoom
+  globZoom,
+  admin
 });

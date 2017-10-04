@@ -512,3 +512,15 @@ export function setGlobalZoom (zoomSource) {
     json: json
   };
 }
+
+// ///////////////////////////////////////////////////////////////
+//                          Set Admin                           //
+// ///////////////////////////////////////////////////////////////
+
+export function setAdmin (admin) {
+  return {
+    type: actions.SET_ADMIN,
+    id: admin.id,
+    name: admin.name
+  };
+}

@@ -24,10 +24,10 @@ import AAFieldMapLegend from './aa-field-map-legend';
 var AAFieldMap = React.createClass({
   displayName: 'AAFieldMap',
   propTypes: {
+    adminName: React.PropTypes.string,
     roadId: React.PropTypes.string,
     geoJSON: React.PropTypes.array,
     fetched: React.PropTypes.bool,
-    provinceName: React.PropTypes.string,
     _fetchVProMMsidSourceGeoJSON: React.PropTypes.func,
     _removeVProMMsSourceGeoJSON: React.PropTypes.func
   },
@@ -112,7 +112,7 @@ var AAFieldMap = React.createClass({
     return (
       <div>
         <div className="aa-header">
-          {this.props.fetched ? this.renderHeader(this.props.provinceName) : ''}
+          {this.props.fetched ? this.renderHeader(this.props.adminName) : ''}
         </div>
         <div className="aa-main__status">
           <div className='aa-map-wrapper'>
@@ -127,7 +127,8 @@ var AAFieldMap = React.createClass({
 function selector (state) {
   return {
     geoJSON: state.VProMMSidSourceGeoJSON.geoJSON,
-    fetched: state.VProMMSidSourceGeoJSON.fetched
+    fetched: state.VProMMSidSourceGeoJSON.fetched,
+    adminName: state.admin.name
   };
 }
 function dispatcher (dispatch) {

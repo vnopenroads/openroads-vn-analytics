@@ -20,9 +20,11 @@ const AATable = React.createClass({
   displayName: 'AATable',
 
   propTypes: {
+    aaId: React.PropTypes.string,
     data: React.PropTypes.array,
     province: React.PropTypes.string,
     provinceName: React.PropTypes.string,
+    routeParams: React.PropTypes.func,
     sources: React.PropTypes.object
   },
 
@@ -87,9 +89,8 @@ const AATable = React.createClass({
   },
 
   makeFieldMapLink: function (vprommExists, roadId) {
-    const provinceId = this.props.province;
     return vprommExists ? (
-      <Link to={`${getLanguage()}/analytics/${provinceId}/${roadId}/`}>{roadId}</Link>
+      <Link to={`${getLanguage()}/${roadId}/`}>{roadId}</Link>
     ) : roadId;
   },
 

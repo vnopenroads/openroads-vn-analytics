@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { t } from '../utils/i18n';
 
 import AATable from '../components/aa-table-vpromms';
-import AAFieldMap from '../components/aa-field-map';
 
 import { fetchVProMMSidsSources } from '../actions/action-creators';
 import config from '../config';
@@ -71,29 +70,8 @@ var AnalyticsAA = React.createClass({
     );
   },
 
-  renderFieldMap: function (vprommsParam) {
-    // provinceId is used to grab data from VProMMSids, a neccessary piece to gathering the provinceName
-    let provinceId = this.props.routeParams.aaId;
-    let data = this.props.VProMMSids[provinceId];
-    let provinceName = data.provinceName;
-    return (
-      <div>
-        <AAFieldMap roadId={vprommsParam} provinceName={provinceName} />
-      </div>
-     );
-  },
-
-  // the component can either render the admin area's table, or it renders a vpromms road specific analytics page.
-  // if the current params does not include vpromms, then the table should be rendered.
-  // Or, if the vpromms exists, the vpromms analytics page needs to be rendered
   render: function () {
-    const vprommsParam = this.props.params.vpromm;
-    if (!vprommsParam) {
-      return this.renderTable();
-    } else {
-      return this.renderFieldMap(vprommsParam);
-    }
-    return (<div/>);
+    return this.renderTable();
   }
 });
 
