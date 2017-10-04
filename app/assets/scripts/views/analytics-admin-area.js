@@ -36,11 +36,13 @@ var AnalyticsAA = React.createClass({
           <ul className='drop-menu drop-menu--select' role='menu'>
             {
             ['CSV', 'GeoJSON'].map((type, i) => {
-              let cl = 'drop-menu-item bttn bttn-m bttn-base-light bttn-road-network';
+              let cl = 'drop-menu-item';
               return (
-                <a className={cl} href={`${config.provinceDumpBaseUrl}${provinceId}.${type.toLowerCase()}`}>
-                  {`${t('Download')} ${type}`}
-                </a>
+                <li>
+                  <a className={cl} href={`${config.provinceDumpBaseUrl}${provinceId}.${type.toLowerCase()}`}>
+                    {`${t('Download')} ${type}`}
+                  </a>
+                </li>
               );
             })
             }
@@ -65,8 +67,12 @@ var AnalyticsAA = React.createClass({
     return (
     <div>
       <div className="aa-header">
-        <h1>{data.provinceName} {t('Province')}</h1>
-        { completion ? this.renderDataDumpLinks(provinceId) : '' }
+        <div className="aa-headline">
+          <h1>{data.provinceName} {t('Province')}</h1>
+        </div>
+        <div className="aa-head-actions">
+          { completion ? this.renderDataDumpLinks(provinceId) : '' }
+        </div>
       </div>
       <div className='aa-main__status'>
         <h2><strong>{completionMainText}</strong>{completionTailText}</h2>

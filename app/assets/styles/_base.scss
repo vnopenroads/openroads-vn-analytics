@@ -316,6 +316,8 @@ a:active{
         .drop-content {
           margin-top: $global-spacing / 4;
           width: 100%;
+          left: auto;
+          right: 0;
         }
       }
 
@@ -560,9 +562,7 @@ a:active{
       text-decoration: none;
       box-shadow: none;
     }
-    .bttn-road-network {
-      color: $primary-color
-    }
+
     .bttn-road-network.disabled {
       pointer-events: all;
     }
@@ -1196,21 +1196,5 @@ a:active{
 
   .filter-select {
     max-width: 15rem;
-  }
-}
-
-.drop-road-network {
-  margin-top: 1.5rem;
-  .drop-content {
-    min-width: 0rem;
-    width: 10rem;
-    left: -.35rem;
-    margin-top: .5rem;
-    .drop-menu-item {
-      text-align: center;
-      font-size: .75rem;
-      margin: auto;
-      width: 9rem;
-    }
   }
 }
