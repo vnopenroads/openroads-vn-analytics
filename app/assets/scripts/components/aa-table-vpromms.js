@@ -24,7 +24,8 @@ const AATable = React.createClass({
     return {
       sortState: {
         field: 'inTheDatabase',
-        order: 'desc'
+        order: 'desc',
+        expandedId: null
       }
     };
   },
@@ -77,11 +78,27 @@ const AATable = React.createClass({
     return sorted.value();
   },
 
+  onPropertiesClick: function (vprommId) {
+    let curId = this.state.expandedId;
+    let newId = curId === vprommId ? null : vprommId;
+
+    this.setState({expandedId: newId});
+  },
+
   renderTableBody: function () {
     const sorted = this.handleSort(this.props.data);
     return (
       <tbody>
         {_.map(sorted, (vpromm, i) => {
+          let propBtnLabel = this.state.expandedId === vpromm.id ? 'Hide' : 'Show';
+          let propBtnClass = classnames('bttn-table-expand', {
+            'bttn-table-expand--show': this.state.expandedId !== vpromm.id,
+            'bttn-table-expand--hide': this.state.expandedId === vpromm.id
+          });
+          let propContainerClass = classnames('table-properties', {
+            'table-properties--hidden': this.state.expandedId !== vpromm.id
+          });
+
           return (
             <tr key={`vpromm-${vpromm.id}`} className={classnames({'alt': i % 2})}>
               <th>{vpromm.id}</th>
@@ -89,8 +106,8 @@ const AATable = React.createClass({
               <td className={classnames({'added': vpromm.RouteShoot, 'not-added': !vpromm.RouteShoot})}>{vpromm.RouteShoot ? <a href={vpromm.RouteShootUrl}>link</a> : ''}</td>
               <td className={classnames({'added': vpromm.RoadLabPro, 'not-added': !vpromm.RoadLabPro})}>{vpromm.RoadLabPro ? t('added') : t('not added')}</td>
               <td>
-                <button type='button' className='bttn-table-expand bttn-table-expand--show'><span>Show</span></button>
-                <div className='table-properties table-properties--hidden'>
+                <button type='button' className={propBtnClass} onClick={this.onPropertiesClick.bind(null, vpromm.id)}><span>{propBtnLabel}</span></button>
+                <div className={propContainerClass}>
                   <dl>
                     <dt>Key</dt>
                     <dd>Value</dd>
