@@ -1,7 +1,7 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchVProMMSids } from '../actions/action-creators';
+import { fetchVProMMsids } from '../actions/action-creators';
 
 var Analytics = React.createClass({
   displayName: 'Analytics',
@@ -25,13 +25,13 @@ var Analytics = React.createClass({
 
 function selector (state) {
   return {
-    VProMMSids: state.VProMMSids
+    VProMMSids: state.VProMMSidsAnalytics
   };
 }
 
 function dispatcher (dispatch) {
   return {
-    _fetchVProMMSids: (aaid) => dispatch(fetchVProMMSids())
+    _fetchVProMMsids: (use) => dispatch(fetchVProMMsids(use))
   };
 }
 

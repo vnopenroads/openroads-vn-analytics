@@ -1,7 +1,7 @@
 'use strict';
 import React from 'react';
 
-const Dropdown = React.createClass({
+const Headerdrop = React.createClass({
   displayName: 'Dropdown',
 
   propTypes: {
@@ -110,4 +110,4 @@ const Dropdown = React.createClass({
   }
 });
 
-module.exports = Dropdown;
+module.exports = Headerdrop;

@@ -2,8 +2,13 @@
 import React from 'react';
 import _ from 'lodash';
 import Search from './search';
-import Langdrop from './langdrop';
+import Headerdrop from './headerdrop';
 import c from 'classnames';
+import { connect } from 'react-redux';
+import {
+  setSearchType,
+  showSearch
+} from '../actions/action-creators';
 import { t, getAvailableLanguages, getLanguage } from '../utils/i18n';
 import { Link } from 'react-router';
 var SiteHeader = React.createClass({
@@ -14,7 +19,11 @@ var SiteHeader = React.createClass({
     cleanSearchResults: React.PropTypes.func,
     routes: React.PropTypes.array,
     search: React.PropTypes.object,
-    pathname: React.PropTypes.string
+    pathname: React.PropTypes.string,
+    _setSearchType: React.PropTypes.func,
+    searchType: React.PropTypes.string,
+    _showSearch: React.PropTypes.func,
+    displaySearch: React.PropTypes.bool
   },
 
   toggleMenuHandler: function (e) {
@@ -26,18 +35,15 @@ var SiteHeader = React.createClass({
   toggleSearchHandler: function (e) {
     e.preventDefault();
     this.refs.nav.classList.remove('show-menu');
-    this.refs.nav.classList.toggle('show-search');
   },
 
   closeSearch: function () {
     this.refs.nav.classList.remove('show-menu');
-    this.refs.nav.classList.remove('show-search');
   },
 
   resizeHandler: function () {
     if (document.body.getBoundingClientRect().width > 991) {
       this.refs.nav.classList.remove('show-menu');
-      this.refs.nav.classList.remove('show-search');
     }
   },
 
@@ -46,22 +52,51 @@ var SiteHeader = React.createClass({
   },
 
   componentDidMount: function () {
-    this.refs.toggleMenu.addEventListener('click', this.toggleMenuHandler, false);
-    this.refs.toggleSearch.addEventListener('click', this.toggleSearchHandler, false);
-
     this.resizeHandler = _.debounce(this.resizeHandler, 200);
     window.addEventListener('resize', this.resizeHandler);
   },
 
   componentWillUnmount: function () {
     this.refs.toggleMenu.removeEventListener('click', this.toggleMenuHandler);
-    this.refs.toggleSearch.removeEventListener('click', this.toggleSearchHandler);
     window.removeEventListener('resize', this.resizeHandler);
   },
+
+  componentWillReceiveProps: function (nextProps) {
+    this.setSearchDisplay(nextProps);
+  },
+
+  // for the analytics and home page, hide search if open.
+  setSearchDisplay: function (nextProps) {
+    let isExplore = new RegExp(/explore/).test(nextProps.pathname);
+    let isEditor = new RegExp(/editor/).test(nextProps.pathname);
+    if (!isEditor && !isExplore) {
+      this.props._showSearch(false);
+    }
+  },
+
+  displaySearchBar: function () {
+    if (this.props.displaySearch) {
+      return (
+          <div className='site__search'>
+            <Search
+              searchType={this.props.searchType}
+              fetchSearchResults={this.props.fetchSearchResults}
+              cleanSearchResults={this.props.cleanSearchResults}
+              onResultClick={this.closeSearch}
+              results={this.props.search.results}
+              query={this.props.search.query}
+              fetching={this.props.search.fetching}
+              searching={this.props.search.searching} />
+          </div>
+      );
+    } else {
+      return (<div/>);
+    }
+  },
+
   render: function () {
-    let last = _.last(this.props.routes).path;
     return (
-      <header className='site-header'>
+      <header className='site-header' ref={(header) => this.header = header }>
         <div className='inner'>
           <div className='site__headline'>
             <h1 className='site__title'>
@@ -71,20 +106,6 @@ var SiteHeader = React.createClass({
             </h1>
           </div>
           <nav className='site__nav' role='navigation' ref='nav'>
-            <h2 className='toggle-search'><a href='#global-search' title='Show search' ref='toggleSearch'><span>{t('Search')}</span></a></h2>
-            <div className='search-wrapper'>
-              <div className='site__search'>
-                <Search
-                  fetchSearchResults={this.props.fetchSearchResults}
-                  cleanSearchResults={this.props.cleanSearchResults}
-                  onResultClick={this.closeSearch}
-                  results={this.props.search.results}
-                  query={this.props.search.query}
-                  isEditor={last === 'editor/*' || last === 'editor'}
-                  fetching={this.props.search.fetching}
-                  searching={this.props.search.searching} />
-              </div>
-            </div>
             <h2 className='toggle-menu'><a href='#global-menu' title='Show menu' ref='toggleMenu'><span>Menu</span></a></h2>
             <div className='menu-wrapper'>
               <ul className='global-menu' id='global-menu'>
@@ -108,13 +129,15 @@ var SiteHeader = React.createClass({
                     <span>{t('Tasks')}</span>
                   </Link>
                 </li>
+                <li className='search'>
+                  {this.displaySearchBar()}
+                </li>
               </ul>
             </div>
             <div className='menu-wrapper'>
-              <Langdrop
+              <Headerdrop
                 id='lang-switcher'
                 triggerClassName='drop-toggle caret change-lang-button site__lang'
-                className=''
                 triggerText={t('Language')}
                 triggerElement='a'
                 direction='down'
@@ -138,7 +161,31 @@ var SiteHeader = React.createClass({
                   })
                   }
                 </ul>
-              </Langdrop>
+              </Headerdrop>
+              <Headerdrop
+              id='search-selector'
+              triggerClassName='drop-toggle caret change-search-button site__lang'
+              triggerText={t('Search')}
+              triggerElement='a'
+              direction='down'
+              alignment='right'>
+              <ul className='drop-menu drop-menu--select' role='menu'>
+              {
+                ['Admin', 'VProMMs'].map((l, i) => {
+                  let cl = 'drop-menu-item';
+                  return (
+                    <li key={i}>
+                      <a onClick={(e) => {
+                        this.props._setSearchType(l);
+                        this.props._showSearch(true);
+                      }}
+                        className={cl} data-hook='dropdown:close'>{l}</a>
+                    </li>
+                  );
+                })
+                }
+              </ul>
+              </Headerdrop>
             </div>
           </nav>
         </div>
@@ -147,4 +194,18 @@ var SiteHeader = React.createClass({
   }
 });
 
-module.exports = SiteHeader;
+function selector (state) {
+  return {
+    displaySearch: state.searchDisplay.show,
+    searchType: state.setSearchType.searchType
+  };
+}
+
+function dispatcher (dispatch) {
+  return {
+    _showSearch: (bool) => dispatch(showSearch(bool)),
+    _setSearchType: (searchType) => dispatch(setSearchType(searchType))
+  };
+}
+
+module.exports = connect(selector, dispatcher)(SiteHeader);
