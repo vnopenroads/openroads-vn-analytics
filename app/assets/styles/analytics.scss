@@ -104,3 +104,43 @@
     margin-right: 0.25rem;
   }
 }
+
+// Tables
+
+.table-properties-head {
+  width: 16rem;
+}
+
+.table-properties {
+  display: block;
+  padding: $global-spacing 0 0 0;
+}
+
+.table-properties--hidden {
+  display: none;
+}
+
+.bttn-table-expand {
+  @extend .bttn, .bttn-s, .bttn-primary;
+
+  * {
+    vertical-align: top;
+  }
+
+  &::after {
+    opacity: 0.48;
+    font-size: 1rem;
+    margin-left: 0.25rem;
+    line-height: inherit;
+    vertical-align: top;
+  }
+}
+
+.bttn-table-expand--show::after {
+  @extend %collecticons-sm-chevron-down;
+}
+
+.bttn-table-expand--hide::after {
+  @extend %collecticons-sm-chevron-up;
+}
+

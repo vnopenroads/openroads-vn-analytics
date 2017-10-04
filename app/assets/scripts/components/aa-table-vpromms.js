@@ -46,6 +46,7 @@ const AATable = React.createClass({
               </th>
             );
           })}
+          <th className='table-properties-head'>Properties</th>
         </tr>
       </thead>
     );
@@ -83,10 +84,19 @@ const AATable = React.createClass({
         {_.map(sorted, (vpromm, i) => {
           return (
             <tr key={`vpromm-${vpromm.id}`} className={classnames({'alt': i % 2})}>
-              <td><strong>{vpromm.id}</strong></td>
+              <th>{vpromm.id}</th>
               <td className={classnames({'added': vpromm.inTheDatabase, 'not-added': !vpromm.inTheDatabase})}>{vpromm.inTheDatabase ? t('added') : t('not added')}</td>
               <td className={classnames({'added': vpromm.RouteShoot, 'not-added': !vpromm.RouteShoot})}>{vpromm.RouteShoot ? <a href={vpromm.RouteShootUrl}>link</a> : ''}</td>
               <td className={classnames({'added': vpromm.RoadLabPro, 'not-added': !vpromm.RoadLabPro})}>{vpromm.RoadLabPro ? t('added') : t('not added')}</td>
+              <td>
+                <button type='button' className='bttn-table-expand bttn-table-expand--show'><span>Show</span></button>
+                <div className='table-properties table-properties--hidden'>
+                  <dl>
+                    <dt>Key</dt>
+                    <dd>Value</dd>
+                  </dl>
+                </div>
+              </td>
             </tr>
           );
         })}

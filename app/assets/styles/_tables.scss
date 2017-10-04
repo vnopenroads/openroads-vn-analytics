@@ -4,13 +4,16 @@
   border: 1px solid rgb(220, 220, 220);;
   border-radius: $global-radius;
   margin-bottom: 10rem;
+
   table {
     border-collapse: collapse;
     text-align: left;
     width: 100%;
+
     td, th {
-      padding: 3px 10px;
+      padding: $global-spacing / 2;
     }
+
     thead th {
       background-color: $neutral;
       color: $base-color;
@@ -21,6 +24,8 @@
       font-weight: 600;
       border-left: 1px solid rgb(220, 220, 220);
       border-bottom: 2px solid rgb(200, 200, 200);
+
+      padding-bottom: $global-spacing / 4;
 
       &:first-child {
         border-left: none;
@@ -34,9 +39,8 @@
           border-bottom: none;
         }
       }
+
       td {
-        vertical-align: middle;
-        font-size: 0.9rem;
         font-weight: $base-font-light;
         :first-child {
           border-left: none;
