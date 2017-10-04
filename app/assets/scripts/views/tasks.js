@@ -11,6 +11,7 @@ import intersect from '@turf/line-intersect';
 
 import {
   fetchNextWayTask,
+  markTaskAsDone,
   setGlobalZoom
 } from '../actions/action-creators';
 
@@ -52,6 +53,7 @@ var Tasks = React.createClass({
   getInitialState: function () {
     return {
       currentTaskId: null,
+      renderedFeatures: null,
       skippedTasks: [],
       hoverId: null,
       selectedIds: []
@@ -108,7 +110,7 @@ var Tasks = React.createClass({
         }
 
         this.setState({hoverId: id});
-        this.map.setFilter(roadHoverId, ['==', '_id', id]);
+        map.setFilter(roadHoverId, ['==', '_id', id]);
       });
 
       map.on('click', (e) => {
@@ -125,7 +127,7 @@ var Tasks = React.createClass({
             selectedIds.splice(idx, 1);
           }
 
-          this.map.setFilter(roadSelected, ['in', '_id'].concat(selectedIds));
+          map.setFilter(roadSelected, ['in', '_id'].concat(selectedIds));
           this.setState({ selectedIds });
         }
       });
@@ -136,9 +138,9 @@ var Tasks = React.createClass({
     if (taskId && taskId !== this.state.currentTaskId) {
       // We've queried and received a new task
       this.setState({
-        currentTaskId: taskId
-      });
-      return this.onMapLoaded(() => this.syncMapToTask(task));
+        currentTaskId: taskId,
+        renderedFeatures: task
+      }, () => this.onMapLoaded(() => this.syncMapToTask()));
     }
   },
 
@@ -151,21 +153,22 @@ var Tasks = React.createClass({
     else this.map.once('load', fn);
   },
 
-  syncMapToTask: function (task) {
+  syncMapToTask: function () {
+    const features = this.state.renderedFeatures;
     const { map } = this;
     const existingSource = map.getSource(source);
     if (!existingSource) {
       map.addSource(source, {
         type: 'geojson',
-        data: task
+        data: features
       });
       layers.forEach(layer => {
         map.addLayer(layer);
       });
     } else {
-      existingSource.setData(task);
+      existingSource.setData(features);
     }
-    map.fitBounds(getExtent(task), {
+    map.fitBounds(getExtent(features), {
       linear: true,
       padding: 25
     });
@@ -197,20 +200,26 @@ var Tasks = React.createClass({
   },
 
   renderInstrumentPanel: function () {
+    const { task } = this.props;
     return (
       <div className='map-options map-panel'>
-        <h2>Tasks</h2>
+        { task ? <h2>Displaying {task.features.length} Roads</h2> : null }
         <div className='form-group'>
-          <p>1. Select the roads to fix</p>
-          {this.renderSelectedIds()}
+          <p>1. Select the roads to fix.</p>
+          <div className='map__panel--selected'>
+            {this.renderSelectedIds()}
+          </div>
         </div>
-        <div className={c('form-group', {disabled: this.state.selectedIds.length < 2})}>
-          <p>2. Select the action</p>
+        <div className={c('form-group', 'map__panel--form', {disabled: this.state.selectedIds.length < 2})}>
+          <p>2. Choose an action to perform.</p>
           <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.onMerge}>Merge Geometries</button>
+          <br />
           <button className={c('bttn bttn-m bttn-secondary', {disabled: this.state.selectedIds.length > 2})} type='button' onClick={this.onJoin}>Join Intersection</button>
         </div>
-        <div className='form-group'>
-          <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.next}>Next task</button>
+        <div className='form-group map__panel--form'>
+          <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.commit}>Finish task</button>
+          <br />
+          <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.next}>Skip task</button>
         </div>
       </div>
     );
@@ -242,6 +251,13 @@ var Tasks = React.createClass({
     // - Submit to the API
     // - The UI should be refreshed to show the changes. (re-retch the
     // same task?)
+  },
+
+  commit: function () {
+    // This function is different from #next, in that it allows you
+    // to specify a road as basically not needing a fix.
+
+    this.next();
   },
 
   next: function () {
@@ -290,6 +306,7 @@ function selector (state) {
 function dispatcher (dispatch) {
   return {
     _fetchNextTask: function (skippedTasks) { dispatch(fetchNextWayTask(skippedTasks)); },
+    _markTaskAsDone: function (taskId) { dispatch(markTaskAsDone(taskId)); },
     _setGlobalZoom: function (...args) { dispatch(setGlobalZoom(...args)); }
   };
 }

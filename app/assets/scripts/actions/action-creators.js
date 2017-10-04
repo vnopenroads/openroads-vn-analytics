@@ -177,6 +177,24 @@ export function fetchNextWayTask (skippedTasks) {
   };
 }
 
+export function markTaskAsDone (taskId) {
+  return function (dispatch) {
+    let url = `${config.api}/tasks/${taskId}/pending`;
+    return fetch.put(url)
+      .then(response => {
+        if (response.status >= 400) {
+          throw new Error('Bad response');
+        }
+        return response;
+      })
+      .then(response => {
+        // do something
+      }, e => {
+        // do something
+      });
+  };
+}
+
 // ////////////////////////////////////////////////////////////////
 //                        PROJECT TASKS                          //
 // ////////////////////////////////////////////////////////////////
