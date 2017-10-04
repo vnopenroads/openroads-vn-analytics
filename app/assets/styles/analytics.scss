@@ -17,20 +17,20 @@
     @extend .row--centered;
   }
 
-  .aa-header {
+  .a-header {
     display: flex;
     width: 100%;
     padding: ($global-spacing * 2) 0 $global-spacing 0;
     align-items: center;
   }
 
-  .aa-headline h1 {
+  .a-headline h1 {
     font-size: 1.75rem;
     font-weight: 800;
     margin: 0;
   }
 
-  .aa-head-actions {
+  .a-head-actions {
     flex: 1 1 auto;
     text-align: right;
     font-size: 0;
@@ -48,7 +48,7 @@
     }
   }
 
-  .aa-main__status {
+  .a-main__status {
     min-height: 4.5rem;
     padding: 0.5rem 1rem;
     margin: 1rem 0 2rem 0;
