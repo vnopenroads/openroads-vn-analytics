@@ -47,6 +47,7 @@ body {
 // Badges
 
 .badge {
+  @extend .antialiased;
   display: inline-block;
   min-width: 0.85rem;
   padding: 0.225rem 0.5rem;
@@ -62,7 +63,6 @@ body {
   background-color: rgba($base-color, 0.4);
   border-radius: $global-rounded;
   margin-left: 0.25rem;
-  @extend .antialiased;
 }
 
 #main-frame {
@@ -78,9 +78,8 @@ body {
 a {
   cursor: pointer;
   color: $secondary-color;
-  // text-decoration: none;
-  @include transition(opacity 0.2s ease 0s);
-  @include transform(translateZ(0));
+  transition: opacity 0.2s ease 0s;
+  transform: translateZ(0);
 }
 
 a:visited {
@@ -94,7 +93,7 @@ a:hover {
 
 a:active{
   outline: none;
-  @include transform(translate(0, 1px));
+  transform: translate(0, 1px);
 }
 
 

@@ -8,11 +8,11 @@ input[type=reset],
 input[type=submit] {
   -webkit-appearance: button;
   cursor: pointer;
-  @include transform(translateZ(0));
+  transform: translateZ(0);
 }
 
 .bttn {
-  @include user-select(none);
+  user-select: none;
   display: inline-block;
   font-family: $base-font-family;
   font-weight: $base-font-bold;
@@ -36,7 +36,7 @@ input[type=submit] {
   &.active {
     box-shadow: 0 0 0 1px rgba($base-color, 0.24);
     outline: none;
-    @include transform(translate(0, 0, 1px));
+    transform: translate(0, 0, 1px);
   }
   &:hover {
     opacity: 0.64;
@@ -61,7 +61,7 @@ input[type=submit] {
     vertical-align: top;
   }
 
-  @include transition(background-color 0.24s ease 0s, opacity 0s linear 0s);
+  transition: background-color 0.24s ease 0s, opacity 0s linear 0s;
 }
 
 

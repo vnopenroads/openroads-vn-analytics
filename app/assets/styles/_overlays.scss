@@ -43,7 +43,7 @@
     color: $primary-color;
   }
 
-  @include transform(translate3d(0, 0, 0));
+  transform: translate3d(0, 0, 0);
   @include transition(opacity 0.16s ease 0s, margin 0.16s ease 0s, visibility 0.16s linear 0s);
   &:before {
     @extend .collecticons-triangle-up;
@@ -84,7 +84,7 @@
   }
   .center > & {
     left: 50%;
-    @include transform(translate(-50%, 0));
+    transform: translate(-50%, 0);
   }
   .right > & {
     right: -1rem;
@@ -268,7 +268,7 @@
     &:after {
       left: auto;
       right: 0;
-      @include transform(translate(0, 0));
+      transform: translate(0, 0);
     }
   }
 }
