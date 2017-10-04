@@ -7,39 +7,45 @@ import config from '../config';
 //                       ADMIN SUBREGIONS                        //
 // ////////////////////////////////////////////////////////////////
 
-function requestAdminSubregions () {
+function requestAdmins () {
   return {
-    type: actions.REQUEST_ADMIN_SUBREGIONS
+    type: actions.REQUEST_ADMINS
   };
 }
 
-function receiveAdminSubregions (json) {
+function receiveAdmins (json) {
   return {
-    type: actions.RECEIVE_ADMIN_SUBREGIONS,
+    type: actions.RECEIVE_ADMINS,
     json: json,
     receivedAt: Date.now()
   };
 }
 
-export function fetchAdminSubregions (id = null) {
+export function fetchAdmins (id = null) {
   return function (dispatch) {
-    dispatch(requestAdminSubregions());
+    dispatch(requestAdmins());
 
     // The function called by the thunk middleware can return a value,
     // that is passed on as the return value of the dispatch method.
 
     // In this case, we return a promise to wait for.
     // This is not required by thunk middleware, but it is convenient for us.
-    let url = id === null ? `${config.api}/admin/subregions` : `${config.api}/admin/${id}/subregions`;
+    let url = `${config.api}/admin/units?name=${id}&limit=10`;
+    console.log(url);
     console.time('fetch subregions');
     return fetch(url)
       .then(response => response.json())
       .then(json => {
         console.timeEnd('fetch subregions');
-        // setTimeout(() => dispatch(receiveAdminSubregions(json)), 2000);
-        dispatch(receiveAdminSubregions(json));
+        dispatch(receiveAdmins(json));
       });
       // catch any error in the network call.
+  };
+}
+
+export function clearAdmins () {
+  return {
+    type: actions.CLEAR_ADMINS
   };
 }
 
@@ -374,11 +380,11 @@ function receiveVProMMSids (json, error = null) {
   };
 }
 
-export function fetchVProMMSids () {
+export function fetchVProMMsids (use) {
   return function (dispatch) {
     dispatch(requestVProMMSids());
-
-    let url = `${config.api}/properties?keys=iri_mean,rs_url`;
+    const route = use === 'search' ? '/ids' : '/properties?keys=iri_mean,rs_url';
+    let url = `${config.api}${route}`;
     return fetch(url)
       .then(response => {
         return response.json();
@@ -413,7 +419,7 @@ export function exploreMapShowNoVpromms (bool) {
 }
 
 // ////////////////////////////////////////////////////////////////
-//                       Set Global Zoom                         //
+//                              Set Zoom                         //
 // ////////////////////////////////////////////////////////////////
 
 export function setGlobalZoom (zoomSource) {
@@ -437,3 +443,96 @@ export function setGlobalZoom (zoomSource) {
     json: json
   };
 }
+
+function requestVProMMsBbox () {
+  return {
+    type: actions.REQUEST_VPROMMS_BBOX
+  };
+}
+
+function recieveVProMMsBbox (json) {
+  return {
+    type: actions.RECIEVE_VPROMMS_BBOX,
+    json: json
+  };
+}
+export function fetchVProMMsBbox (vprommsId) {
+  return function (dispatch) {
+    dispatch(requestVProMMsBbox());
+    let url = `${config.api}/way/${vprommsId}/bbox`;
+    return fetch(url)
+    .then(response => {
+      return response.json();
+    })
+    .then(json => {
+      if (json.statusCode >= 400) {
+        throw new Error('Bad response');
+      }
+      dispatch(recieveVProMMsBbox(json));
+    });
+  };
+}
+
+function requestAdminBbox () {
+  return {
+    type: actions.REQUEST_ADMIN_BBOX
+  };
+}
+
+function receiveAdminBbox (json) {
+  return {
+    type: actions.RECEIVE_ADMIN_BBOX,
+    json: json
+  };
+}
+
+export function fetchAdminBbox (id) {
+  return function (dispatch) {
+    dispatch(requestAdminBbox());
+    let url = `${config.api}/admin/${id}/info`;
+    return fetch(url)
+    .then(response => {
+      return response.json();
+    })
+    .then(json => {
+      // if not found, throw an error.
+      if (json.statusCode >= 400) {
+        throw new Error('Bad response');
+      }
+      dispatch(receiveAdminBbox(json));
+    });
+  };
+}
+
+// ////////////////////////////////////////////////////////////////
+//                             Search                            //
+// ////////////////////////////////////////////////////////////////
+
+export function showSearch (bool) {
+  return {
+    type: actions.DISPLAY_SEARCH,
+    bool: bool
+  };
+}
+
+export function showSearchResults (bool) {
+  return {
+    type: actions.DISPLAY_SEARCH_RESULTS,
+    bool: bool
+  };
+}
+
+export function setSearchType (text) {
+  return {
+    type: actions.SET_SEARCH_TYPE,
+    text: text
+  };
+}
+
+export function setFilteredVProMMs (array) {
+  return {
+    type: actions.SET_FILTERED_VPROMMS,
+    array: array
+  };
+}
+
