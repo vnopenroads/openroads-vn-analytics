@@ -16,46 +16,24 @@ import {
 
 const source = 'collisions';
 const roadHoverId = 'road-hover';
-const collisionHoverId = 'collision-hover';
 const roadSelected = 'road-selected';
 const layers = [{
   id: 'road',
   type: 'line',
   paint: {
-    'line-width': 6,
-    'line-opacity': 0.8,
-    'line-color': '#FCF009'
-  },
-  layout: { 'line-cap': 'round' },
-  filter: ['has', '_main']
-}, {
-  id: 'collision',
-  type: 'line',
-  paint: {
     'line-width': 4,
     'line-opacity': 0.2
   },
-  layout: { 'line-cap': 'round' },
-  filter: ['!has', '_main']
+  layout: { 'line-cap': 'round' }
 }, {
   id: roadHoverId,
-  type: 'line',
-  paint: {
-    'line-width': 8,
-    'line-opacity': 0.9,
-    'line-color': '#FCF009'
-  },
-  layout: { 'line-cap': 'round' },
-  filter: ['all', ['has', 'main'], ['==', '_id', '']]
-}, {
-  id: collisionHoverId,
   type: 'line',
   paint: {
     'line-width': 6,
     'line-opacity': 0.9
   },
   layout: { 'line-cap': 'round' },
-  filter: ['all', ['!has', 'main'], ['==', '_id', '']]
+  filter: ['==', '_id', '']
 }, {
   id: roadSelected,
   type: 'line',
@@ -65,7 +43,7 @@ const layers = [{
     'line-color': '#FF0000'
   },
   layout: { 'line-cap': 'round' },
-  filter: ['all', ['!has', 'main'], ['==', '_id', '']]
+  filter: ['==', '_id', '']
 }].map(layer => Object.assign({source}, layer));
 
 const layerIds = layers.map(layer => layer.id);
@@ -85,7 +63,7 @@ var Tasks = React.createClass({
 
     meta: React.PropTypes.object,
     task: React.PropTypes.object,
-    taskIds: React.PropTypes.array
+    taskId: React.PropTypes.number
   },
 
   componentWillMount: function () {
@@ -118,19 +96,22 @@ var Tasks = React.createClass({
       map.on('mousemove', (e) => {
         // toggle cursor and hover filters on mouseover
         let features = map.queryRenderedFeatures(e.point, { layers: layerIds });
+        let id
+
         if (features.length && features[0].properties._id) {
           map.getCanvas().style.cursor = 'pointer';
-          this.setHoverFilter(features[0].properties._id);
-          this.setState({hoverId: features[0].properties._id});
+          id = features[0].properties._id;
         } else {
           map.getCanvas().style.cursor = '';
-          this.setHoverFilter('');
-          this.setState({hoverId: null});
+          id = '';
         }
+
+        this.setState({hoverId: id});
+        this.map.setFilter(roadHoverId, ['==', '_id', id]);
       });
 
       map.on('click', (e) => {
-        let features = map.queryRenderedFeatures(e.point, { layers: [ roadHoverId, collisionHoverId ] });
+        let features = map.queryRenderedFeatures(e.point, { layers: [ roadHoverId ] });
         if (features.length && features[0].properties._id) {
           let featId = features[0].properties._id;
           // Clone the selected array.
@@ -143,16 +124,11 @@ var Tasks = React.createClass({
             selectedIds.splice(idx, 1);
           }
 
-          this.map.setFilter(roadSelected, ['all', ['in', '_id'].concat(selectedIds)]);
+          this.map.setFilter(roadSelected, ['in', '_id'].concat(selectedIds));
           this.setState({ selectedIds });
         }
       });
     });
-  },
-
-  setHoverFilter: function (id) {
-    this.map.setFilter(collisionHoverId, ['all', ['!has', '_main'], ['==', '_id', id]]);
-    this.map.setFilter(roadHoverId, ['all', ['has', '_main'], ['==', '_id', id]]);
   },
 
   componentWillReceiveProps: function ({taskId, task}) {
@@ -216,23 +192,6 @@ var Tasks = React.createClass({
           {displayList}
         </dl>
       </aside>
-    );
-  },
-
-  renderMapLegend: function () {
-    return (
-      <div className='map-legend map-panel'>
-        <ul className='map__legend--split'>
-          <li>
-            <span className='legend__line legend__line--primary' />
-            <p className='legend__label'>{t('Current Road')}</p>
-          </li>
-          <li>
-            <span className='legend__line legend__line--secondary' />
-            <p className='legend__label'>{t('Intersecting Road')}</p>
-          </li>
-        </ul>
-      </div>
     );
   },
 
@@ -313,7 +272,6 @@ var Tasks = React.createClass({
         {!task ? this.renderPlaceholder() : null}
         {hoverId ? this.renderPropertiesOverlay() : null}
         {this.renderInstrumentPanel()}
-        {this.renderMapLegend()}
       </div>
     );
   }
