@@ -6,6 +6,8 @@ import { flatten } from 'lodash';
 import { connect } from 'react-redux';
 import { fetchVProMMsidSourceGeoJSON, removeVProMMsSourceGeoJSON } from '../actions/action-creators';
 import config from '../config';
+import AAFieldMapLegend from './aa-field-map-legend';
+
 import {
   makeNWSE,
   makeNewZoom,
@@ -14,12 +16,12 @@ import {
   pixelDistances,
   transformGeoToPixel
 } from '../utils/zoom';
+
 import {
   generateBbox,
   generateSourceFC,
   generateLayer
 } from '../utils/field-map';
-import AAFieldMapLegend from './aa-field-map-legend';
 
 var AAFieldMap = React.createClass({
   displayName: 'AAFieldMap',
@@ -27,7 +29,10 @@ var AAFieldMap = React.createClass({
     adminName: React.PropTypes.string,
     roadId: React.PropTypes.string,
     geoJSON: React.PropTypes.array,
+    provinceName: React.PropTypes.string,
     fetched: React.PropTypes.bool,
+    params: React.PropTypes.object,
+    vpromm: React.PropTypes.string,
     _fetchVProMMsidSourceGeoJSON: React.PropTypes.func,
     _removeVProMMsSourceGeoJSON: React.PropTypes.func
   },
@@ -52,8 +57,8 @@ var AAFieldMap = React.createClass({
   },
 
   componentWillMount: function () {
-    this.props._fetchVProMMsidSourceGeoJSON(this.props.roadId);
-    this.map = '';
+    const vpromm = this.props.params.vpromm;
+    this.props._fetchVProMMsidSourceGeoJSON(vpromm);
   },
 
   generateMap: function (geoJSON) {
@@ -83,40 +88,34 @@ var AAFieldMap = React.createClass({
     });
   },
 
-  componentWillReceiveProps: function (nextProps) {
-    if (nextProps.fetched) {
-      const geoJSON = nextProps.geoJSON[0][nextProps.roadId][0];
-      this.generateMap(geoJSON);
-    }
-  },
-
   componentWillUnmount: function () {
     this.props._removeVProMMsSourceGeoJSON();
   },
 
   renderMap: function (geoJSON) {
-    const layers = geoJSON[0][this.props.roadId][0].features.map(feature => feature.properties.source);
+    const vpromm = this.props.params.vpromm;
+    const layers = geoJSON[0][vpromm][0].map(feature => feature.properties.source);
     return (
       <div>
         <div id='aa-map' className='aa-map'></div>
-        <AAFieldMapLegend layers={layers} />
+        {/* <AAFieldMapLegend layers={layers} /> */}
       </div>
     );
   },
 
-  renderHeader: function (provinceName) {
-    return (<h1>${provinceName} Province - Road # ${this.props.roadId}</h1>);
+  renderHeader: function (adminName) {
+    return (<h1>{`${adminName} Province - Road # ${this.props.params.vpromm}`}</h1>);
   },
 
   render: function () {
     return (
       <div>
         <div className="aa-header">
-          {this.props.fetched ? this.renderHeader(this.props.adminName) : ''}
+          { this.props.fetched ? this.renderHeader(this.props.adminName) : ''}
         </div>
         <div className="aa-main__status">
           <div className='aa-map-wrapper'>
-            {this.props.fetched ? this.renderMap(this.props.geoJSON) : <div id='aa-map' className='aa-map'/> }
+            { this.props.fetched ? this.renderMap(this.props.geoJSON) : <div id='aa-map' className='aa-map'></div>}
           </div>
         </div>
       </div>
@@ -133,8 +132,7 @@ function selector (state) {
 }
 function dispatcher (dispatch) {
   return {
-    _fetchVProMMsidSourceGeoJSON: (id) => dispatch(fetchVProMMsidSourceGeoJSON(id)),
-    _removeVProMMsSourceGeoJSON: () => dispatch(removeVProMMsSourceGeoJSON())
+    _fetchVProMMsidSourceGeoJSON: (id) => dispatch(fetchVProMMsidSourceGeoJSON(id))
   };
 }
 

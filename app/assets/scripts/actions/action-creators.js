@@ -383,7 +383,7 @@ function receiveVProMMSids (json, error = null) {
 export function fetchVProMMsids (use) {
   return function (dispatch) {
     dispatch(requestVProMMSids());
-    const route = use === 'search' ? '/ids' : '/properties?keys=iri_mean,rs_url';
+    const route = use === 'search' ? '/ids' : '/properties/roads?keys=iri_mean,rs_url';
     let url = `${config.api}${route}`;
     return fetch(url)
       .then(response => {
@@ -552,7 +552,7 @@ export function fetchVProMMsBbox (vprommsId) {
     })
     .then(json => {
       if (json.statusCode >= 400) {
-        throw new Error('Bad response');
+        return dispatch(recieveVProMMsBbox({}));
       }
       dispatch(recieveVProMMsBbox(json));
     });

@@ -62,18 +62,18 @@ render((
   <Provider store={store}>
     <Router history={hashHistory}>
       <Route path='/:lang' component={App} onEnter={validateLanguage}>
-        <Route path='editor' component={Editor} />
-        <Route path='editor/*' component={Editor} />
-        <Route path='explore' component={Explore} />
-        <Route path='analytics' component={Analytics}>
-          <Route path='main' component={AnalyticsIndex} />
-          <Route path=':aaId' component={AnalyticsAA} />
+        <Route path='editor' component={Editor} pageClass='editor' />
+        <Route path='editor/*' component={Editor} pageClass='editor' />
+        <Route path='explore' component={Explore} pageClass='explore' />
+        <Route path='road' component={Analytics} pageClass='road'>
+          <Route path=':vpromm' component={AAFieldMap} />
         </Route>
-        <IndexRoute component={Home}/>
+        <Route path='analytics' component={Analytics}>
+          <Route path='main' component={AnalyticsIndex} pageClass='analytics' />
+          <Route path=':aaId' component={AnalyticsAA} pageClass='analytics-aa' />
+        </Route>
+        <IndexRoute component={Home} pageClass='page--landing' />
         <Route path='*' component={UhOh}/>
-      </Route>
-      <Route path=':vpromm' component={Analytics} >
-        <IndexRoute component={AAFieldMap} />
       </Route>
       <Redirect from='/' to='/en' />
     </Router>

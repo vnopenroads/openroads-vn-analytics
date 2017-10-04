@@ -8,7 +8,9 @@ var Analytics = React.createClass({
 
   propTypes: {
     children: React.PropTypes.object,
-    params: React.PropTypes.object
+    params: React.PropTypes.object,
+    VProMMSids: React.PropTypes.object,
+    _fetchVProMMsids: React.PropTypes.func
   },
 
   render: function () {
@@ -16,7 +18,7 @@ var Analytics = React.createClass({
       <section classNmae='page'>
         <div className='page__body aa'>
           <div className='aa-main'>
-            {this.props.children}
+            { React.cloneElement(this.props.children, { VProMMSids: this.props.VProMMSids }) }
           </div>
         </div>
       </section>

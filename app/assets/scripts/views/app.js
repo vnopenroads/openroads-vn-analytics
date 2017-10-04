@@ -18,26 +18,9 @@ var App = React.createClass({
   },
 
   render: function () {
-    let r = _.last(this.props.routes).path;
-    let klass;
-    switch (r) {
-      case undefined:
-        klass = 'page--landing';
-        break;
-      case 'main':
-        klass = 'analytics';
-        break;
-      case ':aaId':
-        klass = 'analytics-aa';
-        break;
-      case ':vpromm':
-        klass = 'analytics-aa';
-        break;
-      default:
-        klass = r.split('/')[0];
-    }
+    const pageClass = _.get(_.last(this.props.routes), 'pageClass', '');
     return (
-      <div className={klass}>
+      <div className={pageClass}>
         <SiteHeader
           pathname={this.props.location.pathname}
           fetchSearchResults={this.props._fetchSearchResults}

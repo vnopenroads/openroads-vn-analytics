@@ -44,7 +44,6 @@ var SiteHeader = React.createClass({
   resizeHandler: function () {
     if (document.body.getBoundingClientRect().width > 991) {
       this.refs.nav.classList.remove('show-menu');
-      // this.refs.search.classList.remove('show-search');
     }
   },
 
@@ -62,10 +61,14 @@ var SiteHeader = React.createClass({
     window.removeEventListener('resize', this.resizeHandler);
   },
 
+  componentWillReceiveProps: function (nextProps) {
+    this.setSearchDisplay(nextProps);
+  },
+
   // for the analytics and home page, hide search if open.
-  setSearchDisplay: function () {
-    let isExplore = new RegExp(/explore/).test(this.props.pathname);
-    let isEditor = new RegExp(/editor/).test(this.props.pathname);
+  setSearchDisplay: function (nextProps) {
+    let isExplore = new RegExp(/explore/).test(nextProps.pathname);
+    let isEditor = new RegExp(/editor/).test(nextProps.pathname);
     if (!isEditor && !isExplore) {
       this.props._showSearch(false);
     }
@@ -92,7 +95,6 @@ var SiteHeader = React.createClass({
   },
 
   render: function () {
-    this.setSearchDisplay();
     return (
       <header className='site-header' ref={(header) => this.header = header }>
         <div className='inner'>

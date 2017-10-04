@@ -2,17 +2,18 @@
 // (combine aa-table-index.js and aa-table-vromms.js into single component)
 
 import React from 'react';
+import { connect } from 'react-redux';
 import _ from 'lodash';
 import classnames from 'classnames';
 import { api } from '../config';
 import { Link } from 'react-router';
-import { getLanguage } from '../utils/i18n';
+import { t, getLanguage } from '../utils/i18n';
+
+import { fetchVProMMSidsSources } from '../actions/action-creators';
 
 const displayHeader = [
   {key: 'id', value: 'VProMMS ID'},
   {key: 'inTheDatabase', value: 'Status'},
-  {key: 'RouteShoot', value: 'RouteShoot'},
-  {key: 'RoadLab', value: 'RoadLabPro'},
   {key: 'FieldData', value: 'Field Data'}
 ];
 
@@ -25,7 +26,8 @@ const AATable = React.createClass({
     province: React.PropTypes.string,
     provinceName: React.PropTypes.string,
     routeParams: React.PropTypes.func,
-    sources: React.PropTypes.object
+    sources: React.PropTypes.object,
+    _fetchVProMMSidsSources: React.PropTypes.func
   },
 
   getInitialState: function () {
@@ -35,6 +37,11 @@ const AATable = React.createClass({
         order: 'desc'
       }
     };
+  },
+
+  componentWillMount: function () {
+    const ids = this.props.data.map(obj => obj.id);
+    this.props._fetchVProMMSidsSources(ids);
   },
 
   renderTableHead: function () {
@@ -84,14 +91,13 @@ const AATable = React.createClass({
     return sorted.value();
   },
 
-  makeFieldDataLink: function (id) {
-    return (<a href={`${api}/field/${id}/geometries?grouped=false&download=true`}>Download</a>);
-  },
-
-  makeFieldMapLink: function (vprommExists, roadId) {
-    return vprommExists ? (
-      <Link to={`${getLanguage()}/${roadId}/`}>{roadId}</Link>
-    ) : roadId;
+  renderFieldMapButtons: function (vprommExists, id) {
+    return (
+      <div className='bttn-group'>
+        <Link className='bttn bttn-s bttn-base-light' to={`/${getLanguage()}/road/${id}/`}>Map</Link>
+        <a className='bttn bttn-s bttn-base-light' href={`${api}/field/${id}/geometries?grouped=false&download=true`}>Download</a>
+      </div>
+    );
   },
 
   // in renderTableBody, vprommExists represents if a given vpromms id has a field data source attached to it.
@@ -106,11 +112,9 @@ const AATable = React.createClass({
           const vprommExists = this.props.sources[vpromm.id];
           return (
             <tr key={`vpromm-${vpromm.id}`} className={classnames({'alt': i % 2})}>
-              <td><strong>{this.makeFieldMapLink(vprommExists, vpromm.id)}</strong></td>
+              <td><strong>{vpromm.id}</strong></td>
               <td className={classnames({'added': vpromm.inTheDatabase, 'not-added': !vpromm.inTheDatabase})}>{vpromm.inTheDatabase ? 'added' : 'not added'}</td>
-              <td className={classnames({'added': vpromm.RouteShoot, 'not-added': !vpromm.RouteShoot})}>{vpromm.RouteShoot ? <a href={vpromm.RouteShootUrl}>link</a> : ''}</td>
-              <td className={classnames({'added': vpromm.RoadLabPro, 'not-added': !vpromm.RoadLabPro})}>{vpromm.RoadLabPro ? 'added' : 'not added'}</td>
-              <td className={classnames({'added': vprommExists, 'not-added': !vprommExists})}>{vprommExists ? this.makeFieldDataLink(vpromm.id) : 'not added'}</td>
+              <td className={classnames({'added': vprommExists, 'not-added': !vprommExists})}>{ vprommExists ? this.renderFieldMapButtons(vprommExists, vpromm.id) : ''}</td>
             </tr>
           );
         })}
@@ -119,6 +123,7 @@ const AATable = React.createClass({
   },
 
   render: function () {
+    console.log(this.props);
     return (
       <div className='table'>
         <table>
@@ -130,4 +135,16 @@ const AATable = React.createClass({
   }
 });
 
-export default AATable;
+function selector (state) {
+  return {
+    sources: state.VProMMSidsSources.sources
+  }
+}
+function dispatcher (dispatch) {
+  return {
+    _fetchVProMMSidsSources: (ids) => dispatch(fetchVProMMSidsSources(ids))
+  }
+}
+ 
+
+export default connect(selector, dispatcher)(AATable);
