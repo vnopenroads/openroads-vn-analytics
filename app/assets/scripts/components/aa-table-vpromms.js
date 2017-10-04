@@ -105,12 +105,20 @@ const AATable = React.createClass({
               <td className={classnames({'added': vpromm.inTheDatabase, 'not-added': !vpromm.inTheDatabase})}>{vpromm.inTheDatabase ? t('added') : t('not added')}</td>
               <td className={classnames({'added': vpromm.RouteShoot, 'not-added': !vpromm.RouteShoot})}>{vpromm.RouteShoot ? <a href={vpromm.RouteShootUrl}>link</a> : ''}</td>
               <td className={classnames({'added': vpromm.RoadLabPro, 'not-added': !vpromm.RoadLabPro})}>{vpromm.RoadLabPro ? t('added') : t('not added')}</td>
-              <td>
+              <td className='table-properties-cell'>
                 <button type='button' className={propBtnClass} onClick={this.onPropertiesClick.bind(null, vpromm.id)}><span>{propBtnLabel}</span></button>
                 <div className={propContainerClass}>
-                  <dl>
-                    <dt>Key</dt>
-                    <dd>Value</dd>
+                  <dl className='dl--horizontal'>
+                    <dt>Key 1</dt>
+                    <dd>Value 1</dd>
+                    <dt>Key 2</dt>
+                    <dd>Value 2</dd>
+                    <dt>Key 3</dt>
+                    <dd>Value 3</dd>
+                    <dt>Key 4</dt>
+                    <dd>Value 4</dd>
+                    <dt>Key 5</dt>
+                    <dd>Value 5</dd>
                   </dl>
                 </div>
               </td>

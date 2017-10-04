@@ -111,17 +111,28 @@
   width: 16rem;
 }
 
+.table-properties-head,
+.table-properties-cell {
+  text-align: left;
+}
+
 .table-properties {
-  display: block;
-  padding: $global-spacing 0 0 0;
+  transform: translateZ(0);
+  overflow: hidden;
+  height: auto;
+  max-height: 64rem;
+  opacity: 1;
+  transition: opacity 0.24s ease-in-out, max-height 0.24s ease-in-out;
 }
 
 .table-properties--hidden {
-  display: none;
+  max-height: 0;
+  opacity: 0;
 }
 
 .bttn-table-expand {
-  @extend .bttn, .bttn-s, .bttn-primary;
+  @extend .bttn, .bttn-s, .bttn-base-light;
+  min-width: 4.5rem;
 
   * {
     vertical-align: top;
@@ -142,5 +153,17 @@
 
 .bttn-table-expand--hide::after {
   @extend %collecticons-sm-chevron-up;
+}
+
+.table-properties dl {
+  margin: ($global-spacing / 2) 0 0 0;
+  width: 100%;
+  text-align: left;
+  font-size: .875rem;
+  line-height: 1rem;
+
+  dt {
+    font-weight: $base-font-bold;
+  }
 }
 
