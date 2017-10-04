@@ -44,6 +44,7 @@ var SiteHeader = React.createClass({
   resizeHandler: function () {
     if (document.body.getBoundingClientRect().width > 991) {
       this.refs.nav.classList.remove('show-menu');
+      // this.refs.search.classList.remove('show-search');
     }
   },
 
@@ -61,14 +62,10 @@ var SiteHeader = React.createClass({
     window.removeEventListener('resize', this.resizeHandler);
   },
 
-  componentWillReceiveProps: function (nextProps) {
-    this.setSearchDisplay(nextProps);
-  },
-
   // for the analytics and home page, hide search if open.
-  setSearchDisplay: function (nextProps) {
-    let isExplore = new RegExp(/explore/).test(nextProps.pathname);
-    let isEditor = new RegExp(/editor/).test(nextProps.pathname);
+  setSearchDisplay: function () {
+    let isExplore = new RegExp(/explore/).test(this.props.pathname);
+    let isEditor = new RegExp(/editor/).test(this.props.pathname);
     if (!isEditor && !isExplore) {
       this.props._showSearch(false);
     }
@@ -95,6 +92,7 @@ var SiteHeader = React.createClass({
   },
 
   render: function () {
+    this.setSearchDisplay();
     return (
       <header className='site-header' ref={(header) => this.header = header }>
         <div className='inner'>
@@ -110,7 +108,7 @@ var SiteHeader = React.createClass({
             <div className='menu-wrapper'>
               <ul className='global-menu' id='global-menu'>
                 <li>
-                  <Link to={`/${getLanguage()}/analytics/main`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
+                  <Link to={`/${getLanguage()}/analytics`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
                     <span>{t('Analytics')}</span>
                   </Link>
                 </li>
@@ -124,41 +122,13 @@ var SiteHeader = React.createClass({
                     <span>{t('Editor')}</span>
                   </Link>
                 </li>
-                <li>
-                  <div className='search dropdown-menu-item'>
-                    {this.displaySearchBar()}
-                  </div>
+                <li className='search'>
+                  {this.displaySearchBar()}
                 </li>
               </ul>
             </div>
-            <div className='menu-wrapper dropdown-menu'>
+            <div className='menu-wrapper'>
               <Headerdrop
-              className='dropdown-menu-item'
-              id='search-selector'
-              triggerClassName='drop-toggle caret change-search-button site__lang'
-              triggerText={t('Search')}
-              triggerElement='a'
-              direction='down'
-              alignment='right'>
-              <ul className='drop-menu drop-menu--select' role='menu'>
-              {
-                ['Admin', 'VProMMs'].map((l, i) => {
-                  let cl = 'drop-menu-item';
-                  return (
-                    <li key={i}>
-                      <a onClick={(e) => {
-                        this.props._setSearchType(l);
-                        this.props._showSearch(true);
-                      }}
-                        className={cl} data-hook='dropdown:close'>{l}</a>
-                    </li>
-                  );
-                })
-                }
-              </ul>
-              </Headerdrop>
-              <Headerdrop
-                className='dropdown-menu-item'
                 id='lang-switcher'
                 triggerClassName='drop-toggle caret change-lang-button site__lang'
                 triggerText={t('Language')}
@@ -184,6 +154,30 @@ var SiteHeader = React.createClass({
                   })
                   }
                 </ul>
+              </Headerdrop>
+              <Headerdrop
+              id='search-selector'
+              triggerClassName='drop-toggle caret change-search-button site__lang'
+              triggerText={t('Search')}
+              triggerElement='a'
+              direction='down'
+              alignment='right'>
+              <ul className='drop-menu drop-menu--select' role='menu'>
+              {
+                ['Admin', 'VProMMs'].map((l, i) => {
+                  let cl = 'drop-menu-item';
+                  return (
+                    <li key={i}>
+                      <a onClick={(e) => {
+                        this.props._setSearchType(l);
+                        this.props._showSearch(true);
+                      }}
+                        className={cl} data-hook='dropdown:close'>{l}</a>
+                    </li>
+                  );
+                })
+                }
+              </ul>
               </Headerdrop>
             </div>
           </nav>

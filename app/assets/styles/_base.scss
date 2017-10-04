@@ -441,7 +441,7 @@ a:active{
       }
 
       .bttn-search {
-        height: 33px;
+        height: 32px;
         &::before {
           line-height: inherit;
           @extend %collecticons-magnifier-right;
