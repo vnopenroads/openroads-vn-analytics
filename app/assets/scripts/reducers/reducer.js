@@ -5,24 +5,51 @@ import { routeReducer } from 'react-router-redux';
 import * as actions from '../actions/action-types';
 import { VPROMMS_IDS } from '../constants';
 
-const adminSubregions = function (state = {adminAreas: [], fetching: false, fetched: false}, action) {
+const admins = function (state = {units: [], fetching: false, fetched: false}, action) {
   switch (action.type) {
-    case actions.REQUEST_ADMIN_SUBREGIONS:
-      console.log('REQUEST_ADMIN_SUBREGIONS');
+    case actions.REQUEST_ADMINS:
+      console.log('REQUEST_ADMINS');
       state = _.cloneDeep(state);
       state.fetching = true;
       break;
-    case actions.RECEIVE_ADMIN_SUBREGIONS:
-      console.log('RECEIVE_ADMIN_SUBREGIONS');
+    case actions.RECEIVE_ADMINS:
+      console.log('RECEIVE_ADMINS');
       state = _.cloneDeep(state);
-      state = action.json;
+      state.units = action.json;
+      state.fetching = false;
+      state.fetched = true;
+      break;
+    case actions.CLEAR_ADMINS:
+      state = _.cloneDeep(state);
+      state.units = [];
+      break;
+  }
+  return state;
+};
+
+const adminBboxDefaultState = {
+  fetching: false,
+  fetched: false,
+  bbox: []
+};
+const adminBbox = function (state = adminBboxDefaultState, action) {
+  switch (action.type) {
+    case actions.REQUEST_ADMIN_BBOX:
+      console.log('REQUEST_ADMIN_BBOX');
+      state = _.cloneDeep(state);
+      state.fetching = true;
+      state.fetched = false;
+      break;
+    case actions.RECEIVE_ADMIN_BBOX:
+      console.log('RECEIVE_ADMIN_BBOX');
+      state = _.cloneDeep(state);
+      state.bbox = action.json.bbox;
       state.fetching = false;
       state.fetched = true;
       break;
   }
   return state;
 };
-
 const search = function (state = {results: [], fetching: false, fetched: false, query: '', searching: false}, action) {
   switch (action.type) {
     case actions.REQUEST_SEARCH_RESULTS:
@@ -256,12 +283,41 @@ _.forEach(VPROMMS_IDS, (province) => {
     };
   });
 });
+
 const VProMMSidsDefaultState = {
+  fetching: false,
+  fetched: false,
+  data: []
+};
+
+const VProMMSids = function (state = VProMMSidsDefaultState, action) {
+  switch (action.type) {
+    case actions.REQUEST_VPROMMS_IDS:
+      state = _.cloneDeep(state);
+      state.error = null;
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_VPROMMS_IDS:
+      state = _.cloneDeep(state);
+      if (action.error) {
+        state.error = action.error;
+      } else {
+        state.data = action.json;
+      }
+      state.fetching = false;
+      state.fetched = true;
+      break;
+  }
+  return state;
+};
+
+const VProMMSidsAnalyticsDefaultState = {
   fetching: false,
   fetched: false,
   data: VPROMMS_IDS
 };
-const VProMMSids = function (state = VProMMSidsDefaultState, action) {
+
+const VProMMSidsAnalytics = function (state = VProMMSidsAnalyticsDefaultState, action) {
   switch (action.type) {
     case actions.REQUEST_VPROMMS_IDS:
       state = _.cloneDeep(state);
@@ -302,6 +358,28 @@ const VProMMSids = function (state = VProMMSidsDefaultState, action) {
   return state;
 };
 
+const VProMMsWayBboxDefaultState = {
+  fetching: false,
+  fetched: false,
+  bbox: []
+};
+
+const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
+  switch (action.type) {
+    case actions.REQUEST_VPROMMS_IDS:
+      state = _.cloneDeep(state);
+      state.error = null;
+      state.fetching = true;
+      break;
+    case actions.RECIEVE_VPROMMS_BBOX:
+      state = _.cloneDeep(state);
+      state.fetching = false;
+      state.fetched = true;
+      state.bbox = action.json;
+  }
+  return state;
+};
+
 const exploreMapDefaultState = {
   layer: 'iri',
   showNoVpromms: false
@@ -335,8 +413,53 @@ const globZoom = function (state = globZoomDefault, action) {
   return state;
 };
 
+const searchDisplay = function (state = {show: false}, action) {
+  switch (action.type) {
+    case actions.DISPLAY_SEARCH:
+      state = _.cloneDeep(state);
+      state.show = action.bool;
+      break;
+  }
+  return state;
+};
+
+const searchResultsDisplay = function (state = {show: false}, action) {
+  switch (action.type) {
+    case actions.DISPLAY_SEARCH_RESULTS:
+      state = _.cloneDeep(state);
+      state.show = action.bool;
+      break;
+  }
+  return state;
+};
+
+const defaultSearchType = {
+  searchType: ''
+};
+
+const setSearchType = function (state = defaultSearchType, action) {
+  switch (action.type) {
+    case actions.SET_SEARCH_TYPE:
+      state = _.cloneDeep(state);
+      state.searchType = action.text;
+      break;
+  }
+  return state;
+};
+
+const setFilteredVProMMs = function (state = [], action) {
+  switch (action.type) {
+    case actions.SET_FILTERED_VPROMMS:
+      state = _.cloneDeep(state);
+      state = action.array;
+      break;
+  }
+  return state;
+};
+
 export default combineReducers({
-  adminSubregions,
+  admins,
+  adminBbox,
   search,
   stats,
   tofixtasks,
@@ -345,7 +468,13 @@ export default combineReducers({
   projectsMeta,
   roadNetworkStatus,
   VProMMSids,
+  VProMMSidsAnalytics,
+  VProMMsWayBbox,
   exploreMap,
   routing: routeReducer,
-  globZoom
+  globZoom,
+  searchDisplay,
+  searchResultsDisplay,
+  setSearchType,
+  setFilteredVProMMs
 });

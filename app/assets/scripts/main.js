@@ -65,7 +65,7 @@ render((
         <Route path='editor/*' component={Editor} />
         <Route path='explore' component={Explore} />
         <Route path='analytics' component={Analytics}>
-          <IndexRoute path='main' component={AnalyticsIndex} />
+          <Route path='main' component={AnalyticsIndex} />
           <Route path=':aaId' component={AnalyticsAA} />
         </Route>
         <IndexRoute component={Home}/>
