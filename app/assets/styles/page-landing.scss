@@ -30,13 +30,16 @@
         }
         .toggle-menu,
         .toggle-search,
-        .search-wrapper {
+        .change-search-button {
           display: none;
         }
       }
     }
-  }
+    .search-wrapper {
+      display: none;
+    }
 
+  }
   .page {
     &__header--landing {
       @extend .antialiased;

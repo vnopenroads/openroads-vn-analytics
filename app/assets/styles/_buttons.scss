@@ -8,11 +8,11 @@ input[type=reset],
 input[type=submit] {
   -webkit-appearance: button;
   cursor: pointer;
-  @include transform(translateZ(0));
+  transform: translateZ(0);
 }
 
 .bttn {
-  @include user-select(none);
+  user-select: none;
   display: inline-block;
   font-family: $base-font-family;
   font-weight: $base-font-bold;
@@ -28,15 +28,15 @@ input[type=submit] {
   padding: 0.25rem 0.75rem;
   text-shadow: none;
   opacity: 1;
-  // box-shadow: inset 0 -2px 0 0 rgba($base-color, 0.12), 0 0 0 1px $brdr-rgba, 0 1px 2px 0 rgba($base-color, 0.24);
   box-shadow: 0 0 0 1px $brdr-rgba;
+  text-decoration: none;
+
   .open > &,
   &:active,
   &.active {
-    // box-shadow: inset 0 2px 0 0 rgba($base-color, 0.12), 0 0 0 1px rgba($base-color, 0.24), 0 1px 2px 0 rgba($base-color, 0.24);
     box-shadow: 0 0 0 1px rgba($base-color, 0.24);
     outline: none;
-    @include transform(translate(0, 0, 1px));
+    transform: translate(0, 0, 1px);
   }
   &:hover {
     opacity: 0.64;
@@ -44,6 +44,7 @@ input[type=submit] {
   &.disabled, &[disabled] {
     @extend .disabled;
   }
+
   &.hide-txt {
     &:before {
       margin-right: 0;
@@ -55,7 +56,12 @@ input[type=submit] {
       @extend .visually-hidden;
     }
   }
-  @include transition(background-color 0.24s ease 0s, opacity 0s linear 0s);
+
+  * {
+    vertical-align: top;
+  }
+
+  transition: background-color 0.24s ease 0s, opacity 0s linear 0s;
 }
 
 
@@ -225,13 +231,9 @@ input[type=submit] {
 }
 
 .bttn-edit {
-  @extend .bttn, .bttn-s, .bttn-primary;
-}
-
-.bttn-road-network {
-  @extend .bttn, .bttn-m, .bttn-secondary;
-  text-decoration: none;
-  box-shadow: none;
+  @extend .bttn; 
+  @extend .bttn-s;
+  @extend .bttn-primary;
 }
 
 .bttn-stats-prev,
