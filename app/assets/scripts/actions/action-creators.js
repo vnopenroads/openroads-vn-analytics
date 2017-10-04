@@ -466,7 +466,7 @@ export function fetchVProMMsBbox (vprommsId) {
     })
     .then(json => {
       if (json.statusCode >= 400) {
-        throw new Error('Bad response');
+        return dispatch(recieveVProMMsBbox({}));
       }
       dispatch(recieveVProMMsBbox(json));
     });
