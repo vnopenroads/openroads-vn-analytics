@@ -150,11 +150,14 @@ function receiveWayTask (json, error = null) {
   };
 }
 
-export function fetchNextWayTask () {
+export function fetchNextWayTask (skippedTasks) {
   return function (dispatch) {
     dispatch(requestWayTask());
 
     let url = `${config.api}/tasks/next`;
+    if (Array.isArray(skippedTasks) && skippedTasks.length) {
+      url += `?skip=${skippedTasks.join(',')}`;
+    }
     return fetch(url)
       .then(response => {
         if (response.status >= 400) {

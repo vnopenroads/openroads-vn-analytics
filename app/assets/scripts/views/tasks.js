@@ -52,6 +52,7 @@ var Tasks = React.createClass({
   getInitialState: function () {
     return {
       currentTaskId: null,
+      skippedTasks: [],
       hoverId: null,
       selectedIds: []
     };
@@ -96,7 +97,7 @@ var Tasks = React.createClass({
       map.on('mousemove', (e) => {
         // toggle cursor and hover filters on mouseover
         let features = map.queryRenderedFeatures(e.point, { layers: layerIds });
-        let id
+        let id;
 
         if (features.length && features[0].properties._id) {
           map.getCanvas().style.cursor = 'pointer';
@@ -142,7 +143,7 @@ var Tasks = React.createClass({
   },
 
   fetchNextTask: function () {
-    this.props._fetchNextTask();
+    this.props._fetchNextTask(this.state.skippedTasks);
   },
 
   onMapLoaded: function (fn) {
@@ -246,8 +247,10 @@ var Tasks = React.createClass({
   next: function () {
     // Deselect roads.
     this.map.setFilter(roadSelected, ['all', ['in', '_id', '']]);
-    this.setState({ selectedIds: [] });
-    this.fetchNextTask();
+
+    // Add the skipped task to state, so we can request one we haven't gotten yet.
+    const skippedTasks = this.state.skippedTasks.concat([this.state.currentTaskId]);
+    this.setState({ selectedIds: [], skippedTasks }, this.fetchNextTask);
   },
 
   renderSelectedIds: function () {
@@ -286,7 +289,7 @@ function selector (state) {
 
 function dispatcher (dispatch) {
   return {
-    _fetchNextTask: function () { dispatch(fetchNextWayTask()); },
+    _fetchNextTask: function (skippedTasks) { dispatch(fetchNextWayTask(skippedTasks)); },
     _setGlobalZoom: function (...args) { dispatch(setGlobalZoom(...args)); }
   };
 }
