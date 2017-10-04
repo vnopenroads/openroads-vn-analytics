@@ -61,14 +61,14 @@ render((
   <Provider store={store}>
     <Router history={hashHistory}>
       <Route path='/:lang' component={App} onEnter={validateLanguage}>
-        <Route path='editor' component={Editor} />
-        <Route path='editor/*' component={Editor} />
-        <Route path='explore' component={Explore} />
+        <Route path='editor' component={Editor} pageClass='editor' />
+        <Route path='editor/*' component={Editor} pageClass='editor' />
+        <Route path='explore' component={Explore} pageClass='explore' />
         <Route path='analytics' component={Analytics}>
-          <IndexRoute component={AnalyticsIndex} />
-          <Route path=':aaId' component={AnalyticsAA} />
+          <IndexRoute component={AnalyticsIndex} pageClass='analytics' />
+          <Route path=':aaId' component={AnalyticsAA} pageClass='analytics-aa' />
         </Route>
-        <IndexRoute component={Home}/>
+        <IndexRoute component={Home} pageClass='page--landing' />
         <Route path='*' component={UhOh}/>
       </Route>
       <Redirect from='/' to='/en' />
