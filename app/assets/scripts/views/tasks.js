@@ -10,7 +10,7 @@ import c from 'classnames';
 import intersect from '@turf/line-intersect';
 
 import {
-  fetchWayTasks,
+  fetchNextWayTask,
   setGlobalZoom
 } from '../actions/action-creators';
 
@@ -74,24 +74,22 @@ var Tasks = React.createClass({
   getInitialState: function () {
     return {
       currentTaskId: null,
-      currentTask: null,
       hoverId: null,
       selectedIds: []
     };
   },
 
   propTypes: {
-    _fetchWayTasks: React.PropTypes.func,
-    _fetchWayTask: React.PropTypes.func,
+    _fetchNextTask: React.PropTypes.func,
     _setGlobalZoom: React.PropTypes.func,
 
     meta: React.PropTypes.object,
-    currentTask: React.PropTypes.object,
+    task: React.PropTypes.object,
     taskIds: React.PropTypes.array
   },
 
   componentWillMount: function () {
-    this.props._fetchWayTasks();
+    this.fetchNextTask();
   },
 
   componentDidMount: function () {
@@ -157,40 +155,18 @@ var Tasks = React.createClass({
     this.map.setFilter(roadHoverId, ['all', ['has', '_main'], ['==', '_id', id]]);
   },
 
-  componentWillReceiveProps: function ({meta, taskIds, currentTask}) {
-    if (taskIds) {
-      const { currentTaskId } = this.state;
-      if (!currentTask && !meta.fetching) {
-        // Current task is done (or there's no current task), query the next task
-        this.fetchNextTask(currentTaskId, taskIds);
-      } else if (currentTask && currentTaskId !== currentTask._id) {
-        // We've queried and received a new task
-        this.setNewTask(currentTask);
-        return this.onMapLoaded(() => this.syncMapToTask(currentTask));
-      }
+  componentWillReceiveProps: function ({taskId, task}) {
+    if (taskId && taskId !== this.state.currentTaskId) {
+      // We've queried and received a new task
+      this.setState({
+        currentTaskId: taskId
+      });
+      return this.onMapLoaded(() => this.syncMapToTask(task));
     }
   },
 
-  fetchNextTask: function (currentTaskId, taskIds) {
-    let nextTask = this.getNextTask(currentTaskId, taskIds);
-    return nextTask ? this.props._fetchWayTask(nextTask) : null;
-  },
-
-  getNextTask: function (currentTaskId, taskIds) {
-    if (!currentTaskId) { return taskIds[0]; }
-    for (var i = 0; i < taskIds.length; ++i) {
-      if (taskIds[i] === currentTaskId && i < taskIds.length - 1) {
-        return taskIds[i + 1];
-      }
-    }
-    return null;
-  },
-
-  setNewTask: function (task) {
-    this.setState({
-      currentTaskId: task._id,
-      currentTask: task
-    });
+  fetchNextTask: function () {
+    this.props._fetchNextTask();
   },
 
   onMapLoaded: function (fn) {
@@ -198,36 +174,21 @@ var Tasks = React.createClass({
     else this.map.once('load', fn);
   },
 
-  featureCollectionFromTask: function (task) {
-    // For setting interaction filters, apply _main property to the road,
-    // and make sure the _id property is present at feature.properties.
-    task.properties._main = true;
-    const features = Array.concat.apply([], [[task], task._collisions]);
-    features.forEach(feature => {
-      feature.properties._id = feature._id;
-    });
-    return {
-      type: 'FeatureCollection',
-      features
-    };
-  },
-
   syncMapToTask: function (task) {
     const { map } = this;
-    const features = this.featureCollectionFromTask(task);
     const existingSource = map.getSource(source);
     if (!existingSource) {
       map.addSource(source, {
         type: 'geojson',
-        data: features
+        data: task
       });
       layers.forEach(layer => {
         map.addLayer(layer);
       });
     } else {
-      existingSource.setData(features);
+      existingSource.setData(task);
     }
-    map.fitBounds(getExtent(features), {
+    map.fitBounds(getExtent(task), {
       linear: true,
       padding: 25
     });
@@ -242,9 +203,9 @@ var Tasks = React.createClass({
   },
 
   renderPropertiesOverlay: function () {
-    const { currentTaskId, currentTask, hoverId } = this.state;
-    const properties = hoverId === currentTaskId ? currentTask.properties
-      : currentTask._collisions.find(c => hoverId === c._id).properties;
+    const { hoverId } = this.state;
+    const { task } = this.props;
+    const properties = task.features.find(c => hoverId === c.properties._id).properties;
     const displayList = Object.keys(properties).map(key => key.charAt(0) === '_' ? null : [
       <dt key={`${key}-key`}><strong>{key}</strong></dt>,
       <dd key={`${key}-value`}>{properties[key] || '--'}</dd>
@@ -276,13 +237,9 @@ var Tasks = React.createClass({
   },
 
   renderInstrumentPanel: function () {
-    let taskIds = this.props.taskIds || [];
-    let currId = this.props.currentTask ? this.props.currentTask._id : null;
-    let currTaskIdx = findIndex(taskIds, o => o === currId);
-
     return (
       <div className='map-options map-panel'>
-        <h2>Task {currTaskIdx + 1} of {taskIds.length}</h2>
+        <h2>Tasks</h2>
         <div className='form-group'>
           <p>1. Select the roads to fix</p>
           {this.renderSelectedIds()}
@@ -301,8 +258,8 @@ var Tasks = React.createClass({
 
   onJoin: function () {
     // Get the 2 selected roads. There's a strict maximum of 2 for intersection.
-    let roadA = this.props.currentTask._collisions.find(o => o._id === this.state.selectedIds[0]);
-    let roadB = this.props.currentTask._collisions.find(o => o._id === this.state.selectedIds[1]);
+    let roadA = this.props.task._collisions.find(o => o._id === this.state.selectedIds[0]);
+    let roadB = this.props.task._collisions.find(o => o._id === this.state.selectedIds[1]);
 
     let intersection = intersect(roadA, roadB);
 
@@ -331,7 +288,7 @@ var Tasks = React.createClass({
     // Deselect roads.
     this.map.setFilter(roadSelected, ['all', ['in', '_id', '']]);
     this.setState({ selectedIds: [] });
-    this.fetchNextTask(this.state.currentTaskId, this.props.taskIds);
+    this.fetchNextTask();
   },
 
   renderSelectedIds: function () {
@@ -346,13 +303,14 @@ var Tasks = React.createClass({
   },
 
   render: function () {
-    const { currentTaskId, hoverId } = this.state;
+    const { hoverId } = this.state;
+    const { task } = this.props;
     return (
       <div className='task-container'>
         <div className='map-container'>
           <div id='map' />
         </div>
-        {!currentTaskId ? this.renderPlaceholder() : null}
+        {!task ? this.renderPlaceholder() : null}
         {hoverId ? this.renderPropertiesOverlay() : null}
         {this.renderInstrumentPanel()}
         {this.renderMapLegend()}
@@ -363,16 +321,14 @@ var Tasks = React.createClass({
 
 function selector (state) {
   return {
-    meta: state.waytasks,
-    taskIds: state.waytasks.data.taskIds,
-    currentTask: state.waytasks.data.currentTask
+    task: state.waytasks.data,
+    taskId: state.waytasks.id
   };
 }
 
 function dispatcher (dispatch) {
   return {
-    _fetchWayTask: function (id) { dispatch(fetchWayTasks(id)); },
-    _fetchWayTasks: function () { dispatch(fetchWayTasks()); },
+    _fetchNextTask: function () { dispatch(fetchNextWayTask()); },
     _setGlobalZoom: function (...args) { dispatch(setGlobalZoom(...args)); }
   };
 }

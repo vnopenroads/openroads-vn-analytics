@@ -1,4 +1,3 @@
-import url from 'url';
 import fetch from 'isomorphic-fetch';
 import _ from 'lodash';
 import * as actions from './action-types';
@@ -136,27 +135,27 @@ export function fetchAdminStats (id = null) {
 //                          WAYTASKS                             //
 // ////////////////////////////////////////////////////////////////
 
-function requestWayTasks () {
+function requestWayTask () {
   return {
-    type: actions.REQUEST_WAY_TASKS
+    type: actions.REQUEST_WAY_TASK
   };
 }
 
-function receiveWayTasks (json, error = null) {
+function receiveWayTask (json, error = null) {
   return {
-    type: actions.RECEIVE_WAY_TASKS,
+    type: actions.RECEIVE_WAY_TASK,
     json: json,
     error,
     receivedAt: Date.now()
   };
 }
 
-export function fetchWayTasks (taskId) {
+export function fetchNextWayTask () {
   return function (dispatch) {
-    dispatch(requestWayTasks());
+    dispatch(requestWayTask());
 
-    let path = taskId ? `collision/${taskId}` : 'collisions';
-    return fetch(url.resolve('http://localhost:3010', path))
+    let url = `${config.api}/tasks/next`;
+    return fetch(url)
       .then(response => {
         if (response.status >= 400) {
           throw new Error('Bad response');
@@ -164,10 +163,13 @@ export function fetchWayTasks (taskId) {
         return response.json();
       })
       .then(json => {
-        return dispatch(receiveWayTasks(json));
+        json.data.features.forEach(feature => {
+          feature.properties._id = feature.meta.id;
+        });
+        return dispatch(receiveWayTask(json));
       }, e => {
         console.log('e', e);
-        return dispatch(receiveWayTasks(null, 'Data not available'));
+        return dispatch(receiveWayTask(null, 'Data not available'));
       });
   };
 }

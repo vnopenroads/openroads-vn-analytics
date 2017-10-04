@@ -104,30 +104,25 @@ const stats = function (state = {fetching: false, fetched: false, data: null}, a
 const waytasksDefaultState = {
   fetching: false,
   fetched: false,
-  data: {
-    taskIds: null,
-    currentTask: null
-  }
+  data: null,
+  id: null
 };
 const waytasks = function (state = waytasksDefaultState, action) {
   switch (action.type) {
-    case actions.REQUEST_WAY_TASKS:
-      console.log('REQUEST_WAY_TASKS');
+    case actions.REQUEST_WAY_TASK:
+      console.log('REQUEST_WAY_TASK');
       state = _.cloneDeep(state);
       state.error = null;
       state.fetching = true;
       break;
-    case actions.RECEIVE_WAY_TASKS:
-      console.log('RECEIVE_WAY_TASKS');
+    case actions.RECEIVE_WAY_TASK:
+      console.log('RECEIVE_WAY_TASK');
       state = _.cloneDeep(state);
       if (action.error) {
         state.error = action.error;
       } else {
-        if (Array.isArray(action.json)) {
-          state.data.taskIds = action.json;
-        } else if (action.json.hasOwnProperty('properties')) {
-          state.data.currentTask = action.json;
-        }
+        state.data = action.json.data;
+        state.id = action.json.id;
       }
       state.fetching = false;
       state.fetched = true;
