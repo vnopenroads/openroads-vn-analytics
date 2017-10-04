@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import mapboxgl from 'mapbox-gl';
 import config from '../config';
 import getExtent from 'turf-extent';
-import { t } from '../utils/i18n';
 import c from 'classnames';
 import intersect from '@turf/line-intersect';
 
@@ -54,6 +53,7 @@ var Tasks = React.createClass({
     return {
       currentTaskId: null,
       renderedFeatures: null,
+      mode: null,
       skippedTasks: [],
       hoverId: null,
       selectedIds: []
@@ -117,14 +117,19 @@ var Tasks = React.createClass({
         let features = map.queryRenderedFeatures(e.point, { layers: [ roadHoverId ] });
         if (features.length && features[0].properties._id) {
           let featId = features[0].properties._id;
-          // Clone the selected array.
-          let selectedIds = [].concat(this.state.selectedIds);
-          let idx = findIndex(selectedIds, o => o === featId);
-
-          if (idx === -1) {
-            selectedIds.push(featId);
+          let selectedIds;
+          if (this.state.mode === 'dedupe') {
+            selectedIds = [featId];
           } else {
-            selectedIds.splice(idx, 1);
+            // Clone the selected array.
+            selectedIds = [].concat(this.state.selectedIds);
+            let idx = findIndex(selectedIds, o => o === featId);
+
+            if (idx === -1) {
+              selectedIds.push(featId);
+            } else {
+              selectedIds.splice(idx, 1);
+            }
           }
 
           map.setFilter(roadSelected, ['in', '_id'].concat(selectedIds));
@@ -140,7 +145,7 @@ var Tasks = React.createClass({
       this.setState({
         currentTaskId: taskId,
         renderedFeatures: task
-      }, () => this.onMapLoaded(() => this.syncMapToTask()));
+      }, () => this.onMapLoaded(() => this.syncMap()));
     }
   },
 
@@ -153,7 +158,7 @@ var Tasks = React.createClass({
     else this.map.once('load', fn);
   },
 
-  syncMapToTask: function () {
+  syncMap: function () {
     const features = this.state.renderedFeatures;
     const { map } = this;
     const existingSource = map.getSource(source);
@@ -172,6 +177,7 @@ var Tasks = React.createClass({
       linear: true,
       padding: 25
     });
+    map.setFilter(roadSelected, ['in', '_id'].concat(this.state.selectedIds));
   },
 
   renderPlaceholder: function () {
@@ -200,27 +206,32 @@ var Tasks = React.createClass({
   },
 
   renderInstrumentPanel: function () {
-    const { task } = this.props;
+    const { mode, renderedFeatures } = this.state;
     return (
       <div className='map-options map-panel'>
-        { task ? <h2>Displaying {task.features.length} Roads</h2> : null }
-        <div className='form-group'>
-          <p>1. Select the roads to fix.</p>
-          <div className='map__panel--selected'>
-            {this.renderSelectedIds()}
+        { renderedFeatures ? <h2>Showing {renderedFeatures.features.length} Roads</h2> : null }
+        {mode ? null : (
+          <div>
+            <div className='form-group'>
+              <p>1. Select roads to work on.</p>
+              <div className='map__panel--selected'>
+                {this.renderSelectedIds()}
+              </div>
+            </div>
+            <div className={c('form-group', 'map__panel--form', {disabled: this.state.selectedIds.length < 2})}>
+              <p>2. Choose an action to perform.</p>
+              <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.onDedupe}>Remove Duplicates</button>
+              <br />
+              <button className={c('bttn bttn-m bttn-secondary', {disabled: this.state.selectedIds.length > 2})} type='button' onClick={this.onJoin}>Join Intersection</button>
+            </div>
+            <div className='form-group map__panel--form'>
+              <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.commit}>Finish task</button>
+              <br />
+              <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.next}>Skip task</button>
+            </div>
           </div>
-        </div>
-        <div className={c('form-group', 'map__panel--form', {disabled: this.state.selectedIds.length < 2})}>
-          <p>2. Choose an action to perform.</p>
-          <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.onMerge}>Merge Geometries</button>
-          <br />
-          <button className={c('bttn bttn-m bttn-secondary', {disabled: this.state.selectedIds.length > 2})} type='button' onClick={this.onJoin}>Join Intersection</button>
-        </div>
-        <div className='form-group map__panel--form'>
-          <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.commit}>Finish task</button>
-          <br />
-          <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.next}>Skip task</button>
-        </div>
+        )}
+        {mode === 'dedupe' ? this.renderDedupeMode() : null}
       </div>
     );
   },
@@ -244,19 +255,40 @@ var Tasks = React.createClass({
     console.log('intersection', intersection);
   },
 
-  onMerge: function () {
-    // - Get the selected roads.
-    // - Merge them?
-    // - Create the appropriate structure
-    // - Submit to the API
-    // - The UI should be refreshed to show the changes. (re-retch the
-    // same task?)
+  onDedupe: function () {
+    const { selectedIds } = this.state;
+    const { task } = this.props;
+    const selectedFeatures = {
+      type: 'FeatureCollection',
+      features: selectedIds.map(id => task.features.find(f => f.properties._id === id))
+    };
+    this.setState({mode: 'dedupe', renderedFeatures: selectedFeatures, selectedIds: []}, this.syncMap);
+  },
+
+  exitMode: function () {
+    const { task } = this.props;
+    this.setState({mode: null, renderedFeatures: task, selectedIds: []}, this.syncMap);
+  },
+
+  renderDedupeMode: function () {
+    return (
+      <div className='form-group map__panel--form'>
+        <h2>Remove Duplicate Roads</h2>
+        <p>Click on a road to keep. The other roads here will be deleted.</p>
+              <button className={c('bttn bttn-m bttn-secondary', {disabled: !this.state.selectedIds.length})} type='button' onClick={this.commitDedupe}>Confirm</button>
+        <br />
+        <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.exitMode}>Cancel</button>
+      </div>
+    );
+  },
+
+  commitDedupe: function () {
+
   },
 
   commit: function () {
     // This function is different from #next, in that it allows you
     // to specify a road as basically not needing a fix.
-
     this.next();
   },
 
@@ -266,7 +298,7 @@ var Tasks = React.createClass({
 
     // Add the skipped task to state, so we can request one we haven't gotten yet.
     const skippedTasks = this.state.skippedTasks.concat([this.state.currentTaskId]);
-    this.setState({ selectedIds: [], skippedTasks }, this.fetchNextTask);
+    this.setState({ selectedIds: [], skippedTasks, mode: null }, this.fetchNextTask);
   },
 
   renderSelectedIds: function () {
