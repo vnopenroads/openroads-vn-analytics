@@ -32,6 +32,7 @@ const adminBboxDefaultState = {
   fetched: false,
   bbox: []
 };
+
 const adminBbox = function (state = adminBboxDefaultState, action) {
   switch (action.type) {
     case actions.REQUEST_ADMIN_BBOX:
@@ -50,6 +51,7 @@ const adminBbox = function (state = adminBboxDefaultState, action) {
   }
   return state;
 };
+
 const search = function (state = {results: [], fetching: false, fetched: false, query: '', searching: false}, action) {
   switch (action.type) {
     case actions.REQUEST_SEARCH_RESULTS:
@@ -358,7 +360,6 @@ const VProMMSidsAnalytics = function (state = VProMMSidsAnalyticsDefaultState, a
   return state;
 };
 
-<<<<<<< HEAD
 const defaultVProMMSidsSources = {
   fetching: false,
   fetched: false,
@@ -412,7 +413,10 @@ const VProMMSidSourceGeoJSON = function (state = defaultVProMMSidSourceGeoJSON, 
       state = _.cloneDeep(state);
       state = defaultVProMMSidSourceGeoJSON;
       break;
-=======
+  }
+  return state;
+};
+
 const VProMMsWayBboxDefaultState = {
   fetching: false,
   fetched: false,
@@ -431,7 +435,6 @@ const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
       state.fetching = false;
       state.fetched = true;
       state.bbox = action.json;
->>>>>>> develop
   }
   return state;
 };
@@ -469,7 +472,6 @@ const globZoom = function (state = globZoomDefault, action) {
   return state;
 };
 
-<<<<<<< HEAD
 const defaultAdmin = { id: '', name: '' };
 
 const admin = function (state = defaultAdmin, action) {
@@ -482,7 +484,6 @@ const admin = function (state = defaultAdmin, action) {
   }
   return state;
 }
-=======
 const searchDisplay = function (state = {show: false}, action) {
   switch (action.type) {
     case actions.DISPLAY_SEARCH:
@@ -526,7 +527,6 @@ const setFilteredVProMMs = function (state = [], action) {
   }
   return state;
 };
->>>>>>> develop
 
 export default combineReducers({
   admins,
@@ -539,16 +539,11 @@ export default combineReducers({
   projectsMeta,
   roadNetworkStatus,
   VProMMSids,
-<<<<<<< HEAD
+  VProMMSidsAnalytics,
   VProMMSidsSources,
   VProMMSidSourceGeoJSON,
-  exploreMap,
-  routing: routeReducer,
-  globZoom,
-  admin
-=======
-  VProMMSidsAnalytics,
   VProMMsWayBbox,
+  admin,
   exploreMap,
   routing: routeReducer,
   globZoom,
@@ -556,5 +551,4 @@ export default combineReducers({
   searchResultsDisplay,
   setSearchType,
   setFilteredVProMMs
->>>>>>> develop
 });

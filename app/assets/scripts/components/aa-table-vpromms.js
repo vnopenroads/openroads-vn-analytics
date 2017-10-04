@@ -4,13 +4,9 @@
 import React from 'react';
 import _ from 'lodash';
 import classnames from 'classnames';
-<<<<<<< HEAD
 import { api } from '../config';
 import { Link } from 'react-router';
 import { getLanguage } from '../utils/i18n';
-=======
-import { t } from '../utils/i18n';
->>>>>>> develop
 
 const displayHeader = [
   {key: 'id', value: 'VProMMS ID'},
@@ -110,18 +106,11 @@ const AATable = React.createClass({
           const vprommExists = this.props.sources[vpromm.id];
           return (
             <tr key={`vpromm-${vpromm.id}`} className={classnames({'alt': i % 2})}>
-<<<<<<< HEAD
               <td><strong>{this.makeFieldMapLink(vprommExists, vpromm.id)}</strong></td>
               <td className={classnames({'added': vpromm.inTheDatabase, 'not-added': !vpromm.inTheDatabase})}>{vpromm.inTheDatabase ? 'added' : 'not added'}</td>
               <td className={classnames({'added': vpromm.RouteShoot, 'not-added': !vpromm.RouteShoot})}>{vpromm.RouteShoot ? <a href={vpromm.RouteShootUrl}>link</a> : ''}</td>
               <td className={classnames({'added': vpromm.RoadLabPro, 'not-added': !vpromm.RoadLabPro})}>{vpromm.RoadLabPro ? 'added' : 'not added'}</td>
               <td className={classnames({'added': vprommExists, 'not-added': !vprommExists})}>{vprommExists ? this.makeFieldDataLink(vpromm.id) : 'not added'}</td>
-=======
-              <td><strong>{vpromm.id}</strong></td>
-              <td className={classnames({'added': vpromm.inTheDatabase, 'not-added': !vpromm.inTheDatabase})}>{vpromm.inTheDatabase ? t('added') : t('not added')}</td>
-              <td className={classnames({'added': vpromm.RouteShoot, 'not-added': !vpromm.RouteShoot})}>{vpromm.RouteShoot ? <a href={vpromm.RouteShootUrl}>link</a> : ''}</td>
-              <td className={classnames({'added': vpromm.RoadLabPro, 'not-added': !vpromm.RoadLabPro})}>{vpromm.RoadLabPro ? t('added') : t('not added')}</td>
->>>>>>> develop
             </tr>
           );
         })}

@@ -519,7 +519,6 @@ export function setGlobalZoom (zoomSource) {
   };
 }
 
-<<<<<<< HEAD
 // ///////////////////////////////////////////////////////////////
 //                          Set Admin                           //
 // ///////////////////////////////////////////////////////////////
@@ -531,7 +530,6 @@ export function setAdmin (admin) {
     name: admin.name
   };
 }
-=======
 function requestVProMMsBbox () {
   return {
     type: actions.REQUEST_VPROMMS_BBOX
@@ -624,4 +622,3 @@ export function setFilteredVProMMs (array) {
   };
 }
 
->>>>>>> develop
