@@ -5,7 +5,11 @@ import { t } from '../utils/i18n';
 
 import AATable from '../components/aa-table-vpromms';
 
+<<<<<<< HEAD
 import { fetchVProMMSidsSources } from '../actions/action-creators';
+=======
+import { fetchVProMMsids } from '../actions/action-creators';
+>>>>>>> develop
 import config from '../config';
 
 var AnalyticsAA = React.createClass({
@@ -14,6 +18,7 @@ var AnalyticsAA = React.createClass({
   propTypes: {
     children: React.PropTypes.object,
     routeParams: React.PropTypes.object,
+<<<<<<< HEAD
     params: React.PropTypes.object,
     vpromm: React.PropTypes.string,
     _fetchVProMMSids: React.PropTypes.func,
@@ -28,6 +33,14 @@ var AnalyticsAA = React.createClass({
     const vpromms = this.props.VProMMSids[this.props.routeParams.aaId].vpromms.map(road => road.id);
     // fire request for source data
     this.props._fetchVProMMSidsSources(vpromms);
+=======
+    _fetchVProMMsids: React.PropTypes.func,
+    VProMMSids: React.PropTypes.object
+  },
+
+  componentDidMount: function () {
+    this.props._fetchVProMMsids('analytics');
+>>>>>>> develop
   },
 
   renderTable: function () {
@@ -45,12 +58,16 @@ var AnalyticsAA = React.createClass({
     const completion = total !== 0 ? ((done / total) * 100) : 0;
     // completion text is comprised of a main text component and a tail component, both need to be distinct per the existence of ids for the province.
     let completionMainText;
+<<<<<<< HEAD
     // when no province vpromms, make completion tail text say so,
     let completionTailText = 'Information on VPRoMMS roads is not available';
     // if there are roads, then make the main text the % of completed and tail text an identifier of what the completion
+=======
+    let completionTailText = t('Information on VPRoMMS roads is not available');
+>>>>>>> develop
     if (total !== 0) {
       completionMainText = completion.toFixed(2);
-      completionTailText = `% of vPRoMMS IDs added ${done.toLocaleString()} of ${total.toLocaleString()}`;
+      completionTailText = `% ${t('of VProMMS Ids added')} ${done.toLocaleString()} of ${total.toLocaleString()}`;
     }
     return (
       <div>
@@ -80,14 +97,22 @@ var AnalyticsAA = React.createClass({
 
 function selector (state) {
   return {
+<<<<<<< HEAD
     VProMMSids: state.VProMMSids.data,
     VProMMSidsSources: state.VProMMSidsSources.sources
+=======
+    VProMMSids: state.VProMMSidsAnalytics
+>>>>>>> develop
   };
 }
 
 function dispatcher (dispatch) {
   return {
+<<<<<<< HEAD
     _fetchVProMMSidsSources: (ids) => dispatch(fetchVProMMSidsSources(ids))
+=======
+    _fetchVProMMsids: (use) => dispatch(fetchVProMMsids(use))
+>>>>>>> develop
   };
 }
 
