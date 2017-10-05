@@ -66,19 +66,22 @@ var AnalyticsAA = React.createClass({
     }
     return (
     <div>
-      <div className="aa-header">
-        <div className="aa-headline">
+      <div className='a-header'>
+        <div className='a-headline'>
           <h1>{data.provinceName} {t('Province')}</h1>
         </div>
-        <div className="aa-head-actions">
+        <div className='a-head-actions'>
           { completion ? this.renderDataDumpLinks(provinceId) : '' }
         </div>
       </div>
-      <div className='aa-main__status'>
+
+      <div className='a-main__status'>
         <h2><strong>{completionMainText}</strong>{completionTailText}</h2>
         <div className='meter'>
-         <div className='meter__internal' style={{width: `${completion}%`}}></div>
+          <div className='meter__internal' style={{width: `${completion}%`}}></div>
         </div>
+      </div>
+      <div>
         {total ? <AATable data={ids} vpromms={this.props.VProMMSids}/> : ''}
       </div>
     </div>

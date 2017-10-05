@@ -43,8 +43,13 @@ var AnalyticsIndex = React.createClass({
     const completion = (accumulator.done / accumulator.total) * 100;
     return (
       <div>
-      <h1>{t('VProMMS Edits By Province')}</h1>
-        <div className='aa-main__status'>
+        <div className='a-header'>
+          <div className='a-headline'>
+            <h1>{t('VProMMS Edits By Province')}</h1>
+          </div>
+        </div>
+
+        <div className='a-main__status'>
           <h2><strong>{completion.toFixed(2)}%</strong> {t('of VProMMS Ids added')} ({done.toLocaleString()} of {total.toLocaleString()})</h2>
           <div className='meter'>
             <div className='meter__internal' style={{width: `${completion}%`}}></div>

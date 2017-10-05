@@ -17,20 +17,20 @@
     @extend .row--centered;
   }
 
-  .aa-header {
+  .a-header {
     display: flex;
     width: 100%;
     padding: ($global-spacing * 2) 0 $global-spacing 0;
     align-items: center;
   }
 
-  .aa-headline h1 {
+  .a-headline h1 {
     font-size: 1.75rem;
     font-weight: 800;
     margin: 0;
   }
 
-  .aa-head-actions {
+  .a-head-actions {
     flex: 1 1 auto;
     text-align: right;
     font-size: 0;
@@ -48,7 +48,7 @@
     }
   }
 
-  .aa-main__status {
+  .a-main__status {
     min-height: 4.5rem;
     padding: 0.5rem 1rem;
     margin: 1rem 0 2rem 0;
@@ -102,5 +102,91 @@
 
   .collecticons {
     margin-right: 0.25rem;
+  }
+}
+
+// Tables
+
+.table-properties-head {
+  width: 16rem;
+}
+
+.table-properties-head,
+.table-properties-cell {
+  text-align: left;
+}
+
+.table-properties {
+  transform: translateZ(0);
+  overflow: hidden;
+  height: auto;
+  max-height: 64rem;
+  opacity: 1;
+  // transition: opacity 0.24s ease-in-out, max-height 0.24s ease-in-out;
+}
+
+.table-properties--hidden {
+  max-height: 0;
+  opacity: 0;
+}
+
+.bttn-table-expand {
+  @extend .bttn, .bttn-s, .bttn-base-light;
+  min-width: 4.5rem;
+
+  * {
+    vertical-align: top;
+  }
+
+  &::after {
+    opacity: 0.48;
+    font-size: 1rem;
+    margin-left: 0.25rem;
+    line-height: inherit;
+    vertical-align: top;
+  }
+}
+
+.bttn-table-expand--show::after {
+  @extend %collecticons-sm-chevron-down;
+}
+
+.bttn-table-expand--hide::after {
+  @extend %collecticons-sm-chevron-up;
+}
+
+.table-properties-list {
+  @extend .clearfix;
+  margin: ($global-spacing / 2) 0 0 0;
+  text-align: left;
+  font-size: .875rem;
+  line-height: 1rem;
+  overflow-wrap: break-word;
+
+  dt,
+  dd {
+    float: left;
+    margin-bottom: $global-spacing / 2; 
+  }
+
+  dt {
+    width: 48%;
+    clear: left;
+    padding-right: $global-spacing / 2;
+    font-weight: $base-font-bold;
+  }
+
+  dd {
+    width: 52%;
+    padding-left: $global-spacing / 2;
+  }
+
+  dd + dd {
+    margin-left: 48%;
+  }
+
+  dt:last-of-type,
+  dd:last-of-type {
+    margin-bottom: 0;
   }
 }
