@@ -13,9 +13,9 @@ var AnalyticsAA = React.createClass({
   displayName: 'AnalyticsAA',
 
   propTypes: {
+    _fetchVProMMsids: React.PropTypes.func,
     children: React.PropTypes.object,
     routeParams: React.PropTypes.object,
-    _fetchVProMMsids: React.PropTypes.func,
     VProMMSids: React.PropTypes.object
   },
 

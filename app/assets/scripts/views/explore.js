@@ -9,7 +9,8 @@ import lineColors from '../utils/line-colors';
 import {
   selectExploreMapLayer,
   exploreMapShowNoVpromms,
-  setGlobalZoom
+  setGlobalZoom,
+  removeVProMMsBBox
 } from '../actions/action-creators';
 import MapOptions from '../components/map-options';
 import MapLegend from '../components/map-legend';
@@ -18,15 +19,17 @@ var Explore = React.createClass({
   displayName: 'Explore',
 
   propTypes: {
+    _removeVProMMsBBox: React.PropTypes.func,
+    _setGlobalZoom: React.PropTypes.func,
     layer: React.PropTypes.string,
     showNoVpromms: React.PropTypes.bool,
     dispatch: React.PropTypes.func,
-    _setGlobalZoom: React.PropTypes.func,
     globX: React.PropTypes.number,
     globY: React.PropTypes.number,
     globZ: React.PropTypes.number,
     adminBbox: React.PropTypes.array,
-    vprommsBbox: React.PropTypes.object
+    vprommsBbox: React.PropTypes.array,
+    source: React.PropTypes.string
   },
 
   componentDidMount: function () {
@@ -38,7 +41,6 @@ var Explore = React.createClass({
       center: [this.props.globX, this.props.globY],
       zoom: this.props.globZ
     }).addControl(new mapboxgl.NavigationControl(), 'bottom-left');
-
     this.map.on('load', () => {
       // Load all roads with VPRoMMS values, and color by IRI
       this.map.addLayer({
@@ -89,16 +91,32 @@ var Explore = React.createClass({
     this.props._setGlobalZoom(this.makeXYZ());
   },
 
+  // newProps are primarily bounding boxes (either of an admin area or vpromms road).
+  // since the admin bounding boxes only come from the search component, a simple
+  // truth test to see if new bounds are recieved is suffice.
+
+  // Road bounds can come from either the VProMMS AATable or search, so more logic is needed.
   componentWillReceiveProps: function (nextProps) {
     let bounds;
     if (nextProps.adminBbox !== this.props.adminBbox) {
       bounds = nextProps.adminBbox;
       return this.map.fitBounds(bounds);
     }
+    // if (nextProps.source === 'analytics') {
+    //   bounds = nextProps.vprommsBbox;
+    //   this.map.fitBounds(bounds);
+    //   return this.props._removeVProMMsBBox();
+    // }
+    // if (nextProps.source === '' && this.props.source === 'analytics') { return; }
     if (nextProps.vprommsBbox !== this.props.vprommsBbox) {
-      bounds = nextProps.vprommsBbox[Object.keys(nextProps.vprommsBbox)[0]];
+      bounds = nextProps.vprommsBbox;
       return this.map.fitBounds(bounds);
     }
+  },
+
+  shouldComponentUpdate: function (nextProps) {
+    if (nextProps.vprommsBbox.length === 0) { return false; }
+    return true;
   },
 
   render: function () {
@@ -126,12 +144,14 @@ function selector (state) {
     globY: state.globZoom.y,
     globZ: state.globZoom.z,
     vprommsBbox: state.VProMMsWayBbox.bbox,
+    source: state.VProMMsWayBbox.source,
     adminBbox: state.adminBbox.bbox
   };
 }
 
 function dispatcher (dispatch) {
   return {
+    _removeVProMMsBBox: function () { dispatch(removeVProMMsBBox()); },
     _setGlobalZoom: function (xyzObj) { dispatch(setGlobalZoom(xyzObj)); }
   };
 }

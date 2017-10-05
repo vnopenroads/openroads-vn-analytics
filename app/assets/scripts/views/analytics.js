@@ -8,6 +8,7 @@ var Analytics = React.createClass({
 
   propTypes: {
     children: React.PropTypes.object,
+    history: React.PropTypes.object,
     params: React.PropTypes.object
   },
   render: function () {

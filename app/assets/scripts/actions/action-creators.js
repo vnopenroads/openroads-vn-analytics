@@ -450,13 +450,14 @@ function requestVProMMsBbox () {
   };
 }
 
-function recieveVProMMsBbox (json) {
+function recieveVProMMsBbox (json, source) {
   return {
     type: actions.RECIEVE_VPROMMS_BBOX,
-    json: json
+    json: json,
+    source: source
   };
 }
-export function fetchVProMMsBbox (vprommsId) {
+export function fetchVProMMsBbox (vprommsId, source) {
   return function (dispatch) {
     dispatch(requestVProMMsBbox());
     let url = `${config.api}/way/${vprommsId}/bbox`;
@@ -468,8 +469,14 @@ export function fetchVProMMsBbox (vprommsId) {
       if (json.statusCode >= 400) {
         return dispatch(recieveVProMMsBbox({}));
       }
-      dispatch(recieveVProMMsBbox(json));
+      dispatch(recieveVProMMsBbox(json, source));
     });
+  };
+}
+
+export function removeVProMMsBBox () {
+  return {
+    type: actions.REMOVE_VPROMMS_BBOX
   };
 }
 
