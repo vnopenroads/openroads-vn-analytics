@@ -99,7 +99,7 @@ const AATable = React.createClass({
           }
           return (
             <tr key={`province-${province.id}`} className={classnames('collecticon-sort-asc', {'alt': i % 2})}>
-              <td><Link to={`${getLanguage()}/analytics/${province.id}`}>{province.name}</Link></td>
+              <td><Link to={`${getLanguage()}/analytics/${province.route}`}>{province.name}</Link></td>
               <td>{province.done}</td>
               <td>{province.total}</td>
               <td>{percText}</td>

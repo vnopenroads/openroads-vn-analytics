@@ -563,7 +563,13 @@ export function fetchProvinces () {
       if (json.statusCode >= 400) {
         throw new Error('Bad response');
       }
-      dispatch(receiveProjects(json));
+      dispatch(receiveProvinces(json));
     });
   };
 };
+
+export function setCrossWalk () {
+  return {
+    type: actions.SET_CROSSWALK
+  };
+}

@@ -6,7 +6,7 @@ import { t } from '../utils/i18n';
 
 import AATable from '../components/aa-table-index';
 
-import { fetchVProMMsids, fetchProvinces } from '../actions/action-creators';
+import { fetchVProMMsids, fetchProvinces, setCrossWalk } from '../actions/action-creators';
 
 var AnalyticsIndex = React.createClass({
   displayName: 'AnalyticsIndex',
@@ -15,19 +15,25 @@ var AnalyticsIndex = React.createClass({
     children: React.PropTypes.object,
     _fetchProvinces: React.PropTypes.func,
     _fetchVProMMsids: React.PropTypes.func,
-    VProMMSids: React.PropTypes.object,
-    params: React.PropTypes.object
+    _setCrossWalk: React.PropTypes.func,
+    fetched: React.PropTypes.bool,
+    provinces: React.PropTypes.array,
+    provinceCrossWalk: React.PropTypes.object,
+    params: React.PropTypes.object,
+    VProMMSids: React.PropTypes.object
   },
 
-  componentDidMount: function () {
-    this.props._fetchVProMMsids('analytics');
+  componentWillMount: function () {
+    this.props._setCrossWalk();
     this.props._fetchProvinces();
   },
 
-  render: function () {
+  renderAnalyticsIndex: function () {
     let accumulator = { done: 0, total: 0 };
     const provinceData = _.map(this.props.VProMMSids.data, (data, id) => {
       const name = data.provinceName;
+      // generate route to province's admin_boundaires id.
+      const route = this.props.provinceCrossWalk[id];
       const done = data.vpromms.filter(v => v.inTheDatabase).length;
       const total = data.vpromms.length;
       accumulator.done += done;
@@ -38,7 +44,8 @@ var AnalyticsIndex = React.createClass({
         name,
         done,
         total,
-        percentageComplete
+        percentageComplete,
+        route
       };
     });
     const { done, total } = accumulator;
@@ -62,6 +69,10 @@ var AnalyticsIndex = React.createClass({
         </div>
       </div>
     );
+  },
+
+  render: function () {
+    return this.props.fetched ? this.renderAnalyticsIndex() : (<div/>);
   }
 });
 
@@ -70,12 +81,16 @@ var AnalyticsIndex = React.createClass({
 
 function selector (state) {
   return {
-    VProMMSids: state.VProMMSidsAnalytics
+    VProMMSids: state.VProMMSidsAnalytics,
+    provinces: state.provinces.data,
+    fetched: state.provinces.fetched,
+    provinceCrossWalk: state.crosswalk.province
   };
 }
 
 function dispatcher (dispatch) {
   return {
+    _setCrossWalk: () => dispatch(setCrossWalk()),
     _fetchVProMMsids: (use) => dispatch(fetchVProMMsids(use)),
     _fetchProvinces: () => dispatch(fetchProvinces())
   };

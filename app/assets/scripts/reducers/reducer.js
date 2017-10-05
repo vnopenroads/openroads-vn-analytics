@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import { routeReducer } from 'react-router-redux';
 
 import * as actions from '../actions/action-types';
-import { VPROMMS_IDS } from '../constants';
+import { VPROMMS_IDS, ADMIN_MAP } from '../constants';
 
 const admins = function (state = {units: [], fetching: false, fetched: false}, action) {
   switch (action.type) {
@@ -477,11 +477,23 @@ const provinces = function (state = defaultProvinces, action) {
       break;
   }
   return state;
-}
+};
+
+const crosswalk = function (state = {}, action) {
+  switch (action.type) {
+    case actions.SET_CROSSWALK:
+      state = _.cloneDeep(state);
+      state.province = _.invert(_.pickBy(ADMIN_MAP.province, (province) => { return !/^\s*$/.test(province); }));
+      state.district = _.invert(_.pickBy(ADMIN_MAP.district, (district) => { return district !== 'missing'; }));
+      break;
+  }
+  return state;
+};
 
 export default combineReducers({
   admins,
   adminBbox,
+  crosswalk,
   search,
   stats,
   tofixtasks,
