@@ -13,6 +13,7 @@ var AnalyticsIndex = React.createClass({
 
   propTypes: {
     children: React.PropTypes.object,
+    _fetchProvinces: React.PropTypes.func,
     _fetchVProMMsids: React.PropTypes.func,
     VProMMSids: React.PropTypes.object,
     params: React.PropTypes.object
@@ -74,7 +75,8 @@ function selector (state) {
 
 function dispatcher (dispatch) {
   return {
-    _fetchVProMMsids: (use) => dispatch(fetchVProMMsids(use))
+    _fetchVProMMsids: (use) => dispatch(fetchVProMMsids(use)),
+    _fetchProvinces: () => dispatch(fetchProvinces())
   };
 }
 

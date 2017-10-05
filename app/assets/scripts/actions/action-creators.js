@@ -536,3 +536,33 @@ export function setFilteredVProMMs (array) {
   };
 }
 
+// ////////////////////////////////////////////////////////////////
+//                            Admins                             //
+// ////////////////////////////////////////////////////////////////
+
+function requestProvinces () {
+  return {
+    type: actions.REQUEST_PROVINCES
+  };
+}
+
+function receiveProvinces (json) {
+  return {
+    type: actions.RECEIVE_PROVINCES,
+    json: json
+  };
+}
+
+export function fetchProvinces () {
+  return function (dispatch) {
+    let url = `${config.api}/admin/province/units`;
+    return fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      if (json.statusCode >= 400) {
+        throw new Error('Bad response');
+      }
+      dispatch(receiveProjects(json));
+    });
+  };
+};
