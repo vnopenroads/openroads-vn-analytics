@@ -5,11 +5,14 @@ const AAFieldMapLegend = React.createClass({
   displayName: 'AAFieldMapLegend',
 
   propTypes: {
-    layers: React.PropTypes.array
+    sources: React.PropTypes.array
   },
 
   renderLegendElements: function () {
-    return this.props.layers.map((source, i) => {
+    // for each source as the source name
+    // as well as a small svg path with the color
+    // matching source in the lineColors config
+    return this.props.sources.map((source, i) => {
       return (
         <li key={i}>
           <div>

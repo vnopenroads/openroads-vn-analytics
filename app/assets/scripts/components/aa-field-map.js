@@ -2,7 +2,7 @@
 
 import React from 'react';
 import mapboxgl from 'mapbox-gl';
-import { flatten } from 'lodash';
+import { flatten, uniq } from 'lodash';
 import { connect } from 'react-redux';
 import { fetchVProMMsidSourceGeoJSON } from '../actions/action-creators';
 import config from '../config';
@@ -38,6 +38,8 @@ var AAFieldMap = React.createClass({
   },
 
   generateLngLatZoom: function (featureCollection) {
+    // see test for this util for helpful description of
+    // what all is happening here.
     var bounds = flatten(generateBbox(featureCollection));
     var NWSE = makeNWSE(bounds);
     var dummyZoom = 10;
@@ -57,11 +59,9 @@ var AAFieldMap = React.createClass({
   },
 
   generateMap: function (geoJSON) {
-    // pull featureCollections from the road props object
     // generate the bounding box used to set initial zoom of gl map
     var lngLatZoom = this.generateLngLatZoom(geoJSON[0]);
     mapboxgl.accessToken = config.mbToken;
-    // add the map to the 'aa-map' canvas
     var map = new mapboxgl.Map({
       container: 'aa-map',
       center: [lngLatZoom.lng, lngLatZoom.lat],
@@ -71,34 +71,38 @@ var AAFieldMap = React.createClass({
     });
     map.on('load', () => {
       map.addControl(new mapboxgl.ScaleControl({unit: 'metric'}));
-      // add the feature collection source to the gl map
+      map.addControl(new mapboxgl.NavigationControl());
+      // forEach geoJSON source, add the feature collection
       var sourceId = `${this.props.roadId}-field-data`;
-      map.addSource(sourceId, generateSourceFC(geoJSON[0]));
-      // then for each feature, add a layer
-      geoJSON[0].features.forEach(feature => {
-        // grab the feature's field data source from its properties
-        var fieldDataSource = feature.properties.source;
-        // generate a layer for the feature on the map
-        map.addLayer(generateLayer(sourceId, fieldDataSource, this.props.roadId));
+      geoJSON.forEach(fc => {
+        map.addSource(sourceId, generateSourceFC(geoJSON[0]));
+        fc.features.forEach(feature => {
+          var fieldDataSource = feature.properties.source;
+          map.addLayer(generateLayer(sourceId, fieldDataSource, this.props.roadId));
+        });
       });
     });
   },
 
+  // before component mounts, fetch the GeoJSON for
+  // the VProMMs id
   componentWillMount: function () {
     const vpromm = this.props.params.vpromm;
     this.props._fetchVProMMsidSourceGeoJSON(vpromm);
   },
-
+  // only once the GeoJSON is fetched, generate the map
   componentWillReceiveProps: function (nextProps) {
     if (nextProps.fetched) { this.generateMap(nextProps.geoJSON); }
   },
 
+  // same rule that applied in componentWillReceiveProps goes for
+  // the header render and the map render.
   renderMap: function (geoJSON) {
     const sources = geoJSON[0].features.map(feature => feature.properties.source);
     return (
       <div>
         <div id='aa-map' className='aa-map'></div>
-        <AAFieldMapLegend layers={sources} />
+        <AAFieldMapLegend sources={uniq(sources)} />
       </div>
     );
   },

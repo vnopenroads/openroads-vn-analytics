@@ -6,8 +6,6 @@ import { t } from '../utils/i18n';
 import AATable from '../components/aa-table-vpromms';
 import Headerdrop from '../components/headerdrop';
 
-import { fetchVProMMSids } from '../actions/action-creators';
-
 import config from '../config';
 
 var AnalyticsAA = React.createClass({

@@ -93,9 +93,9 @@ const AATable = React.createClass({
 
   renderFieldMapButtons: function (vprommExists, id) {
     return (
-      <div className='bttn-group'>
+      <div>
         <Link className='bttn bttn-s bttn-base-light' to={`/${getLanguage()}/road/${id}/`}>Map</Link>
-        <a className='bttn bttn-s bttn-base-light' href={`${api}/field/${id}/geometries?grouped=false&download=true`}>Download</a>
+        <a className='bttn bttn-s bttn-base-light' href={`${api}/field/geometries/${id}?grouped=false&download=true`}>Download</a>
       </div>
     );
   },
@@ -137,13 +137,12 @@ const AATable = React.createClass({
 function selector (state) {
   return {
     sources: state.VProMMSidsSources.sources
-  }
+  };
 }
 function dispatcher (dispatch) {
   return {
     _fetchVProMMSidsSources: (ids) => dispatch(fetchVProMMSidsSources(ids))
-  }
+  };
 }
- 
 
 export default connect(selector, dispatcher)(AATable);

@@ -133,10 +133,10 @@ const AATable = React.createClass({
 
 function selector (state) { return {}; }
 
-function dispatcher (dispatch) { 
+function dispatcher (dispatch) {
   return {
     _setAdmin: (admin) => dispatch(setAdmin(admin))
-  }
+  };
 }
 
 export default connect(selector, dispatcher)(AATable);

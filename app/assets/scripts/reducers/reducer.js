@@ -483,7 +483,7 @@ const admin = function (state = defaultAdmin, action) {
       break;
   }
   return state;
-}
+};
 const searchDisplay = function (state = {show: false}, action) {
   switch (action.type) {
     case actions.DISPLAY_SEARCH:
