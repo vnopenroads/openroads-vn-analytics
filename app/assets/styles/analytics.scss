@@ -122,7 +122,7 @@
   height: auto;
   max-height: 64rem;
   opacity: 1;
-  transition: opacity 0.24s ease-in-out, max-height 0.24s ease-in-out;
+  // transition: opacity 0.24s ease-in-out, max-height 0.24s ease-in-out;
 }
 
 .table-properties--hidden {
@@ -155,15 +155,38 @@
   @extend %collecticons-sm-chevron-up;
 }
 
-.table-properties dl {
+.table-properties-list {
+  @extend .clearfix;
   margin: ($global-spacing / 2) 0 0 0;
-  width: 100%;
   text-align: left;
   font-size: .875rem;
   line-height: 1rem;
+  overflow-wrap: break-word;
+
+  dt,
+  dd {
+    float: left;
+    margin-bottom: $global-spacing / 2; 
+  }
 
   dt {
+    width: 48%;
+    clear: left;
+    padding-right: $global-spacing / 2;
     font-weight: $base-font-bold;
   }
-}
 
+  dd {
+    width: 52%;
+    padding-left: $global-spacing / 2;
+  }
+
+  dd + dd {
+    margin-left: 48%;
+  }
+
+  dt:last-of-type,
+  dd:last-of-type {
+    margin-bottom: 0;
+  }
+}

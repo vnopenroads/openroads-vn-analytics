@@ -108,11 +108,11 @@ const AATable = React.createClass({
               <td className='table-properties-cell'>
                 <button type='button' className={propBtnClass} onClick={this.onPropertiesClick.bind(null, vpromm.id)}><span>{propBtnLabel}</span></button>
                 <div className={propContainerClass}>
-                  <dl className='dl--horizontal'>
+                  <dl className='table-properties-list'>
                     <dt>Key 1</dt>
                     <dd>Value 1</dd>
-                    <dt>Key 2</dt>
-                    <dd>Value 2</dd>
+                    <dt>Very_long_key_here_yes_it_is</dt>
+                    <dd>A_very_long_value_for_a_very_long_key</dd>
                     <dt>Key 3</dt>
                     <dd>Value 3</dd>
                     <dt>Key 4</dt>
