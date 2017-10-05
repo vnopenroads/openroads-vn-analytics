@@ -363,7 +363,7 @@ const VProMMSidsAnalytics = function (state = VProMMSidsAnalyticsDefaultState, a
 const defaultVProMMSidsSources = {
   fetching: false,
   fetched: false,
-  sources: {}
+  sources: []
 };
 
 const VProMMSidsSources = function (state = defaultVProMMSidsSources, action) {

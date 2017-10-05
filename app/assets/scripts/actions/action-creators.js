@@ -456,7 +456,7 @@ export function fetchVProMMsidSourceGeoJSON (vprommId, provinceName) {
   return function (dispatch) {
     dispatch(requestVProMMSidSourceGeoJSON());
     // hit the grouped field geometries endpoint. do not download it.
-    let url = `${config.api}/field/${vprommId}/geometries?grouped=true`;
+    let url = `${config.api}/field/geometries/${vprommId}?grouped=true`;
     return fetch(url)
     .then(response => response.json())
     .then(json => {

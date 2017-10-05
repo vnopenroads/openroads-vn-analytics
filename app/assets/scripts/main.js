@@ -65,8 +65,8 @@ render((
         <Route path='editor' component={Editor} pageClass='editor' />
         <Route path='editor/*' component={Editor} pageClass='editor' />
         <Route path='explore' component={Explore} pageClass='explore' />
-        <Route path='road' component={Analytics} pageClass='road'>
-          <Route path=':vpromm' component={AAFieldMap} />
+        <Route path='road' component={Analytics} >
+          <Route path=':vpromm' component={AAFieldMap} pageClass='analytics' />
         </Route>
         <Route path='analytics' component={Analytics}>
           <Route path='main' component={AnalyticsIndex} pageClass='analytics' />

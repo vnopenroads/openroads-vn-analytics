@@ -26,7 +26,7 @@ const AATable = React.createClass({
     province: React.PropTypes.string,
     provinceName: React.PropTypes.string,
     routeParams: React.PropTypes.func,
-    sources: React.PropTypes.object,
+    sources: React.PropTypes.array,
     _fetchVProMMSidsSources: React.PropTypes.func
   },
 
@@ -109,7 +109,7 @@ const AATable = React.createClass({
     return (
       <tbody>
         {_.map(sorted, (vpromm, i) => {
-          const vprommExists = this.props.sources[vpromm.id];
+          const vprommExists = (this.props.sources.indexOf(vpromm.id) !== -1);
           return (
             <tr key={`vpromm-${vpromm.id}`} className={classnames({'alt': i % 2})}>
               <td><strong>{vpromm.id}</strong></td>
@@ -123,7 +123,6 @@ const AATable = React.createClass({
   },
 
   render: function () {
-    console.log(this.props);
     return (
       <div className='table'>
         <table>

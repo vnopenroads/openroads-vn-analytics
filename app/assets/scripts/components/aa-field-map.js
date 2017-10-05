@@ -4,7 +4,7 @@ import React from 'react';
 import mapboxgl from 'mapbox-gl';
 import { flatten } from 'lodash';
 import { connect } from 'react-redux';
-import { fetchVProMMsidSourceGeoJSON, removeVProMMsSourceGeoJSON } from '../actions/action-creators';
+import { fetchVProMMsidSourceGeoJSON } from '../actions/action-creators';
 import config from '../config';
 import AAFieldMapLegend from './aa-field-map-legend';
 
@@ -56,49 +56,49 @@ var AAFieldMap = React.createClass({
     };
   },
 
-  componentWillMount: function () {
-    const vpromm = this.props.params.vpromm;
-    this.props._fetchVProMMsidSourceGeoJSON(vpromm);
-  },
-
   generateMap: function (geoJSON) {
     // pull featureCollections from the road props object
     // generate the bounding box used to set initial zoom of gl map
-    var lngLatZoom = this.generateLngLatZoom(geoJSON);
+    var lngLatZoom = this.generateLngLatZoom(geoJSON[0]);
     mapboxgl.accessToken = config.mbToken;
     // add the map to the 'aa-map' canvas
-    this.map = new mapboxgl.Map({
+    var map = new mapboxgl.Map({
       container: 'aa-map',
       center: [lngLatZoom.lng, lngLatZoom.lat],
       zoom: lngLatZoom.zoom,
       style: 'mapbox://styles/mapbox/light-v9',
       failIfMajorPerformanceCaveat: false
     });
-    this.map.on('load', () => {
+    map.on('load', () => {
+      map.addControl(new mapboxgl.ScaleControl({unit: 'metric'}));
       // add the feature collection source to the gl map
       var sourceId = `${this.props.roadId}-field-data`;
-      this.map.addSource(sourceId, generateSourceFC(geoJSON));
+      map.addSource(sourceId, generateSourceFC(geoJSON[0]));
       // then for each feature, add a layer
-      geoJSON.features.forEach(feature => {
+      geoJSON[0].features.forEach(feature => {
         // grab the feature's field data source from its properties
         var fieldDataSource = feature.properties.source;
         // generate a layer for the feature on the map
-        this.map.addLayer(generateLayer(sourceId, fieldDataSource, this.props.roadId));
+        map.addLayer(generateLayer(sourceId, fieldDataSource, this.props.roadId));
       });
     });
   },
 
-  componentWillUnmount: function () {
-    this.props._removeVProMMsSourceGeoJSON();
+  componentWillMount: function () {
+    const vpromm = this.props.params.vpromm;
+    this.props._fetchVProMMsidSourceGeoJSON(vpromm);
+  },
+
+  componentWillReceiveProps: function (nextProps) {
+    if (nextProps.fetched) { this.generateMap(nextProps.geoJSON); }
   },
 
   renderMap: function (geoJSON) {
-    const vpromm = this.props.params.vpromm;
-    const layers = geoJSON[0][vpromm][0].map(feature => feature.properties.source);
+    const sources = geoJSON[0].features.map(feature => feature.properties.source);
     return (
       <div>
         <div id='aa-map' className='aa-map'></div>
-        {/* <AAFieldMapLegend layers={layers} /> */}
+        <AAFieldMapLegend layers={sources} />
       </div>
     );
   },
@@ -110,7 +110,7 @@ var AAFieldMap = React.createClass({
   render: function () {
     return (
       <div>
-        <div className="aa-header">
+        <div className="aa-headline aa-header">
           { this.props.fetched ? this.renderHeader(this.props.adminName) : ''}
         </div>
         <div className="aa-main__status">
