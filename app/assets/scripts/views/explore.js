@@ -91,23 +91,12 @@ var Explore = React.createClass({
     this.props._setGlobalZoom(this.makeXYZ());
   },
 
-  // newProps are primarily bounding boxes (either of an admin area or vpromms road).
-  // since the admin bounding boxes only come from the search component, a simple
-  // truth test to see if new bounds are recieved is suffice.
-
-  // Road bounds can come from either the VProMMS AATable or search, so more logic is needed.
   componentWillReceiveProps: function (nextProps) {
     let bounds;
     if (nextProps.adminBbox !== this.props.adminBbox) {
       bounds = nextProps.adminBbox;
       return this.map.fitBounds(bounds);
     }
-    // if (nextProps.source === 'analytics') {
-    //   bounds = nextProps.vprommsBbox;
-    //   this.map.fitBounds(bounds);
-    //   return this.props._removeVProMMsBBox();
-    // }
-    // if (nextProps.source === '' && this.props.source === 'analytics') { return; }
     if (nextProps.vprommsBbox !== this.props.vprommsBbox) {
       bounds = nextProps.vprommsBbox;
       return this.map.fitBounds(bounds);
