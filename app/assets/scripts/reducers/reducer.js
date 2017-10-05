@@ -127,6 +127,47 @@ const waytasks = function (state = waytasksDefaultState, action) {
       state.fetching = false;
       state.fetched = true;
       break;
+    case actions.RELOAD_WAY_TASK:
+      console.log('RELOAD_WAY_TASK');
+      state = _.cloneDeep(state);
+      state.id = null;
+      state.data = null;
+      break;
+  }
+  return state;
+};
+
+const osmChangeState = {
+  fetching: false,
+  fetched: false,
+  taskId: null,
+  error: null
+};
+const osmChange = function (state = osmChangeState, action) {
+  switch (action.type) {
+    case actions.REQUEST_OSM_CHANGE:
+      console.log('REQUEST_OSM_CHANGE');
+      state = _.cloneDeep(state);
+      state.error = null;
+      state.fetching = true;
+      break;
+    case actions.COMPLETE_OSM_CHANGE:
+      console.log('COMPLETE_OSM_CHANGE');
+      state = _.cloneDeep(state);
+      if (action.error) {
+        state.error = action.error;
+      } else {
+        state.taskId = action.taskId;
+      }
+      state.fetching = false;
+      state.fetched = true;
+      break;
+    case actions.RELOAD_WAY_TASK:
+      console.log('RELOAD_WAY_TASK');
+      state = _.cloneDeep(state);
+      state.fetched = false;
+      state.taskId = false;
+      break;
   }
   return state;
 };
@@ -456,6 +497,7 @@ export default combineReducers({
   search,
   stats,
   waytasks,
+  osmChange,
   projecttasks,
   projects,
   projectsMeta,

@@ -141,6 +141,12 @@ function requestWayTask () {
   };
 }
 
+function reloadWayTask () {
+  return {
+    type: actions.RELOAD_WAY_TASK
+  };
+}
+
 function receiveWayTask (json, error = null) {
   return {
     type: actions.RECEIVE_WAY_TASK,
@@ -177,26 +183,106 @@ export function fetchNextWayTask (skippedTasks) {
   };
 }
 
-export function markTaskAsDone (taskId) {
+export function reloadCurrentTask (taskId) {
   return function (dispatch) {
-    let url = `${config.api}/tasks/${taskId}/pending`;
-    return fetch.put(url)
+    dispatch(reloadWayTask());
+    dispatch(requestWayTask());
+    let url = `${config.api}/tasks/${taskId}`;
+    return fetch(url)
       .then(response => {
         if (response.status >= 400) {
           throw new Error('Bad response');
         }
-        return response;
+        return response.json();
       })
-      .then(response => {
-        // do something
+      .then(json => {
+        json.data.features.forEach(feature => {
+          feature.properties._id = feature.meta.id;
+        });
+        return dispatch(receiveWayTask(json));
       }, e => {
-        // do something
+        console.log('e', e);
+        return dispatch(receiveWayTask(null, 'Data not available'));
       });
   };
 }
 
 // ////////////////////////////////////////////////////////////////
-//                        PROJECT TASKS                          //
+//                        osm changesets                         //
+// ////////////////////////////////////////////////////////////////
+
+export function markTaskAsDone (taskId) {
+  return function (dispatch) {
+    putPendingTask(taskId);
+  };
+}
+
+function putPendingTask (taskId) {
+  let url = `${config.api}/tasks/${taskId}/pending`;
+  return fetch(url, {
+    method: 'PUT'
+  }).then(response => {
+    if (response.status >= 400) {
+      throw new Error('Could not update task status');
+    }
+    return response;
+  });
+}
+
+function requestOsmChange () {
+  return {
+    type: actions.REQUEST_OSM_CHANGE
+  };
+}
+
+function completeOsmChange (taskId, error = null) {
+  return {
+    type: actions.COMPLETE_OSM_CHANGE,
+    taskId,
+    error,
+    receivedAt: Date.now()
+  };
+}
+
+export function queryOsm (taskId, payload) {
+  return function (dispatch) {
+    dispatch(requestOsmChange());
+    const changesetUrl = `${config.api}/changeset/create`;
+    const details = {
+      uid: 555555,
+      user: 'Openroads Tasks'
+    };
+    fetch(changesetUrl, {
+      method: 'PUT',
+      body: objectToBlob(details)
+    }).then(response => {
+      if (response.status >= 400) {
+        throw new Error('Bad response');
+      }
+      return response.text();
+    }).then(upload, e => {
+      return dispatch(completeOsmChange(null, e));
+    });
+
+    function upload (changesetId) {
+      let url = `${config.api}/changeset/${changesetId}/upload`;
+      return fetch(url, {
+        method: 'POST',
+        body: objectToBlob({ osmChange: payload })
+      })
+      .then(() => {
+        return dispatch(completeOsmChange(taskId));
+      });
+    }
+  };
+}
+
+function objectToBlob (obj) {
+  return new Blob([JSON.stringify(obj, null, 2)], {type: 'application/json'});
+}
+
+// ////////////////////////////////////////////////////////////////
+//                        project tasks                          //
 // ////////////////////////////////////////////////////////////////
 
 function requestProjectTasks () {

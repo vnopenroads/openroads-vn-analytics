@@ -11,7 +11,9 @@ import intersect from '@turf/line-intersect';
 import {
   fetchNextWayTask,
   markTaskAsDone,
-  setGlobalZoom
+  setGlobalZoom,
+  queryOsm,
+  reloadCurrentTask
 } from '../actions/action-creators';
 
 const source = 'collisions';
@@ -63,7 +65,10 @@ var Tasks = React.createClass({
   propTypes: {
     _fetchNextTask: React.PropTypes.func,
     _setGlobalZoom: React.PropTypes.func,
+    _queryOsm: React.PropTypes.func,
+    _reloadCurrentTask: React.PropTypes.func,
 
+    osmInflight: React.PropTypes.bool,
     meta: React.PropTypes.object,
     task: React.PropTypes.object,
     taskId: React.PropTypes.number
@@ -78,7 +83,8 @@ var Tasks = React.createClass({
     const map = this.map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/light-v9',
-      failIfMajorPerformanceCaveat: false
+      failIfMajorPerformanceCaveat: false,
+      zoom: 12
     }).addControl(new mapboxgl.NavigationControl(), 'bottom-left');
 
     this.onMapLoaded(() => {
@@ -139,13 +145,22 @@ var Tasks = React.createClass({
     });
   },
 
-  componentWillReceiveProps: function ({taskId, task}) {
+  componentWillReceiveProps: function ({taskId, task, lastUpdated}) {
     if (taskId && taskId !== this.state.currentTaskId) {
       // We've queried and received a new task
       this.setState({
         currentTaskId: taskId,
         renderedFeatures: task
       }, () => this.onMapLoaded(() => this.syncMap()));
+    } else if (lastUpdated === this.state.currentTaskId) {
+      // We've just successfully completed an osm changeset
+      // Reload the task to sync UI with API
+      this.props._reloadCurrentTask(this.state.currentTaskId);
+      this.setState({
+        currentTaskId: null,
+        selectedIds: [],
+        mode: null
+      });
     }
   },
 
@@ -283,7 +298,15 @@ var Tasks = React.createClass({
   },
 
   commitDedupe: function () {
-
+    const { selectedIds, renderedFeatures, currentTaskId } = this.state;
+    const { features } = renderedFeatures;
+    const toDelete = features.filter(feature => selectedIds[0] !== feature.properties._id)
+    .map(feature => ({id: feature.properties._id}));
+    this.props._queryOsm(currentTaskId, {
+      delete: {
+        way: toDelete
+      }
+    });
   },
 
   commit: function () {
@@ -312,9 +335,17 @@ var Tasks = React.createClass({
     return <p>{selectedIds.length} roads selected.</p>;
   },
 
+  renderInflight: function () {
+    return (
+      <div className='map-options map-panel'>
+        <h2>Performing action...</h2>
+      </div>
+    );
+  },
+
   render: function () {
     const { hoverId } = this.state;
-    const { task } = this.props;
+    const { task, osmInflight } = this.props;
     return (
       <div className='task-container'>
         <div className='map-container'>
@@ -322,7 +353,7 @@ var Tasks = React.createClass({
         </div>
         {!task ? this.renderPlaceholder() : null}
         {hoverId ? this.renderPropertiesOverlay() : null}
-        {this.renderInstrumentPanel()}
+        {osmInflight ? this.renderInflight() : this.renderInstrumentPanel()}
       </div>
     );
   }
@@ -331,7 +362,9 @@ var Tasks = React.createClass({
 function selector (state) {
   return {
     task: state.waytasks.data,
-    taskId: state.waytasks.id
+    taskId: state.waytasks.id,
+    osmInflight: state.osmChange.fetching,
+    lastUpdated: state.osmChange.taskId
   };
 }
 
@@ -339,6 +372,8 @@ function dispatcher (dispatch) {
   return {
     _fetchNextTask: function (skippedTasks) { dispatch(fetchNextWayTask(skippedTasks)); },
     _markTaskAsDone: function (taskId) { dispatch(markTaskAsDone(taskId)); },
+    _queryOsm: function (taskId, payload) { dispatch(queryOsm(taskId, payload)); },
+    _reloadCurrentTask: function (taskId) { dispatch(reloadCurrentTask(taskId)); },
     _setGlobalZoom: function (...args) { dispatch(setGlobalZoom(...args)); }
   };
 }
