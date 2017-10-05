@@ -44,7 +44,8 @@
   }
 
   transform: translate3d(0, 0, 0);
-  @include transition(opacity 0.16s ease 0s, margin 0.16s ease 0s, visibility 0.16s linear 0s);
+  transition: opacity 0.16s ease 0s, margin 0.16s ease 0s, visibility 0.16s linear 0s;
+
   &:before {
     @extend .collecticons-triangle-up;
     position: absolute;
@@ -146,6 +147,7 @@
   color: $link-color;
   text-decoration: none;
   transition: all 0.16s ease 0s;
+
   &:hover,
   &:focus {
     background-color: tint($link-color, 89%);
