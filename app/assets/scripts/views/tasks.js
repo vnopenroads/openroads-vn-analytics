@@ -67,6 +67,7 @@ var Tasks = React.createClass({
     _setGlobalZoom: React.PropTypes.func,
     _queryOsm: React.PropTypes.func,
     _reloadCurrentTask: React.PropTypes.func,
+    _markTaskAsDone: React.PropTypes.func,
 
     osmInflight: React.PropTypes.bool,
     meta: React.PropTypes.object,
@@ -300,7 +301,7 @@ var Tasks = React.createClass({
   commitDedupe: function () {
     const { selectedIds, renderedFeatures, currentTaskId } = this.state;
     const { features } = renderedFeatures;
-    const toDelete = features.filter(feature => selectedIds[0] !== feature.properties._id)
+    const toDelete = features.filter(feature => selectedIds[0] !== feature.properties._id);
     this.props._queryOsm(currentTaskId, {
       delete: {
         way: toDelete.map(feature => ({id: feature.properties._id}))
