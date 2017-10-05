@@ -6,7 +6,7 @@ import { t } from '../utils/i18n';
 
 import AATable from '../components/aa-table-index';
 
-import { fetchVProMMsids } from '../actions/action-creators';
+import { fetchVProMMsids, fetchProvinces } from '../actions/action-creators';
 
 var AnalyticsIndex = React.createClass({
   displayName: 'AnalyticsIndex',
@@ -21,6 +21,7 @@ var AnalyticsIndex = React.createClass({
 
   componentDidMount: function () {
     this.props._fetchVProMMsids('analytics');
+    this.props._fetchProvinces();
   },
 
   render: function () {

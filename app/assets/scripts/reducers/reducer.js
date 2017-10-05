@@ -457,6 +457,28 @@ const setFilteredVProMMs = function (state = [], action) {
   return state;
 };
 
+const defaultProvinces = {
+  fetching: false,
+  fetched: false,
+  data: []
+};
+
+const provinces = function (state = defaultProvinces, action) {
+  switch (action.type) {
+    case actions.REQUEST_PROVINCES:
+      state = _.cloneDeep(state);
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_PROVINCES:
+      state = _.cloneDeep(state);
+      state.fetching = false;
+      state.fetched = true;
+      state.data = action.json;
+      break;
+  }
+  return state;
+}
+
 export default combineReducers({
   admins,
   adminBbox,
@@ -473,6 +495,7 @@ export default combineReducers({
   exploreMap,
   routing: routeReducer,
   globZoom,
+  provinces,
   searchDisplay,
   searchResultsDisplay,
   setSearchType,

@@ -555,6 +555,7 @@ function receiveProvinces (json) {
 
 export function fetchProvinces () {
   return function (dispatch) {
+    dispatch(requestProvinces())
     let url = `${config.api}/admin/province/units`;
     return fetch(url)
     .then(response => response.json())
