@@ -20,7 +20,7 @@
     "serve": "gulp collecticons && gulp serve",
     "build": "gulp collecticons && NODE_ENV=production gulp",
     "lint": "eslint app/assets/scripts/ --ext .js",
-    "test": "echo NO TESTS YET"
+    "test": "mocha test/*"
   },
   "browserify": {
     "transform": [
@@ -44,12 +44,14 @@
     "babelify": "^7.2.0",
     "browser-sync": "^2.11.1",
     "browserify": "^13.0.0",
+    "chai": "^4.1.2",
     "collecticons-processor": "3.1.0",
     "del": "^2.2.0",
     "envify": "^3.4.0",
     "eslint": "^1.0.0",
     "eslint-config-semistandard": "^5.0.0",
     "eslint-config-standard": "^4.0.0",
+    "eslint-plugin-mocha": "^4.11.0",
     "eslint-plugin-promise": "^1.0.8",
     "eslint-plugin-react": "^3.16.1",
     "eslint-plugin-standard": "^1.3.2",
@@ -70,6 +72,7 @@
     "gulp-useref": "^3.0.5",
     "gulp-util": "^3.0.7",
     "jeet": "^6.1.2",
+    "mocha": "^3.5.0",
     "node-bourbon": "^4.2.3",
     "node-notifier": "^4.5.0",
     "require-globify": "^1.3.0",
@@ -79,8 +82,10 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.3.14",
-    "classnames": "^2.2.1",
+    "classnames": "^2.2.5",
     "d3": "^3.5.16",
+    "dotenv": "^4.0.0",
+    "global-mercator": "^2.8.4",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.2.1",
     "mapbox-gl": "^0.39.1",
@@ -89,14 +94,19 @@
     "rc-slider": "^3.3.2",
     "react": "^0.14.7",
     "react-addons-create-fragment": "^0.14.8",
+    "react-addons-css-transition-group": "^15.6.0",
     "react-dom": "^0.14.7",
     "react-paginate": "^0.5.5",
     "react-redux": "^4.3.0",
     "react-router": "^2.0.0-rc5",
     "react-router-redux": "^2.0.4",
+    "react-simple-dropdown": "^3.1.0",
+    "react-tether": "^0.5.7",
     "redux": "^3.2.1",
     "redux-logger": "^3.0.1",
     "redux-thunk": "^1.0.3",
-    "titlecase": "^1.1.2"
+    "titlecase": "^1.1.2",
+    "transifex": "^1.5.0",
+    "transifex-api-es6": "^0.2.3"
   }
 }

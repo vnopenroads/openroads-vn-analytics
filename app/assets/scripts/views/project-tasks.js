@@ -1,9 +1,11 @@
 'use strict';
+
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 import ReactPaginate from 'react-paginate';
+import { t } from '../utils/i18n';
 import { fetchProjectTasks, fetchAdminSubregions, fetchRoadNetworkStatus } from '../actions/action-creators';
 import PageHeader from '../components/page-header';
 
@@ -83,7 +85,7 @@ var ProjectTasks = React.createClass({
 
   renderBackLink: function () {
     return (
-      <Link to={`/analytics/${this.props.subregions.id}`}>Back to overview</Link>
+      <Link to={`/analytics/${this.props.subregions.id}`}>{t('Back to overview')}</Link>
     );
   },
 
@@ -100,9 +102,9 @@ var ProjectTasks = React.createClass({
         </ul>
       );
     } else if (data.error) {
-      content = <p className='aa-tofixtasks--empty'>Oops... An error occurred.</p>;
+      content = <p className='aa-tofixtasks--empty'>{t('Oops... An error occurred.')}</p>;
     } else if (!data.meta.total) {
-      content = <p className='aa-tofixtasks--empty'>Nothing to show.</p>;
+      content = <p className='aa-tofixtasks--empty'>{t('Nothing to show.')}</p>;
     }
 
     if (content) {
@@ -117,7 +119,7 @@ var ProjectTasks = React.createClass({
             return (
               <li key={o.id}>
                 <Link to={`editor/bbox=${o.bbox.join('/')}&overlays=${projectType}`} className='aa-tofixtasks__wrapper'>
-                  <p>Missing Road for project <strong>{o.id}</strong></p>
+                  <p>{t('Missing Road for project')} <strong>{o.id}</strong></p>
                 </Link>
               </li>
             );

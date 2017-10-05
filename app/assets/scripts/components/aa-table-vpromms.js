@@ -4,6 +4,7 @@
 import React from 'react';
 import _ from 'lodash';
 import classnames from 'classnames';
+import { t } from '../utils/i18n';
 
 const displayHeader = [
   {key: 'id', value: 'VProMMS ID'},
@@ -23,7 +24,8 @@ const AATable = React.createClass({
     return {
       sortState: {
         field: 'inTheDatabase',
-        order: 'desc'
+        order: 'desc',
+        expandedId: null
       }
     };
   },
@@ -41,10 +43,11 @@ const AATable = React.createClass({
             return (
               <th key={d.key} onClick={this.sortLinkClickHandler.bind(null, d.key)}>
                 <i className={c}></i>
-                <span>{d.value}</span>
+                <span>{t(d.value)}</span>
               </th>
             );
           })}
+          <th className='table-properties-head'>Properties</th>
         </tr>
       </thead>
     );
@@ -75,17 +78,50 @@ const AATable = React.createClass({
     return sorted.value();
   },
 
+  onPropertiesClick: function (vprommId) {
+    let curId = this.state.expandedId;
+    let newId = curId === vprommId ? null : vprommId;
+
+    this.setState({expandedId: newId});
+  },
+
   renderTableBody: function () {
     const sorted = this.handleSort(this.props.data);
     return (
       <tbody>
         {_.map(sorted, (vpromm, i) => {
+          let propBtnLabel = this.state.expandedId === vpromm.id ? 'Hide' : 'Show';
+          let propBtnClass = classnames('bttn-table-expand', {
+            'bttn-table-expand--show': this.state.expandedId !== vpromm.id,
+            'bttn-table-expand--hide': this.state.expandedId === vpromm.id
+          });
+          let propContainerClass = classnames('table-properties', {
+            'table-properties--hidden': this.state.expandedId !== vpromm.id
+          });
+
           return (
             <tr key={`vpromm-${vpromm.id}`} className={classnames({'alt': i % 2})}>
-              <td><strong>{vpromm.id}</strong></td>
-              <td className={classnames({'added': vpromm.inTheDatabase, 'not-added': !vpromm.inTheDatabase})}>{vpromm.inTheDatabase ? 'added' : 'not added'}</td>
+              <th>{vpromm.id}</th>
+              <td className={classnames({'added': vpromm.inTheDatabase, 'not-added': !vpromm.inTheDatabase})}>{vpromm.inTheDatabase ? t('added') : t('not added')}</td>
               <td className={classnames({'added': vpromm.RouteShoot, 'not-added': !vpromm.RouteShoot})}>{vpromm.RouteShoot ? <a href={vpromm.RouteShootUrl}>link</a> : ''}</td>
-              <td className={classnames({'added': vpromm.RoadLabPro, 'not-added': !vpromm.RoadLabPro})}>{vpromm.RoadLabPro ? 'added' : 'not added'}</td>
+              <td className={classnames({'added': vpromm.RoadLabPro, 'not-added': !vpromm.RoadLabPro})}>{vpromm.RoadLabPro ? t('added') : t('not added')}</td>
+              <td className='table-properties-cell'>
+                <button type='button' className={propBtnClass} onClick={this.onPropertiesClick.bind(null, vpromm.id)}><span>{propBtnLabel}</span></button>
+                <div className={propContainerClass}>
+                  <dl className='table-properties-list'>
+                    <dt>Key 1</dt>
+                    <dd>Value 1</dd>
+                    <dt>Very_long_key_here_yes_it_is</dt>
+                    <dd>A_very_long_value_for_a_very_long_key</dd>
+                    <dt>Key 3</dt>
+                    <dd>Value 3</dd>
+                    <dt>Key 4</dt>
+                    <dd>Value 4</dd>
+                    <dt>Key 5</dt>
+                    <dd>Value 5</dd>
+                  </dl>
+                </div>
+              </td>
             </tr>
           );
         })}

@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { Link } from 'react-router';
+import { t, getLanguage } from '../utils/i18n';
 import _ from 'lodash';
 import classnames from 'classnames';
 
@@ -10,7 +11,7 @@ const displayHeader = [
   {key: 'name', value: 'Province'},
   {key: 'done', value: 'Done'},
   {key: 'total', value: 'Total'},
-  {key: 'percentageComplete', value: '% Complete'},
+  {key: 'percentageComplete', value: '% ' + 'Complete'},
   {key: 'progress', value: 'Progress'}
 ];
 
@@ -43,7 +44,7 @@ const AATable = React.createClass({
             return (
               <th key={d.key} onClick={this.sortLinkClickHandler.bind(null, d.key)}>
                 <i className={c}></i>
-                <span>{d.value}</span>
+                <span>{t(d.value)}</span>
               </th>
             );
           })}
@@ -89,16 +90,16 @@ const AATable = React.createClass({
           let percText;
           if (!isNaN(province.total)) {
             if (province.total > 0) {
-              percText = `${((province.done / province.total * 100)).toFixed(2)}% Complete`;
+              percText = `${((province.done / province.total * 100)).toFixed(2)}${t('% Complete')}`;
             } else {
               percText = '';
             }
           } else {
-            percText = '100.00% Complete';
+            percText = `100.00${t('% Complete')}`;
           }
           return (
             <tr key={`province-${province.id}`} className={classnames('collecticon-sort-asc', {'alt': i % 2})}>
-              <td><Link to={`/analytics/${province.id}`}>{province.name}</Link></td>
+              <td><Link to={`${getLanguage()}/analytics/${province.id}`}>{province.name}</Link></td>
               <td>{province.done}</td>
               <td>{province.total}</td>
               <td>{percText}</td>

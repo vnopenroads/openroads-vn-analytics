@@ -2,23 +2,24 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import { t } from '../utils/i18n';
 
 import AATable from '../components/aa-table-index';
 
-import { fetchVProMMSids } from '../actions/action-creators';
+import { fetchVProMMsids } from '../actions/action-creators';
 
 var AnalyticsIndex = React.createClass({
   displayName: 'AnalyticsIndex',
 
   propTypes: {
     children: React.PropTypes.object,
-    _fetchVProMMSids: React.PropTypes.func,
+    _fetchVProMMsids: React.PropTypes.func,
     VProMMSids: React.PropTypes.object,
     params: React.PropTypes.object
   },
 
   componentDidMount: function () {
-    this.props._fetchVProMMSids();
+    this.props._fetchVProMMsids('analytics');
   },
 
   render: function () {
@@ -42,9 +43,14 @@ var AnalyticsIndex = React.createClass({
     const completion = (accumulator.done / accumulator.total) * 100;
     return (
       <div>
-      <h1>VProMMS Edits By Province</h1>
-        <div className='aa-main__status'>
-          <h2><strong>{completion.toFixed(2)}%</strong> of VProMMS Ids added ({done.toLocaleString()} of {total.toLocaleString()})</h2>
+        <div className='a-header'>
+          <div className='a-headline'>
+            <h1>{t('VProMMS Edits By Province')}</h1>
+          </div>
+        </div>
+
+        <div className='a-main__status'>
+          <h2><strong>{completion.toFixed(2)}%</strong> {t('of VProMMS Ids added')} ({done.toLocaleString()} of {total.toLocaleString()})</h2>
           <div className='meter'>
             <div className='meter__internal' style={{width: `${completion}%`}}></div>
           </div>
@@ -62,13 +68,13 @@ var AnalyticsIndex = React.createClass({
 
 function selector (state) {
   return {
-    VProMMSids: state.VProMMSids
+    VProMMSids: state.VProMMSidsAnalytics
   };
 }
 
 function dispatcher (dispatch) {
   return {
-    _fetchVProMMSids: (aaid) => dispatch(fetchVProMMSids())
+    _fetchVProMMsids: (use) => dispatch(fetchVProMMsids(use))
   };
 }
 

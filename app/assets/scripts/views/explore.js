@@ -8,12 +8,11 @@ import config from '../config';
 import lineColors from '../utils/line-colors';
 import {
   selectExploreMapLayer,
-  exploreMapShowNoVpromms
+  exploreMapShowNoVpromms,
+  setGlobalZoom
 } from '../actions/action-creators';
 import MapOptions from '../components/map-options';
 import MapLegend from '../components/map-legend';
-
-var map;
 
 var Explore = React.createClass({
   displayName: 'Explore',
@@ -21,26 +20,28 @@ var Explore = React.createClass({
   propTypes: {
     layer: React.PropTypes.string,
     showNoVpromms: React.PropTypes.bool,
-    dispatch: React.PropTypes.func
+    dispatch: React.PropTypes.func,
+    _setGlobalZoom: React.PropTypes.func,
+    globX: React.PropTypes.number,
+    globY: React.PropTypes.number,
+    globZ: React.PropTypes.number,
+    adminBbox: React.PropTypes.array,
+    vprommsBbox: React.PropTypes.object
   },
 
-  componentDidMount: () => {
+  componentDidMount: function () {
     mapboxgl.accessToken = config.mbToken;
-
-    map = new mapboxgl.Map({
+    this.map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/light-v9',
-      failIfMajorPerformanceCaveat: false
-    }).fitBounds(
-      [
-        [102.1, 7.3],
-        [109.4, 23.4]
-      ], {padding: 15, animate: false}
-    ).addControl(new mapboxgl.NavigationControl(), 'bottom-left');
+      failIfMajorPerformanceCaveat: false,
+      center: [this.props.globX, this.props.globY],
+      zoom: this.props.globZ
+    }).addControl(new mapboxgl.NavigationControl(), 'bottom-left');
 
-    map.on('load', () => {
+    this.map.on('load', () => {
       // Load all roads with VPRoMMS values, and color by IRI
-      map.addLayer({
+      this.map.addLayer({
         id: 'conflated',
         type: 'line',
         source: {
@@ -58,10 +59,16 @@ var Explore = React.createClass({
     });
   },
 
+  makeXYZ: function () {
+    const xyz = this.map.getCenter();
+    xyz.zoom = this.map.getZoom();
+    return xyz;
+  },
+
   handleLayerChange: function (e) {
     const property = e.target.value;
     this.props.dispatch(selectExploreMapLayer(property));
-    map.setPaintProperty(
+    this.map.setPaintProperty(
       'conflated',
       'line-color',
       lineColors[property]
@@ -72,15 +79,31 @@ var Explore = React.createClass({
     const show = e.target.checked;
     this.props.dispatch(exploreMapShowNoVpromms(show));
     if (show) {
-      map.setFilter('conflated', null);
+      this.map.setFilter('conflated', null);
     } else {
-      map.setFilter('conflated', ['has', 'or_vpromms']);
+      this.map.setFilter('conflated', ['has', 'or_vpromms']);
+    }
+  },
+
+  componentWillUnmount: function () {
+    this.props._setGlobalZoom(this.makeXYZ());
+  },
+
+  componentWillReceiveProps: function (nextProps) {
+    let bounds;
+    if (nextProps.adminBbox !== this.props.adminBbox) {
+      bounds = nextProps.adminBbox;
+      return this.map.fitBounds(bounds);
+    }
+    if (nextProps.vprommsBbox !== this.props.vprommsBbox) {
+      bounds = nextProps.vprommsBbox[Object.keys(nextProps.vprommsBbox)[0]];
+      return this.map.fitBounds(bounds);
     }
   },
 
   render: function () {
     return (
-      <div className='map-container'>
+      <div className='map-container' >
         <div id='map'></div>
 
         <MapOptions
@@ -98,7 +121,19 @@ var Explore = React.createClass({
 
 function selector (state) {
   return {
-    layer: state.exploreMap.layer
+    layer: state.exploreMap.layer,
+    globX: state.globZoom.x,
+    globY: state.globZoom.y,
+    globZ: state.globZoom.z,
+    vprommsBbox: state.VProMMsWayBbox.bbox,
+    adminBbox: state.adminBbox.bbox
   };
 }
-module.exports = connect(selector)(Explore);
+
+function dispatcher (dispatch) {
+  return {
+    _setGlobalZoom: function (xyzObj) { dispatch(setGlobalZoom(xyzObj)); }
+  };
+}
+
+module.exports = connect(selector, dispatcher)(Explore);

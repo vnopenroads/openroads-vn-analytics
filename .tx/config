@@ -1,0 +1,9 @@
+[main]
+host = https://www.transifex.com
+
+[orma-vn-analytics.en]
+file_filter = app/assets/locales/<lang>.json
+source_file = app/assets/locales/source/en.json
+source_lang = en
+type = KEYVALUEJSON
+

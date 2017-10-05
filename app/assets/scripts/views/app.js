@@ -13,28 +13,16 @@ var App = React.createClass({
     _cleanSearchResults: React.PropTypes.func,
     search: React.PropTypes.object,
     routes: React.PropTypes.array,
-    children: React.PropTypes.object
+    children: React.PropTypes.object,
+    location: React.PropTypes.object
   },
 
   render: function () {
-    let r = _.last(this.props.routes).path;
-    let klass;
-    switch (r) {
-      case undefined:
-        klass = 'page--landing';
-        break;
-      case 'main':
-        klass = 'analytics';
-        break;
-      case ':aaId':
-        klass = 'analytics-aa';
-        break;
-      default:
-        klass = r.split('/')[0];
-    }
+    const pageClass = _.get(_.last(this.props.routes), 'pageClass', '');
     return (
-      <div className={klass}>
+      <div className={pageClass}>
         <SiteHeader
+          pathname={this.props.location.pathname}
           fetchSearchResults={this.props._fetchSearchResults}
           cleanSearchResults={this.props._cleanSearchResults}
           routes={this.props.routes}

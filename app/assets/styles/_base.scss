@@ -47,6 +47,7 @@ body {
 // Badges
 
 .badge {
+  @extend .antialiased;
   display: inline-block;
   min-width: 0.85rem;
   padding: 0.225rem 0.5rem;
@@ -62,7 +63,6 @@ body {
   background-color: rgba($base-color, 0.4);
   border-radius: $global-rounded;
   margin-left: 0.25rem;
-  @extend .antialiased;
 }
 
 #main-frame {
@@ -78,9 +78,8 @@ body {
 a {
   cursor: pointer;
   color: $secondary-color;
-  // text-decoration: none;
-  @include transition(opacity 0.2s ease 0s);
-  @include transform(translateZ(0));
+  transition: opacity 0.2s ease 0s;
+  transform: translateZ(0);
 }
 
 a:visited {
@@ -94,7 +93,7 @@ a:hover {
 
 a:active{
   outline: none;
-  @include transform(translate(0, 1px));
+  transform: translate(0, 1px);
 }
 
 
@@ -178,8 +177,46 @@ a:active{
   position: relative;
   z-index: 99999;
 
+  .search-wrapper {
+    overflow: visible;
+    max-height: 0;
+    transition: opacity 0.16s ease 0s, max-height 0.16s ease 0s, visibility 0.16s linear 0s;
+    visibility: visible;
+    opacity: 1;
+    max-height: 600rem;
+    .search-button {
+      display: block;
+      line-height: 1.4rem;
+      padding: 0 0.5rem;
+      color: #fff;
+      font-weight: normal;
+      text-decoration: none;
+      background: rgba($link-color, 0.24);
+      border-radius: $global-radius;
+      font-size: 0.9rem;
+      margin: 0.3rem 0;
+      font-weight: $base-font-bold;
+      margin-top: -1rem;
+      > span,
+      &::after {
+        vertical-align: center;
+      }
+  }
+
+
+    &::after {
+      font-size: inherit;
+    }
+  }
+
   a {
     color: inherit;
+    display: block;
+
+    > * {
+      vertical-align: top;
+      display: inline-block;
+    }
   }
 
   > .inner {
@@ -193,14 +230,10 @@ a:active{
       line-height: 1.25rem;
       padding: 0.325rem 0;
 
-      * {
-        vertical-align: top;
-        display: inline-block;
-      }
-
       img {
         width: auto;
         height: 1.25rem;
+        vertical-align: baseline;
       }
 
       span {
@@ -228,9 +261,8 @@ a:active{
       float: left;
       clear: both;
       text-align: center;
-      margin-top: 1rem;
-      white-space: nowrap;
-
+      margin: 1rem 0 0 0;
+      display: block;
       &.show-menu,
       &.show-search {
         margin-top: 1rem;
@@ -268,35 +300,68 @@ a:active{
           right: $global-padding * 2;
         }
 
-        @include media(large-up) {
-          display: none;
-        }
       }
 
       .menu-wrapper {
         display: inline-block;
         vertical-align: top;
-        overflow: hidden;
-        visibility: hidden;
-        opacity: 0;
-        max-height: 0;
-        transition: opacity 0.16s ease 0s, max-height 0.16s ease 0s, visibility 0.16s linear 0s;
+
+        &:last-child {
+          padding-left: $global-spacing * 1.25;
+          margin-left: $global-spacing / 2;
+          box-shadow: -1px 0 0 0 rgba(#fff, 0.16);
+        }
+
+        .drop-content {
+          margin-top: $global-spacing / 4;
+          width: 100%;
+          left: auto;
+          right: 0;
+        }
+      }
+
+      .change-lang-button,
+      .change-search-button {
+        display: block;
+        line-height: 1.25rem;
+        padding: 0 0.5rem;
+        color: #fff;
+        font-weight: normal;
+        text-decoration: none;
+        background: rgba($link-color, 0.24);
+        border-radius: $global-radius;
+        font-size: 0.875rem;
+        margin: 0.25rem 0;
+        font-weight: $base-font-bold;
+
+        > span,
+        &::after {
+          vertical-align: center;
+        }
+
+        &::after {
+          font-size: inherit;
+        }
+      }
+
+      .change-search-button {
+        margin-left: .8rem;
       }
 
       .global-menu {
         @extend .clearfix;
-        overflow: hidden;
         list-style: none;
         margin: 0;
         padding: 0;
 
         > li {
-          margin: 0 ($global-padding / 2) 0 0;
+          margin: 0;
           float: left;
+          overflow: hidden;
+        }
 
-          &:last-child {
-            margin-right: 0;
-          }
+        .search {
+          overflow: visible;
         }
       }
 
@@ -306,7 +371,7 @@ a:active{
         line-height: 2rem;
         padding: 0 $global-padding;
         color: #fff;
-        font-weight: normal;
+        font-weight: $base-font-bold;
         text-decoration: none;
         &, &:visited {
           color: #fff;
@@ -316,18 +381,23 @@ a:active{
           border-radius: $global-radius;
         }
       }
+
+      .dropdown-menu {
+        display: inline-block;
+      }
+
+      .dropdown-menu-item {
+        margin-top: 0;
+        margin-right: 1rem;
+        display: inline-block;
+      }
+
       // ^^ Menu.
 
       // vv Search.
-      .toggle-search {
-        position: absolute;
-        font-size: 1rem;
-        line-height: 1rem;
-        margin: 0;
-        top: 1rem;
-        right: $global-padding + 2rem;
-        z-index: 1;
-
+      .search-toggle {
+        display: inline-block;
+        margin-left: 1rem;
         a {
           color: #fff;
           text-decoration: none;
@@ -335,48 +405,31 @@ a:active{
             @extend .collecticons-magnifier-right;
           }
         }
-
-        span {
-          @extend .visually-hidden;
-        }
-
         @include media(small-up) {
           right: $global-padding * 2 + 2rem;
         }
-        @include media(large-up) {
-          display: none;
+        a:before {
+          content: none;
         }
       }
-      .search-wrapper {
-        overflow: hidden;
-        visibility: hidden;
-        opacity: 0;
-        max-height: 0;
-        transition: opacity 0.16s ease 0s, max-height 0.16s ease 0s, visibility 0.16s linear 0s;
-        @include media(large-up) {
-          @include col(4/8);
-          display: block;
-          overflow: visible;
-          visibility: visible;
-          opacity: 1;
-          max-height: 600rem;
-          text-align: right;
-        }
-      }
-      &.show-search .search-wrapper {
-        display: block;
-        overflow: visible;
-        visibility: visible;
-        opacity: 1;
-        max-height: 600rem;
-      }
+
       // ^^ Search.
+      .drop {
+        display: inline-block;
+        a {
+          text-decoration: none;
+        }
+      }
     }
+
     /* END Main navigation */
 
-
-
     &__search {
+      margin-bottom: 0;
+      @include media(medium-down) {
+        max-width: 210px;  
+        .search-results { max-width: 210px }
+      }
       // @include col(5/12);
 
       .drop {
@@ -389,6 +442,12 @@ a:active{
       }
 
       .bttn-search {
+        height: 32px;
+
+        &::before {
+          line-height: inherit;
+          @extend %collecticons-magnifier-right;
+        }
         text-decoration: none;
       }
 
@@ -400,22 +459,27 @@ a:active{
         z-index: 9999;
         color: $base-color;
         width: 80%;
-        max-width: 25rem;
-
+        max-width: 321px;
+        &::before {
+          display: none;
+        }
+        &-show {
+          visibility: visible;
+          opacity: 1;
+          margin-top: .5rem;
+        }
         .drop-menu-sectitle {
-          overflow: hidden;
           strong {
             @extend .truncated;
             max-width: 22rem;
-            font-weight: inherit;
-            float: left;
-          }
-          small {
-            float: right;
+            font-weight: bolder;
           }
         }
-        .drop-menu-result a {
-          @extend .truncated;
+
+        .drop-menu-result {
+          a {
+            @extend .truncated;
+          }
         }
 
         i {
@@ -430,7 +494,6 @@ a:active{
     }
   }
 }
-
 .actions-menu {
   @extend .clearfix;
   /* Inline helper */
@@ -499,6 +562,7 @@ a:active{
       text-decoration: none;
       box-shadow: none;
     }
+
     .bttn-road-network.disabled {
       pointer-events: all;
     }

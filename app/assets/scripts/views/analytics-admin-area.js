@@ -1,10 +1,12 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
+import { t } from '../utils/i18n';
 
 import AATable from '../components/aa-table-vpromms';
+import Headerdrop from '../components/headerdrop';
 
-import { fetchVProMMSids } from '../actions/action-creators';
+import { fetchVProMMsids } from '../actions/action-creators';
 import config from '../config';
 
 var AnalyticsAA = React.createClass({
@@ -13,12 +15,40 @@ var AnalyticsAA = React.createClass({
   propTypes: {
     children: React.PropTypes.object,
     routeParams: React.PropTypes.object,
-    _fetchVProMMSids: React.PropTypes.func,
+    _fetchVProMMsids: React.PropTypes.func,
     VProMMSids: React.PropTypes.object
   },
 
   componentDidMount: function () {
-    this.props._fetchVProMMSids();
+    this.props._fetchVProMMsids('analytics');
+  },
+
+  renderDataDumpLinks: function (provinceId) {
+    return (
+        <Headerdrop
+          id='datadump-selector'
+          className='drop-road-network'
+          triggerClassName='drop-toggle drop-road-network caret bttn bttn-secondary bttn-road-network'
+          triggerText={`${t('Download')} ${t('Roads')}`}
+          triggerElement='a'
+          direction='down'
+          alignment='right'>
+          <ul className='drop-menu drop-menu--select' role='menu'>
+            {
+            ['CSV', 'GeoJSON'].map((type, i) => {
+              let cl = 'drop-menu-item';
+              return (
+                <li>
+                  <a className={cl} href={`${config.provinceDumpBaseUrl}${provinceId}.${type.toLowerCase()}`}>
+                    {`${t('Download')} ${type}`}
+                  </a>
+                </li>
+              );
+            })
+            }
+          </ul>
+        </Headerdrop>
+    );
   },
 
   render: function () {
@@ -29,22 +59,30 @@ var AnalyticsAA = React.createClass({
     const total = ids.length;
     const completion = total !== 0 ? ((done / total) * 100) : 0;
     let completionMainText;
-    let completionTailText = 'Information on VPRoMMS roads is not available';
+    let completionTailText = t('Information on VPRoMMS roads is not available');
     if (total !== 0) {
       completionMainText = completion.toFixed(2);
-      completionTailText = `% of vPRoMMS IDs added ${done.toLocaleString()} of ${total.toLocaleString()}`;
+      completionTailText = `% ${t('of VProMMS Ids added')} ${done.toLocaleString()} of ${total.toLocaleString()}`;
     }
     return (
     <div>
-      <div className="aa-header">
-        <h1>{data.provinceName} Province</h1>
-        { completion ? <a className='bttn-s bttn-road-network' href={config.provinceDumpBaseUrl + provinceId + '.geojson'}>Download Roads</a> : '' }
+      <div className='a-header'>
+        <div className='a-headline'>
+          <h1>{data.provinceName} {t('Province')}</h1>
+        </div>
+        <div className='a-head-actions'>
+          { completion ? this.renderDataDumpLinks(provinceId) : '' }
+        </div>
       </div>
-      <div className='aa-main__status'>
+
+      <div className='a-main__status'>
         <h2><strong>{completionMainText}</strong>{completionTailText}</h2>
         <div className='meter'>
-         <div className='meter__internal' style={{width: `${completion}%`}}></div>
+          <div className='meter__internal' style={{width: `${completion}%`}}></div>
         </div>
+      </div>
+
+      <div>
         {total ? <AATable data={ids} /> : ''}
       </div>
     </div>
@@ -57,13 +95,13 @@ var AnalyticsAA = React.createClass({
 
 function selector (state) {
   return {
-    VProMMSids: state.VProMMSids
+    VProMMSids: state.VProMMSidsAnalytics
   };
 }
 
 function dispatcher (dispatch) {
   return {
-    _fetchVProMMSids: (aaid) => dispatch(fetchVProMMSids())
+    _fetchVProMMsids: (use) => dispatch(fetchVProMMsids(use))
   };
 }
 

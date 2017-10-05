@@ -4,12 +4,6 @@
 .editor .site-header,
 .explore .site-header {
   .site__nav {
-    .menu-wrapper {
-      overflow: auto;
-      visibility: visible;
-      opacity: 1;
-      max-height: 600rem;
-    }
 
     .toggle-menu,
     .toggle-search,
@@ -109,7 +103,7 @@
 
   .map-legend-scale {
     height: 15px;
-    background-image: linear-gradient(to right, #FFFF00, #DA251D);
+    background-image: linear-gradient(to right, #8CCA1B, #DA251D);
   }
 
   .map-legend-label {

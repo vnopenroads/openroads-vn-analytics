@@ -2,6 +2,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { push, replace } from 'react-router-redux';
+import { setGlobalZoom } from '../actions/action-creators';
+import { getLanguage } from '../utils/i18n';
+import {
+  transformGeoToPixel,
+  pixelDistances,
+  newZoomScale,
+  makeNewZoom,
+  makeCenterpoint,
+  makeNWSE
+} from '../utils/zoom';
 import config from '../config';
 
 var Editor = React.createClass({
@@ -9,7 +19,13 @@ var Editor = React.createClass({
 
   propTypes: {
     params: React.PropTypes.object,
-    dispatch: React.PropTypes.func
+    dispatch: React.PropTypes.func,
+    _setGlobalZoom: React.PropTypes.func,
+    globX: React.PropTypes.number,
+    globY: React.PropTypes.number,
+    globZ: React.PropTypes.number,
+    vprommsBbox: React.PropTypes.object,
+    adminBbox: React.PropTypes.array
   },
 
   // /////////////////////////////////////////////////////////////////////////////
@@ -40,8 +56,8 @@ var Editor = React.createClass({
     if (e.data.type === 'urlchange') {
       switch (e.data.id) {
         case 'or-editor':
-          var hash = this.cleanUrl(e.data.url, config.editorUrl);
-          this.props.dispatch(replace(`/editor/${hash}`));
+          this.hash = this.cleanUrl(e.data.url, config.editorUrl);
+          this.props.dispatch(replace(`/${getLanguage()}/editor/${this.hash}`));
           break;
       }
     } else if (e.data.type === 'navigate') {
@@ -57,20 +73,102 @@ var Editor = React.createClass({
     return url.replace(new RegExp(`(http:|https:)?${base}/?#?`), '');
   },
 
+  makeNewXYZ: function (bounds, zoom) {
+    // grab bbox bounds from its returned obj.
+    // make NWSE object
+    const NWSE = makeNWSE(bounds);
+    // make nw and se pixel location objects;
+    const nw = transformGeoToPixel(NWSE.nw, zoom);
+    const se = transformGeoToPixel(NWSE.se, zoom);
+    // pixel distance between nw and se x points & nw and se y points
+    const distances = pixelDistances(nw, se);
+    // scale factor used to generate new zoom
+    const zoomScale = newZoomScale(distances);
+    // new zoom, using zoomScale and zoom
+    const newZoom = makeNewZoom(zoomScale, zoom);
+    // centerpoint for new zoom object
+    const cp = makeCenterpoint(bounds);
+    // return a zoom object with new x,y, and z!
+    return {
+      x: cp.x,
+      y: cp.y,
+      z: newZoom
+    };
+  },
+
+  makeIdHash: function (newXYZ) {
+    return `//orma.github.io/openroads-vn-iD/#map=${newXYZ.z}/${newXYZ.x}/${newXYZ.y}/`;
+  },
+
   componentDidMount: function () {
+    this.hash = '';
     window.addEventListener('message', this.messageListener, false);
   },
 
   componentWillUnmount: function () {
     window.removeEventListener('message', this.messageListener, false);
+    if (this.hash.length) {
+      this.props._setGlobalZoom(this.hash);
+    }
+  },
+
+  componentWillReceiveProps: function (nextProps) {
+    // the props this component recieves are only the bounds of either a new admin or vpromms bbox
+    // this bbox needs to be converted to a new centerpoint & zoom level.
+
+    // to do this, first grab the current zoom
+    const zoom = document.getElementById('main-frame')
+      .getAttribute('src')
+      .split('#map=')[1].split('/')[0];
+    let bounds;
+    // then grab a bounding box provided by a user search in the search component
+    if (nextProps.vprommsBbox !== this.props.vprommsBbox) {
+      bounds = nextProps.vprommsBbox[Object.keys(nextProps.vprommsBbox)[0]];
+    }
+    if (nextProps.adminBbox !== this.props.adminBbox) {
+      bounds = nextProps.adminBbox;
+    }
+    // then generate a new centerpoint and zoom level with these bounds and zoom level
+    const newXYZ = this.makeNewXYZ(bounds, zoom);
+    // translate that xyz object into a url hash that when given to the iframe will
+    // change the zoom level of iD
+    const newiDSource = this.makeIdHash(newXYZ);
+    this.hash = this.cleanUrl(newiDSource, config.editorUrl);
+    this.props.dispatch(replace(`/${getLanguage()}/editor/${this.hash}`));
+    document.getElementById('main-frame').setAttribute('src', newiDSource);
+  },
+
+  shouldComponentUpdate: function (nextProps) {
+    return false;
   },
 
   render: function () {
-    var path = config.editorUrl + (this.props.params.splat ? `#${this.props.params.splat}` : '');
+    var globalZoomHash = `map=${this.props.globZ.toString()}/${this.props.globX.toString()}/${this.props.globY.toString()}`;
+    var path = config.editorUrl + `#${globalZoomHash}`;
     return (
-       <iframe src={path} id='main-frame' name='main-frame'></iframe>
+      <div>
+       <iframe src={path} id='main-frame' name='main-frame' ref="iframe"></iframe>
+      </div>
     );
   }
 });
 
-module.exports = connect()(Editor);
+function selector (state) {
+  return {
+    globX: state.globZoom.x,
+    globY: state.globZoom.y,
+    globZ: state.globZoom.z,
+    vprommsBbox: state.VProMMsWayBbox.bbox,
+    adminBbox: state.adminBbox.bbox
+
+  };
+}
+
+function dispatcher (dispatch) {
+  return {
+    dispatch,
+    _setGlobalZoom: function (url) { dispatch(setGlobalZoom(url)); }
+  };
+}
+
+module.exports = connect(selector, dispatcher)(Editor);
