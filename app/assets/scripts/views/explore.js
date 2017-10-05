@@ -28,8 +28,7 @@ var Explore = React.createClass({
     globY: React.PropTypes.number,
     globZ: React.PropTypes.number,
     adminBbox: React.PropTypes.array,
-    vprommsBbox: React.PropTypes.array,
-    source: React.PropTypes.string
+    vprommsBbox: React.PropTypes.array
   },
 
   componentDidMount: function () {
@@ -133,7 +132,6 @@ function selector (state) {
     globY: state.globZoom.y,
     globZ: state.globZoom.z,
     vprommsBbox: state.VProMMsWayBbox.bbox,
-    source: state.VProMMsWayBbox.source,
     adminBbox: state.adminBbox.bbox
   };
 }

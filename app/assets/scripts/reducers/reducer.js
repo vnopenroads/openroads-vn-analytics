@@ -361,8 +361,7 @@ const VProMMSidsAnalytics = function (state = VProMMSidsAnalyticsDefaultState, a
 const VProMMsWayBboxDefaultState = {
   fetching: false,
   fetched: false,
-  bbox: [],
-  source: ''
+  bbox: []
 };
 
 const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
@@ -377,7 +376,6 @@ const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
       state.fetching = false;
       state.fetched = true;
       state.bbox = action.json;
-      state.source = action.source;
       break;
     case actions.REMOVE_VPROMMS_BBOX:
       state = _.cloneDeep(state);
