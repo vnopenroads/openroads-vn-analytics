@@ -22,9 +22,11 @@ const AATable = React.createClass({
 
   propTypes: {
     _fetchVProMMsBbox: React.PropTypes.func,
+    _fetchVProMMsids: React.PropTypes.func,
     bbox: React.PropTypes.object,
     data: React.PropTypes.array,
-    fetched: React.PropTypes.bool
+    fetched: React.PropTypes.bool,
+    vpromms: React.PropTypes.array
   },
 
   getInitialState: function () {
@@ -83,14 +85,21 @@ const AATable = React.createClass({
     return sorted.value();
   },
 
+  renderVProMMsLink: function (id) {
+    return (
+      <Link to={`/${getLanguage()}/explore`} onClick={(e) => { this.props._fetchVProMMsBbox(id); } }><strong>{id}</strong></Link>
+    );
+  },
+
   renderTableBody: function () {
     const sorted = this.handleSort(this.props.data);
     return (
       <tbody>
         {_.map(sorted, (vpromm, i) => {
+          const vprommInDB = (this.props.vpromms.indexOf(vpromm.id) !== -1);
           return (
             <tr key={`vpromm-${vpromm.id}`} className={classnames({'alt': i % 2})}>
-              <td><Link to={`/${getLanguage()}/explore`} onClick={(e) => { this.props._fetchVProMMsBbox(vpromm.id); } }><strong>{vpromm.id}</strong></Link></td>
+              <td className={classnames({'added': vprommInDB, 'not-added': !vprommInDB})}>{ vprommInDB ? this.renderVProMMsLink(vpromm.id) : vpromm.id }</td>
               <td className={classnames({'added': vpromm.inTheDatabase, 'not-added': !vpromm.inTheDatabase})}>{vpromm.inTheDatabase ? t('added') : t('not added')}</td>
               <td className={classnames({'added': vpromm.RouteShoot, 'not-added': !vpromm.RouteShoot})}>{vpromm.RouteShoot ? <a href={vpromm.RouteShootUrl}>link</a> : ''}</td>
               <td className={classnames({'added': vpromm.RoadLabPro, 'not-added': !vpromm.RoadLabPro})}>{vpromm.RoadLabPro ? t('added') : t('not added')}</td>
@@ -116,7 +125,8 @@ const AATable = React.createClass({
 function selector (state) {
   return {
     bbox: state.VProMMsWayBbox.bbox,
-    fetched: state.VProMMsWayBbox.fetched
+    fetched: state.VProMMsWayBbox.fetched,
+    vpromms: state.VProMMSids.data
   };
 }
 

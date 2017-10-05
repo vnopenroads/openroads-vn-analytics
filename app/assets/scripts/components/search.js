@@ -184,7 +184,6 @@ var Search = React.createClass({
       }
     } else {
       _.forEach(g, (o, k) => {
-        console.log(k);
         results.push(
         <dt key={`aa-type-vpromms-${k}`} className='drop-menu-sectitle'>
           <a onClick={(e) => {

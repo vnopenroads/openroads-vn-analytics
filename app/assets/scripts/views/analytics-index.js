@@ -19,7 +19,7 @@ var AnalyticsIndex = React.createClass({
   },
 
   componentDidMount: function () {
-    this.props._fetchVProMMsids('analytics');
+    this.props._fetchVProMMsids();
   },
 
   render: function () {
@@ -69,7 +69,7 @@ function selector (state) {
 
 function dispatcher (dispatch) {
   return {
-    _fetchVProMMsids: (use) => dispatch(fetchVProMMsids(use))
+    _fetchVProMMsids: () => dispatch(fetchVProMMsids())
   };
 }
 

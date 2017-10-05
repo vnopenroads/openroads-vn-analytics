@@ -20,7 +20,7 @@ var AnalyticsAA = React.createClass({
   },
 
   componentDidMount: function () {
-    this.props._fetchVProMMsids('analytics');
+    this.props._fetchVProMMsids();
   },
 
   renderDataDumpLinks: function (provinceId) {
@@ -79,7 +79,7 @@ var AnalyticsAA = React.createClass({
         <div className='meter'>
          <div className='meter__internal' style={{width: `${completion}%`}}></div>
         </div>
-        {total ? <AATable data={ids} /> : ''}
+        {total ? <AATable data={ids} vpromms={this.props.VProMMSids}/> : ''}
       </div>
     </div>
     );
@@ -97,7 +97,7 @@ function selector (state) {
 
 function dispatcher (dispatch) {
   return {
-    _fetchVProMMsids: (use) => dispatch(fetchVProMMsids(use))
+    _fetchVProMMsids: () => dispatch(fetchVProMMsids())
   };
 }
 
