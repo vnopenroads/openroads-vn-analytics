@@ -6,7 +6,7 @@ var logo = require('./logo');
 module.exports = {
   environment: 'production',
   consoleMessage: logo,
-  api: 'https://openroads-vn-api.herokuapp.com',
+  api: 'http://54.255.146.89',
   mbToken: 'pk.eyJ1Ijoib3BlbnJvYWRzIiwiYSI6InJ0aUQ2N3MifQ.R3hdFqriZr6kEUr-j_FYpg',
   editorUrl: '//orma.github.io/openroads-vn-iD/',
   roadNetTileLayerUrl: 'http://50.16.162.86/dashboard/{z}/{x}/{y}.png',
