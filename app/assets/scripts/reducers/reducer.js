@@ -460,7 +460,7 @@ const setFilteredVProMMs = function (state = [], action) {
 const defaultProvinces = {
   fetching: false,
   fetched: false,
-  data: []
+  data: {}
 };
 
 const provinces = function (state = defaultProvinces, action) {

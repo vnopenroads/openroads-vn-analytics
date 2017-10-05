@@ -1,6 +1,7 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
+import { _ } from 'lodash';
 import { t } from '../utils/i18n';
 
 import AATable from '../components/aa-table-vpromms';
@@ -16,7 +17,9 @@ var AnalyticsAA = React.createClass({
     children: React.PropTypes.object,
     routeParams: React.PropTypes.object,
     _fetchVProMMsids: React.PropTypes.func,
-    VProMMSids: React.PropTypes.object
+    provinceCrossWalk: React.PropTypes.object,
+    VProMMSids: React.PropTypes.object,
+    crosswalk: React.PropTypes.object
   },
 
   componentDidMount: function () {
@@ -52,7 +55,7 @@ var AnalyticsAA = React.createClass({
   },
 
   render: function () {
-    const provinceId = this.props.routeParams.aaId;
+    const provinceId = _.invert(this.props.crosswalk.province)[this.props.routeParams.aaId];
     const data = this.props.VProMMSids.data[provinceId];
     const ids = data.vpromms;
     const done = ids.filter(v => v.inTheDatabase).length;
@@ -87,6 +90,7 @@ var AnalyticsAA = React.createClass({
       </div>
     </div>
     );
+    return (<div/>);
   }
 });
 
@@ -95,7 +99,8 @@ var AnalyticsAA = React.createClass({
 
 function selector (state) {
   return {
-    VProMMSids: state.VProMMSidsAnalytics
+    VProMMSids: state.VProMMSidsAnalytics,
+    provinceCrossWalk: state.crosswalk.province
   };
 }
 

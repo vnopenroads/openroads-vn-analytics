@@ -17,14 +17,13 @@ var AnalyticsIndex = React.createClass({
     _fetchVProMMsids: React.PropTypes.func,
     _setCrossWalk: React.PropTypes.func,
     fetched: React.PropTypes.bool,
-    provinces: React.PropTypes.array,
-    provinceCrossWalk: React.PropTypes.object,
+    provinces: React.PropTypes.object,
+    crosswalk: React.PropTypes.object,
     params: React.PropTypes.object,
     VProMMSids: React.PropTypes.object
   },
 
   componentWillMount: function () {
-    this.props._setCrossWalk();
     this.props._fetchProvinces();
   },
 
@@ -33,7 +32,7 @@ var AnalyticsIndex = React.createClass({
     const provinceData = _.map(this.props.VProMMSids.data, (data, id) => {
       const name = data.provinceName;
       // generate route to province's admin_boundaires id.
-      const route = this.props.provinceCrossWalk[id];
+      const route = this.props.crosswalk.province[id];
       const done = data.vpromms.filter(v => v.inTheDatabase).length;
       const total = data.vpromms.length;
       accumulator.done += done;
@@ -65,7 +64,7 @@ var AnalyticsIndex = React.createClass({
           </div>
         </div>
         <div>
-          <AATable data={provinceData} />
+          <AATable data={provinceData} crosswalk={this.props.crosswalk} />
         </div>
       </div>
     );
@@ -83,14 +82,12 @@ function selector (state) {
   return {
     VProMMSids: state.VProMMSidsAnalytics,
     provinces: state.provinces.data,
-    fetched: state.provinces.fetched,
-    provinceCrossWalk: state.crosswalk.province
+    fetched: state.provinces.fetched
   };
 }
 
 function dispatcher (dispatch) {
   return {
-    _setCrossWalk: () => dispatch(setCrossWalk()),
     _fetchVProMMsids: (use) => dispatch(fetchVProMMsids(use)),
     _fetchProvinces: () => dispatch(fetchProvinces())
   };
