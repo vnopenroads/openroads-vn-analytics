@@ -240,7 +240,7 @@ var Tasks = React.createClass({
               <button className={c('bttn bttn-m bttn-secondary', {disabled: this.state.selectedIds.length > 2})} type='button' onClick={this.onJoin}>Join Intersection</button>
             </div>
             <div className='form-group map__panel--form'>
-              <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.commit}>Finish task</button>
+              <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.markAsDone}>Finish task</button>
               <br />
               <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.next}>Skip task</button>
             </div>
@@ -301,17 +301,18 @@ var Tasks = React.createClass({
     const { selectedIds, renderedFeatures, currentTaskId } = this.state;
     const { features } = renderedFeatures;
     const toDelete = features.filter(feature => selectedIds[0] !== feature.properties._id)
-    .map(feature => ({id: feature.properties._id}));
     this.props._queryOsm(currentTaskId, {
       delete: {
-        way: toDelete
+        way: toDelete.map(feature => ({id: feature.properties._id}))
       }
     });
+    this.props._markTaskAsDone(toDelete.map(feature => feature.properties._id));
   },
 
-  commit: function () {
+  markAsDone: function () {
     // This function is different from #next, in that it allows you
-    // to specify a road as basically not needing a fix.
+    // to specify all visible roads as 'done'
+    this.props._markTaskAsDone(this.state.renderedFeatures.features.map(feature => feature.properties._id));
     this.next();
   },
 

@@ -211,16 +211,18 @@ export function reloadCurrentTask (taskId) {
 //                        osm changesets                         //
 // ////////////////////////////////////////////////////////////////
 
-export function markTaskAsDone (taskId) {
+export function markTaskAsDone (taskIds) {
+  let ids = Array.isArray(taskIds) ? taskIds : [taskIds];
   return function (dispatch) {
-    putPendingTask(taskId);
+    putPendingTask({way_ids: ids});
   };
 }
 
-function putPendingTask (taskId) {
-  let url = `${config.api}/tasks/${taskId}/pending`;
+function putPendingTask (ids) {
+  let url = `${config.api}/tasks/pending`;
   return fetch(url, {
-    method: 'PUT'
+    method: 'PUT',
+    body: objectToBlob(ids)
   }).then(response => {
     if (response.status >= 400) {
       throw new Error('Could not update task status');
