@@ -7,7 +7,7 @@
     "Status": "Status",
     "Total": "Tổng",
     "Complete": "Hoàn thành",
-    "% Complete": "% Hoàn thành",
+    "% Complete": "% Complete",
     "Progress": "Tiến độ",
     "Language": "Ngôn ngữ",
     "Search": "Tìm kiếm",
@@ -30,5 +30,8 @@
     "Select visualized variable": "Lựa chọn thuộc tính hiển thị",
     "UhOh that is a bummer.": "Không tìm thấy dữ liệu",
     "Information on VPRoMMS roads is not available": "Information on VPRoMMS roads is not available",
-    "These will have no properties": "These will have no properties"
+    "These will have no properties": "These will have no properties",
+    "Download": "Download",
+    "Road": "Road",
+    "Roads": "Roads"
 }

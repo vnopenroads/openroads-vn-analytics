@@ -6,7 +6,7 @@ import { t } from '../utils/i18n';
 import { fetchProvinces } from '../actions/action-creators';
 
 import AATable from '../components/aa-table-index';
-
+// 
 var AnalyticsIndex = React.createClass({
   displayName: 'AnalyticsIndex',
 
@@ -19,7 +19,8 @@ var AnalyticsIndex = React.createClass({
     provinces: React.PropTypes.object,
     crosswalk: React.PropTypes.object,
     params: React.PropTypes.object,
-    VProMMSids: React.PropTypes.object
+    VProMMSids: React.PropTypes.object,
+    fieldIds: React.PropTypes.array
   },
 
   componentWillMount: function () {

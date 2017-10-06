@@ -8,7 +8,7 @@ import classnames from 'classnames';
 import { api } from '../config';
 import { Link } from 'react-router';
 import { t, getLanguage } from '../utils/i18n';
-import { fetchVProMMsBbox, fetchVProMMSidsSources } from '../actions/action-creators';
+import { fetchVProMMsBbox, fetchVProMMSidsSources, fetchVProMMSidsProperties } from '../actions/action-creators';
 
 const displayHeader = [
   {key: 'id', value: 'VProMMS ID'},
@@ -28,9 +28,10 @@ const AATable = React.createClass({
     sources: React.PropTypes.array,
     _fetchVProMMSidsSources: React.PropTypes.func,
     _fetchVProMMsBbox: React.PropTypes.func,
+    _fetchVProMMSidsProperties: React.PropTypes.func,
     bbox: React.PropTypes.array,
     fetched: React.PropTypes.bool,
-    vpromms: React.PropTypes.object
+    properties: React.PropTypes.object
   },
 
   getInitialState: function () {
@@ -123,12 +124,12 @@ const AATable = React.createClass({
 
   renderTableBody: function () {
     const sorted = this.handleSort(this.props.data);
+    const inDbIds = Object.keys(this.props.properties);
     return (
       <tbody>
         {_.map(sorted, (vpromm, i) => {
           const vprommFieldInDB = (this.props.sources.indexOf(vpromm.id) !== -1);
-          const vprommInDB = (this.props.vpromms.indexOf(vpromm.id) !== -1);
-
+          const vprommInDB = (inDbIds.indexOf(vpromm.id) !== -1);
           let propBtnLabel = this.state.expandedId === vpromm.id ? 'Hide' : 'Show';
           let propBtnClass = classnames('bttn-table-expand', {
             'bttn-table-expand--show': this.state.expandedId !== vpromm.id,
@@ -168,14 +169,14 @@ const AATable = React.createClass({
   },
 
   render: function () {
-    return (
+    return this.props.fetched ? (
       <div className='table'>
         <table>
           {this.renderTableHead()}
           {this.renderTableBody()}
         </table>
       </div>
-    );
+    ) : (<div/>);
   }
 });
 
@@ -183,14 +184,16 @@ function selector (state) {
   return {
     bbox: state.VProMMsWayBbox.bbox,
     fetched: state.VProMMSidsSources.fetched,
-    sources: state.VProMMSidsSources.sources
+    sources: state.VProMMSidsSources.sources,
+    properties: state.VProMMsidProperties.properties
   };
 }
 
 function dispatcher (dispatch) {
   return {
     _fetchVProMMsBbox: (id, source) => dispatch(fetchVProMMsBbox(id, source)),
-    _fetchVProMMSidsSources: (id) => dispatch(fetchVProMMSidsSources(id))
+    _fetchVProMMSidsSources: (id) => dispatch(fetchVProMMSidsSources(id)),
+
   };
 }
 

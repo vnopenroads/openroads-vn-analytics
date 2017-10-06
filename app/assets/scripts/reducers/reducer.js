@@ -435,6 +435,48 @@ const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
   return state;
 };
 
+const defaultVProMMsidPropertiesGeoJSON = {
+  fetching: false,
+  fetched: false,
+  properties: {}
+};
+
+const VProMMsidProperties = function (state = defaultVProMMsidPropertiesGeoJSON, action) {
+  switch (action.type) {
+    case actions.REQUEST_VPROMMS_PROPERTIES:
+      state = _.cloneDeep(state);
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_VPROMMS_PROPERTIES:
+      state = _.cloneDeep(state);
+      state.fetching = false;
+      state.fetched = true;
+      state.properties = action.json;
+  }
+  return state;
+};
+
+const defaultFieldVProMMsids = {
+  fetching: false,
+  fetched: false,
+  ids: []
+};
+
+const fieldVProMMsids = function (state = defaultFieldVProMMsids, action) {
+  switch (action.type) {
+    case actions.REQUEST_VPROMMS_FIELD_IDS:
+      state = _.cloneDeep(state);
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_VPROMMS_FIELD_IDS:
+      state = _.cloneDeep(state);
+      state.fetching = false;     
+      state.fetched = true;
+      state.ids = action.json;
+  }
+  return state;
+};
+
 const exploreMapDefaultState = {
   layer: 'iri',
   showNoVpromms: false
@@ -615,6 +657,8 @@ export default combineReducers({
   VProMMSids,
   VProMMSidsAnalytics,
   VProMMsWayBbox,
+  VProMMsidProperties,
   VProMMSidSourceGeoJSON,
-  VProMMSidsSources
+  VProMMSidsSources,
+  fieldVProMMsids
 });

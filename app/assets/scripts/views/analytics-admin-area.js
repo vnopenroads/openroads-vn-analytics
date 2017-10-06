@@ -19,7 +19,8 @@ var AnalyticsAA = React.createClass({
     crosswalk: React.PropTypes.object,
     params: React.PropTypes.object,
     provinceCrossWalk: React.PropTypes.object,
-    VProMMSids: React.PropTypes.object
+    VProMMSids: React.PropTypes.object,
+    fieldVProMMsids: React.PropTypes.array
   },
 
   renderDataDumpLinks: function (provinceId) {
@@ -34,7 +35,7 @@ var AnalyticsAA = React.createClass({
           alignment='right'>
           <ul className='drop-menu drop-menu--select' role='menu'>
             {
-            ['CSV', 'GeoJSON'].map((type, i) => {
+            ['CSV'].map((type, i) => {
               let cl = 'drop-menu-item';
               return (
                 <li>
@@ -52,6 +53,7 @@ var AnalyticsAA = React.createClass({
 
   render: function () {
     const provinceId = _.invert(this.props.crosswalk.province)[this.props.routeParams.aaId];
+    console.log(provinceId);
     const data = this.props.VProMMSids.data[provinceId];
     const ids = data.vpromms;
     const done = ids.filter(v => v.inTheDatabase).length;
@@ -82,7 +84,7 @@ var AnalyticsAA = React.createClass({
           </div>
         </div>
         <div>
-          {total ? <AATable data={ids} vpromms={data} /> : ''}
+          {total ? <AATable data={ids} /> : ''}
         </div>
       </div>
     );

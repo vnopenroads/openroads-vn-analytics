@@ -472,6 +472,34 @@ export function removeVProMMsSourceGeoJSON () {
   };
 }
 
+function requestVProMMsidsProperties () {
+  return {
+    type: actions.REQUEST_VPROMMS_PROPERTIES
+  };
+}
+
+function receiveVProMMsidsProperties (json) {
+  return {
+    type: actions.RECEIVE_VPROMMS_PROPERTIES,
+    json: json
+  };
+}
+
+export function fetchVProMMsidsProperties () {
+  return function (dispatch) {
+    dispatch(requestVProMMsidsProperties);
+    const url = `${config.url}/properties/roads/ids`;
+    return fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      if (json.statusCode >= 400) {
+        throw new Error('Bad Response');
+      }
+      dispatch(receiveVProMMsidsProperties(json));
+    });
+  };
+}
+
 // ////////////////////////////////////////////////////////////////
 //                         Explore Map                           //
 // ////////////////////////////////////////////////////////////////
@@ -562,33 +590,30 @@ export function removeVProMMsBBox () {
   };
 }
 
-function requestAdminBbox () {
-  return {
-    type: actions.REQUEST_ADMIN_BBOX
+function requestFieldVProMMsids () {
+  return { 
+    type: actions.REQUEST_VPROMMS_FIELD_IDS
   };
 }
 
-function receiveAdminBbox (json) {
+function receiveFieldVProMMsids (json) {
   return {
-    type: actions.RECEIVE_ADMIN_BBOX,
-    json: json
+    type: actions.RECEIVE_VPROMMS_FIELD_IDS,
+    json: actions.json
   };
 }
 
-export function fetchAdminBbox (id) {
+export function fetchFieldVProMMsids (json) {
   return function (dispatch) {
-    dispatch(requestAdminBbox());
-    let url = `${config.api}/admin/${id}/info`;
+    dispatch(requestFieldVProMMsids);
+    const url = `${config.api}/field.ids`;
     return fetch(url)
-    .then(response => {
-      return response.json();
-    })
+    .then(response => response.json())
     .then(json => {
-      // if not found, throw an error.
       if (json.statusCode >= 400) {
-        throw new Error('Bad response');
+        throw new Error('Bad Response');
       }
-      dispatch(receiveAdminBbox(json));
+      dispatch(receiveFieldVProMMsids(json));
     });
   };
 }
@@ -628,6 +653,37 @@ export function setFilteredVProMMs (array) {
 // ////////////////////////////////////////////////////////////////
 //                            Admins                             //
 // ////////////////////////////////////////////////////////////////
+
+function requestAdminBbox () {
+  return {
+    type: actions.REQUEST_ADMIN_BBOX
+  };
+}
+
+function receiveAdminBbox (json) {
+  return {
+    type: actions.RECEIVE_ADMIN_BBOX,
+    json: json
+  };
+}
+
+export function fetchAdminBbox (id) {
+  return function (dispatch) {
+    dispatch(requestAdminBbox());
+    let url = `${config.api}/admin/${id}/info`;
+    return fetch(url)
+    .then(response => {
+      return response.json();
+    })
+    .then(json => {
+      // if not found, throw an error.
+      if (json.statusCode >= 400) {
+        throw new Error('Bad response');
+      }
+      dispatch(receiveAdminBbox(json));
+    });
+  };
+}
 
 function requestProvinces () {
   return {
