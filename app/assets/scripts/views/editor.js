@@ -128,6 +128,9 @@ var Editor = React.createClass({
     if (nextProps.adminBbox !== this.props.adminBbox) {
       bounds = nextProps.adminBbox;
     }
+
+    if (!bounds) return;
+
     // then generate a new centerpoint and zoom level with these bounds and zoom level
     const newXYZ = this.makeNewXYZ(bounds, zoom);
     // translate that xyz object into a url hash that when given to the iframe will
