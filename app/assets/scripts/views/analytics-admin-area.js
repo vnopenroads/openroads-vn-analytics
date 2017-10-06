@@ -1,26 +1,24 @@
 'use strict';
 import React from 'react';
-import { connect } from 'react-redux';
 import { t } from '../utils/i18n';
 
 import AATable from '../components/aa-table-vpromms';
 import Headerdrop from '../components/headerdrop';
 
-import { fetchVProMMsids } from '../actions/action-creators';
 import config from '../config';
 
 var AnalyticsAA = React.createClass({
   displayName: 'AnalyticsAA',
 
   propTypes: {
+    _fetchVProMMsids: React.PropTypes.func,
     children: React.PropTypes.object,
     routeParams: React.PropTypes.object,
-    _fetchVProMMsids: React.PropTypes.func,
-    VProMMSids: React.PropTypes.object
-  },
-
-  componentDidMount: function () {
-    this.props._fetchVProMMsids('analytics');
+    params: React.PropTypes.object,
+    VProMMSids: React.PropTypes.object,
+    VProMMSidsSources: React.PropTypes.object,
+    VProMMSidSourceGeoJSON: React.PropTypes.object,
+    VProMMSidSourceGeoJSONisFetched: React.PropTypes.bool
   },
 
   renderDataDumpLinks: function (provinceId) {
@@ -58,6 +56,7 @@ var AnalyticsAA = React.createClass({
     const done = ids.filter(v => v.inTheDatabase).length;
     const total = ids.length;
     const completion = total !== 0 ? ((done / total) * 100) : 0;
+    // completion text is comprised of a main text component and a tail component, both need to be distinct per the existence of ids for the province.
     let completionMainText;
     let completionTailText = t('Information on VPRoMMS roads is not available');
     if (total !== 0) {
@@ -81,28 +80,13 @@ var AnalyticsAA = React.createClass({
           <div className='meter__internal' style={{width: `${completion}%`}}></div>
         </div>
       </div>
-
       <div>
-        {total ? <AATable data={ids} /> : ''}
+        {total ? <AATable data={ids} vpromms={this.props.VProMMSids}/> : ''}
       </div>
     </div>
     );
   }
 });
 
-// /////////////////////////////////////////////////////////////////// //
-// Connect functions
+module.exports = AnalyticsAA;
 
-function selector (state) {
-  return {
-    VProMMSids: state.VProMMSidsAnalytics
-  };
-}
-
-function dispatcher (dispatch) {
-  return {
-    _fetchVProMMsids: (use) => dispatch(fetchVProMMsids(use))
-  };
-}
-
-module.exports = connect(selector, dispatcher)(AnalyticsAA);
