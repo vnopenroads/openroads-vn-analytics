@@ -1,0 +1,68 @@
+# ssh-keygen -t rsa -b 4096 -C orma/openroads-vn-analytics -f deploy_key
+version: 2
+jobs:
+  build:
+    docker:
+      - image: node:6
+
+    working_directory: ~/repo
+
+    environment:
+      - DEPLOY_BRANCH: "master"
+      - KNOWN_HOST: "ec2-52-55-132-50.compute-1.amazonaws.com,52.55.132.50 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBPKNreor05kE4+ge4cW+jAmwhR5dRAjRB4GqwW+YIe8MbkMjSJsIacuyhqnfoEuTFpBrkjkKa6sgYMtCo0l7R3c="
+      - SSH_URL: "ubuntu@ec2-52-55-132-50.compute-1.amazonaws.com"
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      - run: yarn test
+      - run: yarn lint
+
+      - add_ssh_keys:
+          fingerprints:
+            - "ac:b6:ec:1b:85:17:a7:d6:46:27:46:a9:05:ca:7e:86"
+
+      - run: 
+          name: Processing translations
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "${DEPLOY_BRANCH}" ]; then
+              chmod +x ./.build_scripts/translations.sh
+              ./.build_scripts/translations.sh
+            else
+              echo "Skip translations"
+            fi
+
+      - run: 
+          name: Building site
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "${DEPLOY_BRANCH}" ]; then
+              yarn build
+            else
+              echo "Skip building site"
+            fi
+
+      - run:
+          name: Deploy to AWS
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "${DEPLOY_BRANCH}" ]; then
+              cd dist
+              echo "$KNOWN_HOST" >> ~/.ssh/known_hosts
+              ssh $SSH_URL rm -rf /var/www/html/*
+              scp -rp ./* $SSH_URL:/var/www/html
+            else
+              echo "Skip deploying to AWS"
+            fi
