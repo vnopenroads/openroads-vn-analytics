@@ -414,8 +414,7 @@ const VProMMSidSourceGeoJSON = function (state = defaultVProMMSidSourceGeoJSON, 
       break;
     case actions.REMOVE_VPROMMS_SOURCE_GEOJSON:
       console.log('REMOVE_SOURCE_GEOJSON');
-      state = defaultVProMMSidSourceGeoJSON;
-      break;
+      return defaultVProMMSidSourceGeoJSON;
   }
   return state;
 };
