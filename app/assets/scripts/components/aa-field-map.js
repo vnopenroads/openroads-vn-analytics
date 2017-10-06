@@ -108,7 +108,7 @@ var AAFieldMap = React.createClass({
   },
 
   renderHeader: function (adminName) {
-    return (<h1>{adminName + 'Province - Road #' + this.props.params.vpromm}</h1>);
+    return (<h1>{adminName} Province - Road # {this.props.params.vpromm}</h1>);
   },
 
   render: function () {
