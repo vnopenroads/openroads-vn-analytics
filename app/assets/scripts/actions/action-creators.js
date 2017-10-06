@@ -31,7 +31,6 @@ export function fetchAdmins (id = null) {
     // In this case, we return a promise to wait for.
     // This is not required by thunk middleware, but it is convenient for us.
     let url = `${config.api}/admin/units?name=${id}&limit=10`;
-    console.log(url);
     console.time('fetch subregions');
     return fetch(url)
       .then(response => response.json())
@@ -380,10 +379,10 @@ function receiveVProMMSids (json, error = null) {
   };
 }
 
-export function fetchVProMMsids (use) {
+export function fetchVProMMsids () {
   return function (dispatch) {
     dispatch(requestVProMMSids());
-    const route = use === 'search' ? '/ids' : '/properties/roads?keys=iri_mean,rs_url';
+    const route = '/properties/roads/ids';
     let url = `${config.api}${route}`;
     return fetch(url)
       .then(response => {
@@ -556,6 +555,12 @@ export function fetchVProMMsBbox (vprommsId) {
       }
       dispatch(recieveVProMMsBbox(json));
     });
+  };
+}
+
+export function removeVProMMsBBox () {
+  return {
+    type: actions.REMOVE_VPROMMS_BBOX
   };
 }
 

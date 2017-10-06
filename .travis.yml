@@ -16,7 +16,6 @@ before_script:
 script:
 - yarn run build
 deploy:
-  matrix:
   - provider: s3
     access_key_id: AKIAISZNARCIKVQUX4CQ
     secret_access_key:
@@ -33,5 +32,5 @@ deploy:
     skip_cleanup: true
     script: .build_scripts/deploy.sh
     on:
-    repo: orma/openroads-vn-analytics
-    branch: ${PRODUCTION_BRANCH}
+      repo: orma/openroads-vn-analytics
+      branch: ${PRODUCTION_BRANCH}

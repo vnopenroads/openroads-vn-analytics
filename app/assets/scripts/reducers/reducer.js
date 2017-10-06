@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import { routeReducer } from 'react-router-redux';
 
 import * as actions from '../actions/action-types';
-import { VPROMMS_IDS } from '../constants';
+import { VPROMMS_IDS, ADMIN_MAP } from '../constants';
 
 const admins = function (state = {units: [], fetching: false, fetched: false}, action) {
   switch (action.type) {
@@ -32,7 +32,6 @@ const adminBboxDefaultState = {
   fetched: false,
   bbox: []
 };
-
 const adminBbox = function (state = adminBboxDefaultState, action) {
   switch (action.type) {
     case actions.REQUEST_ADMIN_BBOX:
@@ -51,7 +50,6 @@ const adminBbox = function (state = adminBboxDefaultState, action) {
   }
   return state;
 };
-
 const search = function (state = {results: [], fetching: false, fetched: false, query: '', searching: false}, action) {
   switch (action.type) {
     case actions.REQUEST_SEARCH_RESULTS:
@@ -360,6 +358,12 @@ const VProMMSidsAnalytics = function (state = VProMMSidsAnalyticsDefaultState, a
   return state;
 };
 
+const VProMMsWayBboxDefaultState = {
+  fetching: false,
+  fetched: false,
+  bbox: []
+};
+
 const defaultVProMMSidsSources = {
   fetching: false,
   fetched: false,
@@ -417,11 +421,6 @@ const VProMMSidSourceGeoJSON = function (state = defaultVProMMSidSourceGeoJSON, 
   return state;
 };
 
-const VProMMsWayBboxDefaultState = {
-  fetching: false,
-  fetched: false,
-  bbox: []
-};
 
 const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
   switch (action.type) {
@@ -484,6 +483,7 @@ const admin = function (state = defaultAdmin, action) {
   }
   return state;
 };
+
 const searchDisplay = function (state = {show: false}, action) {
   switch (action.type) {
     case actions.DISPLAY_SEARCH:
@@ -528,27 +528,96 @@ const setFilteredVProMMs = function (state = [], action) {
   return state;
 };
 
+const defaultProvinces = {
+  fetching: false,
+  fetched: false,
+  data: {}
+};
+
+const provinces = function (state = defaultProvinces, action) {
+  switch (action.type) {
+    case actions.REQUEST_PROVINCES:
+      state = _.cloneDeep(state);
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_PROVINCES:
+      state = _.cloneDeep(state);
+      state.fetching = false;
+      state.fetched = true;
+      state.data = action.json;
+      break;
+  }
+  return state;
+};
+
+const crosswalk = function (state = {}, action) {
+  switch (action.type) {
+    case actions.SET_CROSSWALK:
+      state = _.cloneDeep(state);
+      state.province = _.invert(_.pickBy(ADMIN_MAP.province, (province) => { return !/^\s*$/.test(province); }));
+      state.district = _.invert(_.pickBy(ADMIN_MAP.district, (district) => { return district !== 'missing'; }));
+      break;
+  }
+  return state;
+};
+
+const defaultAdminChildren = {
+  fetched: false,
+  fetching: false,
+  data: []
+}
+
+const adminChildren = function (state = defaultAdminChildren, action) {
+  switch (action.type) {
+    case actions.REQUEST_ADMIN_CHILDREN:
+      state = _.cloneDeep(state);
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_ADMIN_CHILDREN:
+      state = _.cloneDeep(state);
+      state.fetching = false;
+      state.fetched = true;
+      state.data = action.json.children;
+  }
+  return state;
+};
+
+const defaultAdminLevel = { level: '' };
+
+const adminLevel = function (state = defaultAdminLevel, action) {
+  switch (action.type) {
+    case actions.SET_ADMIN_LEVEL:
+      state = _.cloneDeep(state);
+      state.level = action.text;
+  }
+  return state;
+};
+
 export default combineReducers({
+  admin,
   admins,
   adminBbox,
-  search,
-  stats,
-  tofixtasks,
+  adminChildren,
+  adminLevel,
+  crosswalk,
+  exploreMap,
+  globZoom,
   projecttasks,
   projects,
   projectsMeta,
+  provinces,
   roadNetworkStatus,
-  VProMMSids,
-  VProMMSidsAnalytics,
-  VProMMSidsSources,
-  VProMMSidSourceGeoJSON,
-  VProMMsWayBbox,
-  admin,
-  exploreMap,
   routing: routeReducer,
-  globZoom,
+  search,
   searchDisplay,
   searchResultsDisplay,
   setSearchType,
-  setFilteredVProMMs
+  setFilteredVProMMs,
+  stats,
+  tofixtasks,
+  VProMMSids,
+  VProMMSidsAnalytics,
+  VProMMsWayBbox,
+  VProMMSidSourceGeoJSON,
+  VProMMSidsSources
 });

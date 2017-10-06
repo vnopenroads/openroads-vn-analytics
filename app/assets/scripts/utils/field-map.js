@@ -26,7 +26,6 @@ export function generateSourceFC (fc) {
  * @return {object} layer object used to add layers to mapboxgl map
  */
 export function generateLayer (sourceId, fieldDataSource, vprommId) {
-  console.log(fieldDataSource);
   return {
     'id': `${vprommId}-${fieldDataSource}-field-data`,
     'type': 'line',

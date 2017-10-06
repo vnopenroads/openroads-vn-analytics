@@ -27,7 +27,6 @@ var Search = React.createClass({
     fetching: React.PropTypes.bool,
     fetchSearchResults: React.PropTypes.func,
     searchType: React.PropTypes.string,
-    searchDisplay: React.PropTypes.bool,
     searchResultsDisplay: React.PropTypes.bool,
     vpromms: React.PropTypes.array,
     filteredVProMMs: React.PropTypes.array,
@@ -51,7 +50,7 @@ var Search = React.createClass({
     } else {
       if (searchVal.length >= 2) {
         this.filterVProMMs(searchVal);
-        this.props.results.classList.add('search-results-show');
+        this.refs.results.classList.add('search-results-show');
       } else {
         this.props._setFilteredVProMMs([]);
       }
@@ -131,6 +130,7 @@ var Search = React.createClass({
   },
 
   componentDidMount: function () {
+    this.props._fetchVProMMsids('search');
     document.addEventListener('click', this.onDocumentClick, false);
     document.addEventListener('keyup', this.onKeyup, false);
   },
@@ -165,19 +165,18 @@ var Search = React.createClass({
         g = _.groupBy(g, (o) => o.level);
         _.forEach(g, (l, k) => {
           results.push(
-            <dt key={`aa-type-${k}`} className='drop-menu-sectitle'>
+            <dt key={`aa-type-admin-${k}`} className='drop-menu-sectitle'>
               <strong>Admin Level - {k}</strong>
             </dt>
           );
           _.forEach(l, (o, i) => {
             results.push(
-              <dd key={`aa-type-${k}-${i}`} className='drop-menu-result'
-              onClick={(e) => {
+              <dd key={`aa-type-admin-${k}-${i}`} className='drop-menu-result'>
+              <small><a onClick={(e) => {
                 const adminArea = this.props.admins.find(o => o.name_en === e.target.textContent).id;
                 this.refs.results.classList.remove('search-results-show');
                 this.searchAdminArea(adminArea);
-              }}>
-              <small><a>{getLanguage() === 'en' ? o.name_en : o.name_vn}</a></small>
+              }}>{getLanguage() === 'en' ? o.name_en : o.name_vn}</a></small>
             </dd>
             );
           });
@@ -186,12 +185,14 @@ var Search = React.createClass({
     } else {
       _.forEach(g, (o, k) => {
         results.push(
-        <dt key={`aa-type-${k}`} className='drop-menu-sectitle'
-          onClick={(e) => {
+        <dt key={`aa-type-vpromms-${k}`} className='drop-menu-sectitle'>
+          <a onClick={(e) => {
             const vprommsId = e.target.textContent;
+            this.refs.results.classList.remove('search-results-show');
             this.searchVProMMsID(vprommsId);
           }}>
-          <strong>{o}</strong>
+            <strong>{o}</strong>
+          </a>
         </dt>);
       });
     }
@@ -221,16 +222,11 @@ var Search = React.createClass({
   },
 
   render: function () {
-    const searchResultsClasses = classNames({
-      'drop-content': true,
-      'search-results': true,
-      'search-results-show': this.props.searchResultsDisplay
-    });
     return (
       <form className='form-search' ref='searchForm'>
         <div className={classNames('drop dropdown center', {open: this.props.searching})}>
           {this.searchBar()}
-          <div className={searchResultsClasses} ref='results'>
+          <div className='drop-content search-results' ref='results'>
             {this.renderResults()}
           </div>
         </div>

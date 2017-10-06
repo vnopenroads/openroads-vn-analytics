@@ -16,7 +16,6 @@ var AnalyticsIndex = React.createClass({
   },
 
   render: function () {
-    console.log(this.props);
     let accumulator = { done: 0, total: 0 };
     const provinceData = _.map(this.props.VProMMSids.data, (data, id) => {
       const name = data.provinceName;
@@ -36,9 +35,14 @@ var AnalyticsIndex = React.createClass({
     const { done, total } = accumulator;
     const completion = (accumulator.done / accumulator.total) * 100;
     return (
-      <div className='aa-headline'>
-      <h1 className='aa-header '>{t('VProMMS Edits By Province')}</h1>
-        <div className='aa-main__status'>
+      <div>
+        <div className='a-header'>
+          <div className='a-headline'>
+            <h1>{t('VProMMS Edits By Province')}</h1>
+          </div>
+        </div>
+
+        <div className='a-main__status'>
           <h2><strong>{completion.toFixed(2)}%</strong> {t('of VProMMS Ids added')} ({done.toLocaleString()} of {total.toLocaleString()})</h2>
           <div className='meter'>
             <div className='meter__internal' style={{width: `${completion}%`}}></div>
@@ -52,4 +56,4 @@ var AnalyticsIndex = React.createClass({
   }
 });
 
-module.exports = AnalyticsIndex;
+export default AnalyticsIndex;

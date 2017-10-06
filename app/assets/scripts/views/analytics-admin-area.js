@@ -1,6 +1,5 @@
 'use strict';
 import React from 'react';
-import { connect } from 'react-redux';
 import { t } from '../utils/i18n';
 
 import AATable from '../components/aa-table-vpromms';
@@ -12,6 +11,7 @@ var AnalyticsAA = React.createClass({
   displayName: 'AnalyticsAA',
 
   propTypes: {
+    _fetchVProMMsids: React.PropTypes.func,
     children: React.PropTypes.object,
     routeParams: React.PropTypes.object,
     params: React.PropTypes.object,
@@ -64,31 +64,29 @@ var AnalyticsAA = React.createClass({
       completionTailText = `% ${t('of VProMMS Ids added')} ${done.toLocaleString()} of ${total.toLocaleString()}`;
     }
     return (
-      <div>
-        <div className="aa-header">
-          <div className="aa-headline">
-            <h1>{data.provinceName} {t('Province')}</h1>
-          </div>
-          <div className="aa-head-actions">
-            { completion ? this.renderDataDumpLinks(provinceId) : '' }
-          </div>
+    <div>
+      <div className='a-header'>
+        <div className='a-headline'>
+          <h1>{data.provinceName} {t('Province')}</h1>
         </div>
-        <div className='aa-main__status'>
-          <h2><strong>{completionMainText}</strong>{completionTailText}</h2>
-          <div className='meter'>
-            <div className='meter__internal' style={{width: `${completion}%`}}></div>
-          </div>
-          {total ? <AATable data={ids} /> : ''}
+        <div className='a-head-actions'>
+          { completion ? this.renderDataDumpLinks(provinceId) : '' }
         </div>
       </div>
+
+      <div className='a-main__status'>
+        <h2><strong>{completionMainText}</strong>{completionTailText}</h2>
+        <div className='meter'>
+          <div className='meter__internal' style={{width: `${completion}%`}}></div>
+        </div>
+      </div>
+      <div>
+        {total ? <AATable data={ids} vpromms={this.props.VProMMSids}/> : ''}
+      </div>
+    </div>
     );
   }
 });
 
-function selector (state) {
-  return {
-    VProMMSids: state.VProMMSidsAnalytics
-  };
-}
+module.exports = AnalyticsAA;
 
-module.exports = connect(selector)(AnalyticsAA);

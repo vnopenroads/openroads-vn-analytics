@@ -114,10 +114,10 @@ var AAFieldMap = React.createClass({
   render: function () {
     return (
       <div>
-        <div className="aa-headline aa-header">
+        <div className="a-headline a-header">
           { this.props.fetched ? this.renderHeader(this.props.adminName) : ''}
         </div>
-        <div className="aa-main__status">
+        <div className="a-main__status">
           <div className='aa-map-wrapper'>
             { this.props.fetched ? this.renderMap(this.props.geoJSON) : <div id='aa-map' className='aa-map'></div>}
           </div>
