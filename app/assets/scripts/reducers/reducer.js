@@ -647,7 +647,6 @@ export default combineReducers({
   setSearchType,
   setFilteredVProMMs,
   stats,
-  tofixtasks,
   VProMMSids,
   VProMMSidsAnalytics,
   VProMMsWayBbox,
