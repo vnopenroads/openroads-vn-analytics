@@ -1,12 +1,9 @@
 'use strict';
 import React from 'react';
-import { connect } from 'react-redux';
 import _ from 'lodash';
 import { t } from '../utils/i18n';
 
 import AATable from '../components/aa-table-index';
-
-import { fetchVProMMsids } from '../actions/action-creators';
 
 var AnalyticsIndex = React.createClass({
   displayName: 'AnalyticsIndex',
@@ -16,10 +13,6 @@ var AnalyticsIndex = React.createClass({
     _fetchVProMMsids: React.PropTypes.func,
     VProMMSids: React.PropTypes.object,
     params: React.PropTypes.object
-  },
-
-  componentDidMount: function () {
-    this.props._fetchVProMMsids();
   },
 
   render: function () {
@@ -63,19 +56,4 @@ var AnalyticsIndex = React.createClass({
   }
 });
 
-// /////////////////////////////////////////////////////////////////// //
-// Connect functions
-
-function selector (state) {
-  return {
-    VProMMSids: state.VProMMSidsAnalytics
-  };
-}
-
-function dispatcher (dispatch) {
-  return {
-    _fetchVProMMsids: () => dispatch(fetchVProMMsids())
-  };
-}
-
-module.exports = connect(selector, dispatcher)(AnalyticsIndex);
+export default AnalyticsIndex;

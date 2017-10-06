@@ -35,9 +35,9 @@ exports.pixelDistances = function (nwPixel, sePixel) {
  * @param {object} distances object with bounds distances represented pixels
  * @return {number} factor used to generate new zoom
  */
-exports.newZoomScale = function (distances) {
-  // hardcoded for testing, will use iframe
-  var dimensions = {x: 1000, y: 800};
+exports.newZoomScale = function (distances, dimensions) {
+  // if dimensions are provided, use them. if they are not, hard code them.
+  dimensions = !dimensions ? {x: 1000, y: 800} : dimensions;
   return Math.min(dimensions.x / distances.x, dimensions.y / distances. y);
 };
 

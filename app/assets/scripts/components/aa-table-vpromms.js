@@ -3,28 +3,32 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 import _ from 'lodash';
 import classnames from 'classnames';
+import { api } from '../config';
+import { Link } from 'react-router';
 import { t, getLanguage } from '../utils/i18n';
-
-import { setGlobalZoom, fetchVProMMsBbox } from '../actions/action-creators';
+import { fetchVProMMsBbox, fetchVProMMSidsSources } from '../actions/action-creators';
 
 const displayHeader = [
   {key: 'id', value: 'VProMMS ID'},
   {key: 'inTheDatabase', value: 'Status'},
-  {key: 'RouteShoot', value: 'RouteShoot'},
-  {key: 'RoadLab', value: 'RoadLabPro'}
+  {key: 'FieldData', value: 'Field Data'}
 ];
 
 const AATable = React.createClass({
   displayName: 'AATable',
 
   propTypes: {
-    _fetchVProMMsBbox: React.PropTypes.func,
-    _fetchVProMMsids: React.PropTypes.func,
-    bbox: React.PropTypes.array,
+    aaId: React.PropTypes.string,
     data: React.PropTypes.array,
+    province: React.PropTypes.string,
+    provinceName: React.PropTypes.string,
+    routeParams: React.PropTypes.func,
+    sources: React.PropTypes.array,
+    _fetchVProMMSidsSources: React.PropTypes.func,
+    _fetchVProMMsBbox: React.PropTypes.func,
+    bbox: React.PropTypes.array,
     fetched: React.PropTypes.bool,
     vpromms: React.PropTypes.array
   },
@@ -37,6 +41,11 @@ const AATable = React.createClass({
         expandedId: null
       }
     };
+  },
+
+  componentWillMount: function () {
+    const ids = this.props.data.map(obj => obj.id);
+    this.props._fetchVProMMSidsSources(ids);
   },
 
   renderTableHead: function () {
@@ -87,6 +96,19 @@ const AATable = React.createClass({
     return sorted.value();
   },
 
+  renderFieldMapButtons: function (vprommExists, id) {
+    return (
+      <div>
+        <Link className='bttn bttn-s bttn-base-light' to={`/${getLanguage()}/analytics/road/${id}/`}>Map</Link>
+        <a className='bttn bttn-s bttn-base-light' href={`${api}/field/geometries/${id}?grouped=false&download=true`}>Download</a>
+      </div>
+    );
+  },
+
+  // in renderTableBody, vprommExists represents if a given vpromms id has a field data source attached to it.
+  // it is used to decide whether:
+  // 1. make a link to the AAFieldMap component in the first column of the table.
+  // 2. to a road data dump in the last column
   renderVProMMsLink: function (id) {
     return (
       <Link to={`/${getLanguage()}/explore`} onClick={(e) => { this.props._fetchVProMMsBbox(id); } }><strong>{id}</strong></Link>
@@ -104,7 +126,9 @@ const AATable = React.createClass({
     return (
       <tbody>
         {_.map(sorted, (vpromm, i) => {
+          const vprommFieldInDB = (this.props.sources.indexOf(vpromm.id) !== -1);
           const vprommInDB = (this.props.vpromms.indexOf(vpromm.id) !== -1);
+
           let propBtnLabel = this.state.expandedId === vpromm.id ? 'Hide' : 'Show';
           let propBtnClass = classnames('bttn-table-expand', {
             'bttn-table-expand--show': this.state.expandedId !== vpromm.id,
@@ -118,8 +142,7 @@ const AATable = React.createClass({
             <tr key={`vpromm-${vpromm.id}`} className={classnames({'alt': i % 2})}>
               <th className={classnames({'added': vprommInDB, 'not-added': !vprommInDB})}>{ vprommInDB ? this.renderVProMMsLink(vpromm.id) : vpromm.id }</th>
               <td className={classnames({'added': vpromm.inTheDatabase, 'not-added': !vpromm.inTheDatabase})}>{vpromm.inTheDatabase ? t('added') : t('not added')}</td>
-              <td className={classnames({'added': vpromm.RouteShoot, 'not-added': !vpromm.RouteShoot})}>{vpromm.RouteShoot ? <a href={vpromm.RouteShootUrl}>link</a> : ''}</td>
-              <td className={classnames({'added': vpromm.RoadLabPro, 'not-added': !vpromm.RoadLabPro})}>{vpromm.RoadLabPro ? t('added') : t('not added')}</td>
+              <td className={classnames({'added': vprommFieldInDB, 'not-added': !vprommFieldInDB})}>{ vprommFieldInDB ? this.renderFieldMapButtons(vprommFieldInDB, vpromm.id) : ''}</td>
               <td className='table-properties-cell'>
                 <button type='button' className={propBtnClass} onClick={this.onPropertiesClick.bind(null, vpromm.id)}><span>{propBtnLabel}</span></button>
                 <div className={propContainerClass}>
@@ -159,7 +182,8 @@ const AATable = React.createClass({
 function selector (state) {
   return {
     bbox: state.VProMMsWayBbox.bbox,
-    fetched: state.VProMMsWayBbox.fetched,
+    fetched: state.VProMMSidsSources.fetched,
+    sources: state.VProMMSidsSources.sources,
     vpromms: state.VProMMSids.data
   };
 }
@@ -167,7 +191,7 @@ function selector (state) {
 function dispatcher (dispatch) {
   return {
     _fetchVProMMsBbox: (id, source) => dispatch(fetchVProMMsBbox(id, source)),
-    _setGlobalZoom: (xyz) => dispatch(setGlobalZoom(xyz))
+    _fetchVProMMSidsSources: (id) => dispatch(fetchVProMMSidsSources(id))
   };
 }
 
