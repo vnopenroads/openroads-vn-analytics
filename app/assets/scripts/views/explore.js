@@ -9,7 +9,8 @@ import lineColors from '../utils/line-colors';
 import {
   selectExploreMapLayer,
   exploreMapShowNoVpromms,
-  setGlobalZoom
+  setGlobalZoom,
+  removeVProMMsBBox
 } from '../actions/action-creators';
 import MapOptions from '../components/map-options';
 import MapLegend from '../components/map-legend';
@@ -18,15 +19,16 @@ var Explore = React.createClass({
   displayName: 'Explore',
 
   propTypes: {
+    _removeVProMMsBBox: React.PropTypes.func,
+    _setGlobalZoom: React.PropTypes.func,
     layer: React.PropTypes.string,
     showNoVpromms: React.PropTypes.bool,
     dispatch: React.PropTypes.func,
-    _setGlobalZoom: React.PropTypes.func,
     globX: React.PropTypes.number,
     globY: React.PropTypes.number,
     globZ: React.PropTypes.number,
     adminBbox: React.PropTypes.array,
-    vprommsBbox: React.PropTypes.object
+    vprommsBbox: React.PropTypes.array
   },
 
   componentDidMount: function () {
@@ -38,7 +40,6 @@ var Explore = React.createClass({
       center: [this.props.globX, this.props.globY],
       zoom: this.props.globZ
     }).addControl(new mapboxgl.NavigationControl(), 'bottom-left');
-
     this.map.on('load', () => {
       // Load all roads with VPRoMMS values, and color by IRI
       this.map.addLayer({
@@ -96,9 +97,14 @@ var Explore = React.createClass({
       return this.map.fitBounds(bounds);
     }
     if (nextProps.vprommsBbox !== this.props.vprommsBbox) {
-      bounds = nextProps.vprommsBbox[Object.keys(nextProps.vprommsBbox)[0]];
+      bounds = nextProps.vprommsBbox;
       return this.map.fitBounds(bounds);
     }
+  },
+
+  shouldComponentUpdate: function (nextProps) {
+    if (nextProps.vprommsBbox.length === 0) { return false; }
+    return true;
   },
 
   render: function () {
@@ -132,6 +138,7 @@ function selector (state) {
 
 function dispatcher (dispatch) {
   return {
+    _removeVProMMsBBox: function () { dispatch(removeVProMMsBBox()); },
     _setGlobalZoom: function (xyzObj) { dispatch(setGlobalZoom(xyzObj)); }
   };
 }

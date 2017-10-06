@@ -65,11 +65,16 @@ var SiteHeader = React.createClass({
     this.setSearchDisplay(nextProps);
   },
 
+  isSearchAvailable: function (props) {
+    let isExplore = new RegExp(/explore/).test(props.pathname);
+    let isEditor = new RegExp(/editor/).test(props.pathname);
+
+    return isExplore || isEditor;
+  },
+
   // for the analytics and home page, hide search if open.
   setSearchDisplay: function (nextProps) {
-    let isExplore = new RegExp(/explore/).test(nextProps.pathname);
-    let isEditor = new RegExp(/editor/).test(nextProps.pathname);
-    if (!isEditor && !isExplore) {
+    if (this.props.displaySearch && !this.isSearchAvailable(nextProps)) {
       this.props._showSearch(false);
     }
   },
@@ -163,6 +168,7 @@ var SiteHeader = React.createClass({
                 </ul>
               </Headerdrop>
               <Headerdrop
+              className={c({disabled: !this.isSearchAvailable(this.props)})}
               id='search-selector'
               triggerClassName='drop-toggle caret change-search-button site__lang'
               triggerText={t('Search')}

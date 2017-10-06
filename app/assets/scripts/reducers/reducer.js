@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import { routeReducer } from 'react-router-redux';
 
 import * as actions from '../actions/action-types';
-import { VPROMMS_IDS } from '../constants';
+import { VPROMMS_IDS, ADMIN_MAP } from '../constants';
 
 const admins = function (state = {units: [], fetching: false, fetched: false}, action) {
   switch (action.type) {
@@ -398,6 +398,61 @@ const VProMMsWayBboxDefaultState = {
   bbox: []
 };
 
+const defaultVProMMSidsSources = {
+  fetching: false,
+  fetched: false,
+  sources: []
+};
+
+const VProMMSidsSources = function (state = defaultVProMMSidsSources, action) {
+  switch (action.type) {
+    case actions.REQUEST_VPROMMS_IDS_SOURCES:
+      console.log('REQUEST_VPROMMS_IDS_SOURCES');
+      state = _.cloneDeep(state);
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_VPROMMS_IDS_SOURCES:
+      console.log('RECEIVE_VPROMMS_IDS_SOURCES');
+      state = _.cloneDeep(state);
+      state.sources = action.json;
+      state.fetching = false;
+      state.fetched = true;
+      break;
+  }
+  return state;
+};
+
+const defaultVProMMSidSourceGeoJSON = {
+  fetching: false,
+  fetched: false,
+  geoJSON: [],
+  vprommId: '',
+  provinceName: ''
+};
+
+const VProMMSidSourceGeoJSON = function (state = defaultVProMMSidSourceGeoJSON, action) {
+  switch (action.type) {
+    case actions.REQUEST_VPROMMS_SOURCE_GEOJSON:
+      console.log('REQUEST_VPROMMS_SOURCE_GEOJSON');
+      state = _.cloneDeep(state);
+      state.fetching = true;
+      break;
+    case actions.RECIEVE_VPROMMS_SOURCE_GEOJSON:
+      console.log('RECIEVE_VPROMMS_SOURCE_GEOJSON');
+      state = _.cloneDeep(state);
+      state.geoJSON = action.json;
+      state.vprommId = action.vprommId;
+      state.provinceName = action.provinceName;
+      state.fetching = false;
+      state.fetched = true;
+      break;
+    case actions.REMOVE_VPROMMS_SOURCE_GEOJSON:
+      console.log('REMOVE_SOURCE_GEOJSON');
+      return defaultVProMMSidSourceGeoJSON;
+  }
+  return state;
+};
+
 const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
   switch (action.type) {
     case actions.REQUEST_VPROMMS_IDS:
@@ -409,7 +464,7 @@ const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
       state = _.cloneDeep(state);
       state.fetching = false;
       state.fetched = true;
-      state.bbox = action.json;
+      state.bbox = action.json[Object.keys(action.json)[0]];
   }
   return state;
 };
@@ -442,6 +497,19 @@ const globZoom = function (state = globZoomDefault, action) {
     case actions.SET_GLOBAL_ZOOM:
       state = _.cloneDeep(state);
       state = action.json;
+      break;
+  }
+  return state;
+};
+
+const defaultAdmin = { id: '', name: '' };
+
+const admin = function (state = defaultAdmin, action) {
+  switch (action.type) {
+    case actions.SET_ADMIN:
+      state = _.cloneDeep(state);
+      state.id = action.id;
+      state.name = action.name;
       break;
   }
   return state;
@@ -491,25 +559,98 @@ const setFilteredVProMMs = function (state = [], action) {
   return state;
 };
 
+const defaultProvinces = {
+  fetching: false,
+  fetched: false,
+  data: {}
+};
+
+const provinces = function (state = defaultProvinces, action) {
+  switch (action.type) {
+    case actions.REQUEST_PROVINCES:
+      state = _.cloneDeep(state);
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_PROVINCES:
+      state = _.cloneDeep(state);
+      state.fetching = false;
+      state.fetched = true;
+      state.data = action.json;
+      break;
+  }
+  return state;
+};
+
+const crosswalk = function (state = {}, action) {
+  switch (action.type) {
+    case actions.SET_CROSSWALK:
+      state = _.cloneDeep(state);
+      state.province = _.invert(_.pickBy(ADMIN_MAP.province, (province) => { return !/^\s*$/.test(province); }));
+      state.district = _.invert(_.pickBy(ADMIN_MAP.district, (district) => { return district !== 'missing'; }));
+      break;
+  }
+  return state;
+};
+
+const defaultAdminChildren = {
+  fetched: false,
+  fetching: false,
+  data: []
+};
+
+const adminChildren = function (state = defaultAdminChildren, action) {
+  switch (action.type) {
+    case actions.REQUEST_ADMIN_CHILDREN:
+      state = _.cloneDeep(state);
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_ADMIN_CHILDREN:
+      state = _.cloneDeep(state);
+      state.fetching = false;
+      state.fetched = true;
+      state.data = action.json.children;
+  }
+  return state;
+};
+
+const defaultAdminLevel = { level: '' };
+
+const adminLevel = function (state = defaultAdminLevel, action) {
+  switch (action.type) {
+    case actions.SET_ADMIN_LEVEL:
+      state = _.cloneDeep(state);
+      state.level = action.text;
+  }
+  return state;
+};
+
 export default combineReducers({
+  admin,
   admins,
   adminBbox,
-  search,
-  stats,
   waytasks,
   osmChange,
+  adminChildren,
+  adminLevel,
+  crosswalk,
+  exploreMap,
+  globZoom,
   projecttasks,
   projects,
   projectsMeta,
+  provinces,
   roadNetworkStatus,
-  VProMMSids,
-  VProMMSidsAnalytics,
-  VProMMsWayBbox,
-  exploreMap,
   routing: routeReducer,
-  globZoom,
+  search,
   searchDisplay,
   searchResultsDisplay,
   setSearchType,
-  setFilteredVProMMs
+  setFilteredVProMMs,
+  stats,
+  tofixtasks,
+  VProMMSids,
+  VProMMSidsAnalytics,
+  VProMMsWayBbox,
+  VProMMSidSourceGeoJSON,
+  VProMMSidsSources
 });

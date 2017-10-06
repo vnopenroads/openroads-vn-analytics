@@ -72,6 +72,11 @@
         color: $base-color;
       }
     }
+    .field-data {
+      * { 
+        margin-right: .5rem; 
+      }
+    }
   }
 
   .meter {
