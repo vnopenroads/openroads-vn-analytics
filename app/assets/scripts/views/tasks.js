@@ -72,7 +72,8 @@ var Tasks = React.createClass({
     osmInflight: React.PropTypes.bool,
     meta: React.PropTypes.object,
     task: React.PropTypes.object,
-    taskId: React.PropTypes.number
+    taskId: React.PropTypes.number,
+    taskError: React.PropTypes.error
   },
 
   componentWillMount: function () {
@@ -153,7 +154,7 @@ var Tasks = React.createClass({
         currentTaskId: taskId,
         renderedFeatures: task
       }, () => this.onMapLoaded(() => this.syncMap()));
-    } else if (lastUpdated === this.state.currentTaskId) {
+    } else if (lastUpdated && lastUpdated === this.state.currentTaskId) {
       // We've just successfully completed an osm changeset
       // Reload the task to sync UI with API
       this.props._reloadCurrentTask(this.state.currentTaskId);
@@ -197,9 +198,11 @@ var Tasks = React.createClass({
   },
 
   renderPlaceholder: function () {
+    const { taskError } = this.props;
+    const message = taskError ? taskError : 'Loading your first task...';
     return (
       <div className='placeholder__fullscreen'>
-        <h3 className='placeholder__message'>Loading your first task...</h3>
+        <h3 className='placeholder__message'>{message}</h3>
       </div>
     );
   },
@@ -347,13 +350,13 @@ var Tasks = React.createClass({
 
   render: function () {
     const { hoverId } = this.state;
-    const { task, osmInflight } = this.props;
+    const { task, taskError, osmInflight } = this.props;
     return (
       <div className='task-container'>
         <div className='map-container'>
           <div id='map' />
         </div>
-        {!task ? this.renderPlaceholder() : null}
+        {!task || taskError ? this.renderPlaceholder() : null}
         {hoverId ? this.renderPropertiesOverlay() : null}
         {osmInflight ? this.renderInflight() : this.renderInstrumentPanel()}
       </div>
@@ -365,6 +368,7 @@ function selector (state) {
   return {
     task: state.waytasks.data,
     taskId: state.waytasks.id,
+    taskError: state.waytasks.error,
     osmInflight: state.osmChange.fetching,
     lastUpdated: state.osmChange.taskId
   };

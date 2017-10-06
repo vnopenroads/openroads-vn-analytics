@@ -166,8 +166,10 @@ export function fetchNextWayTask (skippedTasks) {
     }
     return fetch(url)
       .then(response => {
-        if (response.status >= 400) {
-          throw new Error('Bad response');
+        if (response.status === 404) {
+          throw new Error('No tasks remaining');
+        } else if (response.status >= 400) {
+          throw new Error('Connection error');
         }
         return response.json();
       })
@@ -178,7 +180,7 @@ export function fetchNextWayTask (skippedTasks) {
         return dispatch(receiveWayTask(json));
       }, e => {
         console.log('e', e);
-        return dispatch(receiveWayTask(null, 'Data not available'));
+        return dispatch(receiveWayTask(null, e.message));
       });
   };
 }
