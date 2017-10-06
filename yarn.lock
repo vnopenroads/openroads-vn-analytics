@@ -39,6 +39,26 @@
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@mapbox/whoots-js/-/whoots-js-3.0.0.tgz#c1de4293081424da3ac30c23afa850af1019bb54"
 
+"@turf/bearing@5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@turf/bearing/-/bearing-5.0.0.tgz#448a2d1c7c6fde2b777c79886bf706256758e309"
+  dependencies:
+    "@turf/invariant" "5.0.0"
+
+"@turf/destination@5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@turf/destination/-/destination-5.0.0.tgz#9b1c3fc3bcb4fe631a5cb9e14dbc00baeb788770"
+  dependencies:
+    "@turf/helpers" "5.0.0"
+    "@turf/invariant" "5.0.0"
+
+"@turf/distance@5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@turf/distance/-/distance-5.0.0.tgz#f4db3dcfa160213fdaaf82b2153e1a479efaba6b"
+  dependencies:
+    "@turf/helpers" "5.0.0"
+    "@turf/invariant" "5.0.0"
+
 "@turf/helpers@5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@turf/helpers/-/helpers-5.0.0.tgz#732cb570e6aebca9ef7375e8e42fafa8e16e5d47"
@@ -68,6 +88,18 @@
 "@turf/meta@*", "@turf/meta@5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@turf/meta/-/meta-5.0.0.tgz#75b100e9854cd7b2fa63e68561e1298dac09d7b4"
+
+"@turf/point-on-line@^5.0.3":
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@turf/point-on-line/-/point-on-line-5.0.3.tgz#cb7d5f99a03a0d6338f6f8e3d4b3cca56b46bd45"
+  dependencies:
+    "@turf/bearing" "5.0.0"
+    "@turf/destination" "5.0.0"
+    "@turf/distance" "5.0.0"
+    "@turf/helpers" "5.0.0"
+    "@turf/invariant" "5.0.0"
+    "@turf/line-intersect" "^5.0.3"
+    "@turf/meta" "5.0.0"
 
 JSONStream@^1.0.3:
   version "1.3.1"
@@ -7659,6 +7691,12 @@ turf-extent@^1.0.4:
 turf-meta@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/turf-meta/-/turf-meta-1.0.2.tgz#74d4c495938eb24772a70b31a157ee3d4fd6ba1b"
+
+turf-point@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/turf-point/-/turf-point-2.0.1.tgz#a2dcc30a2d20f44cf5c6271df7bae2c0e2146069"
+  dependencies:
+    minimist "^1.1.0"
 
 tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"

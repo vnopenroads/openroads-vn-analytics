@@ -7,13 +7,17 @@ import config from '../config';
 import getExtent from 'turf-extent';
 import c from 'classnames';
 import intersect from '@turf/line-intersect';
+import pointOnLine from '@turf/point-on-line';
+import point from 'turf-point';
+import { createModifyLineString } from '../utils/to-osm';
 
 import {
   fetchNextWayTask,
   markTaskAsDone,
   setGlobalZoom,
   queryOsm,
-  reloadCurrentTask
+  reloadCurrentTask,
+  modifyWaysWithNewPoint
 } from '../actions/action-creators';
 
 const source = 'collisions';
@@ -73,7 +77,7 @@ var Tasks = React.createClass({
     meta: React.PropTypes.object,
     task: React.PropTypes.object,
     taskId: React.PropTypes.number,
-    taskError: React.PropTypes.error
+    taskError: React.PropTypes.string
   },
 
   componentWillMount: function () {
@@ -128,6 +132,14 @@ var Tasks = React.createClass({
           let selectedIds;
           if (this.state.mode === 'dedupe') {
             selectedIds = [featId];
+          } else if (this.state.mode === 'join') {
+            if (this.state.selectedIds[0] === featId) {
+              // in join, don't allow de-selecting the initially selected road
+              selectedIds = [].concat(this.state.selectedIds);
+            } else {
+              // in join, there can only be 2 selections
+              selectedIds = [this.state.selectedIds[0], featId];
+            }
           } else {
             // Clone the selected array.
             selectedIds = [].concat(this.state.selectedIds);
@@ -199,7 +211,7 @@ var Tasks = React.createClass({
 
   renderPlaceholder: function () {
     const { taskError } = this.props;
-    const message = taskError ? taskError : 'Loading your first task...';
+    const message = taskError || 'Loading your first task...';
     return (
       <div className='placeholder__fullscreen'>
         <h3 className='placeholder__message'>{message}</h3>
@@ -237,11 +249,11 @@ var Tasks = React.createClass({
                 {this.renderSelectedIds()}
               </div>
             </div>
-            <div className={c('form-group', 'map__panel--form', {disabled: this.state.selectedIds.length < 2})}>
+            <div className='form-group map__panel--form'>
               <p>2. Choose an action to perform.</p>
-              <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.onDedupe}>Remove Duplicates</button>
+              <button className={c('bttn bttn-m bttn-secondary', {disabled: this.state.selectedIds.length < 2})} type='button' onClick={this.onDedupe}>Remove Duplicates</button>
               <br />
-              <button className={c('bttn bttn-m bttn-secondary', {disabled: this.state.selectedIds.length > 2})} type='button' onClick={this.onJoin}>Join Intersection</button>
+              <button className={c('bttn bttn-m bttn-secondary', {disabled: this.state.selectedIds.length !== 1})} type='button' onClick={this.onJoin}>Create Intersection</button>
             </div>
             <div className='form-group map__panel--form'>
               <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.markAsDone}>Finish task</button>
@@ -251,27 +263,13 @@ var Tasks = React.createClass({
           </div>
         )}
         {mode === 'dedupe' ? this.renderDedupeMode() : null}
+        {mode === 'join' ? this.renderJoinMode() : null}
       </div>
     );
   },
 
   onJoin: function () {
-    // Get the 2 selected roads. There's a strict maximum of 2 for intersection.
-    let roadA = this.props.task._collisions.find(o => o._id === this.state.selectedIds[0]);
-    let roadB = this.props.task._collisions.find(o => o._id === this.state.selectedIds[1]);
-
-    let intersection = intersect(roadA, roadB);
-
-    if (!intersection.features.length) {
-      alert('Error: Roads do not intersect.');
-    }
-
-    // - Create the appropriate structure from ALL the intersecting points in
-    // intersection.features
-    // - Submit to the API
-    // - The UI should be refreshed to show the changes. (re-retch the
-    // same task?)
-    console.log('intersection', intersection);
+    this.setState({mode: 'join'});
   },
 
   onDedupe: function () {
@@ -294,7 +292,19 @@ var Tasks = React.createClass({
       <div className='form-group map__panel--form'>
         <h2>Remove Duplicate Roads</h2>
         <p>Click on a road to keep. The other roads here will be deleted.</p>
-              <button className={c('bttn bttn-m bttn-secondary', {disabled: !this.state.selectedIds.length})} type='button' onClick={this.commitDedupe}>Confirm</button>
+        <button className={c('bttn bttn-m bttn-secondary', {disabled: !this.state.selectedIds.length})} type='button' onClick={this.commitDedupe}>Confirm</button>
+        <br />
+        <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.exitMode}>Cancel</button>
+      </div>
+    );
+  },
+
+  renderJoinMode: function () {
+    return (
+      <div className='form-group map__panel--form'>
+        <h2>Create an Intersection</h2>
+        <p>Click on a road to create an intersection with.</p>
+        <button className={c('bttn bttn-m bttn-secondary', {disabled: this.state.selectedIds.length !== 2})} type='button' onClick={this.commitJoin}>Confirm</button>
         <br />
         <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.exitMode}>Cancel</button>
       </div>
@@ -311,6 +321,41 @@ var Tasks = React.createClass({
       }
     });
     this.props._markTaskAsDone(toDelete.map(feature => feature.properties._id));
+  },
+
+  commitJoin: function () {
+    const { selectedIds, renderedFeatures, currentTaskId } = this.state;
+    const { features } = renderedFeatures;
+    const line1 = features.find(f => f.properties._id === selectedIds[0]);
+    const line2 = features.find(f => f.properties._id === selectedIds[1]);
+    const intersectingFeatures = intersect(line1, line2);
+    const changes = [];
+    if (!intersectingFeatures.features.length) {
+      // lines don't intersect, join them from the nearest endpoint of line 1
+      // find the end of line 1 that's closest to line 2
+      // add that point to both ways
+      let start = pointOnLine(line2, point(line1.geometry.coordinates[0]));
+      let end = pointOnLine(line2, point(line1.geometry.coordinates[line1.geometry.coordinates.length - 1]));
+      let fromStart = start.properties.dist < end.properties.dist;
+      let intersection = fromStart ? start : end;
+      let connectingFeature = Object.assign({}, line1, {
+        geometry: {
+          type: 'LineString',
+          coordinates: fromStart
+            ? [intersection.geometry.coordinates].concat(line1.geometry.coordinates)
+            : line1.geometry.coordinates.concat([intersection.geometry.coordinates])
+        }
+      });
+      changes.push(connectingFeature);
+      changes.push(insertPointOnLine(line2, intersection));
+    } else {
+      let intersection = intersectingFeatures.features[0];
+      changes.push(insertPointOnLine(line1, intersection));
+      changes.push(insertPointOnLine(line2, intersection));
+    }
+    const changeset = createModifyLineString(changes);
+    this.props._queryOsm(currentTaskId, changeset);
+    this.props._markTaskAsDone([line1.properties._id, line2.properties._id]);
   },
 
   markAsDone: function () {
@@ -380,6 +425,9 @@ function dispatcher (dispatch) {
     _markTaskAsDone: function (taskId) { dispatch(markTaskAsDone(taskId)); },
     _queryOsm: function (taskId, payload) { dispatch(queryOsm(taskId, payload)); },
     _reloadCurrentTask: function (taskId) { dispatch(reloadCurrentTask(taskId)); },
+    _modifyWaysWithNewPoint: function (features, point) {
+      dispatch(modifyWaysWithNewPoint(features, point));
+    },
     _setGlobalZoom: function (...args) { dispatch(setGlobalZoom(...args)); }
   };
 }
@@ -395,6 +443,17 @@ function findIndex (haystack, fn) {
     }
     return false;
   });
-
   return idx;
+}
+
+function insertPointOnLine (feature, point) {
+  const nearest = pointOnLine(feature, point);
+  const coordinates = feature.geometry.coordinates.slice();
+  coordinates.splice(nearest.properties.index + 1, 0, point.geometry.coordinates);
+  return Object.assign({}, feature, {
+    geometry: {
+      type: 'LineString',
+      coordinates
+    }
+  });
 }

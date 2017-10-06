@@ -251,22 +251,7 @@ function completeOsmChange (taskId, error = null) {
 export function queryOsm (taskId, payload) {
   return function (dispatch) {
     dispatch(requestOsmChange());
-    const changesetUrl = `${config.api}/changeset/create`;
-    const details = {
-      uid: 555555,
-      user: 'Openroads Tasks'
-    };
-    fetch(changesetUrl, {
-      method: 'PUT',
-      body: objectToBlob(details)
-    }).then(response => {
-      if (response.status >= 400) {
-        throw new Error('Bad response');
-      }
-      return response.text();
-    }).then(upload, e => {
-      return dispatch(completeOsmChange(null, e));
-    });
+    createChangeset(dispatch, upload);
 
     function upload (changesetId) {
       let url = `${config.api}/changeset/${changesetId}/upload`;
@@ -279,6 +264,25 @@ export function queryOsm (taskId, payload) {
       });
     }
   };
+}
+
+function createChangeset (dispatch, cb) {
+  const changesetUrl = `${config.api}/changeset/create`;
+  const details = {
+    uid: 555555,
+    user: 'Openroads Tasks'
+  };
+  return fetch(changesetUrl, {
+    method: 'PUT',
+    body: objectToBlob(details)
+  }).then(response => {
+    if (response.status >= 400) {
+      throw new Error('Bad response');
+    }
+    return response.text();
+  }).then(cb, e => {
+    return dispatch(completeOsmChange(null, e));
+  });
 }
 
 function objectToBlob (obj) {

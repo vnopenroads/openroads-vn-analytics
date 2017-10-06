@@ -82,6 +82,7 @@
   },
   "dependencies": {
     "@turf/line-intersect": "^5.0.3",
+    "@turf/point-on-line": "^5.0.3",
     "babel-polyfill": "^6.3.14",
     "classnames": "^2.2.5",
     "d3": "^3.5.16",
@@ -111,6 +112,7 @@
     "titlecase": "^1.1.2",
     "transifex": "^1.5.0",
     "transifex-api-es6": "^0.2.3",
-    "turf-extent": "^1.0.4"
+    "turf-extent": "^1.0.4",
+    "turf-point": "^2.0.1"
   }
 }
