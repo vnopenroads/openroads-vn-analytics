@@ -23,7 +23,7 @@ const AATable = React.createClass({
   propTypes: {
     _fetchVProMMsBbox: React.PropTypes.func,
     _fetchVProMMsids: React.PropTypes.func,
-    bbox: React.PropTypes.object,
+    bbox: React.PropTypes.array,
     data: React.PropTypes.array,
     fetched: React.PropTypes.bool,
     vpromms: React.PropTypes.array

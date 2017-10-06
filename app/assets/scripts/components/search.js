@@ -222,15 +222,11 @@ var Search = React.createClass({
   },
 
   render: function () {
-    const searchResultsClasses = classNames({
-      'drop-content': true,
-      'search-results': true
-    });
     return (
       <form className='form-search' ref='searchForm'>
         <div className={classNames('drop dropdown center', {open: this.props.searching})}>
           {this.searchBar()}
-          <div className={searchResultsClasses} ref='results'>
+          <div className='drop-content search-results' ref='results'>
             {this.renderResults()}
           </div>
         </div>
