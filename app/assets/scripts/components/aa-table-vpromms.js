@@ -2,9 +2,13 @@
 // (combine aa-table-index.js and aa-table-vromms.js into single component)
 
 import React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import _ from 'lodash';
 import classnames from 'classnames';
-import { t } from '../utils/i18n';
+import { t, getLanguage } from '../utils/i18n';
+
+import { setGlobalZoom, fetchVProMMsBbox } from '../actions/action-creators';
 
 const displayHeader = [
   {key: 'id', value: 'VProMMS ID'},
@@ -17,7 +21,12 @@ const AATable = React.createClass({
   displayName: 'AATable',
 
   propTypes: {
-    data: React.PropTypes.array
+    _fetchVProMMsBbox: React.PropTypes.func,
+    _fetchVProMMsids: React.PropTypes.func,
+    bbox: React.PropTypes.array,
+    data: React.PropTypes.array,
+    fetched: React.PropTypes.bool,
+    vpromms: React.PropTypes.array
   },
 
   getInitialState: function () {
@@ -78,10 +87,15 @@ const AATable = React.createClass({
     return sorted.value();
   },
 
+  renderVProMMsLink: function (id) {
+    return (
+      <Link to={`/${getLanguage()}/explore`} onClick={(e) => { this.props._fetchVProMMsBbox(id); } }><strong>{id}</strong></Link>
+    );
+  },
+
   onPropertiesClick: function (vprommId) {
     let curId = this.state.expandedId;
     let newId = curId === vprommId ? null : vprommId;
-
     this.setState({expandedId: newId});
   },
 
@@ -90,6 +104,7 @@ const AATable = React.createClass({
     return (
       <tbody>
         {_.map(sorted, (vpromm, i) => {
+          const vprommInDB = (this.props.vpromms.indexOf(vpromm.id) !== -1);
           let propBtnLabel = this.state.expandedId === vpromm.id ? 'Hide' : 'Show';
           let propBtnClass = classnames('bttn-table-expand', {
             'bttn-table-expand--show': this.state.expandedId !== vpromm.id,
@@ -101,7 +116,7 @@ const AATable = React.createClass({
 
           return (
             <tr key={`vpromm-${vpromm.id}`} className={classnames({'alt': i % 2})}>
-              <th>{vpromm.id}</th>
+              <th className={classnames({'added': vprommInDB, 'not-added': !vprommInDB})}>{ vprommInDB ? this.renderVProMMsLink(vpromm.id) : vpromm.id }</th>
               <td className={classnames({'added': vpromm.inTheDatabase, 'not-added': !vpromm.inTheDatabase})}>{vpromm.inTheDatabase ? t('added') : t('not added')}</td>
               <td className={classnames({'added': vpromm.RouteShoot, 'not-added': !vpromm.RouteShoot})}>{vpromm.RouteShoot ? <a href={vpromm.RouteShootUrl}>link</a> : ''}</td>
               <td className={classnames({'added': vpromm.RoadLabPro, 'not-added': !vpromm.RoadLabPro})}>{vpromm.RoadLabPro ? t('added') : t('not added')}</td>
@@ -141,4 +156,19 @@ const AATable = React.createClass({
   }
 });
 
-export default AATable;
+function selector (state) {
+  return {
+    bbox: state.VProMMsWayBbox.bbox,
+    fetched: state.VProMMsWayBbox.fetched,
+    vpromms: state.VProMMSids.data
+  };
+}
+
+function dispatcher (dispatch) {
+  return {
+    _fetchVProMMsBbox: (id, source) => dispatch(fetchVProMMsBbox(id, source)),
+    _setGlobalZoom: (xyz) => dispatch(setGlobalZoom(xyz))
+  };
+}
+
+export default connect(selector, dispatcher)(AATable);

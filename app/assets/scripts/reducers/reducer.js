@@ -375,7 +375,10 @@ const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
       state = _.cloneDeep(state);
       state.fetching = false;
       state.fetched = true;
-      state.bbox = action.json;
+      state.bbox = action.json[Object.keys(action.json)[0]];
+      break;
+    case actions.REMOVE_VPROMMS_BBOX:
+      return VProMMsWayBboxDefaultState;
   }
   return state;
 };

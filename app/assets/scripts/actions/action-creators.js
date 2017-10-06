@@ -380,10 +380,10 @@ function receiveVProMMSids (json, error = null) {
   };
 }
 
-export function fetchVProMMsids (use) {
+export function fetchVProMMsids () {
   return function (dispatch) {
     dispatch(requestVProMMSids());
-    const route = use === 'search' ? '/ids' : '/properties?keys=iri_mean,rs_url';
+    const route = '/properties/roads/ids';
     let url = `${config.api}${route}`;
     return fetch(url)
       .then(response => {
@@ -470,6 +470,12 @@ export function fetchVProMMsBbox (vprommsId) {
       }
       dispatch(recieveVProMMsBbox(json));
     });
+  };
+}
+
+export function removeVProMMsBBox () {
+  return {
+    type: actions.REMOVE_VPROMMS_BBOX
   };
 }
 
