@@ -3,10 +3,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { t } from '../utils/i18n';
+import { fetchProvinces } from '../actions/action-creators';
 
 import AATable from '../components/aa-table-index';
-
-import { fetchVProMMsids, fetchProvinces, setCrossWalk } from '../actions/action-creators';
 
 var AnalyticsIndex = React.createClass({
   displayName: 'AnalyticsIndex',
@@ -64,7 +63,7 @@ var AnalyticsIndex = React.createClass({
           </div>
         </div>
         <div>
-          <AATable data={provinceData} crosswalk={this.props.crosswalk} />
+          <AATable data={provinceData} crosswalk={this.props.crosswalk} vpromms={this.props.VProMMSids} />
         </div>
       </div>
     );
@@ -80,7 +79,6 @@ var AnalyticsIndex = React.createClass({
 
 function selector (state) {
   return {
-    VProMMSids: state.VProMMSidsAnalytics,
     provinces: state.provinces.data,
     fetched: state.provinces.fetched
   };
@@ -88,7 +86,6 @@ function selector (state) {
 
 function dispatcher (dispatch) {
   return {
-    _fetchVProMMsids: (use) => dispatch(fetchVProMMsids(use)),
     _fetchProvinces: () => dispatch(fetchProvinces())
   };
 }

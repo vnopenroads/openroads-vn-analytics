@@ -31,7 +31,6 @@ export function fetchAdmins (id = null) {
     // In this case, we return a promise to wait for.
     // This is not required by thunk middleware, but it is convenient for us.
     let url = `${config.api}/admin/units?name=${id}&limit=10`;
-    console.log(url);
     console.time('fetch subregions');
     return fetch(url)
       .then(response => response.json())
@@ -380,10 +379,10 @@ function receiveVProMMSids (json, error = null) {
   };
 }
 
-export function fetchVProMMsids (use) {
+export function fetchVProMMsids () {
   return function (dispatch) {
     dispatch(requestVProMMSids());
-    const route = use === 'search' ? '/ids' : '/properties?keys=iri_mean,rs_url';
+    const route = '/properties/roads/ids';
     let url = `${config.api}${route}`;
     return fetch(url)
       .then(response => {
@@ -397,6 +396,81 @@ export function fetchVProMMsids (use) {
         }
         dispatch(receiveVProMMSids(json));
       });
+  };
+}
+
+// ////////////////////////////////////////////////////////////////
+//                   VProMMS IDs Source Data                     //
+// ////////////////////////////////////////////////////////////////
+
+function requestVProMMSidsSources () {
+  return {
+    type: actions.REQUEST_VPROMMS_IDS_SOURCES
+  };
+}
+
+function receiveVProMMSidsSources (json) {
+  return {
+    type: actions.RECEIVE_VPROMMS_IDS_SOURCES,
+    json: json,
+    recievedAt: Date.now()
+  };
+}
+
+export function fetchVProMMSidsSources (ids) {
+  return function (dispatch) {
+    dispatch(requestVProMMSidsSources());
+    let idsQuery = ids.join(',');
+    let url = `${config.api}/field/${idsQuery}/exists`;
+    return fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      if (json.statusCode === 400) {
+        return {dataAvailable: false};
+      } else if (json.statusCode > 400) {
+        throw new Error('Bad response');
+      }
+      dispatch(receiveVProMMSidsSources(json));
+    });
+  };
+}
+
+function requestVProMMSidSourceGeoJSON () {
+  return {
+    type: actions.REQUEST_VPROMMS_SOURCE_GEOJSON
+  };
+}
+
+function recieveVPRoMMSidSourceGeoJSON (json, vprommId, provinceName) {
+  return {
+    type: actions.RECIEVE_VPROMMS_SOURCE_GEOJSON,
+    json: json,
+    vprommId: vprommId,
+    provinceName: provinceName,
+    recievedAt: Date.now()
+  };
+}
+
+export function fetchVProMMsidSourceGeoJSON (vprommId, provinceName) {
+  return function (dispatch) {
+    dispatch(requestVProMMSidSourceGeoJSON());
+    // hit the grouped field geometries endpoint. do not download it.
+    let url = `${config.api}/field/geometries/${vprommId}?grouped=true`;
+    return fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      if (json.statusCode >= 400) {
+        throw new Error('Bad Response');
+      }
+      dispatch(recieveVPRoMMSidSourceGeoJSON(json, vprommId, provinceName));
+    });
+  };
+}
+
+export function removeVProMMsSourceGeoJSON () {
+  return {
+    type: actions.REMOVE_VPROMMS_SOURCE_GEOJSON,
+    receivedAt: Date.now()
   };
 }
 
@@ -444,6 +518,17 @@ export function setGlobalZoom (zoomSource) {
   };
 }
 
+// ///////////////////////////////////////////////////////////////
+//                          Set Admin                           //
+// ///////////////////////////////////////////////////////////////
+
+export function setAdmin (admin) {
+  return {
+    type: actions.SET_ADMIN,
+    id: admin.id,
+    name: admin.name
+  };
+}
 function requestVProMMsBbox () {
   return {
     type: actions.REQUEST_VPROMMS_BBOX
@@ -470,6 +555,12 @@ export function fetchVProMMsBbox (vprommsId) {
       }
       dispatch(recieveVProMMsBbox(json));
     });
+  };
+}
+
+export function removeVProMMsBBox () {
+  return {
+    type: actions.REMOVE_VPROMMS_BBOX
   };
 }
 

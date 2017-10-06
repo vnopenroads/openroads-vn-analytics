@@ -24,7 +24,7 @@ var Editor = React.createClass({
     globX: React.PropTypes.number,
     globY: React.PropTypes.number,
     globZ: React.PropTypes.number,
-    vprommsBbox: React.PropTypes.object,
+    vprommsBbox: React.PropTypes.array,
     adminBbox: React.PropTypes.array
   },
 
@@ -123,11 +123,14 @@ var Editor = React.createClass({
     let bounds;
     // then grab a bounding box provided by a user search in the search component
     if (nextProps.vprommsBbox !== this.props.vprommsBbox) {
-      bounds = nextProps.vprommsBbox[Object.keys(nextProps.vprommsBbox)[0]];
+      bounds = nextProps.vprommsBbox;
     }
     if (nextProps.adminBbox !== this.props.adminBbox) {
       bounds = nextProps.adminBbox;
     }
+
+    if (!bounds) return;
+
     // then generate a new centerpoint and zoom level with these bounds and zoom level
     const newXYZ = this.makeNewXYZ(bounds, zoom);
     // translate that xyz object into a url hash that when given to the iframe will

@@ -28,5 +28,19 @@ module.exports = {
     stops: [
       [false, '#808080']
     ]
+  },
+  'RouteShoot': {
+    property: 'RouteShoot',
+    type: 'nominal',
+    stops: [
+      false, '#808080'
+    ]
+  },
+  'RoadLabPro': {
+    property: 'RoadLabPro',
+    type: 'nominal',
+    stops: [
+      false, '#808080'
+    ]
   }
 };

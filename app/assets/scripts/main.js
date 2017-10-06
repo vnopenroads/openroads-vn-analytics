@@ -24,6 +24,7 @@ import Explore from './views/explore';
 import Analytics from './views/analytics';
 import AnalyticsIndex from './views/analytics-index';
 import AnalyticsAA from './views/analytics-admin-area';
+import AAFieldMap from './components/aa-field-map';
 
 const logger = createLogger({
   level: 'info',
@@ -65,7 +66,10 @@ render((
         <Route path='editor/*' component={Editor} pageClass='editor' />
         <Route path='explore' component={Explore} pageClass='explore' />
         <Route path='analytics' component={Analytics}>
-          <IndexRoute component={AnalyticsIndex} pageClass='analytics' />
+          <Route path='road' component={Analytics} >
+            <Route path=':vpromm' component={AAFieldMap} pageClass='analytics-aa'/>
+          </Route>
+          <Route path='main' component={AnalyticsIndex} pageClass='analytics' />
           <Route path=':aaId' component={AnalyticsAA} pageClass='analytics-aa' />
         </Route>
         <IndexRoute component={Home} pageClass='page--landing' />
