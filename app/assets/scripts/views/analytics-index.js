@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { t } from '../utils/i18n';
-import { fetchProvinces } from '../actions/action-creators';
+import { fetchProvinces, fetchVProMMsidsProperties, fetchFieldVProMMsids } from '../actions/action-creators';
 
 import AATable from '../components/aa-table-index';
 // 
@@ -14,41 +14,50 @@ var AnalyticsIndex = React.createClass({
     children: React.PropTypes.object,
     _fetchProvinces: React.PropTypes.func,
     _fetchVProMMsids: React.PropTypes.func,
+    _fetchVProMMsidsProperties: React.PropTypes.func,
+    _fetchFieldVProMMsids: React.PropTypes.func,
     _setCrossWalk: React.PropTypes.func,
-    fetched: React.PropTypes.bool,
-    provinces: React.PropTypes.object,
+    provincesFetched: React.PropTypes.bool,
+    VProMMsFetched: React.PropTypes.bool,
+    provinces: React.PropTypes.array,
     crosswalk: React.PropTypes.object,
     params: React.PropTypes.object,
     VProMMSids: React.PropTypes.object,
-    fieldIds: React.PropTypes.array
+    VProMMs: React.PropTypes.object,
+    fieldIds: React.PropTypes.array,
+    fieldIdsFetched: React.PropTypes.bool
   },
 
   componentWillMount: function () {
     this.props._fetchProvinces();
+    this.props._fetchFieldVProMMsids();
+    this.props._fetchVProMMsidsProperties();
   },
 
   renderAnalyticsIndex: function () {
-    let accumulator = { done: 0, total: 0 };
-    const provinceData = _.map(this.props.VProMMSids.data, (data, id) => {
-      const name = data.provinceName;
-      // generate route to province's admin_boundaires id.
-      const route = this.props.crosswalk.province[id];
-      const done = data.vpromms.filter(v => v.inTheDatabase).length;
-      const total = data.vpromms.length;
-      accumulator.done += done;
-      accumulator.total += total;
-      const percentageComplete = (done / total).toFixed(2);
+    const vprommsProvinceKeys = Object.keys(_.invert(this.props.crosswalk.province));
+    const provinces = this.props.provinces.filter(province => vprommsProvinceKeys.indexOf(province.id.toString()) !== -1);
+    let accumulator = { field: this.props.fieldIds.length, total: Object.keys(this.props.VProMMs).length };
+    const provinceData = _.map(provinces, (province, key) => {
+      // very very crude answer to an issue of english name, will pluck when names are cleaned;
+      const name = province.name_en.replace('Thua Thien H', 'Thua Thien');
+      const id = _.invert(this.props.crosswalk.province)[province.id]; 
+      const route = province.id;
+      const idTest = new RegExp(id);
+      const field = this.props.fieldIds.filter(vpromm => idTest.test(vpromm)).length;
+      const total = Object.keys(this.props.VProMMs).filter(vpromm => idTest.test(vpromm)).length;
+      const percentageComplete = (field / total).toFixed(2);
       return {
-        id,
         name,
-        done,
+        id,
+        route,
+        field,
         total,
-        percentageComplete,
-        route
+        percentageComplete
       };
     });
-    const { done, total } = accumulator;
-    const completion = (accumulator.done / accumulator.total) * 100;
+    const { field, total } = accumulator;
+    const completion = (accumulator.field / accumulator.total) * 100;
     return (
       <div>
         <div className='a-header'>
@@ -58,7 +67,7 @@ var AnalyticsIndex = React.createClass({
         </div>
 
         <div className='a-main__status'>
-          <h2><strong>{completion.toFixed(2)}%</strong> {t('of VProMMS Ids added')} ({done.toLocaleString()} of {total.toLocaleString()})</h2>
+          <h2><strong>{completion.toFixed(2)}%</strong> {t('of VProMMS Ids have field data collected')} ({field.toLocaleString()} of {total.toLocaleString()})</h2>
           <div className='meter'>
             <div className='meter__internal' style={{width: `${completion}%`}}></div>
           </div>
@@ -71,7 +80,8 @@ var AnalyticsIndex = React.createClass({
   },
 
   render: function () {
-    return this.props.fetched ? this.renderAnalyticsIndex() : (<div/>);
+    const allFetched = (this.props.provincesFetched && this.props.VProMMsFetched && this.props.fieldIdsFetched)
+    return  allFetched ? this.renderAnalyticsIndex() : (<div/>);
   }
 });
 
@@ -80,14 +90,20 @@ var AnalyticsIndex = React.createClass({
 
 function selector (state) {
   return {
-    provinces: state.provinces.data,
-    fetched: state.provinces.fetched
+    provinces: state.provinces.data.province,
+    provincesFetched: state.provinces.fetched,
+    VProMMs: state.VProMMsidProperties.properties,
+    VProMMsFetched: state.VProMMsidProperties.fetched,
+    fieldIds: state.fieldVProMMsids.ids,
+    fieldIdsFetched: state.fieldVProMMsids.fetched
   };
 }
 
 function dispatcher (dispatch) {
   return {
-    _fetchProvinces: () => dispatch(fetchProvinces())
+    _fetchProvinces: () => dispatch(fetchProvinces()),
+    _fetchVProMMsidsProperties: () => dispatch(fetchVProMMsidsProperties()),
+    _fetchFieldVProMMsids: () => dispatch(fetchFieldVProMMsids())
   };
 }
 

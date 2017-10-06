@@ -488,7 +488,7 @@ function receiveVProMMsidsProperties (json) {
 export function fetchVProMMsidsProperties () {
   return function (dispatch) {
     dispatch(requestVProMMsidsProperties);
-    const url = `${config.url}/properties/roads/ids`;
+    const url = `${config.api}/properties/roads`;
     return fetch(url)
     .then(response => response.json())
     .then(json => {
@@ -591,7 +591,7 @@ export function removeVProMMsBBox () {
 }
 
 function requestFieldVProMMsids () {
-  return { 
+  return {
     type: actions.REQUEST_VPROMMS_FIELD_IDS
   };
 }
@@ -599,14 +599,14 @@ function requestFieldVProMMsids () {
 function receiveFieldVProMMsids (json) {
   return {
     type: actions.RECEIVE_VPROMMS_FIELD_IDS,
-    json: actions.json
+    json: json
   };
 }
 
 export function fetchFieldVProMMsids (json) {
   return function (dispatch) {
     dispatch(requestFieldVProMMsids);
-    const url = `${config.api}/field.ids`;
+    const url = `${config.api}/field/ids`;
     return fetch(url)
     .then(response => response.json())
     .then(json => {

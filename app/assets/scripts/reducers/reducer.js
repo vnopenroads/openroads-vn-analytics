@@ -430,7 +430,7 @@ const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
       state = _.cloneDeep(state);
       state.fetching = false;
       state.fetched = true;
-      state.bbox = action.json[Object.keys(action.json)[0]];
+      state.bbox = action.json;
   }
   return state;
 };
@@ -470,7 +470,7 @@ const fieldVProMMsids = function (state = defaultFieldVProMMsids, action) {
       break;
     case actions.RECEIVE_VPROMMS_FIELD_IDS:
       state = _.cloneDeep(state);
-      state.fetching = false;     
+      state.fetching = false;
       state.fetched = true;
       state.ids = action.json;
   }
