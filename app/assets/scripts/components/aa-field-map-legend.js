@@ -14,7 +14,7 @@ const AAFieldMapLegend = React.createClass({
     // matching source in the lineColors config
     return this.props.sources.map((source, i) => {
       return (
-        <li key={i}>
+        <li key={source}>
           <div>
             <span className='aa-map-legend-label'>{source}</span>
             <svg width="100" height="15">

@@ -414,7 +414,6 @@ const VProMMSidSourceGeoJSON = function (state = defaultVProMMSidSourceGeoJSON, 
       break;
     case actions.REMOVE_VPROMMS_SOURCE_GEOJSON:
       console.log('REMOVE_SOURCE_GEOJSON');
-      state = _.cloneDeep(state);
       state = defaultVProMMSidSourceGeoJSON;
       break;
   }
@@ -432,7 +431,7 @@ const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
       state = _.cloneDeep(state);
       state.fetching = false;
       state.fetched = true;
-      state.bbox = action.json;
+      state.bbox = action.json[Object.keys(action.json)[0]];
   }
   return state;
 };
