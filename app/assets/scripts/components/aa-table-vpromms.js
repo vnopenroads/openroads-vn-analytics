@@ -175,7 +175,7 @@ const AATable = React.createClass({
           {this.renderTableBody()}
         </table>
       </div>
-    )
+    );
   }
 });
 

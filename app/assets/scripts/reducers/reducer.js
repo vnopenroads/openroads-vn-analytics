@@ -421,7 +421,6 @@ const VProMMSidSourceGeoJSON = function (state = defaultVProMMSidSourceGeoJSON, 
   return state;
 };
 
-
 const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
   switch (action.type) {
     case actions.REQUEST_VPROMMS_IDS:
@@ -565,7 +564,7 @@ const defaultAdminChildren = {
   fetched: false,
   fetching: false,
   data: []
-}
+};
 
 const adminChildren = function (state = defaultAdminChildren, action) {
   switch (action.type) {
