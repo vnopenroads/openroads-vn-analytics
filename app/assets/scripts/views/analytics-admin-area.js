@@ -31,7 +31,8 @@ var AnalyticsAA = React.createClass({
     fieldFetched: React.PropTypes.bool,
     propsFetched: React.PropTypes.bool,
     adminChildren: React.PropTypes.object,
-    adminChildrenFetched: React.PropTypes.bool
+    adminChildrenFetched: React.PropTypes.bool,
+    location: React.PropTypes.object
   },
 
   renderAdminChildren: function (children) {
@@ -61,7 +62,12 @@ var AnalyticsAA = React.createClass({
     this.props._fetchAdminChildren(this.props.params.aaId);
   },
 
+  handlePop: function () {
+    this.props.adminChildren.level === 'district' ? this.props._fetchAdminChildren(this.props.adminChildren.parent) : '';
+  },
+
   renderAnalyticsAdmin: function () {
+    this.props.location.action === 'POP' ? this.handlePop() : '';
     const level = this.props.adminChildren.level;
     const provinceId = (level === 'province') ? _.invert(this.props.crosswalk[level])[this.props.params.aaId] : this.props.crosswalk[level][this.props.params.aaId];
     const provinceName = this.props.adminChildren.name;
