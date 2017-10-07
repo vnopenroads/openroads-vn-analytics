@@ -66,14 +66,12 @@ var AnalyticsAA = React.createClass({
     const provinceId = (level === 'province') ? _.invert(this.props.crosswalk[level])[this.props.params.aaId] : this.props.crosswalk[level][this.props.params.aaId];
     const provinceName = this.props.adminChildren.name;
     const idTest = (level === 'province') ? new RegExp(provinceId) : [new RegExp(provinceId), new RegExp(_.invert(this.props.crosswalk['province'])[this.props.adminChildren.parent])];
-    console.log(level);
     const adminData = (level === 'province') ? Object.keys(this.props.VProMMsProps).filter(id => idTest.test(id.substring(0, 2))) : (Object.keys(this.props.VProMMsProps).filter(
       (id) => {
         id = id.substring(0, 5);
         return idTest[0].test(id) && idTest[1].test(id);
       })
     );
-    console.log(adminData);
     const propertiesData = _.pickBy(this.props.VProMMsProps, (prop, vpromm) => (adminData.indexOf(vpromm) !== -1));
     const field = (level === 'province') ? this.props.fieldIds.filter(vpromm => idTest.test(vpromm.substring(0, 2))).length : (Object.keys(this.props.VProMMsProps).filter(
       (id) => {
