@@ -220,13 +220,14 @@ a:active{
   }
 
   > .inner {
+    display: flex;
+    flex-wrap: nowrap;
     @extend .row;
     @extend .row--centered;
   }
 
   .site {
     &__headline {
-      float: left;
       line-height: 1.25rem;
       padding: 0.325rem 0;
 
@@ -258,18 +259,15 @@ a:active{
 
     /* Main navigation */
     &__nav {
-      float: left;
       clear: both;
       text-align: center;
-      margin: 1rem 0 0 0;
-      display: block;
+      margin: 1rem 0 0 auto;
       &.show-menu,
       &.show-search {
         margin-top: 1rem;
       }
 
       @include media(medium-up) {
-        float: right;
         margin-top: 0;
         clear: none;
       }
@@ -408,11 +406,36 @@ a:active{
         @include media(small-up) {
           right: $global-padding * 2 + 2rem;
         }
+        @include media(large-up) {
+          display: none;
+        }
+
         a:before {
           content: none;
         }
       }
-
+      .search-wrapper {
+        overflow: hidden;
+        visibility: hidden;
+        opacity: 0;
+        max-height: 0;
+        transition: opacity 0.16s ease 0s, max-height 0.16s ease 0s, visibility 0.16s linear 0s;
+        @include media(large-up) {
+          display: inline-block;
+          overflow: visible;
+          visibility: visible;
+          opacity: 1;
+          max-height: 600rem;
+          text-align: right;
+        }
+      }
+      &.show-search .search-wrapper {
+        display: inline-block;
+        overflow: visible;
+        visibility: visible;
+        opacity: 1;
+        max-height: 600rem;
+      }
       // ^^ Search.
       .drop {
         display: inline-block;

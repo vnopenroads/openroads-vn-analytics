@@ -101,38 +101,72 @@ const stats = function (state = {fetching: false, fetched: false, data: null}, a
   return state;
 };
 
-const tofixtasksDefaultState = {
+const waytasksDefaultState = {
   fetching: false,
   fetched: false,
-  data: {
-    tasks: {
-      meta: {
-        page: null,
-        limit: null,
-        total: null
-      },
-      results: []
-    }
-  }
+  data: null,
+  id: null
 };
-const tofixtasks = function (state = tofixtasksDefaultState, action) {
+const waytasks = function (state = waytasksDefaultState, action) {
   switch (action.type) {
-    case actions.REQUEST_TOFIX_TASKS:
-      console.log('REQUEST_TOFIX_TASKS');
+    case actions.REQUEST_WAY_TASK:
+      console.log('REQUEST_WAY_TASK');
       state = _.cloneDeep(state);
       state.error = null;
       state.fetching = true;
       break;
-    case actions.RECEIVE_TOFIX_TASKS:
-      console.log('RECEIVE_TOFIX_TASKS');
+    case actions.RECEIVE_WAY_TASK:
+      console.log('RECEIVE_WAY_TASK');
       state = _.cloneDeep(state);
       if (action.error) {
         state.error = action.error;
       } else {
-        state.data = action.json;
+        state.data = action.json.data;
+        state.id = action.json.id;
       }
       state.fetching = false;
       state.fetched = true;
+      break;
+    case actions.RELOAD_WAY_TASK:
+      console.log('RELOAD_WAY_TASK');
+      state = _.cloneDeep(state);
+      state.id = null;
+      state.data = null;
+      break;
+  }
+  return state;
+};
+
+const osmChangeState = {
+  fetching: false,
+  fetched: false,
+  taskId: null,
+  error: null
+};
+const osmChange = function (state = osmChangeState, action) {
+  switch (action.type) {
+    case actions.REQUEST_OSM_CHANGE:
+      console.log('REQUEST_OSM_CHANGE');
+      state = _.cloneDeep(state);
+      state.error = null;
+      state.fetching = true;
+      break;
+    case actions.COMPLETE_OSM_CHANGE:
+      console.log('COMPLETE_OSM_CHANGE');
+      state = _.cloneDeep(state);
+      if (action.error) {
+        state.error = action.error;
+      } else {
+        state.taskId = action.taskId;
+      }
+      state.fetching = false;
+      state.fetched = true;
+      break;
+    case actions.RELOAD_WAY_TASK:
+      console.log('RELOAD_WAY_TASK');
+      state = _.cloneDeep(state);
+      state.fetched = false;
+      state.taskId = false;
       break;
   }
   return state;
@@ -642,6 +676,8 @@ export default combineReducers({
   admin,
   admins,
   adminBbox,
+  waytasks,
+  osmChange,
   adminChildren,
   crosswalk,
   search,
@@ -660,6 +696,7 @@ export default combineReducers({
   searchResultsDisplay,
   setSearchType,
   setFilteredVProMMs,
+  stats,
   VProMMSids,
   VProMMSidsAnalytics,
   VProMMsWayBbox,
