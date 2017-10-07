@@ -616,7 +616,7 @@ const adminChildren = function (state = defaultAdminChildren, action) {
       state = _.cloneDeep(state);
       state.fetching = false;
       state.fetched = true;
-      state.data = { 
+      state.data = {
         children: action.json.children,
         level: action.json.level,
         name: action.json.name_en,

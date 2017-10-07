@@ -6,7 +6,6 @@ import { t, getLanguage } from '../utils/i18n';
 import { Link } from 'react-router';
 
 import AATable from '../components/aa-table-vpromms';
-import Headerdrop from '../components/headerdrop';
 
 import { fetchVProMMsids, fetchAdminChildren, fetchFieldVProMMsids, fetchVProMMsidsProperties, setCrossWalk } from '../actions/action-creators';
 
