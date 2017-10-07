@@ -135,7 +135,7 @@ function selector (state) {
     VProMMSids: state.VProMMSidsAnalytics,
     VProMMsProps: state.VProMMsidProperties.properties,
     adminChildren: state.adminChildren.data,
-    adminChildrenFetched: !state.adminChildren.fetching
+    adminChildrenFetched: state.adminChildren.fetched
   };
 }
 
