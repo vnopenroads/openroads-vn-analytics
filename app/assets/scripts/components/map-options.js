@@ -14,7 +14,7 @@ const MapOptions = React.createClass({
     return (
       <div className='map-options map-panel'>
         <div className='form-group'>
-          <label className='form__option form__option--custom-checkbox' htmlFor='show-no-vpromms'>
+          <label className='map-options-label form__option form__option--custom-checkbox' htmlFor='show-no-vpromms'>
             <input type='checkbox' name='show-no-vpromms' id='show-no-vpromms' value='show-no-vpromms' onChange={ e => this.props.handleShowNoVpromms(e) } />
             <span className='form__option__text' data-title='These will have no properties.'>{t('Show road without vPromMMS ID')}</span>
             <span className='form__option__ui'></span>
@@ -23,7 +23,7 @@ const MapOptions = React.createClass({
 
         <div className='form-group'>
           <label className='map-options-label'>{t('Select visualized variable')}</label>
-          <select onChange={ e => this.props.handleLayerChange(e) }>
+          <select className='map__options--select' onChange={ e => this.props.handleLayerChange(e) }>
             <option value='iri'>{t('IRI')}</option>
             <option value='or_width'>{t('Width')}</option>
             <option value='or_condition'>{t('Condition')}</option>
