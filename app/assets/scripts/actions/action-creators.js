@@ -48,6 +48,34 @@ export function clearAdmins () {
   };
 }
 
+function requestAdminChildren () {
+  return {
+    type: actions.REQUEST_ADMIN_CHILDREN
+  };
+}
+
+function receiveAdminChildren (json) {
+  return {
+    type: actions.RECEIVE_ADMIN_CHILDREN,
+    json: json
+  };
+}
+
+export function fetchAdminChildren (id) {
+  return function (dispatch) {
+    dispatch(requestAdminChildren());
+    const url = `${config.api}/admin/${id}/info`;
+    return fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      if (json.statusCode >= 400) {
+        throw new Error('Bad Request');
+      }
+      dispatch(receiveAdminChildren(json));
+    });
+  };
+}
+
 // ////////////////////////////////////////////////////////////////
 //                        SEARCH RESULTS                         //
 // ////////////////////////////////////////////////////////////////
@@ -700,7 +728,7 @@ function receiveProvinces (json) {
 
 export function fetchProvinces () {
   return function (dispatch) {
-    dispatch(requestProvinces())
+    dispatch(requestProvinces());
     let url = `${config.api}/admin/province/units`;
     return fetch(url)
     .then(response => response.json())
@@ -711,7 +739,7 @@ export function fetchProvinces () {
       dispatch(receiveProvinces(json));
     });
   };
-};
+}
 
 export function setCrossWalk () {
   return {

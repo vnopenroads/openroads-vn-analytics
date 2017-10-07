@@ -8,7 +8,7 @@ import classnames from 'classnames';
 import { api } from '../config';
 import { Link } from 'react-router';
 import { t, getLanguage } from '../utils/i18n';
-import { fetchVProMMsBbox, fetchFieldVProMMsids } from '../actions/action-creators';
+import { fetchVProMMsBbox } from '../actions/action-creators';
 
 const displayHeader = [
   {key: 'id', value: 'VProMMS ID'},
@@ -121,7 +121,7 @@ const AATable = React.createClass({
     return (
       <tbody>
         {_.map(sorted, (vpromm, i) => {
-          const vprommFieldInDB = (this.props.fieldIds.indexOf(vpromm) !== -1)
+          const vprommFieldInDB = (this.props.fieldIds.indexOf(vpromm) !== -1);
           let propBtnLabel = this.state.expandedId === vpromm ? 'Hide' : 'Show';
           let propBtnClass = classnames('bttn-table-expand', {
             'bttn-table-expand--show': this.state.expandedId !== vpromm,
@@ -176,10 +176,9 @@ function selector (state) {
 
 function dispatcher (dispatch) {
   return {
-    _fetchVProMMsBbox: (id, source) => dispatch(fetchVProMMsBbox(id, source)),
+    _fetchVProMMsBbox: (id, source) => dispatch(fetchVProMMsBbox(id, source))
   };
 }
 
 export default connect(selector, dispatcher)(AATable);
 
-// fieldIds={this.props.fieldIds}

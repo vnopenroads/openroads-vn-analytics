@@ -70,7 +70,7 @@ render((
             <Route path=':vpromm' component={AAFieldMap} pageClass='analytics-aa'/>
           </Route>
           <IndexRoute component={AnalyticsIndex} pageClass='analytics' />
-          <Route path=':aaId' component={AnalyticsAA} pageClass='analytics-aa' />
+          <Route path=':aaId' component={AnalyticsAA} pageClass='analytics-aa'/>
         </Route>
         <IndexRoute component={Home} pageClass='page--landing' />
         <Route path='*' component={UhOh}/>

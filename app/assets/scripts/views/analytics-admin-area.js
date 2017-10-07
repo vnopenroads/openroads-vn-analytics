@@ -2,12 +2,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { _ } from 'lodash';
-import { t } from '../utils/i18n';
+import { t, getLanguage } from '../utils/i18n';
+import { Link } from 'react-router';
 
 import AATable from '../components/aa-table-vpromms';
 import Headerdrop from '../components/headerdrop';
 
-import { fetchVProMMsids, fetchFieldVProMMsids, fetchVProMMsidsProperties, setCrossWalk } from '../actions/action-creators';
+import { fetchVProMMsids, fetchAdminChildren, fetchFieldVProMMsids, fetchVProMMsidsProperties, setCrossWalk } from '../actions/action-creators';
 
 import config from '../config';
 
@@ -18,6 +19,7 @@ var AnalyticsAA = React.createClass({
     _fetchVProMMsids: React.PropTypes.func,
     _fetchFieldVProMMsids: React.PropTypes.func,
     _fetchVProMMsidsProperties: React.PropTypes.func,
+    _fetchAdminChildren: React.PropTypes.func,
     _setCrossWalk: React.PropTypes.func,
     children: React.PropTypes.object,
     routeParams: React.PropTypes.object,
@@ -28,49 +30,58 @@ var AnalyticsAA = React.createClass({
     VProMMsProps: React.PropTypes.object,
     fieldIds: React.PropTypes.array,
     fieldFetched: React.PropTypes.bool,
-    propsFetched: React.PropTypes.bool
+    propsFetched: React.PropTypes.bool,
+    adminChildren: React.PropTypes.object,
+    adminChildrenFetched: React.PropTypes.bool
+  },
+
+  renderAdminChildren: function (children) {
+    return (
+      <ul className='a-children'>
+        {children.map((child, i) => {
+          return (
+            <li><Link onClick={(e) => { this.props._fetchAdminChildren(child.id); } } to={`/${getLanguage()}/analytics/${child.id}`}>{child.name_en}</Link></li>
+          );
+        })}
+      </ul>
+    );
   },
 
   renderDataDumpLinks: function (provinceId) {
     return (
-        <Headerdrop
-          id='datadump-selector'
-          className='drop-road-network'
-          triggerClassName='drop-toggle drop-road-network caret bttn bttn-secondary bttn-road-network'
-          triggerText={`${t('Download')} ${t('Roads')}`}
-          triggerElement='a'
-          direction='down'
-          alignment='right'>
-          <ul className='drop-menu drop-menu--select' role='menu'>
-            {
-            ['CSV'].map((type, i) => {
-              let cl = 'drop-menu-item';
-              return (
-                <li>
-                  <a className={cl} href={`${config.provinceDumpBaseUrl}${provinceId}.${type.toLowerCase()}`}>
-                    {`${t('Download')} ${type}`}
-                  </a>
-                </li>
-              );
-            })
-            }
-          </ul>
-        </Headerdrop>
+      <div>
+        <h3 classNam='a-header'>Admin Chilren</h3>
+        <a className='bttn bttn-secondary' href={`${config.provinceDumpBaseUrl}${provinceId}.csv`}>Download Roads</a>
+      </div>
     );
   },
 
   componentWillMount: function () {
     this.props._fetchVProMMsidsProperties();
     this.props._fetchFieldVProMMsids();
+    this.props._fetchAdminChildren(this.props.params.aaId);
   },
 
   renderAnalyticsAdmin: function () {
-    const provinceId = _.invert(this.props.crosswalk.province)[this.props.routeParams.aaId];
-    const provinceName = this.props.VProMMSids.data[provinceId].provinceName;
-    const idTest = new RegExp(provinceId);
-    const adminData = Object.keys(this.props.VProMMsProps).filter(id => idTest.test(id));
+    const level = this.props.adminChildren.level;
+    const provinceId = (level === 'province') ? _.invert(this.props.crosswalk[level])[this.props.params.aaId] : this.props.crosswalk[level][this.props.params.aaId];
+    const provinceName = this.props.adminChildren.name;
+    const idTest = (level === 'province') ? new RegExp(provinceId) : [new RegExp(provinceId), new RegExp(_.invert(this.props.crosswalk['province'])[this.props.adminChildren.parent])];
+    console.log(level);
+    const adminData = (level === 'province') ? Object.keys(this.props.VProMMsProps).filter(id => idTest.test(id.substring(0, 2))) : (Object.keys(this.props.VProMMsProps).filter(
+      (id) => {
+        id = id.substring(0, 5);
+        return idTest[0].test(id) && idTest[1].test(id);
+      })
+    );
+    console.log(adminData);
     const propertiesData = _.pickBy(this.props.VProMMsProps, (prop, vpromm) => (adminData.indexOf(vpromm) !== -1));
-    const field = this.props.fieldIds.filter(vpromm => idTest.test(vpromm)).length;
+    const field = (level === 'province') ? this.props.fieldIds.filter(vpromm => idTest.test(vpromm.substring(0, 2))).length : (Object.keys(this.props.VProMMsProps).filter(
+      (id) => {
+        id = id.substring(0, 5);
+        return idTest[0].test(id) && idTest[1].test(id);
+      }).length
+    );
     const total = adminData.length;
     const completion = total !== 0 ? ((field / total) * 100) : 0;
     let completionMainText;
@@ -84,13 +95,14 @@ var AnalyticsAA = React.createClass({
       <div>
         <div className='a-header'>
           <div className='a-headline'>
-            <h1>{provinceName} {t('Province')}</h1>
+            <h1>{provinceName}</h1>
           </div>
           <div className='a-head-actions'>
             { completion ? this.renderDataDumpLinks(provinceId) : '' }
           </div>
         </div>
         <div>
+          { (level !== 'district') ? this.renderAdminChildren(this.props.adminChildren.children) : '' }
           <div className='a-main__status'>
             <h2><strong>{completionMainText}</strong>{completionTailText}</h2>
             <div className='meter'>
@@ -106,7 +118,7 @@ var AnalyticsAA = React.createClass({
   },
 
   render: function () {
-    const allFetched = (this.props.propsFetched && this.props.fieldFetched);
+    const allFetched = (this.props.propsFetched && this.props.fieldFetched && this.props.adminChildrenFetched);
     return allFetched ? this.renderAnalyticsAdmin() : (<div/>);
   }
 });
@@ -118,7 +130,9 @@ function selector (state) {
     propsFetched: state.VProMMsidProperties.fetched,
     fieldFetched: state.fieldVProMMsids.fetched,
     VProMMSids: state.VProMMSidsAnalytics,
-    VProMMsProps: state.VProMMsidProperties.properties
+    VProMMsProps: state.VProMMsidProperties.properties,
+    adminChildren: state.adminChildren.data,
+    adminChildrenFetched: !state.adminChildren.fetching
   };
 }
 
@@ -127,6 +141,7 @@ function dispatcher (dispatch) {
     _fetchVProMMsids: () => dispatch(fetchVProMMsids()),
     _fetchFieldVProMMsids: () => dispatch(fetchFieldVProMMsids()),
     _fetchVProMMsidsProperties: () => dispatch(fetchVProMMsidsProperties()),
+    _fetchAdminChildren: (id) => dispatch(fetchAdminChildren(id)),
     _setCrossWalk: () => dispatch(setCrossWalk())
   };
 }

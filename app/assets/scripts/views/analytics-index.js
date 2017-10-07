@@ -6,7 +6,7 @@ import { t } from '../utils/i18n';
 import { fetchProvinces, fetchVProMMsidsProperties, fetchFieldVProMMsids } from '../actions/action-creators';
 
 import AATable from '../components/aa-table-index';
-// 
+
 var AnalyticsIndex = React.createClass({
   displayName: 'AnalyticsIndex',
 
@@ -41,11 +41,11 @@ var AnalyticsIndex = React.createClass({
     const provinceData = _.map(provinces, (province, key) => {
       // very very crude answer to an issue of english name, will pluck when names are cleaned;
       const name = province.name_en.replace('Thua Thien H', 'Thua Thien');
-      const id = _.invert(this.props.crosswalk.province)[province.id]; 
+      const id = _.invert(this.props.crosswalk.province)[province.id];
       const route = province.id;
       const idTest = new RegExp(id);
-      const field = this.props.fieldIds.filter(vpromm => idTest.test(vpromm)).length;
-      const total = Object.keys(this.props.VProMMs).filter(vpromm => idTest.test(vpromm)).length;
+      const field = this.props.fieldIds.filter(vpromm => idTest.test(vpromm.substring(0, 2))).length;
+      const total = Object.keys(this.props.VProMMs).filter(vpromm => idTest.test(vpromm.substring(0, 2))).length;
       const percentageComplete = (field / total).toFixed(2);
       return {
         name,
@@ -80,8 +80,8 @@ var AnalyticsIndex = React.createClass({
   },
 
   render: function () {
-    const allFetched = (this.props.provincesFetched && this.props.VProMMsFetched && this.props.fieldIdsFetched)
-    return  allFetched ? this.renderAnalyticsIndex() : (<div/>);
+    const allFetched = (this.props.provincesFetched && this.props.VProMMsFetched && this.props.fieldIdsFetched);
+    return allFetched ? this.renderAnalyticsIndex() : (<div/>);
   }
 });
 

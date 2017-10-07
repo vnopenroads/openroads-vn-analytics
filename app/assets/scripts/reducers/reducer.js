@@ -594,7 +594,7 @@ const crosswalk = function (state = {}, action) {
     case actions.SET_CROSSWALK:
       state = _.cloneDeep(state);
       state.province = _.invert(_.pickBy(ADMIN_MAP.province, (province) => { return !/^\s*$/.test(province); }));
-      state.district = _.invert(_.pickBy(ADMIN_MAP.district, (district) => { return district !== 'missing'; }));
+      state.district = ADMIN_MAP.district;
       break;
   }
   return state;
@@ -603,7 +603,7 @@ const crosswalk = function (state = {}, action) {
 const defaultAdminChildren = {
   fetched: false,
   fetching: false,
-  data: []
+  data: {}
 };
 
 const adminChildren = function (state = defaultAdminChildren, action) {
@@ -616,7 +616,13 @@ const adminChildren = function (state = defaultAdminChildren, action) {
       state = _.cloneDeep(state);
       state.fetching = false;
       state.fetched = true;
-      state.data = action.json.children;
+      state.data = { 
+        children: action.json.children,
+        level: action.json.level,
+        name: action.json.name_en,
+        childLevel: action.json.children_level,
+        parent: action.json.parent.id
+      };
   }
   return state;
 };
@@ -636,11 +642,11 @@ export default combineReducers({
   admin,
   admins,
   adminBbox,
+  adminChildren,
   crosswalk,
   search,
   stats,
   tofixtasks,
-  adminChildren,
   adminLevel,
   exploreMap,
   globZoom,
