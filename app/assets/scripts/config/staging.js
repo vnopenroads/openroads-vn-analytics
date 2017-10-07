@@ -4,6 +4,5 @@
  */
 
 module.exports = {
-  environment: 'staging',
-  api: 'http://50.16.162.86:4000'
+  environment: 'staging'
 };
