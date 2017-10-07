@@ -48,6 +48,34 @@ export function clearAdmins () {
   };
 }
 
+function requestAdminChildren () {
+  return {
+    type: actions.REQUEST_ADMIN_CHILDREN
+  };
+}
+
+function receiveAdminChildren (json) {
+  return {
+    type: actions.RECEIVE_ADMIN_CHILDREN,
+    json: json
+  };
+}
+
+export function fetchAdminChildren (id) {
+  return function (dispatch) {
+    dispatch(requestAdminChildren());
+    const url = `${config.api}/admin/${id}/info`;
+    return fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      if (json.statusCode >= 400) {
+        throw new Error('Bad Request');
+      }
+      dispatch(receiveAdminChildren(json));
+    });
+  };
+}
+
 // ////////////////////////////////////////////////////////////////
 //                        SEARCH RESULTS                         //
 // ////////////////////////////////////////////////////////////////
@@ -586,6 +614,34 @@ export function removeVProMMsSourceGeoJSON () {
   };
 }
 
+function requestVProMMsidsProperties () {
+  return {
+    type: actions.REQUEST_VPROMMS_PROPERTIES
+  };
+}
+
+function receiveVProMMsidsProperties (json) {
+  return {
+    type: actions.RECEIVE_VPROMMS_PROPERTIES,
+    json: json
+  };
+}
+
+export function fetchVProMMsidsProperties () {
+  return function (dispatch) {
+    dispatch(requestVProMMsidsProperties);
+    const url = `${config.api}/properties/roads`;
+    return fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      if (json.statusCode >= 400) {
+        throw new Error('Bad Response');
+      }
+      dispatch(receiveVProMMsidsProperties(json));
+    });
+  };
+}
+
 // ////////////////////////////////////////////////////////////////
 //                         Explore Map                           //
 // ////////////////////////////////////////////////////////////////
@@ -676,33 +732,30 @@ export function removeVProMMsBBox () {
   };
 }
 
-function requestAdminBbox () {
+function requestFieldVProMMsids () {
   return {
-    type: actions.REQUEST_ADMIN_BBOX
+    type: actions.REQUEST_VPROMMS_FIELD_IDS
   };
 }
 
-function receiveAdminBbox (json) {
+function receiveFieldVProMMsids (json) {
   return {
-    type: actions.RECEIVE_ADMIN_BBOX,
+    type: actions.RECEIVE_VPROMMS_FIELD_IDS,
     json: json
   };
 }
 
-export function fetchAdminBbox (id) {
+export function fetchFieldVProMMsids (json) {
   return function (dispatch) {
-    dispatch(requestAdminBbox());
-    let url = `${config.api}/admin/${id}/info`;
+    dispatch(requestFieldVProMMsids);
+    const url = `${config.api}/field/ids`;
     return fetch(url)
-    .then(response => {
-      return response.json();
-    })
+    .then(response => response.json())
     .then(json => {
-      // if not found, throw an error.
       if (json.statusCode >= 400) {
-        throw new Error('Bad response');
+        throw new Error('Bad Response');
       }
-      dispatch(receiveAdminBbox(json));
+      dispatch(receiveFieldVProMMsids(json));
     });
   };
 }
@@ -739,3 +792,71 @@ export function setFilteredVProMMs (array) {
   };
 }
 
+// ////////////////////////////////////////////////////////////////
+//                            Admins                             //
+// ////////////////////////////////////////////////////////////////
+
+function requestAdminBbox () {
+  return {
+    type: actions.REQUEST_ADMIN_BBOX
+  };
+}
+
+function receiveAdminBbox (json) {
+  return {
+    type: actions.RECEIVE_ADMIN_BBOX,
+    json: json
+  };
+}
+
+export function fetchAdminBbox (id) {
+  return function (dispatch) {
+    dispatch(requestAdminBbox());
+    let url = `${config.api}/admin/${id}/info`;
+    return fetch(url)
+    .then(response => {
+      return response.json();
+    })
+    .then(json => {
+      // if not found, throw an error.
+      if (json.statusCode >= 400) {
+        throw new Error('Bad response');
+      }
+      dispatch(receiveAdminBbox(json));
+    });
+  };
+}
+
+function requestProvinces () {
+  return {
+    type: actions.REQUEST_PROVINCES
+  };
+}
+
+function receiveProvinces (json) {
+  return {
+    type: actions.RECEIVE_PROVINCES,
+    json: json
+  };
+}
+
+export function fetchProvinces () {
+  return function (dispatch) {
+    dispatch(requestProvinces());
+    let url = `${config.api}/admin/province/units`;
+    return fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      if (json.statusCode >= 400) {
+        throw new Error('Bad response');
+      }
+      dispatch(receiveProvinces(json));
+    });
+  };
+}
+
+export function setCrossWalk () {
+  return {
+    type: actions.SET_CROSSWALK
+  };
+}

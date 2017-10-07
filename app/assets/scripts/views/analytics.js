@@ -1,14 +1,22 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
+import { setCrossWalk } from '../actions/action-creators';
+
 var Analytics = React.createClass({
   displayName: 'Analytics',
 
   propTypes: {
+    _setCrossWalk: React.PropTypes.func,
+    fieldVProMMsids: React.PropTypes.array,
     children: React.PropTypes.object,
+    crosswalk: React.PropTypes.object,
     params: React.PropTypes.object,
-    VProMMSids: React.PropTypes.object,
-    _fetchVProMMsids: React.PropTypes.func
+    VProMMSids: React.PropTypes.object
+  },
+
+  componentWillMount: function () {
+    this.props._setCrossWalk();
   },
 
   render: function () {
@@ -16,7 +24,7 @@ var Analytics = React.createClass({
       <section classNmae='page'>
         <div className='page__body aa'>
           <div className='aa-main'>
-            { React.cloneElement(this.props.children, { VProMMSids: this.props.VProMMSids }) }
+            {React.cloneElement(this.props.children, {crosswalk: this.props.crosswalk, VProMMSids: this.props.VProMMSids})}
           </div>
         </div>
       </section>
@@ -26,8 +34,15 @@ var Analytics = React.createClass({
 
 function selector (state) {
   return {
-    VProMMSids: state.VProMMSidsAnalytics
+    fieldVProMMsids: state.fieldVProMMsids.ids,
+    crosswalk: state.crosswalk
   };
 }
 
-module.exports = connect(selector)(Analytics);
+function dispatcher (dispatch) {
+  return {
+    _setCrossWalk: () => dispatch(setCrossWalk())
+  };
+}
+
+module.exports = connect(selector, dispatcher)(Analytics);

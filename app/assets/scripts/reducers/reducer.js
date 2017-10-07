@@ -464,7 +464,49 @@ const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
       state = _.cloneDeep(state);
       state.fetching = false;
       state.fetched = true;
-      state.bbox = action.json[Object.keys(action.json)[0]];
+      state.bbox = action.json;
+  }
+  return state;
+};
+
+const defaultVProMMsidPropertiesGeoJSON = {
+  fetching: false,
+  fetched: false,
+  properties: {}
+};
+
+const VProMMsidProperties = function (state = defaultVProMMsidPropertiesGeoJSON, action) {
+  switch (action.type) {
+    case actions.REQUEST_VPROMMS_PROPERTIES:
+      state = _.cloneDeep(state);
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_VPROMMS_PROPERTIES:
+      state = _.cloneDeep(state);
+      state.fetching = false;
+      state.fetched = true;
+      state.properties = action.json;
+  }
+  return state;
+};
+
+const defaultFieldVProMMsids = {
+  fetching: false,
+  fetched: false,
+  ids: []
+};
+
+const fieldVProMMsids = function (state = defaultFieldVProMMsids, action) {
+  switch (action.type) {
+    case actions.REQUEST_VPROMMS_FIELD_IDS:
+      state = _.cloneDeep(state);
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_VPROMMS_FIELD_IDS:
+      state = _.cloneDeep(state);
+      state.fetching = false;
+      state.fetched = true;
+      state.ids = action.json;
   }
   return state;
 };
@@ -586,7 +628,7 @@ const crosswalk = function (state = {}, action) {
     case actions.SET_CROSSWALK:
       state = _.cloneDeep(state);
       state.province = _.invert(_.pickBy(ADMIN_MAP.province, (province) => { return !/^\s*$/.test(province); }));
-      state.district = _.invert(_.pickBy(ADMIN_MAP.district, (district) => { return district !== 'missing'; }));
+      state.district = ADMIN_MAP.district;
       break;
   }
   return state;
@@ -595,7 +637,7 @@ const crosswalk = function (state = {}, action) {
 const defaultAdminChildren = {
   fetched: false,
   fetching: false,
-  data: []
+  data: {}
 };
 
 const adminChildren = function (state = defaultAdminChildren, action) {
@@ -608,7 +650,13 @@ const adminChildren = function (state = defaultAdminChildren, action) {
       state = _.cloneDeep(state);
       state.fetching = false;
       state.fetched = true;
-      state.data = action.json.children;
+      state.data = {
+        children: action.json.children,
+        level: action.json.level,
+        name: action.json.name_en,
+        childLevel: action.json.children_level,
+        parent: action.json.parent.id
+      };
   }
   return state;
 };
@@ -631,8 +679,10 @@ export default combineReducers({
   waytasks,
   osmChange,
   adminChildren,
-  adminLevel,
   crosswalk,
+  search,
+  stats,
+  adminLevel,
   exploreMap,
   globZoom,
   projecttasks,
@@ -641,15 +691,15 @@ export default combineReducers({
   provinces,
   roadNetworkStatus,
   routing: routeReducer,
-  search,
   searchDisplay,
   searchResultsDisplay,
   setSearchType,
   setFilteredVProMMs,
-  stats,
   VProMMSids,
   VProMMSidsAnalytics,
   VProMMsWayBbox,
+  VProMMsidProperties,
   VProMMSidSourceGeoJSON,
-  VProMMSidsSources
+  VProMMSidsSources,
+  fieldVProMMsids
 });

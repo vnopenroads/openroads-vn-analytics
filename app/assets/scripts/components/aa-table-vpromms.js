@@ -8,11 +8,10 @@ import classnames from 'classnames';
 import { api } from '../config';
 import { Link } from 'react-router';
 import { t, getLanguage } from '../utils/i18n';
-import { fetchVProMMsBbox, fetchVProMMSidsSources } from '../actions/action-creators';
+import { fetchVProMMsBbox } from '../actions/action-creators';
 
 const displayHeader = [
   {key: 'id', value: 'VProMMS ID'},
-  {key: 'inTheDatabase', value: 'Status'},
   {key: 'FieldData', value: 'Field Data'}
 ];
 
@@ -28,9 +27,10 @@ const AATable = React.createClass({
     sources: React.PropTypes.array,
     _fetchVProMMSidsSources: React.PropTypes.func,
     _fetchVProMMsBbox: React.PropTypes.func,
-    bbox: React.PropTypes.array,
     fetched: React.PropTypes.bool,
-    vpromms: React.PropTypes.array
+    properties: React.PropTypes.object,
+    propertiesData: React.PropTypes.object,
+    fieldIds: React.PropTypes.array
   },
 
   getInitialState: function () {
@@ -41,11 +41,6 @@ const AATable = React.createClass({
         expandedId: null
       }
     };
-  },
-
-  componentWillMount: function () {
-    const ids = this.props.data.map(obj => obj.id);
-    this.props._fetchVProMMSidsSources(ids);
   },
 
   renderTableHead: function () {
@@ -126,37 +121,30 @@ const AATable = React.createClass({
     return (
       <tbody>
         {_.map(sorted, (vpromm, i) => {
-          const vprommFieldInDB = (this.props.sources.indexOf(vpromm.id) !== -1);
-          const vprommInDB = (this.props.vpromms.indexOf(vpromm.id) !== -1);
-
-          let propBtnLabel = this.state.expandedId === vpromm.id ? 'Hide' : 'Show';
+          const vprommFieldInDB = (this.props.fieldIds.indexOf(vpromm) !== -1);
+          let propBtnLabel = this.state.expandedId === vpromm ? 'Hide' : 'Show';
           let propBtnClass = classnames('bttn-table-expand', {
-            'bttn-table-expand--show': this.state.expandedId !== vpromm.id,
-            'bttn-table-expand--hide': this.state.expandedId === vpromm.id
+            'bttn-table-expand--show': this.state.expandedId !== vpromm,
+            'bttn-table-expand--hide': this.state.expandedId === vpromm
           });
           let propContainerClass = classnames('table-properties', {
-            'table-properties--hidden': this.state.expandedId !== vpromm.id
+            'table-properties--hidden': this.state.expandedId !== vpromm
           });
-
+          const roadProps = this.props.propertiesData[vpromm];
           return (
-            <tr key={`vpromm-${vpromm.id}`} className={classnames({'alt': i % 2})}>
-              <th className={classnames({'added': vprommInDB, 'not-added': !vprommInDB})}>{ vprommInDB ? this.renderVProMMsLink(vpromm.id) : vpromm.id }</th>
-              <td className={classnames({'added': vpromm.inTheDatabase, 'not-added': !vpromm.inTheDatabase})}>{vpromm.inTheDatabase ? t('added') : t('not added')}</td>
-              <td className={classnames({'added': vprommFieldInDB, 'not-added': !vprommFieldInDB})}>{ vprommFieldInDB ? this.renderFieldMapButtons(vprommFieldInDB, vpromm.id) : ''}</td>
+            <tr key={vpromm} className={classnames({'alt': i % 2})}>
+              <th>{ this.renderVProMMsLink(vpromm) }</th>
+              <td className={classnames({'added': vprommFieldInDB, 'not-added': !vprommFieldInDB})}>{ vprommFieldInDB ? this.renderFieldMapButtons(vprommFieldInDB, vpromm) : ''}</td>
               <td className='table-properties-cell'>
-                <button type='button' className={propBtnClass} onClick={this.onPropertiesClick.bind(null, vpromm.id)}><span>{propBtnLabel}</span></button>
+                <button type='button' className={propBtnClass} onClick={this.onPropertiesClick.bind(null, vpromm)}><span>{propBtnLabel}</span></button>
                 <div className={propContainerClass}>
                   <dl className='table-properties-list'>
-                    <dt>Key 1</dt>
-                    <dd>Value 1</dd>
-                    <dt>Very_long_key_here_yes_it_is</dt>
-                    <dd>A_very_long_value_for_a_very_long_key</dd>
-                    <dt>Key 3</dt>
-                    <dd>Value 3</dd>
-                    <dt>Key 4</dt>
-                    <dd>Value 4</dd>
-                    <dt>Key 5</dt>
-                    <dd>Value 5</dd>
+                    <dt>Admin Level</dt>
+                    <dd>{roadProps.or_responsibility ? roadProps.or_responsibility : '' }</dd>
+                    <dt>Road Length</dt>
+                    <dd>{roadProps.length ? `${roadProps.length.toFixed(2)} km` : ''}</dd>
+                    <dt>Mean IRI</dt>
+                    <dd>{roadProps.iri_mean ? roadProps.iri_mean.toFixed(2) : ''}</dd>
                   </dl>
                 </div>
               </td>
@@ -181,18 +169,16 @@ const AATable = React.createClass({
 
 function selector (state) {
   return {
-    bbox: state.VProMMsWayBbox.bbox,
-    fetched: state.VProMMSidsSources.fetched,
-    sources: state.VProMMSidsSources.sources,
-    vpromms: state.VProMMSids.data
+    properties: state.VProMMsidProperties.properties,
+    fieldIds: state.fieldVProMMsids.ids
   };
 }
 
 function dispatcher (dispatch) {
   return {
-    _fetchVProMMsBbox: (id, source) => dispatch(fetchVProMMsBbox(id, source)),
-    _fetchVProMMSidsSources: (id) => dispatch(fetchVProMMSidsSources(id))
+    _fetchVProMMsBbox: (id, source) => dispatch(fetchVProMMsBbox(id, source))
   };
 }
 
 export default connect(selector, dispatcher)(AATable);
+

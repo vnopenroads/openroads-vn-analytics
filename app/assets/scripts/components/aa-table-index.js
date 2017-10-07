@@ -12,9 +12,8 @@ import { setAdmin } from '../actions/action-creators';
 
 const displayHeader = [
   {key: 'name', value: 'Province'},
-  {key: 'done', value: 'Done'},
+  {key: 'field', value: 'Field'},
   {key: 'total', value: 'Total'},
-  {key: 'percentageComplete', value: '% ' + 'Complete'},
   {key: 'progress', value: 'Progress'}
 ];
 
@@ -91,25 +90,14 @@ const AATable = React.createClass({
     return (
       <tbody>
         {_.map(sorted, (province, i) => {
-          let percText;
-          if (!isNaN(province.total)) {
-            if (province.total > 0) {
-              percText = `${((province.done / province.total * 100)).toFixed(2)}${t('% Complete')}`;
-            } else {
-              percText = '';
-            }
-          } else {
-            percText = `100.00${t('% Complete')}`;
-          }
           return (
             <tr key={`province-${province.id}`} className={classnames('collecticon-sort-asc', {'alt': i % 2})}>
-              <td><Link onClick={(e) => { this.props._setAdmin({ id: province.id, name: province.name }); } }to={`${getLanguage()}/analytics/${province.id}`}>{province.name}</Link></td>
-              <td>{province.done}</td>
+              <td><Link onClick={(e) => { this.props._setAdmin({ id: province.id, name: province.name }); } } to={`${getLanguage()}/analytics/${province.route}`}>{province.name}</Link></td>
+              <td>{province.field}</td>
               <td>{province.total}</td>
-              <td>{percText}</td>
               <td>
                 <div className='meter'>
-                  <div className='meter__internal' style={ province.total > 0 ? {width: `${province.done / province.total * 100}%`} : {width: 0}}></div>
+                  <div className='meter__internal' style={ province.total > 0 ? {width: `${province.field / province.total * 100}%`} : {width: 0}}></div>
                 </div>
               </td>
             </tr>
