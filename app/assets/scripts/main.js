@@ -20,6 +20,7 @@ import UhOh from './views/uhoh';
 import App from './views/app';
 import Home from './views/home';
 import Editor from './views/editor';
+import Tasks from './views/tasks';
 import Explore from './views/explore';
 import Analytics from './views/analytics';
 import AnalyticsIndex from './views/analytics-index';
@@ -62,6 +63,7 @@ render((
   <Provider store={store}>
     <Router history={hashHistory}>
       <Route path='/:lang' component={App} onEnter={validateLanguage}>
+        <Route path='tasks' component={Tasks} pageClass='tasks' />
         <Route path='editor' component={Editor} pageClass='editor' />
         <Route path='editor/*' component={Editor} pageClass='editor' />
         <Route path='explore' component={Explore} pageClass='explore' />
@@ -70,7 +72,7 @@ render((
             <Route path=':vpromm' component={AAFieldMap} pageClass='analytics-aa'/>
           </Route>
           <IndexRoute component={AnalyticsIndex} pageClass='analytics' />
-          <Route path=':aaId' component={AnalyticsAA} pageClass='analytics-aa' />
+          <Route path=':aaId' component={AnalyticsAA} pageClass='analytics-aa'/>
         </Route>
         <IndexRoute component={Home} pageClass='page--landing' />
         <Route path='*' component={UhOh}/>

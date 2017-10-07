@@ -101,38 +101,72 @@ const stats = function (state = {fetching: false, fetched: false, data: null}, a
   return state;
 };
 
-const tofixtasksDefaultState = {
+const waytasksDefaultState = {
   fetching: false,
   fetched: false,
-  data: {
-    tasks: {
-      meta: {
-        page: null,
-        limit: null,
-        total: null
-      },
-      results: []
-    }
-  }
+  data: null,
+  id: null
 };
-const tofixtasks = function (state = tofixtasksDefaultState, action) {
+const waytasks = function (state = waytasksDefaultState, action) {
   switch (action.type) {
-    case actions.REQUEST_TOFIX_TASKS:
-      console.log('REQUEST_TOFIX_TASKS');
+    case actions.REQUEST_WAY_TASK:
+      console.log('REQUEST_WAY_TASK');
       state = _.cloneDeep(state);
       state.error = null;
       state.fetching = true;
       break;
-    case actions.RECEIVE_TOFIX_TASKS:
-      console.log('RECEIVE_TOFIX_TASKS');
+    case actions.RECEIVE_WAY_TASK:
+      console.log('RECEIVE_WAY_TASK');
       state = _.cloneDeep(state);
       if (action.error) {
         state.error = action.error;
       } else {
-        state.data = action.json;
+        state.data = action.json.data;
+        state.id = action.json.id;
       }
       state.fetching = false;
       state.fetched = true;
+      break;
+    case actions.RELOAD_WAY_TASK:
+      console.log('RELOAD_WAY_TASK');
+      state = _.cloneDeep(state);
+      state.id = null;
+      state.data = null;
+      break;
+  }
+  return state;
+};
+
+const osmChangeState = {
+  fetching: false,
+  fetched: false,
+  taskId: null,
+  error: null
+};
+const osmChange = function (state = osmChangeState, action) {
+  switch (action.type) {
+    case actions.REQUEST_OSM_CHANGE:
+      console.log('REQUEST_OSM_CHANGE');
+      state = _.cloneDeep(state);
+      state.error = null;
+      state.fetching = true;
+      break;
+    case actions.COMPLETE_OSM_CHANGE:
+      console.log('COMPLETE_OSM_CHANGE');
+      state = _.cloneDeep(state);
+      if (action.error) {
+        state.error = action.error;
+      } else {
+        state.taskId = action.taskId;
+      }
+      state.fetching = false;
+      state.fetched = true;
+      break;
+    case actions.RELOAD_WAY_TASK:
+      console.log('RELOAD_WAY_TASK');
+      state = _.cloneDeep(state);
+      state.fetched = false;
+      state.taskId = false;
       break;
   }
   return state;
@@ -430,7 +464,49 @@ const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
       state = _.cloneDeep(state);
       state.fetching = false;
       state.fetched = true;
-      state.bbox = action.json[Object.keys(action.json)[0]];
+      state.bbox = action.json;
+  }
+  return state;
+};
+
+const defaultVProMMsidPropertiesGeoJSON = {
+  fetching: false,
+  fetched: false,
+  properties: {}
+};
+
+const VProMMsidProperties = function (state = defaultVProMMsidPropertiesGeoJSON, action) {
+  switch (action.type) {
+    case actions.REQUEST_VPROMMS_PROPERTIES:
+      state = _.cloneDeep(state);
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_VPROMMS_PROPERTIES:
+      state = _.cloneDeep(state);
+      state.fetching = false;
+      state.fetched = true;
+      state.properties = action.json;
+  }
+  return state;
+};
+
+const defaultFieldVProMMsids = {
+  fetching: false,
+  fetched: false,
+  ids: []
+};
+
+const fieldVProMMsids = function (state = defaultFieldVProMMsids, action) {
+  switch (action.type) {
+    case actions.REQUEST_VPROMMS_FIELD_IDS:
+      state = _.cloneDeep(state);
+      state.fetching = true;
+      break;
+    case actions.RECEIVE_VPROMMS_FIELD_IDS:
+      state = _.cloneDeep(state);
+      state.fetching = false;
+      state.fetched = true;
+      state.ids = action.json;
   }
   return state;
 };
@@ -552,7 +628,7 @@ const crosswalk = function (state = {}, action) {
     case actions.SET_CROSSWALK:
       state = _.cloneDeep(state);
       state.province = _.invert(_.pickBy(ADMIN_MAP.province, (province) => { return !/^\s*$/.test(province); }));
-      state.district = _.invert(_.pickBy(ADMIN_MAP.district, (district) => { return district !== 'missing'; }));
+      state.district = ADMIN_MAP.district;
       break;
   }
   return state;
@@ -561,7 +637,7 @@ const crosswalk = function (state = {}, action) {
 const defaultAdminChildren = {
   fetched: false,
   fetching: false,
-  data: []
+  data: {}
 };
 
 const adminChildren = function (state = defaultAdminChildren, action) {
@@ -574,7 +650,13 @@ const adminChildren = function (state = defaultAdminChildren, action) {
       state = _.cloneDeep(state);
       state.fetching = false;
       state.fetched = true;
-      state.data = action.json.children;
+      state.data = {
+        children: action.json.children,
+        level: action.json.level,
+        name: action.json.name_en,
+        childLevel: action.json.children_level,
+        parent: action.json.parent.id
+      };
   }
   return state;
 };
@@ -594,9 +676,13 @@ export default combineReducers({
   admin,
   admins,
   adminBbox,
+  waytasks,
+  osmChange,
   adminChildren,
-  adminLevel,
   crosswalk,
+  search,
+  stats,
+  adminLevel,
   exploreMap,
   globZoom,
   projecttasks,
@@ -605,16 +691,15 @@ export default combineReducers({
   provinces,
   roadNetworkStatus,
   routing: routeReducer,
-  search,
   searchDisplay,
   searchResultsDisplay,
   setSearchType,
   setFilteredVProMMs,
-  stats,
-  tofixtasks,
   VProMMSids,
   VProMMSidsAnalytics,
   VProMMsWayBbox,
+  VProMMsidProperties,
   VProMMSidSourceGeoJSON,
-  VProMMSidsSources
+  VProMMSidsSources,
+  fieldVProMMsids
 });

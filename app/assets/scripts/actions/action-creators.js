@@ -48,6 +48,34 @@ export function clearAdmins () {
   };
 }
 
+function requestAdminChildren () {
+  return {
+    type: actions.REQUEST_ADMIN_CHILDREN
+  };
+}
+
+function receiveAdminChildren (json) {
+  return {
+    type: actions.RECEIVE_ADMIN_CHILDREN,
+    json: json
+  };
+}
+
+export function fetchAdminChildren (id) {
+  return function (dispatch) {
+    dispatch(requestAdminChildren());
+    const url = `${config.api}/admin/${id}/info`;
+    return fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      if (json.statusCode >= 400) {
+        throw new Error('Bad Request');
+      }
+      dispatch(receiveAdminChildren(json));
+    });
+  };
+}
+
 // ////////////////////////////////////////////////////////////////
 //                        SEARCH RESULTS                         //
 // ////////////////////////////////////////////////////////////////
@@ -134,29 +162,61 @@ export function fetchAdminStats (id = null) {
 //                          WAYTASKS                             //
 // ////////////////////////////////////////////////////////////////
 
-function requestTofixTasks () {
+function requestWayTask () {
   return {
-    type: actions.REQUEST_TOFIX_TASKS
+    type: actions.REQUEST_WAY_TASK
   };
 }
 
-function receiveTofixTasks (json, error = null) {
+function reloadWayTask () {
   return {
-    type: actions.RECEIVE_TOFIX_TASKS,
+    type: actions.RELOAD_WAY_TASK
+  };
+}
+
+function receiveWayTask (json, error = null) {
+  return {
+    type: actions.RECEIVE_WAY_TASK,
     json: json,
     error,
     receivedAt: Date.now()
   };
 }
 
-export function fetchTofixTasks (aaid = null, page, limit) {
+export function fetchNextWayTask (skippedTasks) {
   return function (dispatch) {
-    dispatch(requestTofixTasks());
+    dispatch(requestWayTask());
 
-    // Note: `page` is 0 based, so subtract 1.
-    let url = aaid === null
-      ? `${config.api}/admin/0/waytasks?page=${--page}&limit=${limit}`
-      : `${config.api}/admin/${aaid}/waytasks?page=${--page}&limit=${limit}`;
+    let url = `${config.api}/tasks/next`;
+    if (Array.isArray(skippedTasks) && skippedTasks.length) {
+      url += `?skip=${skippedTasks.join(',')}`;
+    }
+    return fetch(url)
+      .then(response => {
+        if (response.status === 404) {
+          throw new Error('No tasks remaining');
+        } else if (response.status >= 400) {
+          throw new Error('Connection error');
+        }
+        return response.json();
+      })
+      .then(json => {
+        json.data.features.forEach(feature => {
+          feature.properties._id = feature.meta.id;
+        });
+        return dispatch(receiveWayTask(json));
+      }, e => {
+        console.log('e', e);
+        return dispatch(receiveWayTask(null, e.message));
+      });
+  };
+}
+
+export function reloadCurrentTask (taskId) {
+  return function (dispatch) {
+    dispatch(reloadWayTask());
+    dispatch(requestWayTask());
+    let url = `${config.api}/tasks/${taskId}`;
     return fetch(url)
       .then(response => {
         if (response.status >= 400) {
@@ -165,17 +225,99 @@ export function fetchTofixTasks (aaid = null, page, limit) {
         return response.json();
       })
       .then(json => {
-        // setTimeout(() => dispatch(receiveTofixTasks(json)), 2000);
-        return dispatch(receiveTofixTasks(json));
+        json.data.features.forEach(feature => {
+          feature.properties._id = feature.meta.id;
+        });
+        return dispatch(receiveWayTask(json));
       }, e => {
         console.log('e', e);
-        return dispatch(receiveTofixTasks(null, 'Data not available'));
+        return dispatch(receiveWayTask(null, 'Data not available'));
       });
   };
 }
 
 // ////////////////////////////////////////////////////////////////
-//                        PROJECT TASKS                          //
+//                        osm changesets                         //
+// ////////////////////////////////////////////////////////////////
+
+export function markTaskAsDone (taskIds) {
+  let ids = Array.isArray(taskIds) ? taskIds : [taskIds];
+  return function (dispatch) {
+    putPendingTask({way_ids: ids});
+  };
+}
+
+function putPendingTask (ids) {
+  let url = `${config.api}/tasks/pending`;
+  return fetch(url, {
+    method: 'PUT',
+    body: objectToBlob(ids)
+  }).then(response => {
+    if (response.status >= 400) {
+      throw new Error('Could not update task status');
+    }
+    return response;
+  });
+}
+
+function requestOsmChange () {
+  return {
+    type: actions.REQUEST_OSM_CHANGE
+  };
+}
+
+function completeOsmChange (taskId, error = null) {
+  return {
+    type: actions.COMPLETE_OSM_CHANGE,
+    taskId,
+    error,
+    receivedAt: Date.now()
+  };
+}
+
+export function queryOsm (taskId, payload) {
+  return function (dispatch) {
+    dispatch(requestOsmChange());
+    createChangeset(dispatch, upload);
+
+    function upload (changesetId) {
+      let url = `${config.api}/changeset/${changesetId}/upload`;
+      return fetch(url, {
+        method: 'POST',
+        body: objectToBlob({ osmChange: payload })
+      })
+      .then(() => {
+        return dispatch(completeOsmChange(taskId));
+      });
+    }
+  };
+}
+
+function createChangeset (dispatch, cb) {
+  const changesetUrl = `${config.api}/changeset/create`;
+  const details = {
+    uid: 555555,
+    user: 'Openroads Tasks'
+  };
+  return fetch(changesetUrl, {
+    method: 'PUT',
+    body: objectToBlob(details)
+  }).then(response => {
+    if (response.status >= 400) {
+      throw new Error('Bad response');
+    }
+    return response.text();
+  }).then(cb, e => {
+    return dispatch(completeOsmChange(null, e));
+  });
+}
+
+function objectToBlob (obj) {
+  return new Blob([JSON.stringify(obj, null, 2)], {type: 'application/json'});
+}
+
+// ////////////////////////////////////////////////////////////////
+//                        project tasks                          //
 // ////////////////////////////////////////////////////////////////
 
 function requestProjectTasks () {
@@ -472,6 +614,34 @@ export function removeVProMMsSourceGeoJSON () {
   };
 }
 
+function requestVProMMsidsProperties () {
+  return {
+    type: actions.REQUEST_VPROMMS_PROPERTIES
+  };
+}
+
+function receiveVProMMsidsProperties (json) {
+  return {
+    type: actions.RECEIVE_VPROMMS_PROPERTIES,
+    json: json
+  };
+}
+
+export function fetchVProMMsidsProperties () {
+  return function (dispatch) {
+    dispatch(requestVProMMsidsProperties);
+    const url = `${config.api}/properties/roads`;
+    return fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      if (json.statusCode >= 400) {
+        throw new Error('Bad Response');
+      }
+      dispatch(receiveVProMMsidsProperties(json));
+    });
+  };
+}
+
 // ////////////////////////////////////////////////////////////////
 //                         Explore Map                           //
 // ////////////////////////////////////////////////////////////////
@@ -562,33 +732,30 @@ export function removeVProMMsBBox () {
   };
 }
 
-function requestAdminBbox () {
+function requestFieldVProMMsids () {
   return {
-    type: actions.REQUEST_ADMIN_BBOX
+    type: actions.REQUEST_VPROMMS_FIELD_IDS
   };
 }
 
-function receiveAdminBbox (json) {
+function receiveFieldVProMMsids (json) {
   return {
-    type: actions.RECEIVE_ADMIN_BBOX,
+    type: actions.RECEIVE_VPROMMS_FIELD_IDS,
     json: json
   };
 }
 
-export function fetchAdminBbox (id) {
+export function fetchFieldVProMMsids (json) {
   return function (dispatch) {
-    dispatch(requestAdminBbox());
-    let url = `${config.api}/admin/${id}/info`;
+    dispatch(requestFieldVProMMsids);
+    const url = `${config.api}/field/ids`;
     return fetch(url)
-    .then(response => {
-      return response.json();
-    })
+    .then(response => response.json())
     .then(json => {
-      // if not found, throw an error.
       if (json.statusCode >= 400) {
-        throw new Error('Bad response');
+        throw new Error('Bad Response');
       }
-      dispatch(receiveAdminBbox(json));
+      dispatch(receiveFieldVProMMsids(json));
     });
   };
 }
@@ -625,3 +792,71 @@ export function setFilteredVProMMs (array) {
   };
 }
 
+// ////////////////////////////////////////////////////////////////
+//                            Admins                             //
+// ////////////////////////////////////////////////////////////////
+
+function requestAdminBbox () {
+  return {
+    type: actions.REQUEST_ADMIN_BBOX
+  };
+}
+
+function receiveAdminBbox (json) {
+  return {
+    type: actions.RECEIVE_ADMIN_BBOX,
+    json: json
+  };
+}
+
+export function fetchAdminBbox (id) {
+  return function (dispatch) {
+    dispatch(requestAdminBbox());
+    let url = `${config.api}/admin/${id}/info`;
+    return fetch(url)
+    .then(response => {
+      return response.json();
+    })
+    .then(json => {
+      // if not found, throw an error.
+      if (json.statusCode >= 400) {
+        throw new Error('Bad response');
+      }
+      dispatch(receiveAdminBbox(json));
+    });
+  };
+}
+
+function requestProvinces () {
+  return {
+    type: actions.REQUEST_PROVINCES
+  };
+}
+
+function receiveProvinces (json) {
+  return {
+    type: actions.RECEIVE_PROVINCES,
+    json: json
+  };
+}
+
+export function fetchProvinces () {
+  return function (dispatch) {
+    dispatch(requestProvinces());
+    let url = `${config.api}/admin/province/units`;
+    return fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      if (json.statusCode >= 400) {
+        throw new Error('Bad response');
+      }
+      dispatch(receiveProvinces(json));
+    });
+  };
+}
+
+export function setCrossWalk () {
+  return {
+    type: actions.SET_CROSSWALK
+  };
+}
