@@ -45,7 +45,8 @@ var AnalyticsAA = React.createClass({
     adminRoadPropertiesFetched: React.PropTypes.bool,
     location: React.PropTypes.object,
     VProMMsCount: React.PropTypes.array,
-    VProMMsCountFetched: React.PropTypes.bool
+    VProMMsCountFetched: React.PropTypes.bool,
+    history: React.PropTypes.object
   },
 
   renderAdminChildren: function (children) {
@@ -87,8 +88,18 @@ var AnalyticsAA = React.createClass({
       return this.getAdminData(nextProps);
     }
     if (this.props.location.pathname !== nextProps.location.pathname) {
-      // if differnt hash is due to language change, set the language, nothing else.
-      if (this.props.language !== nextProps.language) { return setLanguage(nextProps.language); }
+      const sameLanguage = (this.props.params.lang === nextProps.params.lang);
+      const sameAdmin = (this.props.params.aaId === nextProps.params.aaId);
+      // if back button is pressed right after the langauge was updated,
+      // go back to the parent admin, not the same admin w/different language per the default.
+      if (nextProps.location.action === 'POP') {
+        if (sameAdmin && !sameLanguage) {
+          const level = this.props.params.aaId.length === 3 ? 'province' : 'district';
+          const path = (level === 'district') ? `/${getLanguage()}/analytics/${this.props.adminInfo.parent.id}` : `/${getLanguage()}/analytics/`;
+          this.props.history.push(path);
+        }
+      }
+      if (!sameLanguage) { return setLanguage(nextProps.language); }
       this.props._removeAdminVProMMsProps();
       this.props._removeAdminInfo();
       return this.props._fetchAdminInfo(nextProps.params.aaId);
@@ -98,8 +109,9 @@ var AnalyticsAA = React.createClass({
   shouldComponentUpdate: function (nextProps) {
     // do not re-render component when location changes. wait until admin data fetched.
     if (this.props.location.pathname !== nextProps.location.pathname) {
+      const sameLanguage = (this.props.params.lang === nextProps.params.lang);
       // if changing language in the hash, update to translate page.
-      if (this.props.language !== nextProps.language) { return true; }
+      if (!sameLanguage) { return true; }
       return false;
     }
     return true;
