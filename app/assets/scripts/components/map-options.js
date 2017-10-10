@@ -1,5 +1,6 @@
 import React from 'react';
-import { t } from '../utils/i18n';
+import { connect } from 'react-redux';
+import { t, setLanguage } from '../utils/i18n';
 
 const MapOptions = React.createClass({
   displayName: 'MapOptions',
@@ -7,7 +8,14 @@ const MapOptions = React.createClass({
   propTypes: {
     layer: React.PropTypes.string,
     handleLayerChange: React.PropTypes.func,
-    handleShowNoVpromms: React.PropTypes.func
+    handleShowNoVpromms: React.PropTypes.func,
+    language: React.PropTypes.string
+  },
+
+  componentWillReceiveProps: function (nextProps) {
+    if (this.props.language !== nextProps.language) {
+      setLanguage(nextProps.language);
+    }
   },
 
   render: function () {
@@ -35,4 +43,10 @@ const MapOptions = React.createClass({
   }
 });
 
-module.exports = MapOptions;
+function selector (state) {
+  return {
+    language: state.language.current
+  };
+}
+
+module.exports = connect(selector)(MapOptions);
