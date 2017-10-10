@@ -28,7 +28,6 @@ const MapLegend = React.createClass({
       bestColorLabel = stops[0][0];
       worstColorLabel = stops[stops.length - 1][0];
     }
-
     return (
       <div className='map-legend map-panel'>
         <p className='map-legend-title'>{ title }</p>

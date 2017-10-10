@@ -672,6 +672,15 @@ const adminLevel = function (state = defaultAdminLevel, action) {
   return state;
 };
 
+const language = function (state = {current: 'en'}, action) {
+  switch (action.type) {
+    case actions.SET_LANGUAGE:
+      state = _.cloneDeep(state);
+      state.current = action.text;
+  }
+  return state;
+}
+
 export default combineReducers({
   admin,
   admins,
@@ -701,5 +710,6 @@ export default combineReducers({
   VProMMsidProperties,
   VProMMSidSourceGeoJSON,
   VProMMSidsSources,
-  fieldVProMMsids
+  fieldVProMMsids,
+  language
 });
