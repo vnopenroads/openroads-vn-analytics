@@ -129,7 +129,7 @@ var AnalyticsAA = React.createClass({
 
   makeAdminAnalyticsContent: function () {
     const level = this.props.adminInfo.level;
-    const id = this.props.crosswalk[level][this.props.params.aaId].id;
+    const id = (level === 'district') ? this.props.crosswalk[level][this.props.params.aaId] : this.props.crosswalk[level][this.props.params.aaId].id;
     const name = (level === 'district') ? this.props.adminInfo.name_en : this.props.crosswalk[level][this.props.params.aaId].name;
     const total = this.props.VProMMsCount.length > 0 ? this.props.VProMMsCount[0].total_roads : 0;
     const field = this.props.fieldRoads.length;
