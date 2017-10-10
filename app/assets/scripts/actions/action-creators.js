@@ -48,22 +48,22 @@ export function clearAdmins () {
   };
 }
 
-function requestAdminChildren () {
+function requestAdminInfo () {
   return {
-    type: actions.REQUEST_ADMIN_CHILDREN
+    type: actions.REQUEST_ADMIN_INFO
   };
 }
 
-function receiveAdminChildren (json) {
+function receiveAdminInfo (json) {
   return {
-    type: actions.RECEIVE_ADMIN_CHILDREN,
+    type: actions.RECEIVE_ADMIN_INFO,
     json: json
   };
 }
 
-export function fetchAdminChildren (id) {
+export function fetchAdminInfo (id) {
   return function (dispatch) {
-    dispatch(requestAdminChildren());
+    dispatch(requestAdminInfo());
     const url = `${config.api}/admin/${id}/info`;
     return fetch(url)
     .then(response => response.json())
@@ -71,8 +71,14 @@ export function fetchAdminChildren (id) {
       if (json.statusCode >= 400) {
         throw new Error('Bad Request');
       }
-      dispatch(receiveAdminChildren(json));
+      dispatch(receiveAdminInfo(json));
     });
+  };
+}
+
+export function removeAdminInfo () {
+  return {
+    type: actions.REMOVE_ADMIN_INFO
   };
 }
 
@@ -545,36 +551,6 @@ export function fetchVProMMsids () {
 //                   VProMMS IDs Source Data                     //
 // ////////////////////////////////////////////////////////////////
 
-function requestVProMMSidsSources () {
-  return {
-    type: actions.REQUEST_VPROMMS_IDS_SOURCES
-  };
-}
-
-function receiveVProMMSidsSources (json) {
-  return {
-    type: actions.RECEIVE_VPROMMS_IDS_SOURCES,
-    json: json,
-    recievedAt: Date.now()
-  };
-}
-
-export function fetchVProMMSidsSources (ids) {
-  return function (dispatch) {
-    dispatch(requestVProMMSidsSources());
-    let idsQuery = ids.join(',');
-    let url = `${config.api}/field/${idsQuery}/exists`;
-    return fetch(url)
-    .then(response => response.json())
-    .then(json => {
-      if (json.statusCode >= 400) {
-        throw new Error('Bad response');
-      }
-      dispatch(receiveVProMMSidsSources(json));
-    });
-  };
-}
-
 function requestVProMMSidSourceGeoJSON () {
   return {
     type: actions.REQUEST_VPROMMS_SOURCE_GEOJSON
@@ -642,6 +618,47 @@ export function fetchVProMMsidsProperties () {
   };
 }
 
+export function removeVProMMsidsProperties () {
+  return {
+    type: actions.REMOVE_VPROMMS_PROPERTIES
+  };
+}
+
+function requestVProMMsidsCount () {
+  return {
+    type: actions.REQUEST_VPROMMS_IDS_COUNT
+  };
+}
+
+function receiveVProMMSidsCount (json) {
+  return {
+    type: actions.RECEIVE_VPROMMS_IDS_COUNT,
+    json: json
+  };
+}
+
+export function fetchVProMMsIdsCount (level, id) {
+  return function (dispatch) {
+    dispatch(requestVProMMsidsCount());
+    let url = `${config.api}/admin/roads/total`;
+    if (id) {
+      id = id.join('');
+      url = `${url}/${id}`;
+    }
+    if (level === 'district') {
+      url = `${url}?level=district`;
+    }
+    return fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      if (json.statusCode >= 400) {
+        throw new Error('Bad Request');
+      }
+      dispatch(receiveVProMMSidsCount(json));
+    });
+  };
+}
+
 // ////////////////////////////////////////////////////////////////
 //                         Explore Map                           //
 // ////////////////////////////////////////////////////////////////
@@ -697,6 +714,11 @@ export function setAdmin (admin) {
     name: admin.name
   };
 }
+
+// ///////////////////////////////////////////////////////////////
+//                             Roads                            //
+// ///////////////////////////////////////////////////////////////
+
 function requestVProMMsBbox () {
   return {
     type: actions.REQUEST_VPROMMS_BBOX
@@ -745,9 +767,9 @@ function receiveFieldVProMMsids (json) {
   };
 }
 
-export function fetchFieldVProMMsids (json) {
+export function fetchFieldVProMMsIds (json) {
   return function (dispatch) {
-    dispatch(requestFieldVProMMsids);
+    dispatch(requestFieldVProMMsids());
     const url = `${config.api}/field/ids`;
     return fetch(url)
     .then(response => response.json())
@@ -757,6 +779,134 @@ export function fetchFieldVProMMsids (json) {
       }
       dispatch(receiveFieldVProMMsids(json));
     });
+  };
+}
+
+function requestFieldVProMMsIdsCount () {
+  return {
+    type: actions.REQUEST_VPROMMS_FIELD_IDS_COUNT
+  };
+}
+
+function receiveFieldVProMMsIdsCount (json) {
+  return {
+    type: actions.RECEIVE_VPROMMS_FIELD_IDS_COUNT,
+    json: json
+  };
+}
+
+export function fetchFieldVProMsIdsCount (level) {
+  return function (dispatch) {
+    dispatch(requestFieldVProMMsIdsCount());
+    let url = `${config.api}/field/roads/total`;
+    url = (level === 'district') ? `${url}?level=district` : url;
+    return fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      if (json.statusCode >= 400) {
+        throw new Error('Bad Request');
+      }
+      dispatch(receiveFieldVProMMsIdsCount(json));
+    });
+  };
+}
+
+function requestFieldRoads () {
+  return {
+    type: actions.REQUEST_FIELD_ROADS
+  };
+}
+
+function receiveFieldRoads (json) {
+  return {
+    type: actions.RECEIVE_FIELD_ROADS,
+    json: json
+  };
+}
+
+export function fetchFieldRoads (json, level) {
+  return function (dispatch) {
+    dispatch(requestFieldRoads());
+    let url = `${config.api}/field/roads?province=${json[0]}`;
+    if (level === 'district') {
+      url = `${url}&district=${json[1]}`;
+    }
+    return fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      if (json.statusCode >= 400) {
+        throw new Error('Bad Response');
+      }
+      dispatch(receiveFieldRoads(json));
+    });
+  };
+}
+
+function requestAdminRoads () {
+  return {
+    type: actions.REQUEST_ADMIN_ROADS
+  };
+}
+
+function receiveAdminRoads (json) {
+  return {
+    type: actions.RECEIVE_ADMIN_ROADS,
+    json: json
+  };
+}
+
+export function fetchAdminRoads (json, level) {
+  return function (dispatch) {
+    dispatch(requestAdminRoads());
+    let url = `${config.api}/admin/roads?province=${json[0]}`;
+    if (level === 'district') {
+      url = `${url}&district=${json[1]}`;
+    }
+    return fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      if (json.statusCode >= 400) {
+        throw new Error('Bad Response');
+      }
+      dispatch(receiveAdminRoads(json));
+    });
+  };
+}
+
+function requestAdminVProMMsProps () {
+  return {
+    type: actions.REQUEST_ADMIN_VPROMMS_PROPERTIES
+  };
+}
+
+function receiveAdminVProMMsProps (json) {
+  return {
+    type: actions.RECEIVE_ADMIN_VPROMMS_PROPERTIES,
+    json: json
+  };
+}
+
+export function fetchAdminVProMMsProps (json, level) {
+  return function (dispatch) {
+    dispatch(requestAdminVProMMsProps());
+    let url = `${config.api}/admin/roads/properties?province=${json[0]}`;
+    if (level === 'district') {
+      url = `${url}&district=${json[1]}`;
+    }
+    return fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      if (json.statusCode >= 400) {
+        throw new Error('Bad Request');
+      }
+      dispatch(receiveAdminVProMMsProps(json));
+    });
+  };
+}
+
+export function removeAdminVProMMsProps () {
+  return {
+    type: actions.REMOVE_ADMIN_VPROMMS_PROPERTIES
   };
 }
 

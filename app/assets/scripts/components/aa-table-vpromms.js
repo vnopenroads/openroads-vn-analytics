@@ -8,7 +8,7 @@ import classnames from 'classnames';
 import { api } from '../config';
 import { Link } from 'react-router';
 import { t, getLanguage } from '../utils/i18n';
-import { fetchVProMMsBbox } from '../actions/action-creators';
+import { fetchVProMMsBbox, removeAdminInfo } from '../actions/action-creators';
 
 const displayHeader = [
   {key: 'id', value: 'VProMMS ID'},
@@ -27,10 +27,11 @@ const AATable = React.createClass({
     sources: React.PropTypes.array,
     _fetchVProMMSidsSources: React.PropTypes.func,
     _fetchVProMMsBbox: React.PropTypes.func,
+    _removeAdminInfo: React.PropTypes.func,
     fetched: React.PropTypes.bool,
     properties: React.PropTypes.object,
-    propertiesData: React.PropTypes.object,
-    fieldIds: React.PropTypes.array
+    propertiesData: React.PropTypes.array,
+    fieldRoads: React.PropTypes.array
   },
 
   getInitialState: function () {
@@ -106,7 +107,10 @@ const AATable = React.createClass({
   // 2. to a road data dump in the last column
   renderVProMMsLink: function (id) {
     return (
-      <Link to={`/${getLanguage()}/explore`} onClick={(e) => { this.props._fetchVProMMsBbox(id); } }><strong>{id}</strong></Link>
+      <Link to={`/${getLanguage()}/explore`} onClick={(e) => {
+        this.props._removeAdminInfo();
+        this.props._fetchVProMMsBbox(id);
+      } }><strong>{id}</strong></Link>
     );
   },
 
@@ -121,7 +125,7 @@ const AATable = React.createClass({
     return (
       <tbody>
         {_.map(sorted, (vpromm, i) => {
-          const vprommFieldInDB = (this.props.fieldIds.indexOf(vpromm) !== -1);
+          const vprommFieldInDB = (this.props.fieldRoads.includes(vpromm));
           let propBtnLabel = this.state.expandedId === vpromm ? 'Hide' : 'Show';
           let propBtnClass = classnames('bttn-table-expand', {
             'bttn-table-expand--show': this.state.expandedId !== vpromm,
@@ -130,7 +134,11 @@ const AATable = React.createClass({
           let propContainerClass = classnames('table-properties', {
             'table-properties--hidden': this.state.expandedId !== vpromm
           });
-          const roadProps = this.props.propertiesData[vpromm];
+          const roadPropDropDown = [];
+          _.forEach(this.props.propertiesData[i].properties, (prop, key, j) => {
+            roadPropDropDown.push(<dt key={`${vpromm}-${key}-key`}>{key}</dt>);
+            roadPropDropDown.push(<dd key={`${vpromm}-${key}-value`}>{prop}</dd>);
+          });
           return (
             <tr key={vpromm} className={classnames({'alt': i % 2})}>
               <th>{ this.renderVProMMsLink(vpromm) }</th>
@@ -138,14 +146,7 @@ const AATable = React.createClass({
               <td className='table-properties-cell'>
                 <button type='button' className={propBtnClass} onClick={this.onPropertiesClick.bind(null, vpromm)}><span>{propBtnLabel}</span></button>
                 <div className={propContainerClass}>
-                  <dl className='table-properties-list'>
-                    <dt>Admin Level</dt>
-                    <dd>{roadProps.or_responsibility ? roadProps.or_responsibility : '' }</dd>
-                    <dt>Road Length</dt>
-                    <dd>{roadProps.length ? `${roadProps.length.toFixed(2)} km` : ''}</dd>
-                    <dt>Mean IRI</dt>
-                    <dd>{roadProps.iri_mean ? roadProps.iri_mean.toFixed(2) : ''}</dd>
-                  </dl>
+                  <dl className='table-properties-list'>{roadPropDropDown}</dl>
                 </div>
               </td>
             </tr>
@@ -176,7 +177,8 @@ function selector (state) {
 
 function dispatcher (dispatch) {
   return {
-    _fetchVProMMsBbox: (id, source) => dispatch(fetchVProMMsBbox(id, source))
+    _fetchVProMMsBbox: (id, source) => dispatch(fetchVProMMsBbox(id, source)),
+    _removeAdminInfo: () => dispatch(removeAdminInfo())
   };
 }
 
