@@ -2,8 +2,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { t, getLanguage, setLanguage } from '../utils/i18n';
+import { makePaginationConfig } from '../utils/pagination';
 import { Link } from 'react-router';
 
+import Paginator from '../components/paginator';
 import AATable from '../components/aa-table-vpromms';
 
 import {
@@ -13,8 +15,13 @@ import {
   fetchVProMMsIdsCount,
   fetchAdminVProMMsProps,
   removeAdminVProMMsProps,
+  removeFieldVProMMsIdsCount,
+  removeVProMMsIdsCount,
+  removeFieldRoads,
   removeAdminInfo,
-  setCrossWalk
+  setCrossWalk,
+  setPagination,
+  updatePagination
 } from '../actions/action-creators';
 
 import config from '../config';
@@ -31,8 +38,13 @@ var AnalyticsAA = React.createClass({
     _fetchAdminInfo: React.PropTypes.func,
     _removeAdminInfo: React.PropTypes.func,
     _removeAdminVProMMsProps: React.PropTypes.func,
-    _removeVProMMsCount: React.PropTypes.func,
+    _removeVProMMsIdsCount: React.PropTypes.func,
+    _removeFieldVProMMsIdsCount: React.PropTypes.func,
+    _removeFieldRoads: React.PropTypes.func,
     _setCrossWalk: React.PropTypes.func,
+    _setOffset: React.PropTypes.func,
+    _setPagination: React.PropTypes.func,
+    _updatePagination: React.PropTypes.func,
     crosswalk: React.PropTypes.object,
     crosswalkSet: React.PropTypes.bool,
     params: React.PropTypes.object,
@@ -46,6 +58,7 @@ var AnalyticsAA = React.createClass({
     location: React.PropTypes.object,
     VProMMsCount: React.PropTypes.array,
     VProMMsCountFetched: React.PropTypes.bool,
+    pagination: React.PropTypes.object,
     history: React.PropTypes.object
   },
 
@@ -61,7 +74,8 @@ var AnalyticsAA = React.createClass({
                 this.props._removeAdminVProMMsProps();
                 this.props._removeAdminInfo();
                 this.props._fetchAdminInfo(child.id);
-              } } to={`/${getLanguage()}/analytics/${child.id}`} title={child.name_en}>{child.name_en}</Link>
+                this.props._removeFieldVProMMsIdsCount();
+              } } to={`/${getLanguage()}/analytics/${child.id}`}>{child.name_en}</Link>
             </li>
             );
           })}
@@ -88,6 +102,9 @@ var AnalyticsAA = React.createClass({
   componentWillUnmount: function () {
     this.props._removeAdminVProMMsProps();
     this.props._removeAdminInfo();
+    this.props._removeFieldRoads();
+    this.props._removeFieldVProMMsIdsCount();
+    this.props._removeVProMMsIdsCount();
   },
 
   componentWillReceiveProps: function (nextProps) {
@@ -95,6 +112,13 @@ var AnalyticsAA = React.createClass({
     // grab the admin properties and field data needed to fill out the tables
     if (!this.props.adminInfoFetched && nextProps.adminInfoFetched) {
       return this.getAdminData(nextProps);
+    }
+    if (!this.props.VProMMsCountFetched && nextProps.VProMMsCountFetched) {
+      const paginationConfig = makePaginationConfig(nextProps.VProMMsCount[0].total_roads, 20);
+      this.props._setPagination(paginationConfig);
+    }
+    if (!this.props.fieldFetched && nextProps.fieldFetched) {
+      this.getNextRoads(nextProps);
     }
     if (this.props.location.pathname !== nextProps.location.pathname) {
       const sameLanguage = (this.props.params.lang === nextProps.params.lang);
@@ -111,11 +135,22 @@ var AnalyticsAA = React.createClass({
       if (!sameLanguage) { return setLanguage(nextProps.language); }
       this.props._removeAdminVProMMsProps();
       this.props._removeAdminInfo();
+      this.props._removeFieldVProMMsIdsCount();
+      this.props._removeVProMMsIdsCount();
+      this.props._removeFieldRoads();
       return this.props._fetchAdminInfo(nextProps.params.aaId);
+    }
+    if (this.props.adminRoadProperties !== nextProps.adminRoadProperties) {
+      // adminInfo is needed for getting the relevant data;
+      if (nextProps.adminInfoFetched) { this.getAdminData(nextProps); }
     }
   },
 
   shouldComponentUpdate: function (nextProps) {
+    if (nextProps.location.action === 'PUSH') {
+      if (nextProps.params.aaId.length === 5) { return true; }
+      return false;
+    }
     // do not re-render component when location changes. wait until admin data fetched.
     if (this.props.location.pathname !== nextProps.location.pathname) {
       const sameLanguage = (this.props.params.lang === nextProps.params.lang);
@@ -132,8 +167,17 @@ var AnalyticsAA = React.createClass({
       [props.crosswalk['province'][props.adminInfo.parent.id].id, props.crosswalk[level][props.params.aaId]]
     );
     this.props._fetchVProMMsIdsCount(level, ids);
-    this.props._fetchAdminVProMMsProps(ids, level);
     this.props._fetchFieldRoads(ids, level);
+  },
+
+  getNextRoads: function (props) {
+    const level = props.adminInfo.level;
+    const limit = props.pagination.limit;
+    const offset = props.pagination.currentIndex;
+    let ids = (level === 'province') ? [props.crosswalk[level][props.params.aaId].id] : (
+      [props.crosswalk['province'][props.adminInfo.parent.id].id, props.crosswalk[level][props.params.aaId]]
+    );
+    this.props._fetchAdminVProMMsProps(ids, level, limit, offset);
   },
 
   makeAdminAnalyticsContent: function () {
@@ -188,6 +232,7 @@ var AnalyticsAA = React.createClass({
           </div>
           <div>
             {adminContent.total ? <AATable data={adminRoadIds} fieldRoads={this.props.fieldRoads} propertiesData={this.props.adminRoadProperties} /> : ''}
+            {this.props.pagination.pages > 1 ? <Paginator pagination={this.props.pagination} crosswalk={this.props.crosswalk} adminInfo={this.props.adminInfo} aaId={this.props.params.aaId} /> : <div/>}
           </div>
         </div>
       </section>
@@ -202,7 +247,6 @@ var AnalyticsAA = React.createClass({
       </div>
     );
   }
-
 });
 
 function selector (state) {
@@ -217,20 +261,26 @@ function selector (state) {
     fieldFetched: state.fieldRoads.fetched,
     language: state.language.current,
     VProMMsCount: state.roadIdCount.counts,
-    VProMMsCountFetched: state.roadIdCount.fetched
+    VProMMsCountFetched: state.roadIdCount.fetched,
+    pagination: state.pagination
   };
 }
 
 function dispatcher (dispatch) {
   return {
-    _fetchAdminVProMMsProps: (idTest, level) => dispatch(fetchAdminVProMMsProps(idTest, level)),
+    _fetchAdminVProMMsProps: (ids, level, limit, offset) => dispatch(fetchAdminVProMMsProps(ids, level, limit, offset)),
     _fetchAdminRoads: (idTest, level) => dispatch(fetchAdminRoads(idTest, level)),
     _fetchFieldRoads: (idTest, level) => dispatch(fetchFieldRoads(idTest, level)),
     _fetchVProMMsIdsCount: (idTest, level) => dispatch(fetchVProMMsIdsCount(idTest, level)),
     _fetchAdminInfo: (id, level) => dispatch(fetchAdminInfo(id, level)),
     _removeAdminInfo: () => dispatch(removeAdminInfo()),
+    _removeFieldRoads: () => dispatch(removeFieldRoads()),
+    _removeFieldVProMMsIdsCount: () => dispatch(removeFieldVProMMsIdsCount()),
     _removeAdminVProMMsProps: () => dispatch(removeAdminVProMMsProps()),
-    _setCrossWalk: () => dispatch(setCrossWalk())
+    _removeVProMMsIdsCount: () => dispatch(removeVProMMsIdsCount()),
+    _setCrossWalk: () => dispatch(setCrossWalk()),
+    _setPagination: (paginationConfig) => dispatch(setPagination(paginationConfig)),
+    _updatePagination: (paginationUpdates) => dispatch(updatePagination(paginationUpdates))
   };
 }
 

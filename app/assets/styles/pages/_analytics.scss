@@ -118,6 +118,9 @@
 
 // Tables
 
+
+.table { margin-bottom: 2rem; }
+
 .a-table-action {
   @extend .bttn, .bttn-s, .bttn-base-light;
   margin: 0 ($global-spacing / 4) 0 0;
@@ -271,4 +274,20 @@
       @include column(2/12, $uncycle: 4, $cycle: 6);
     }
   }
+}
+
+
+// paginator
+
+.a-paginator {
+  text-align: center;
+  margin-bottom: 8rem;
+  li {
+    float: left;
+    margin-right: 0.5rem;
+  }
+}
+
+.a-paginator-nav {
+  margin-top: 1rem;
 }
