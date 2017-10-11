@@ -9,7 +9,7 @@ jobs:
 
     environment:
       - DEPLOY_BRANCH: "master"
-      - SSH_URL: "ec2-user@ec2-13-229-8-3.ap-southeast-1.compute.amazonaws.com"
+      - SSH_URL: "ubuntu@ec2-13-229-8-3.ap-southeast-1.compute.amazonaws.com"
 
     steps:
       - checkout
