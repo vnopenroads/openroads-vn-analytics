@@ -512,6 +512,9 @@ const fieldVProMMsids = function (state = defaultFieldVProMMsids, action) {
       state.fetching = false;
       state.fetched = true;
       state.ids = action.json;
+      break;
+    case actions.REMOVE_VPROMMS_FIELD_IDS:
+      return defaultFieldVProMMsids;
   }
   return state;
 };
@@ -664,6 +667,8 @@ const roadIdCount = function (state = defaultVProMMsIdCount, action) {
       state.fetched = true;
       state.counts = action.json;
       break;
+    case actions.REMOVE_VPROMMS_IDS_COUNT:
+      return defaultVProMMsIdCount;
   }
   return state;
 };
@@ -766,6 +771,37 @@ const fieldRoads = function (state = defaultFieldRoads, action) {
       state.fetched = true;
       state.ids = action.json;
       break;
+    case actions.REMOVE_FIELD_ROADS:
+      return defaultFieldRoads;
+  }
+  return state;
+};
+
+const defaultPagination = {currentPage: 0, currentIndex: 0, limit: 0, pages: 0, clickedPage: 0};
+
+const pagination = function (state = defaultPagination, action) {
+  switch (action.type) {
+    case actions.SET_PAGINATION:
+      return action.json;
+    case actions.UPDATE_PAGINATION:
+      state = _.cloneDeep(state);
+      state.currentIndex = action.newIndex;
+      state.currentPage = action.newPage;
+      break;
+    case actions.UPDATE_PAGINATION_CLICKED_PAGE:
+      state = _.cloneDeep(state);
+      state.clickedPage = action.page;
+      break;
+  }
+  return state;
+};
+
+const language = function (state = {current: 'en'}, action) {
+  switch (action.type) {
+    case actions.SET_LANGUAGE:
+      state = _.cloneDeep(state);
+      state.current = action.text;
+      break;
   }
   return state;
 };
@@ -802,6 +838,8 @@ export default combineReducers({
   VProMMsidProperties,
   VProMMsAdminProperties,
   VProMMSidSourceGeoJSON,
+  language,
   fieldRoads,
-  fieldVProMMsids
+  fieldVProMMsids,
+  pagination
 });

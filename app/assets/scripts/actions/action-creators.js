@@ -659,6 +659,12 @@ export function fetchVProMMsIdsCount (level, id) {
   };
 }
 
+export function removeVProMMsIdsCount () {
+  return {
+    type: actions.REMOVE_VPROMMS_IDS_COUNT
+  };
+}
+
 // ////////////////////////////////////////////////////////////////
 //                         Explore Map                           //
 // ////////////////////////////////////////////////////////////////
@@ -795,6 +801,12 @@ function receiveFieldVProMMsIdsCount (json) {
   };
 }
 
+export function removeFieldVProMMsIdsCount () {
+  return {
+    type: actions.REMOVE_VPROMMS_FIELD_IDS_COUNT
+  };
+}
+
 export function fetchFieldVProMsIdsCount (level) {
   return function (dispatch) {
     dispatch(requestFieldVProMMsIdsCount());
@@ -842,6 +854,12 @@ export function fetchFieldRoads (json, level) {
   };
 }
 
+export function removeFieldRoads () {
+  return {
+    type: actions.REMOVE_FIELD_ROADS
+  };
+}
+
 function requestAdminRoads () {
   return {
     type: actions.REQUEST_ADMIN_ROADS
@@ -886,12 +904,18 @@ function receiveAdminVProMMsProps (json) {
   };
 }
 
-export function fetchAdminVProMMsProps (json, level) {
+export function fetchAdminVProMMsProps (json, level, limit, offset) {
   return function (dispatch) {
     dispatch(requestAdminVProMMsProps());
     let url = `${config.api}/admin/roads/properties?province=${json[0]}`;
     if (level === 'district') {
       url = `${url}&district=${json[1]}`;
+    }
+    if (offset) {
+      url = `${url}&offset=${offset}`;
+    }
+    if (limit) {
+      url = `${url}&limit=${limit}`;
     }
     return fetch(url)
     .then(response => response.json())
@@ -1008,5 +1032,42 @@ export function fetchProvinces () {
 export function setCrossWalk () {
   return {
     type: actions.SET_CROSSWALK
+  };
+}
+
+// ////////////////////////////////////////////////////////////////
+//                        PAGINATION                             //
+// ////////////////////////////////////////////////////////////////
+
+export function setPagination (paginationObject) {
+  return {
+    type: actions.SET_PAGINATION,
+    json: paginationObject
+  };
+}
+
+export function updatePagination (newIndex, newPage) {
+  return {
+    type: actions.UPDATE_PAGINATION,
+    newIndex: newIndex,
+    newPage: newPage
+  };
+}
+
+export function updateClickedPage (page) {
+  return {
+    type: actions.UPDATE_PAGINATION_CLICKED_PAGE,
+    page: page
+  };
+}
+
+// ////////////////////////////////////////////////////////////////
+//                           Language                            //
+// ////////////////////////////////////////////////////////////////
+
+export function setLanguage (lang) {
+  return {
+    type: actions.SET_LANGUAGE,
+    text: lang
   };
 }
