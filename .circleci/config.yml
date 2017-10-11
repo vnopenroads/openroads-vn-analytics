@@ -59,8 +59,8 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" == "${DEPLOY_BRANCH}" ]; then
               cd dist
-              ssh $SSH_URL rm -rf /var/www/html/* -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
-              scp -rp ./* $SSH_URL:/var/www/html -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
+              ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_URL rm -rf /var/www/html/*
+              scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -rp ./* $SSH_URL:/var/www/html
             else
               echo "Skip deploying to AWS"
             fi
