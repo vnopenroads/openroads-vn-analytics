@@ -142,7 +142,7 @@ var Search = React.createClass({
 
   renderResults: function () {
     if (this.props.fetching) {
-      return (<p className='info'>Loading...</p>);
+      return (<p className='info'>{t('Loading...')}</p>);
     }
     // Group by type.
     var g = this.props.searchType === 'Admin' ? this.props.admins : this.props.filteredVProMMs;
@@ -155,10 +155,10 @@ var Search = React.createClass({
         if (this.refs.searchBox) {
           var searchVal = _.trim(this.refs.searchBox.value);
           if (/^(?![\s\S])/.test(searchVal)) {
-            results.push(<p className='info'>Please search for an Admin Area</p>);
+            results.push(<p className='info'>{t('Please search for an Admin Area')}</p>);
             // if the search term used does not have a db match, then let users
           } else {
-            results.push(<p className='info'>No results available. Please refine your search.</p>);
+            results.push(<p className='info'>{t('No results available. Please refine your search.')}</p>);
           }
         }
       } else {
@@ -166,7 +166,7 @@ var Search = React.createClass({
         _.forEach(g, (l, k) => {
           results.push(
             <dt key={`aa-type-admin-${k}`} className='drop-menu-sectitle'>
-              <strong>Admin Level - {k}</strong>
+              <strong>{t('Admin Level')} - {k}</strong>
             </dt>
           );
           _.forEach(l, (o, i) => {

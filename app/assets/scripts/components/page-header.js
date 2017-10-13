@@ -1,6 +1,7 @@
 'use strict';
 import React from 'react';
 import { Link } from 'react-router';
+import { t } from '../utils/i18n';
 import ID from '../utils/id';
 import Dropdown from '../components/dropdown';
 import config from '../config';
@@ -23,7 +24,7 @@ var PageHeader = React.createClass({
     }
 
     return data.dataAvailable ? (
-      <li><a href={`${config.api}/admin/${this.props.adminAreaId}?roadNetwork=true`} className='bttn-road-network' title='Download road network' target='_blank'>Download road network</a></li>
+      <li><a href={`${config.api}/admin/${this.props.adminAreaId}?roadNetwork=true`} className='bttn-road-network' title='Download road network' target='_blank'>{t('Download road network')}</a></li>
     ) : (
       <Dropdown element='li' className='dropdown center' triggerClassName='bttn-road-network disabled' triggerText='Download road network' evtClick={false}>
         <div className='drop-info'>
