@@ -7,7 +7,7 @@ import _ from 'lodash';
 import classnames from 'classnames';
 import { api } from '../config';
 import { Link } from 'react-router';
-import { t, getLanguage } from '../utils/i18n';
+import { t, getLanguage, setLanguage } from '../utils/i18n';
 import { fetchVProMMsBbox, removeAdminInfo } from '../actions/action-creators';
 
 const displayHeader = [
@@ -31,7 +31,11 @@ const AATable = React.createClass({
     fetched: React.PropTypes.bool,
     properties: React.PropTypes.object,
     propertiesData: React.PropTypes.array,
-    fieldRoads: React.PropTypes.array
+    propertiesFetched: React.PropTypes.bool,
+    fieldRoads: React.PropTypes.array,
+    language: React.PropTypes.string,
+    adminRoadProperties: React.PropTypes.array,
+    adminRoadPropertiesFetched: React.PropTypes.bool
   },
 
   getInitialState: function () {
@@ -42,6 +46,10 @@ const AATable = React.createClass({
         expandedId: null
       }
     };
+  },
+
+  componentWillReceiveProps: function (nextProps) {
+    if (this.props.language !== nextProps.language) { setLanguage(nextProps.language); }
   },
 
   renderTableHead: function () {
@@ -120,38 +128,57 @@ const AATable = React.createClass({
     this.setState({expandedId: newId});
   },
 
+  renderProperties: function (propBtnClass, propBtnLabel, propContainerClass, roadPropDropDown, vpromm) {
+    return (
+      <td className='table-properties-cell'>
+        <button type='button' className={propBtnClass} onClick={this.onPropertiesClick.bind(null, vpromm)}><span>{propBtnLabel}</span></button>
+        <div className={propContainerClass}>
+          <dl className='table-properties-list'>{roadPropDropDown}</dl>
+        </div>
+      </td>
+    );
+  },
+
   renderTableBody: function () {
-    const sorted = this.handleSort(this.props.data);
+    const propsLength = this.props.adminRoadProperties.length;
+    let sorted = this.props.data.slice(0, propsLength - 1);
     return (
       <tbody>
-        {_.map(sorted, (vpromm, i) => {
-          const vprommFieldInDB = (this.props.fieldRoads.includes(vpromm));
-          let propBtnLabel = this.state.expandedId === vpromm ? 'Hide' : 'Show';
-          let propBtnClass = classnames('bttn-table-expand', {
-            'bttn-table-expand--show': this.state.expandedId !== vpromm,
-            'bttn-table-expand--hide': this.state.expandedId === vpromm
-          });
-          let propContainerClass = classnames('table-properties', {
-            'table-properties--hidden': this.state.expandedId !== vpromm
-          });
-          const roadPropDropDown = [];
-          _.forEach(this.props.propertiesData[i].properties, (prop, key, j) => {
-            roadPropDropDown.push(<dt key={`${vpromm}-${key}-key`}>{key}</dt>);
-            roadPropDropDown.push(<dd key={`${vpromm}-${key}-value`}>{prop}</dd>);
-          });
-          return (
-            <tr key={vpromm} className={classnames({'alt': i % 2})}>
-              <th>{ vprommFieldInDB ? this.renderVProMMsLink(vpromm) : vpromm }</th>
-              <td className={classnames({'added': vprommFieldInDB, 'not-added': !vprommFieldInDB})}>{ vprommFieldInDB ? this.renderFieldMapButtons(vprommFieldInDB, vpromm) : ''}</td>
-              <td className='table-properties-cell'>
-                <button type='button' className={propBtnClass} onClick={this.onPropertiesClick.bind(null, vpromm)}><span>{propBtnLabel}</span></button>
-                <div className={propContainerClass}>
-                  <dl className='table-properties-list'>{roadPropDropDown}</dl>
-                </div>
-              </td>
-            </tr>
-          );
-        })}
+      {_.map(sorted, (vpromm, i) => {
+        const vprommFieldInDB = (this.props.fieldRoads.includes(vpromm));
+        let propBtnLabel = this.state.expandedId === vpromm ? 'Hide' : 'Show';
+        let propBtnClass = classnames('bttn-table-expand', {
+          'bttn-table-expand--show': this.state.expandedId !== vpromm,
+          'bttn-table-expand--hide': this.state.expandedId === vpromm
+        });
+        let propContainerClass = classnames('table-properties', {
+          'table-properties--hidden': this.state.expandedId !== vpromm
+        });
+        const roadPropDropDown = [];
+        if (this.props.adminRoadPropertiesFetched) {
+          if (this.props.adminRoadProperties.length !== 0) {
+            const adminProp = this.props.adminRoadProperties.find((prop) => prop.id === vpromm);
+            if (adminProp) {
+              _.forEach(adminProp.properties, (prop, key, j) => {
+                roadPropDropDown.push(<dt key={`${vpromm}-${key}-${j}-key`}>{key}</dt>);
+                roadPropDropDown.push(<dd key={`${vpromm}-${key}-${j}-prop`}>{prop}</dd>);
+              });
+            } else {
+              roadPropDropDown.push(<dt key={`${vpromm}-key`}></dt>);
+              roadPropDropDown.push(<dd key={`${vpromm}-prop`}></dd>);
+            }
+          } else {
+            roadPropDropDown.push(<p>Data Loading</p>);
+          }
+        }
+        return (
+          <tr key={vpromm} className={classnames({'alt': i % 2})}>
+            <th>{ vprommFieldInDB ? this.renderVProMMsLink(vpromm) : vpromm }</th>
+            <td className={classnames({'added': vprommFieldInDB, 'not-added': !vprommFieldInDB})}>{ vprommFieldInDB ? this.renderFieldMapButtons(vprommFieldInDB, vpromm) : ''}</td>
+            {this.props.adminRoadProperties.length !== 0 ? this.renderProperties(propBtnClass, propBtnLabel, propContainerClass, roadPropDropDown, vpromm) : <td></td>}
+          </tr>
+        );
+      })}
       </tbody>
     );
   },
@@ -171,7 +198,10 @@ const AATable = React.createClass({
 function selector (state) {
   return {
     properties: state.VProMMsidProperties.properties,
-    fieldIds: state.fieldVProMMsids.ids
+    fieldIds: state.fieldVProMMsids.ids,
+    language: state.language.current,
+    adminRoadProperties: state.VProMMsAdminProperties.data,
+    adminRoadPropertiesFetched: state.VProMMsAdminProperties.fetched
   };
 }
 

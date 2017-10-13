@@ -283,11 +283,12 @@
   text-align: center;
   margin-bottom: 8rem;
   li {
-    float: left;
+    display: inline-block;
     margin-right: 0.5rem;
   }
 }
 
 .a-paginator-nav {
+  margin: 0 auto;
   margin-top: 1rem;
 }
