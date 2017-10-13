@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch';
 import _ from 'lodash';
+import XmlReader from 'xml-reader';
 import * as actions from './action-types';
 import config from '../config';
 
@@ -320,6 +321,47 @@ function createChangeset (dispatch, cb) {
 
 function objectToBlob (obj) {
   return new Blob([JSON.stringify(obj, null, 2)], {type: 'application/json'});
+}
+
+// Since the geojson that powers the tasks endpoint doesn't include node IDs,
+// we must query the XML endpoint to get these IDs, then format them into
+// a `delete` action.
+export function deleteEntireWays (taskId, wayIds) {
+  return function (dispatch) {
+    dispatch(requestOsmChange());
+
+    const nodeIds = [];
+    fetch(`${config.api}/api/0.6/ways?nodes=true&ways=${wayIds.join(',')}`)
+    .then(response => {
+      if (response.status >= 400) {
+        throw new Error('Bad response');
+      }
+      return response.text();
+    }).then(parseXml, e => {
+      return dispatch(completeOsmChange(null, e));
+    });
+
+    function parseXml (xmlDoc) {
+      let reader = XmlReader.create({stream: true});
+      reader.on('tag:node', node => {
+        if (node.attributes.id) {
+          nodeIds.push(node.attributes.id);
+        }
+      });
+      reader.on('done', formatPayload);
+      reader.parse(xmlDoc);
+    }
+
+    function formatPayload () {
+      let payload = {
+        delete: {
+          node: nodeIds.map(id => ({ id })),
+          way: wayIds.map(id => ({ id }))
+        }
+      };
+      queryOsm(taskId, payload)(dispatch);
+    }
+  };
 }
 
 // ////////////////////////////////////////////////////////////////
