@@ -138,6 +138,7 @@ function selector (state) {
 
 function dispatcher (dispatch) {
   return {
+    dispatch,
     _removeVProMMsBBox: function () { dispatch(removeVProMMsBBox()); },
     _setGlobalZoom: function (xyzObj) { dispatch(setGlobalZoom(xyzObj)); }
   };
