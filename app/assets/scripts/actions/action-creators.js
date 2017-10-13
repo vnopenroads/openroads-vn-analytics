@@ -285,19 +285,19 @@ function completeOsmChange (taskId, error = null) {
 export function queryOsm (taskId, payload) {
   return function (dispatch) {
     dispatch(requestOsmChange());
-    createChangeset(dispatch, upload);
-
-    function upload (changesetId) {
-      let url = `${config.api}/changeset/${changesetId}/upload`;
-      return fetch(url, {
-        method: 'POST',
-        body: objectToBlob({ osmChange: payload })
-      })
-      .then(() => {
-        return dispatch(completeOsmChange(taskId));
-      });
-    }
+    createChangeset(dispatch, changesetId => uploadChangeset(dispatch, taskId, payload, changesetId));
   };
+}
+
+function uploadChangeset (dispatch, taskId, payload, changesetId) {
+  let url = `${config.api}/changeset/${changesetId}/upload`;
+  return fetch(url, {
+    method: 'POST',
+    body: objectToBlob({ osmChange: payload })
+  })
+  .then(() => {
+    return dispatch(completeOsmChange(taskId));
+  });
 }
 
 function createChangeset (dispatch, cb) {
@@ -359,7 +359,7 @@ export function deleteEntireWays (taskId, wayIds) {
           way: wayIds.map(id => ({ id }))
         }
       };
-      queryOsm(taskId, payload)(dispatch);
+      createChangeset(dispatch, changesetId => uploadChangeset(dispatch, taskId, payload, changesetId));
     }
   };
 }
