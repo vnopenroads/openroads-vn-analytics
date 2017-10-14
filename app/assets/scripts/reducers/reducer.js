@@ -473,7 +473,7 @@ const VProMMsidProperties = function (state = defaultVProMMsProperties, action) 
 const defaultVProMMsAdminProperties = {
   fetching: false,
   fetched: false,
-  json: []
+  data: []
 };
 
 const VProMMsAdminProperties = function (state = defaultVProMMsAdminProperties, action) {
@@ -627,6 +627,8 @@ const provinces = function (state = defaultProvinces, action) {
       state.fetched = true;
       state.data = action.json;
       break;
+    case actions.REMOVE_PROVINCES:
+      return defaultProvinces;
   }
   return state;
 };
@@ -645,6 +647,8 @@ const crosswalk = function (state = defaultCrossWalk, action) {
       state.district = ADMIN_MAP.district;
       state.set = true;
       break;
+    case actions.REMOVE_CROSSWALK:
+      return defaultCrossWalk;
   }
   return state;
 };
@@ -749,6 +753,8 @@ const adminRoads = function (state = defaultAdminRoads, action) {
       state.fetching = false;
       state.ids = action.json;
       break;
+    case actions.REMOVE_ADMIN_ROADS:
+      return defaultAdminRoads;
   }
   return state;
 };
@@ -806,6 +812,26 @@ const language = function (state = {current: 'en'}, action) {
   return state;
 };
 
+const previousLocation = function (state = {path: '/'}, action) {
+  switch (action.type) {
+    case actions.SET_PREVIOUS_LOCATION:
+      state = _.cloneDeep(state);
+      state.path = action.location;
+      break;
+  }
+  return state;
+};
+
+const subadminName = function (state = {name: ''}, action) {
+  switch (action.type) {
+    case actions.SET_SUBADMIN_NAME:
+      state = _.cloneDeep(state);
+      state.name = action.name;
+      break;
+  }
+  return state;
+};
+
 export default combineReducers({
   admin,
   admins,
@@ -841,5 +867,7 @@ export default combineReducers({
   language,
   fieldRoads,
   fieldVProMMsids,
-  pagination
+  pagination,
+  previousLocation,
+  subadminName
 });

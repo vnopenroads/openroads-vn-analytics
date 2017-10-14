@@ -23,14 +23,16 @@ echo $'[https://www.transifex.com]\nhostname = https://www.transifex.com\nuserna
 echo ""
 echo "repo linked to project!"
 
+# map most recent translations from transifex to translation files
+echo ""
+echo "---Pulling any new translations from project into repo---"
+
+tx pull
+
 # push any new changes from translation source
 echo ""
 echo "---Pushing any changes to translation from source file---"
 
 tx push -s
 
-# map most recent translations from transifex to translation files
-echo ""
-echo "---Pulling any new translations from project into repo---"
 
-tx pull
