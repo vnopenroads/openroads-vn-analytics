@@ -22,6 +22,7 @@ import Analytics from './views/analytics';
 import AnalyticsIndex from './views/analytics-index';
 import AnalyticsAA from './views/analytics-admin-area';
 import AAFieldMap from './components/aa-field-map';
+import Upload from './views/upload';
 
 const logger = createLogger({
   level: 'info',
@@ -60,6 +61,7 @@ render((
     <Router history={hashHistory}>
       <Route path='/:lang' component={App} onEnter={validateLanguage}>
         <Route path='tasks' component={Tasks} pageClass='tasks' />
+        <Route path='upload' component={Upload} pageClass='upload' />
         <Route path='editor' component={Editor} pageClass='editor' />
         <Route path='editor/*' component={Editor} pageClass='editor' />
         <Route path='explore' component={Explore} pageClass='explore' />

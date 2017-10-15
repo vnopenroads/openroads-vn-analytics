@@ -136,6 +136,11 @@ var SiteHeader = React.createClass({
                     <span>{t('Tasks')}</span>
                   </Link>
                 </li>
+                <li>
+                  <Link to={`/${getLanguage()}/upload`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
+                    <span>{t('Upload')}</span>
+                  </Link>
+                </li>
                 <li className='search'>
                   {this.displaySearchBar()}
                 </li>
