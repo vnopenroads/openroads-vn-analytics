@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import { routeReducer } from 'react-router-redux';
 
 import * as actions from '../actions/action-types';
-import { VPROMMS_IDS, ADMIN_MAP } from '../constants';
+import { ADMIN_MAP } from '../constants';
 
 const admins = function (state = {units: [], fetching: false, fetched: false}, action) {
   switch (action.type) {
@@ -306,18 +306,6 @@ const roadNetworkStatus = function (state = roadNetworkStatusDefaultState, actio
   return state;
 };
 
-_.forEach(VPROMMS_IDS, (province) => {
-  province.vpromms = province.vpromms.map((id) => {
-    return {
-      id,
-      inTheDatabase: false,
-      RoadLab: false,
-      RouteShootUrl: '',
-      RouteShootPro: false
-    };
-  });
-});
-
 const VProMMSidsDefaultState = {
   fetching: false,
   fetched: false,
@@ -347,8 +335,7 @@ const VProMMSids = function (state = VProMMSidsDefaultState, action) {
 
 const VProMMSidsAnalyticsDefaultState = {
   fetching: false,
-  fetched: false,
-  data: VPROMMS_IDS
+  fetched: false
 };
 
 const VProMMSidsAnalytics = function (state = VProMMSidsAnalyticsDefaultState, action) {
