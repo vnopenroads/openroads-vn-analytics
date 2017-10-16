@@ -203,11 +203,11 @@ var AnalyticsAA = React.createClass({
     }
   },
 
-  renderDataDumpLinks: function (adminName) {
+  renderDataDumpLinks: function (adminId) {
     return (
       <div>
         <h3 classNam='a-header'>{t('Admin Chilren')}</h3>
-        <a className='bttn bttn-secondary' href={`${config.provinceDumpBaseUrl}${adminName}.csv`}>{t('Download Roads')}</a>
+        <a className='bttn bttn-secondary' href={`${config.provinceDumpBaseUrl}${adminId}.csv`}>{t('Download Roads')}</a>
       </div>
     );
   },
@@ -225,6 +225,14 @@ var AnalyticsAA = React.createClass({
   renderAnalyticsAdmin: function () {
     setLanguage(this.props.language);
     const adminContent = this.makeAdminAnalyticsContent();
+
+    // There's no reason for this to be repeated from above,
+    // but the admin-crosswalking logic is convoluted  so it was expedient.
+    // This should be refactored out.
+    const level = !this.props.params.aaIdSub ? 'province' : 'district';
+    const idFinder = (level === 'province') ? { aaId: this.props.params.aaId } : { aaIdSub: this.props.params.aaIdSub };
+    const id = getAdminId(this.props.crosswalk, idFinder, level);
+
     return (
       <section>
         <header className='a-header'>
@@ -234,7 +242,7 @@ var AnalyticsAA = React.createClass({
           {/* completion suggests data exists, in whcih case there is data available for download */}
           <div className='a-head-actions'>
             {/* TODO, remove aaIdSub when sub admin dumps are made. */}
-            { adminContent.completion && !this.props.params.aaIdSub ? this.renderDataDumpLinks(this.makeAdminName()) : '' }
+            { adminContent.completion && !this.props.params.aaIdSub ? this.renderDataDumpLinks(id) : '' }
           </div>
         </header>
         <div>
