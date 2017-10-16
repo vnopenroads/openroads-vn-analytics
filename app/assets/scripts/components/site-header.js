@@ -180,7 +180,7 @@ var SiteHeader = React.createClass({
               alignment='right'>
               <ul className='drop-menu drop-menu--select' role='menu'>
               {
-                ['Admin', 'VProMMs'].map((l, i) => {
+                ['Admin', 'VProMMS'].map((l, i) => {
                   let cl = 'drop-menu-item';
                   return (
                     <li key={i}>

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { t, getLanguage } from '../utils/i18n';
 import { isDescendent } from '../utils/dom';
 import {
-  fetchVProMMsids,
+  fetchFieldVProMMsIds,
   fetchVProMMsBbox,
   setFilteredVProMMs,
   fetchAdmins,
@@ -31,7 +31,7 @@ var Search = React.createClass({
     vpromms: React.PropTypes.array,
     filteredVProMMs: React.PropTypes.array,
     _setFilteredVProMMs: React.PropTypes.func,
-    _fetchVProMMsids: React.PropTypes.func,
+    _fetchFieldVProMMSIds: React.PropTypes.func,
     _fetchVProMMsBbox: React.PropTypes.func,
     _fetchAdmins: React.PropTypes.func,
     _clearAdmins: React.PropTypes.func,
@@ -46,6 +46,7 @@ var Search = React.createClass({
         this.refs.results.classList.add('search-results-show');
       } else {
         this.props._clearAdmins();
+        this.refs.results.classList.remove('search-results-show');
       }
     } else {
       if (searchVal.length >= 2) {
@@ -53,6 +54,7 @@ var Search = React.createClass({
         this.refs.results.classList.add('search-results-show');
       } else {
         this.props._setFilteredVProMMs([]);
+        this.refs.results.classList.remove('search-results-show');
       }
     }
   },
@@ -130,7 +132,7 @@ var Search = React.createClass({
   },
 
   componentDidMount: function () {
-    this.props._fetchVProMMsids('search');
+    this.props._fetchFieldVProMMSIds();
     document.addEventListener('click', this.onDocumentClick, false);
     document.addEventListener('keyup', this.onKeyup, false);
   },
@@ -173,7 +175,8 @@ var Search = React.createClass({
             results.push(
               <dd key={`aa-type-admin-${k}-${i}`} className='drop-menu-result'>
               <small><a onClick={(e) => {
-                const adminArea = this.props.admins.find(o => o.name_en === e.target.textContent).id;
+                const name = (getLanguage() === 'en') ? 'name_en' : 'name_vn';
+                const adminArea = this.props.admins.find(o => o[name] === e.target.textContent).id;
                 this.refs.results.classList.remove('search-results-show');
                 this.searchAdminArea(adminArea);
               }}>{getLanguage() === 'en' ? o.name_en : o.name_vn}</a></small>
@@ -238,7 +241,7 @@ var Search = React.createClass({
 function selector (state) {
   return {
     admins: state.admins.units,
-    vpromms: state.VProMMSids.data,
+    vpromms: state.fieldVProMMsids.ids,
     filteredVProMMs: state.setFilteredVProMMs,
     searchResultsDisplay: state.searchResultsDisplay.show
   };
@@ -246,7 +249,7 @@ function selector (state) {
 
 function dispatcher (dispatch) {
   return {
-    _fetchVProMMsids: (use) => dispatch(fetchVProMMsids(use)),
+    _fetchFieldVProMMSIds: () => dispatch(fetchFieldVProMMsIds()),
     _fetchVProMMsBbox: (vprommsId) => dispatch(fetchVProMMsBbox(vprommsId)),
     _setFilteredVProMMs: (filteredVProMMs) => dispatch(setFilteredVProMMs(filteredVProMMs)),
     _clearAdmins: () => dispatch(clearAdmins()),
