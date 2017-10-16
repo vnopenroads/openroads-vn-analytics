@@ -98,11 +98,11 @@ var Explore = React.createClass({
     let bounds;
     if (nextProps.adminBbox !== this.props.adminBbox) {
       bounds = nextProps.adminBbox;
-      return this.map.fitBounds(bounds);
+      if (!bounds.includes(null)) { return this.map.fitBounds(bounds); }
     }
     if (nextProps.vprommsBbox !== this.props.vprommsBbox) {
       bounds = nextProps.vprommsBbox;
-      return this.map.fitBounds(bounds);
+      if (!bounds.includes(null)) { return this.map.fitBounds(bounds); }
     }
   },
 
