@@ -19,7 +19,6 @@ var SiteHeader = React.createClass({
     _showSearch: React.PropTypes.func,
     _setSearchType: React.PropTypes.func,
     _setLanguage: React.PropTypes.func,
-    _cleanSearchResults: React.PropTypes.func,
     fetchSearchResults: React.PropTypes.func,
     cleanSearchResults: React.PropTypes.func,
     routes: React.PropTypes.array,
