@@ -2,21 +2,6 @@
    Page: Analytics
    ========================================================================== */
 
-.analytics, .analytics-aa .site-header,
-.editor .site-header,
-.explore .site-header  {
-  .site__nav {
-    .toggle-menu,
-    .toggle-search,
-    .search-wrapper {
-      display: none;
-    }
-  }
-}
-
-
-.tasks .site-header .site__nav .search-wrapper { display: none; }
-
 .analytics,
 .analytics-aa {
   .aa-main {

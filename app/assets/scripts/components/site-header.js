@@ -103,7 +103,7 @@ var SiteHeader = React.createClass({
 
   render: function () {
     return (
-      <header className='site-header' ref={(header) => this.header = header }>
+      <header className='site__header' ref={(header) => this.header = header }>
         <div className='inner'>
           <div className='site__headline'>
             <h1 className='site__title'>
@@ -113,38 +113,41 @@ var SiteHeader = React.createClass({
             </h1>
           </div>
           <nav className='site__nav' role='navigation' ref='nav'>
-            <div className='menu-wrapper'>
-              <ul className='global-menu' id='global-menu'>
+            <h2 className='site__menu-toggle'><a href='#menu-block'><span>{t('Menu')}</span></a></h2>
+
+            <div className='site__menu-block' id='menu-block'>
+              <h3 className='site__menu-title'>{t('Lang')}</h3>
+              <ul className='site__menu'>
+                <li><a href='#' className='site__menu-item' activeClassName='site__menu-item--active' title={t('Change language')}>{t('English')}</a></li>
+                <li><a href='#' className='site__menu-item' activeClassName='site__menu-item--active' title={t('Change language')}>{t('Vietnamese')}</a></li>
+              </ul>
+
+              <h3 className='site__menu-title'>{t('Nav')}</h3>
+              <ul className='site__menu'>
+                <li><Link to={`/${getLanguage()}/analytics`} className='site__menu-item' activeClassName='site__menu-item--active' onClick={this.menuClickHandler} title={t('Visit')}>{t('Analytics')}</Link></li>
                 <li>
-                  <Link to={`/${getLanguage()}/analytics`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
-                    <span>{t('Analytics')}</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to={`/${getLanguage()}/explore`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
+                  <Link to={`/${getLanguage()}/explore`} className='site__menu-item' activeClassName='site__menu-item--active' onClick={this.menuClickHandler} title={t('Visit')}>
                     <span>{t('Explore')}</span>
                   </Link>
                 </li>
                 <li>
-                  <Link to={`/${getLanguage()}/editor`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
+                  <Link to={`/${getLanguage()}/editor`} className='site__menu-item' activeClassName='site__menu-item--active' onClick={this.menuClickHandler} title={t('Visit')}>
                     <span>{t('Editor')}</span>
                   </Link>
                 </li>
                 <li>
-                  <Link to={`/${getLanguage()}/tasks`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
+                  <Link to={`/${getLanguage()}/tasks`} className='site__menu-item' activeClassName='site__menu-item--active' onClick={this.menuClickHandler} title={t('Visit')}>
                     <span>{t('Tasks')}</span>
                   </Link>
                 </li>
                 <li>
-                  <Link to={`/${getLanguage()}/upload`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
+                  <Link to={`/${getLanguage()}/upload`} className='site__menu-item' activeClassName='site__menu-item--active' onClick={this.menuClickHandler} title={t('Visit')}>
                     <span>{t('Upload')}</span>
                   </Link>
                 </li>
-                <li className='search'>
-                  {this.displaySearchBar()}
-                </li>
               </ul>
             </div>
+            {/* 
             <div className='menu-wrapper'>
               <Headerdrop
                 id='lang-switcher'
@@ -174,32 +177,9 @@ var SiteHeader = React.createClass({
                   }
                 </ul>
               </Headerdrop>
-              <Headerdrop
-              className={c({disabled: !this.isSearchAvailable(this.props)})}
-              id='search-selector'
-              triggerClassName='drop-toggle caret change-search-button site__lang'
-              triggerText={t('Search')}
-              triggerElement='a'
-              direction='down'
-              alignment='right'>
-              <ul className='drop-menu drop-menu--select' role='menu'>
-              {
-                ['Admin', 'VProMMs'].map((l, i) => {
-                  let cl = 'drop-menu-item';
-                  return (
-                    <li key={i}>
-                      <a onClick={(e) => {
-                        this.props._setSearchType(l);
-                        this.props._showSearch(true);
-                      }}
-                        className={cl} data-hook='dropdown:close'>{l}</a>
-                    </li>
-                  );
-                })
-                }
-              </ul>
-              </Headerdrop>
+
             </div>
+            */} 
           </nav>
         </div>
       </header>

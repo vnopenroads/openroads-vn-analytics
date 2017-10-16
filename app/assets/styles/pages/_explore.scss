@@ -2,20 +2,6 @@
    Page: Explore
    ========================================================================== */
 
-.analytics .site-header,
-.analytics-aa .site-header,
-.main .site-header,
-.editor .site-header,
-.explore .site-header {
-  .site__nav {
-    .toggle-menu,
-    .toggle-search,
-    .search-wrapper {
-      display: none;
-    }
-  }
-}
-
 #map {
   height: 100%;
   width: 100%;
