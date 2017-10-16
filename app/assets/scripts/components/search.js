@@ -153,6 +153,13 @@ var Search = React.createClass({
     }
   },
 
+  renderPlaceHolder: function (results) {
+    if (this.refs.searchBox) {
+      results.push(<p className='info'>No results available. Please refine your search.</p>);
+      return results;
+    }
+  },
+
   renderResults: function () {
     if (this.props.fetching) {
       return (<p className='info'>Loading...</p>);
@@ -163,8 +170,7 @@ var Search = React.createClass({
     if (this.props.searchType === 'Admin') {
       // if no results are shown, prompt user with one of the two messages.
       if (!g.length) {
-        // in the case the search value is just a blank space (denoting nothing is searche for)
-        // provide a message that prompts users to search
+        this.renderPlaceHolder(results);
       } else {
         g = _.groupBy(g, (o) => o.level);
         _.forEach(g, (l, k) => {
@@ -188,26 +194,21 @@ var Search = React.createClass({
         });
       }
     } else {
-      _.forEach(g, (o, k) => {
-        results.push(
-        <dt key={`aa-type-vpromms-${k}`} className='drop-menu-sectitle'>
-          <a onClick={(e) => {
-            const vprommsId = e.target.textContent;
-            this.refs.results.classList.remove('search-results-show');
-            this.searchVProMMsID(vprommsId);
-          }}>
-            <strong>{o}</strong>
-          </a>
-        </dt>);
-      });
-    }
-    if (this.refs.searchBox) {
-      var searchVal = _.trim(this.refs.searchBox.value);
-      if (/^(?![\s\S])/.test(searchVal)) {
-        results.push(<p className='info'>Please search for an Admin Area</p>);
-        // if the search term used does not have a db match, then let users
+      if (!g.length) {
+        this.renderPlaceHolder(results);
       } else {
-        results.push(<p className='info'>No results available. Please refine your search.</p>);
+        _.forEach(g, (o, k) => {
+          results.push(
+          <dt key={`aa-type-vpromms-${k}`} className='drop-menu-sectitle'>
+            <a onClick={(e) => {
+              const vprommsId = e.target.textContent;
+              this.refs.results.classList.remove('search-results-show');
+              this.searchVProMMsID(vprommsId);
+            }}>
+              <strong>{o}</strong>
+            </a>
+          </dt>);
+        });
       }
     }
     return (
