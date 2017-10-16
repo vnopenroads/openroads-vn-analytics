@@ -26,12 +26,14 @@ var Search = React.createClass({
     isEditor: React.PropTypes.bool,
     fetching: React.PropTypes.bool,
     fetchSearchResults: React.PropTypes.func,
+    lang: React.PropTypes.string,
     searchType: React.PropTypes.string,
     searchResultsDisplay: React.PropTypes.bool,
     vpromms: React.PropTypes.array,
+    query: React.PropTypes.string,
     filteredVProMMs: React.PropTypes.array,
     _setFilteredVProMMs: React.PropTypes.func,
-    _fetchFieldVProMMSIds: React.PropTypes.func,
+    _fetchFieldVProMMsIds: React.PropTypes.func,
     _fetchVProMMsBbox: React.PropTypes.func,
     _fetchAdmins: React.PropTypes.func,
     _clearAdmins: React.PropTypes.func,
@@ -132,7 +134,7 @@ var Search = React.createClass({
   },
 
   componentDidMount: function () {
-    this.props._fetchFieldVProMMSIds();
+    this.props._fetchFieldVProMMsIds();
     document.addEventListener('click', this.onDocumentClick, false);
     document.addEventListener('keyup', this.onKeyup, false);
   },
@@ -140,6 +142,15 @@ var Search = React.createClass({
   componentWillUnmount: function () {
     document.removeEventListener('click', this.onDocumentClick, false);
     document.removeEventListener('keyup', this.onKeyup, false);
+  },
+
+  componentWillReceiveProps: function (nextProps) {
+    const newSearchType = (this.props.searchType !== nextProps.searchType);
+    const newLang = (this.props.lang !== nextProps.lang);
+    if (newSearchType || newLang) {
+      this.refs.searchBox.value = '';
+      this.refs.results.classList.remove('search-results-show');
+    }
   },
 
   renderResults: function () {
@@ -167,13 +178,13 @@ var Search = React.createClass({
         g = _.groupBy(g, (o) => o.level);
         _.forEach(g, (l, k) => {
           results.push(
-            <dt key={`aa-type-admin-${k}`} className='drop-menu-sectitle'>
+            <dt key={`aa-type-admin-${l}-${k}`} className='drop-menu-sectitle'>
               <strong>Admin Level - {k}</strong>
             </dt>
           );
           _.forEach(l, (o, i) => {
             results.push(
-              <dd key={`aa-type-admin-${k}-${i}`} className='drop-menu-result'>
+              <dd key={`aa-type-admin-${o}-${k}-${i}`} className='drop-menu-result'>
               <small><a onClick={(e) => {
                 const name = (getLanguage() === 'en') ? 'name_en' : 'name_vn';
                 const adminArea = this.props.admins.find(o => o[name] === e.target.textContent).id;
@@ -243,13 +254,15 @@ function selector (state) {
     admins: state.admins.units,
     vpromms: state.fieldVProMMsids.ids,
     filteredVProMMs: state.setFilteredVProMMs,
-    searchResultsDisplay: state.searchResultsDisplay.show
+    searchResultsDisplay: state.searchResultsDisplay.show,
+    query: state.search.query,
+    lang: state.language.current
   };
 }
 
 function dispatcher (dispatch) {
   return {
-    _fetchFieldVProMMSIds: () => dispatch(fetchFieldVProMMsIds()),
+    _fetchFieldVProMMsIds: () => dispatch(fetchFieldVProMMsIds()),
     _fetchVProMMsBbox: (vprommsId) => dispatch(fetchVProMMsBbox(vprommsId)),
     _setFilteredVProMMs: (filteredVProMMs) => dispatch(setFilteredVProMMs(filteredVProMMs)),
     _clearAdmins: () => dispatch(clearAdmins()),
