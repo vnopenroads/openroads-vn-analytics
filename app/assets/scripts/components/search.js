@@ -165,15 +165,6 @@ var Search = React.createClass({
       if (!g.length) {
         // in the case the search value is just a blank space (denoting nothing is searche for)
         // provide a message that prompts users to search
-        if (this.refs.searchBox) {
-          var searchVal = _.trim(this.refs.searchBox.value);
-          if (/^(?![\s\S])/.test(searchVal)) {
-            results.push(<p className='info'>Please search for an Admin Area</p>);
-            // if the search term used does not have a db match, then let users
-          } else {
-            results.push(<p className='info'>No results available. Please refine your search.</p>);
-          }
-        }
       } else {
         g = _.groupBy(g, (o) => o.level);
         _.forEach(g, (l, k) => {
@@ -209,6 +200,15 @@ var Search = React.createClass({
           </a>
         </dt>);
       });
+    }
+    if (this.refs.searchBox) {
+      var searchVal = _.trim(this.refs.searchBox.value);
+      if (/^(?![\s\S])/.test(searchVal)) {
+        results.push(<p className='info'>Please search for an Admin Area</p>);
+        // if the search term used does not have a db match, then let users
+      } else {
+        results.push(<p className='info'>No results available. Please refine your search.</p>);
+      }
     }
     return (
       <dl className='drop-menu'>
