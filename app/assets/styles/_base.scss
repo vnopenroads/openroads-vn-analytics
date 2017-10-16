@@ -260,6 +260,7 @@ a:active{
       clear: both;
       text-align: center;
       margin: 1rem 0 0 auto;
+      
       &.show-menu,
       &.show-search {
         margin-top: 1rem;
@@ -268,34 +269,6 @@ a:active{
       @include media(medium-up) {
         margin-top: 0;
         clear: none;
-      }
-
-      // vv Menu
-      .toggle-menu {
-        position: absolute;
-        font-size: 1rem;
-        line-height: 1rem;
-        margin: 0;
-        top: 1rem;
-        right: $global-padding;
-        z-index: 1;
-
-        a {
-          color: #fff;
-          text-decoration: none;
-          &:before {
-            @extend .collecticons-circle-information;
-          }
-        }
-
-        span {
-          @extend .visually-hidden;
-        }
-
-        @include media(small-up) {
-          right: $global-padding * 2;
-        }
-
       }
 
       .menu-wrapper {

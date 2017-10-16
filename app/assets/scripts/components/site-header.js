@@ -113,7 +113,6 @@ var SiteHeader = React.createClass({
             </h1>
           </div>
           <nav className='site__nav' role='navigation' ref='nav'>
-            <h2 className='toggle-menu'><a href='#global-menu' title='Show menu' ref='toggleMenu'><span>Menu</span></a></h2>
             <div className='menu-wrapper'>
               <ul className='global-menu' id='global-menu'>
                 <li>
