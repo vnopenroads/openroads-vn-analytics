@@ -11,6 +11,8 @@ import {
   removeAdminVProMMsProps
 } from '../actions/action-creators';
 
+import { makeIdTest } from '../utils/pagination';
+
 var Paginator = React.createClass({
 
   displayName: 'Paginator',
