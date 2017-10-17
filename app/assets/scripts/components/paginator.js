@@ -11,7 +11,7 @@ import {
   removeAdminVProMMsProps
 } from '../actions/action-creators';
 
-import { makeIdTest } from '../utils/pagination';
+import { makeIdTest } from '../utils/admin-level';
 
 var Paginator = React.createClass({
 
@@ -63,7 +63,7 @@ var Paginator = React.createClass({
       // pages inside previous/next buttons; only update the table roads
       pages.push(
         <li key={`page-${thisPage}-index-${thisIndex}`}>
-          <button className={buttonClass} onClick={(e) => { if (thisPage !== clickedPage) { this.props._updateClickedPage(thisPage); this.getNextRoads(limit, thisIndex); } } }>{t('thisPage')}</button>
+          <button className={buttonClass} onClick={(e) => { if (thisPage !== clickedPage) { this.props._updateClickedPage(thisPage); this.getNextRoads(limit, thisIndex); } } }>{thisPage}</button>
         </li>
       );
     }

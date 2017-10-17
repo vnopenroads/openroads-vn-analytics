@@ -873,12 +873,18 @@ function receiveAdminRoads (json) {
   };
 }
 
-export function fetchAdminRoads (json, level) {
+export function fetchAdminRoads (json, level, limit, offset) {
   return function (dispatch) {
     dispatch(requestAdminRoads());
     let url = `${config.api}/admin/roads?province=${json[0]}`;
     if (level === 'district') {
       url = `${url}&district=${json[1]}`;
+    }
+    if (offset) {
+      url = `${url}&offset=${offset}`;
+    }
+    if (limit) {
+      url = `${url}&limit=${limit}`;
     }
     return fetch(url)
     .then(response => response.json())
@@ -888,6 +894,12 @@ export function fetchAdminRoads (json, level) {
       }
       dispatch(receiveAdminRoads(json));
     });
+  };
+}
+
+export function removeAdminRoads () {
+  return {
+    type: actions.REMOVE_ADMIN_ROADS
   };
 }
 
@@ -1029,9 +1041,21 @@ export function fetchProvinces () {
   };
 }
 
+export function removeProvinces () {
+  return {
+    type: actions.REMOVE_PROVINCES
+  };
+}
+
 export function setCrossWalk () {
   return {
     type: actions.SET_CROSSWALK
+  };
+}
+
+export function removeCrosswalk () {
+  return {
+    type: actions.REMOVE_CROSSWALK
   };
 }
 
@@ -1069,5 +1093,23 @@ export function setLanguage (lang) {
   return {
     type: actions.SET_LANGUAGE,
     text: lang
+  };
+}
+
+// ////////////////////////////////////////////////////////////////
+//                           Location                            //
+// ////////////////////////////////////////////////////////////////
+
+export function setPreviousLocation (location) {
+  return {
+    type: actions.SET_PREVIOUS_LOCATION,
+    location: location
+  };
+}
+
+export function setSubAdminName (name) {
+  return {
+    type: actions.SET_SUBADMIN_NAME,
+    name: name
   };
 }
