@@ -1,24 +1,5 @@
-// IE < 10
-// Don't delete.
-.lt-ie10 {
-  #site-canvas {
-    display: none !important;
-  }
-  #nocando {
-    margin: 200px auto;
-    padding: 32px;
-    max-width: 440px;
-    background: #fff;
-    h1 {
-      font-size: 24px;
-      line-height: 1.1;
-      margin-bottom: 32px;
-    }
-  }
-}
-
 /* ==========================================================================
-   Global
+   Base
    ========================================================================== */
 
 html {
@@ -142,13 +123,8 @@ a:active{
   padding-right: $global-padding;
 
   @include media(small-up) {
-    padding-left: $global-padding*2;
-    padding-right: $global-padding*2;
-  }
-
-  @include media(xlarge-up) {
-    padding-left: $global-padding*4;
-    padding-right: $global-padding*4;
+    padding-left: $global-padding * 2;
+    padding-right: $global-padding * 2;
   }
 }
 
@@ -177,7 +153,7 @@ a:active{
   transition: all 0.24s ease 0s;
 
   > .inner {
-    @extend .row, .row--centered;
+    @extend .row;
     display: flex;
     flex-flow: row nowrap;
   }
@@ -288,7 +264,7 @@ a:active{
 
   .site__nav-block--language & {
     a::before {
-      @extend %collecticons-globe;
+      @extend %collecticon-globe;
     }
   }
 
@@ -298,7 +274,7 @@ a:active{
     }
 
     a::before {
-      @extend %collecticons-hamburger-menu;
+      @extend %collecticon-hamburger-menu;
     }
   }
 }
@@ -395,13 +371,13 @@ a:active{
   }
 
   &__actions {
-    .bttn-edit {
-      @extend .bttn-m, .bttn-secondary;
+    .button-edit {
+      @extend .button--medium, .button--primary-raised-dark;
       text-decoration: none;
       box-shadow: none;
     }
 
-    .bttn-road-network.disabled {
+    .button-road-network.disabled {
       pointer-events: all;
     }
 
@@ -670,7 +646,7 @@ a:active{
     margin-left: 0.5rem;
   }
 
-  .bttn-info {
+  .button-info {
     font-size: 1rem;
     line-height: 1.5;
     vertical-align: middle;
@@ -679,8 +655,9 @@ a:active{
     span {
       @extend .visually-hidden;
     }
-    &:after {
-      @extend .collecticons-circle-information;
+
+    &::after {
+      @extend %collecticon-circle-information;
     }
   }
 }
@@ -771,7 +748,7 @@ a:active{
     @extend %empty-box;
   }
 
-  .bttn-view-more {
+  .button-view-more {
     float: right;
     margin-right: 1rem;
     font-weight: $base-font-bold;
@@ -970,7 +947,7 @@ a:active{
     float: left;
   }
   .previous a, .next a {
-    @extend .bttn;
+    @extend .button;
     text-decoration: none;
     text-transform: uppercase;
     color: $base-font-color;
@@ -982,14 +959,14 @@ a:active{
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     &:before {
-      @extend .collecticons-chevron-left;
+      @extend .collecticon-chevron-left;
     }
   }
   .next a {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     &:before {
-      @extend .collecticons-chevron-right;
+      @extend .collecticon-chevron-right;
     }
   }
 
@@ -999,7 +976,7 @@ a:active{
       float: left;
     }
     &__page {
-      @extend .bttn;
+      @extend .button;
       border-radius: 0;
       text-decoration: none;
       text-transform: uppercase;
@@ -1085,5 +1062,27 @@ a:active{
   .actions-menu {
     float: right;
     // white-space: nowrap;
+  }
+}
+
+
+
+
+// IE < 10
+// Don't delete.
+.lt-ie10 {
+  #site-canvas {
+    display: none !important;
+  }
+  #nocando {
+    margin: 200px auto;
+    padding: 32px;
+    max-width: 440px;
+    background: #fff;
+    h1 {
+      font-size: 24px;
+      line-height: 1.1;
+      margin-bottom: 32px;
+    }
   }
 }

@@ -175,7 +175,7 @@ gulp.task('collecticons', function (done) {
     '--style-format', 'sass',
     '--style-dest', 'app/assets/styles/',
     '--style-name', 'collecticons',
-    '--class-name', 'collecticons',
+    '--class-name', 'collecticon',
     '--no-preview'
   ];
 

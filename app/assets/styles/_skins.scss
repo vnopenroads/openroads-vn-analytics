@@ -32,3 +32,7 @@
     pointer-events: none;
   }
 }
+
+%inset-skin {
+  background: tint($base-color, 96%);
+}

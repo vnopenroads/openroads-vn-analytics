@@ -107,7 +107,7 @@
 .table { margin-bottom: 2rem; }
 
 .a-table-action {
-  @extend .bttn, .bttn-s, .bttn-base-light;
+  @extend .button, .button--small, .button--base-raised-light;
   margin: 0 ($global-spacing / 4) 0 0;
   min-width: 5rem;
 }
@@ -136,8 +136,8 @@
   opacity: 0;
 }
 
-.bttn-table-expand {
-  @extend .bttn, .bttn-s, .bttn-base-light;
+.button-table-expand {
+  @extend .button, .button--small, .button--base-raised-light;
   min-width: 4.5rem;
 
   * {
@@ -153,12 +153,12 @@
   }
 }
 
-.bttn-table-expand--show::after {
-  @extend %collecticons-sm-chevron-down;
+.button-table-expand--show::after {
+  @extend %collecticon-sm-chevron-down;
 }
 
-.bttn-table-expand--hide::after {
-  @extend %collecticons-sm-chevron-up;
+.button-table-expand--hide::after {
+  @extend %collecticon-sm-chevron-up;
 }
 
 .table-properties-list {
@@ -232,7 +232,7 @@
     }
 
     &::before {
-      @extend %collecticons-sm-chevron-right;
+      @extend %collecticon-sm-chevron-right;
       position: absolute;
       top: 50%;
       left: 0;

@@ -1,225 +1,319 @@
-// BUTTONS
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
 
-// GLOBAL
-
-button,
-html input[type=button],
-input[type=reset],
-input[type=submit] {
-  -webkit-appearance: button;
-  cursor: pointer;
-  transform: translateZ(0);
-}
-
-.bttn {
+.button {
   @extend .antialiased;
   user-select: none;
   display: inline-block;
-  font-family: $base-font-family;
-  font-weight: $base-font-bold;
-  font-style: normal;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
-  border-radius: $global-radius;
-  border: 0;
-  background-image: none;
   line-height: 1.5rem;
-  font-size: 0.875rem;
+  font-size: 1rem;
   padding: 0.25rem 0.75rem;
+  min-width: 2rem;
+  background: none;
   text-shadow: none;
-  opacity: 1;
-  box-shadow: inset 0 0 0 2px $brdr-rgba;
-  text-decoration: none;
+  border: 0;
+  border-radius: $base-border-radius;
+  font-weight: $base-font-bold;
+  cursor: pointer;
 
-  .open > &,
-  &:active,
-  &.active {
-    box-shadow: 0 0 0 1px rgba($base-color, 0.24);
-    outline: none;
-    transform: translate(0, 0, 1px);
-  }
+  /* States */
 
   &:hover {
-    opacity: 1;
+    opacity: initial;
   }
 
-  &.disabled, &[disabled] {
-    @extend .disabled;
+  .drop--open > &,
+  &.button--active,
+  &:active {
+    z-index: 2;
+    transform: none;
   }
 
-  &.hide-txt {
-    &:before {
-      margin-right: 0;
-    } 
-    &:after {
-      margin-left: 0;
-    } 
-    > * {
-      @extend .visually-hidden;
-    }
+  &,
+  &:focus {
+    outline: none; // This causes usability problems. Needs fixing.
   }
 
-  * {
+  /* Icon handling */
+
+  &::before,
+  &::after,
+  [class^="uisi-"],
+  [class*=" uisi-"] {
+    font-size: 1rem;
+  }
+
+  &::before { margin-right: 0.375rem; }
+  &::after { margin-left: 0.375rem; }
+
+  &::before,
+  &::after,
+  > * {
     vertical-align: top;
+    display: inline-block;
+    line-height: inherit !important;
   }
 
-  transition: background-color 0.24s ease 0s, opacity 0s linear 0s;
+  /* Checkbox/radio handling */
+
+  > input[type=checkbox],
+  > input[type=radio] {
+    @extend .visually-hidden;
+  }
+
+  /* Animation */
+
+  transition: background-color 0.24s ease 0s;
 }
 
 
-// COLORS
+/* Button color modifiers
+   ========================================================================== */
 
-// Base Light
-.bttn-base-light,
-.bttn-base-light:visited {
-  @include bttn-variation(#fff);
-  color: $base-font-color;
+/* Base Raised Light */
+
+.button--base-raised-light {
+  @include button-variation($base-color, "raised", "light");
 }
 
-// Base Dark
-.bttn-base-dark,
-.bttn-base-dark:visited {
-  @include bttn-variation($base-font-color);
-  color: #fff;
+/* Base Raised Dark */
+
+.button--base-raised-dark {
+  @include button-variation($base-color, "raised", "dark");
 }
 
-// Primary
-.bttn-primary,
-.bttn-primary:visited {
-  @include bttn-variation($primary-color);
-  color: #fff;
+/* Base Plain */
+
+.button--base-plain {
+  @include button-variation($base-color, "plain", "light");
 }
 
-// Secondary
-.bttn-secondary,
-.bttn-secondary:visited {
-  @include bttn-variation($secondary-color);
-  color: #fff;
+/* Primary Raised Light */
+
+.button--primary-raised-light {
+  @include button-variation($primary-color, "raised", "light");
+}
+
+/* Primary Raised Dark */
+
+.button--primary-raised-dark {
+  @include button-variation($primary-color, "raised", "dark");
+}
+
+/* Primary Plain */
+
+.button--primary-plain {
+  @include button-variation($primary-color, "plain", "light");
+}
+
+/* Secondary Raised Light */
+
+.button--secondary-raised-light {
+  @include button-variation($secondary-color, "raised", "light");
+}
+
+/* Secondary Raised Dark */
+
+.button--secondary-raised-dark {
+  @include button-variation($secondary-color, "raised", "dark");
+}
+
+/* Secondary Plain */
+
+.button--secondary-plain {
+  @include button-variation($secondary-color, "plain", "light");
+}
+
+/* Danger Raised Light */
+
+.button--danger-raised-light {
+  @include button-variation($danger-color, "raised", "light");
+}
+
+/* Danger Raised Dark */
+
+.button--danger-raised-dark {
+  @include button-variation($danger-color, "raised", "dark");
+}
+
+/* Danger Plain */
+
+.button--danger-plain {
+  @include button-variation($danger-color, "plain", "light");
+}
+
+/* Achromic Plain (white plain) */
+
+.button--achromic-plain {
+  @include button-variation(#fff, "plain", null);
+}
+
+/* Achromic Glass (white ghost-like) */
+
+.button--achromic-glass {
+  @include button-variation(#fff, "glass", null);
 }
 
 
-// SIZES
+/* Button size modifiers
+   ========================================================================== */
 
-// Small (24px)
-.bttn-s,
-.bttn-group-s .bttn {
+/* Small (24px) */
+
+.button--small,
+.button-group--small .button {
   line-height: 1.25rem;
   font-size: 0.875rem;
   padding: 0.125rem 0.5rem;
   min-width: 1.5rem;
 }
 
-// Medium (32px)
-// Default
-.bttn-m,
-.bttn-group-m .bttn {
+/* Medium (32px)
+   Default
+*/
+
+.button--medium,
+.button-group--medium .button {
   line-height: 1.5rem;
-  font-size: 0.875rem;
-  padding: 0.25rem 0.75rem;
+  font-size: 1rem;
+  padding: 0.25rem 1rem;
   min-width: 2rem;
 }
 
 /* Large (40px) */
-.bttn-l,
-.bttn-group-l .bttn {
+
+.button--large,
+.button-group--large .button {
   line-height: 1.5rem;
   font-size: 1rem;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.5rem;
   min-width: 2.5rem;
 }
 
-// ICONS
+/* XLarge (48px) */
 
-.bttn {
-  &:before,
-  &:after {
-    font-size: 1rem;
-  }
-  &:before { margin-right: 0.375rem; }
-  &:after { margin-left: 0.375rem; }
+.button--xlarge,
+.button-group--xlarge .button {
+  line-height: 2rem;
+  font-size: 1rem;
+  padding: 0.5rem 2rem;
+  min-width: 3rem;
 }
 
-.bttn-notxt {
-  padding-left: 0;
-  padding-right: 0;
-  &:before,
-  &:after {
+
+/* Button contaning icons & icons modifiers
+   ========================================================================== */
+
+.button--text-hidden {
+  &::before,
+  &::after {
     margin: 0;
-    opacity: 1;
   }
-  > * {
+  > *:not([class^="uisi-"]):not([class*=" uisi-"]) {
     @extend .visually-hidden;
   }
+  :not(.button-group) & {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
-// GROUP
 
-.bttn-group,
-.bttn-group-vertical {
+/* Button misc modifiers
+   ========================================================================== */
+
+.button--block {
+  display: block;
+  width: 100%;
+}
+
+.button--semi-fluid {
+  min-width: 16rem;
+}
+
+.button--capsule {
+  border-radius: $full-border-radius;
+}
+
+
+/* ==========================================================================
+   Button groups
+   ========================================================================== */
+
+.button-group {
   position: relative;
   display: inline-block;
   vertical-align: middle;
-  font-size: 0;
-  &.bttn-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    > li .bttn {
-      display: block;
-    }
-  }
-  > *,
-  > .bttn {
+
+  > .button {
+    display: block;
     position: relative;
     margin: 0;
+    z-index: 2;
   }
 }
 
-.bttn-group {
-  > *,
-  > .bttn {
+/* Horizontal */
+
+.button-group--horizontal {
+  > .button {
     float: left;
   }
-  > *:first-child:not(:last-child) .bttn,
-  > .bttn:first-child:not(:last-child) {
+
+  > .button:first-child:not(:last-child) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+    clip-path: inset(-100% 0 -100% -100%);
   }
-  > *:last-child:not(:first-child) .bttn,
-  > .bttn:last-child:not(:first-child) {
+
+  > .button:last-child:not(:first-child) {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+    clip-path: inset(-100% -100% -100% 0);
   }
-  > *:not(:first-child):not(:last-child) .bttn,
-  > .bttn:not(:first-child):not(:last-child) {
+
+  > .button:not(:first-child):not(:last-child) {
     border-radius: 0;
+    clip-path: inset(-100% 0);
   }
-  > .bttn + .bttn,
-  &.bttn-list > li + li {
+
+  > .button + .button {
     margin-left: -1px;
   }
 }
 
-.bttn-group-vertical {
-  > *,
-  > .bttn {
-    float: left;
+/* Vertical */
+
+.button-group--vertical {
+  > .button {
     clear: both;
+    width: 100%;
+    border-radius: $base-border-radius;
   }
-  > *:first-child:not(:last-child) .bttn,
-  > .bttn:first-child:not(:last-child) {
+
+  > .button:first-child:not(:last-child) {
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
+    clip-path: inset(-100% -100% 0 -100%);
   }
-  > *:last-child:not(:first-child) .bttn,
-  > .bttn:last-child:not(:first-child) {
+
+  > .button:last-child:not(:first-child) {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+    clip-path: inset(0 -100% -100% -100%);
   }
-  > *:not(:first-child):not(:last-child) .bttn,
-  > .bttn:not(:first-child):not(:last-child) {
+
+  > .button:not(:first-child):not(:last-child) {
     border-radius: 0;
+    clip-path: inset(0 -100%);
+  }
+
+  > .button + .button {
+    margin-top: -1px;
   }
 }
 
@@ -227,47 +321,46 @@ input[type=submit] {
 /* Semantic buttons
    ========================================================================== */
 
-.bttn-verify {
-  @extend .bttn;
-  @extend .bttn-s;
-  @extend .bttn-base-light;
+.button-verify {
+  @extend .button;
+  @extend .button--small;
+  @extend .button--base-raised-light;
 }
 
-.bttn-edit {
-  @extend .bttn; 
-  @extend .bttn-s;
-  @extend .bttn-primary;
+.button-edit {
+  @extend .button; 
+  @extend .button--small;
+  @extend .button--primary-raised-dark;
 }
 
-.bttn-stats-prev,
-.bttn-stats-next {
-  @extend .bttn;
-  @extend .bttn-s;
-  @extend .bttn-base-light;
-  @extend .bttn-notxt;
+.button-stats-prev,
+.button-stats-next {
+  @extend .button;
+  @extend .button--small;
+  @extend .button--base-raised-light;
+  @extend .button--text-hidden;
 }
 
-.bttn-stats-prev:before {
-  @extend .collecticons-chevron-left;
+.button-stats-prev:before {
+  @extend %collecticon-chevron-left;
 }
 
-.bttn-stats-next:before {
-  @extend .collecticons-chevron-right;
+.button-stats-next:before {
+  @extend %collecticon-chevron-right;
 }
 
-.bttn-search {
-  @extend .bttn;
-  @extend .bttn-m;
-  @extend .bttn-base-light;
-  @extend .bttn-notxt;
+.button-search {
+  @extend .button;
+  @extend .button--base-raised-light;
+  @extend .button--text-hidden;
 
   &:before {
-    @extend .collecticons-magnifier-right;
+    @extend %collecticon-magnifier-right;
   }
 }
 
-.bttn-filter {
-  @extend .bttn;
-  @extend .bttn-m;
-  @extend .bttn-base-light;
+.button-filter {
+  @extend .button;
+  @extend .button--medium;
+  @extend .button--base-raised-light;
 }
