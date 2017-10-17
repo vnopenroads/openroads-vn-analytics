@@ -211,8 +211,8 @@ var Search = React.createClass({
           placeholder={searchPlaceHolder} ref='searchBox'
           onChange={_.debounce(this.onSearchQueryChange, 300)}
           onKeyPress={this._handleKeyPress} />
-        <span className='input-group-bttn'>
-          <a href='#' className='bttn-search'
+        <span className='input-group-button'>
+          <a href='#' className='button-search'
             onClick={this.searchClick}>
             <span>{t('Search')}</span>
           </a>

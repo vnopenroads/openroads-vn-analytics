@@ -79,6 +79,7 @@
     &__body--landing {
       text-align: center;
       padding: 3rem 0;
+
       h2 {
         font-size: 1.5rem;
         font-weight: $base-font-light;
@@ -109,8 +110,8 @@
         margin: 0 auto 2rem auto;
       }
 
-      .bttn-explore {
-        @extend .bttn, .bttn-l;
+      .button-explore {
+        @extend .button, .button--large;
         text-decoration: none;
         box-shadow: 0 0 0 2px $secondary-color;
         border-radius: 0;

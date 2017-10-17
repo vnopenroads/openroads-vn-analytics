@@ -46,7 +46,7 @@ var Paginator = React.createClass({
     // if not the first page, add a back button to the list
     const previousPage = currentPage - 10;
     const previousIndex = limit * previousPage;
-    const prevClassName = c('bttn', 'bttn-base-light', {'disabled': (currentPage === 1)});
+    const prevClassName = c('button', 'button-base-light', {'disabled': (currentPage === 1)});
     nav.push(
       <li key={`pagination-previous-button`}>
         <button className={prevClassName} onClick={(e) => { (currentPage > 1) ? this.props._updatePagination(previousIndex, previousPage) : ''; } }>Previous</button>
@@ -58,7 +58,7 @@ var Paginator = React.createClass({
       const thisIndex = limit * i;
       const countIndexDiff = Math.abs(thisIndex - vprommsCount);
       if (countIndexDiff < limit) { limit = countIndexDiff; }
-      const buttonClass = c('bttn', 'bttn-base-light', {'active': (thisPage === clickedPage)});
+      const buttonClass = c('button', 'button-base-light', {'active': (thisPage === clickedPage)});
       // pages inside previous/next buttons; only update the table roads
       pages.push(
         <li key={`page-${thisPage}-index-${thisIndex}`}>
@@ -68,7 +68,7 @@ var Paginator = React.createClass({
     }
     const nextPage = currentPage + 10;
     const nextIndex = limit * nextPage;
-    const nextClassName = c('bttn', 'bttn-base-light', {'disabled': (lastPage === numPages)});
+    const nextClassName = c('button', 'button-base-light', {'disabled': (lastPage === numPages)});
     nav.push(
       <li key={`pagination-next-button`}>
         <button className={nextClassName} onClick={(e) => { (currentPage !== numPages) ? this.props._updatePagination(nextIndex, nextPage) : ''; } }>Next</button>

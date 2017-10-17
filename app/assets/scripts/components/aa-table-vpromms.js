@@ -147,9 +147,9 @@ const AATable = React.createClass({
       {_.map(sorted, (vpromm, i) => {
         const vprommFieldInDB = (this.props.fieldRoads.includes(vpromm));
         let propBtnLabel = this.state.expandedId === vpromm ? 'Hide' : 'Show';
-        let propBtnClass = classnames('bttn-table-expand', {
-          'bttn-table-expand--show': this.state.expandedId !== vpromm,
-          'bttn-table-expand--hide': this.state.expandedId === vpromm
+        let propBtnClass = classnames('button-table-expand', {
+          'button-table-expand--show': this.state.expandedId !== vpromm,
+          'button-table-expand--hide': this.state.expandedId === vpromm
         });
         let propContainerClass = classnames('table-properties', {
           'table-properties--hidden': this.state.expandedId !== vpromm

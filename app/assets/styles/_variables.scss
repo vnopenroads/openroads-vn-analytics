@@ -1,27 +1,37 @@
 /* ==========================================================================
-   Colors
+   Variables
    ========================================================================== */
+
+/* Colors
+   ========================================================================== */
+
 $base-color: #252525;                   // Asphalt
 $primary-color: #3d0a08;                // Aubergine
 $secondary-color: #da251d;              // Red
 $tertiary-color: #ffffff;               // Undefined
 
-// $success-color: #ffffff;             // Undefined
-$alert-color: #E07860;                  // Red
-$warning-color: #EFB654;                // Yellow
-$info-color: #44BAB8;                   // Teal
-
 // background for titles
 $neutral: #F2F2F2;                      // Gray
 
+/* State colors */
+
+$danger-color: #E74C3C;                 // Alizarin
+$success-color: #2ECC71;                // Emerald
+$warning-color: #F1C40F;                // Sunflower
+$info-color: #3498DB;                   // Peter River
+
+
+/* Legacy colors */
+
+$alert-color: $danger-color;
 
 /* Helper colors */
 
 $link-color: $secondary-color;
 $base-alpha-color: rgba($base-color, 0.12);
 
-/* ==========================================================================
-   Typography
+
+/* Typography
    ========================================================================== */
 
 /* $base-* refers to the base styles when there's nothing else to override them. */
@@ -37,8 +47,7 @@ $base-font-weight: $base-font-light;
 $code-font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 
 
-/* ==========================================================================
-   Decoration
+/* Decoration
    ========================================================================== */
 
 /* Border radius */
@@ -61,8 +70,7 @@ $flat-shadow-rgba: rgba($base-color, 0.08); // flat drop shadow
 $spread-shadow-rgba: rgba($base-color, 0.24); // spread drop shadow
 
 
-/* ==========================================================================
-   Spacing and media queries
+/* Sizing, spacing and media queries
    ========================================================================== */
 
 /* Row's min and max width */

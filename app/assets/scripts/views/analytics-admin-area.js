@@ -205,7 +205,7 @@ var AnalyticsAA = React.createClass({
 
   renderDataDumpLinks: function (adminId) {
     return (
-      <a className='bttn bttn-secondary' href={`${config.provinceDumpBaseUrl}${adminId}.csv`}>{t('Download Roads')}</a>
+      <a className='button button-secondary' href={`${config.provinceDumpBaseUrl}${adminId}.csv`}>{t('Download Roads')}</a>
     );
   },
 
