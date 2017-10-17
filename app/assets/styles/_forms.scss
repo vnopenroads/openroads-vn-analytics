@@ -1,136 +1,176 @@
-// GLOBAL
+/* ==========================================================================
+   Forms
+   ========================================================================== */
 
-button, input, select, textarea {
-  font: inherit;
-  height: auto;
-  width: auto;
-  margin: 0;
+.form {
+  margin-bottom: $global-spacing;
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
 }
 
-.form-control {
+.form__control {
   display: block;
   width: 100%;
-  padding: 0.5rem 0.5rem;
+  padding: 0.25rem 0.5rem;
   font-size: 1rem;
   line-height: 1.5rem;
-  height: 2.1rem;
   color: $base-font-color;
   background-color: #fff;
-  background-image: none;
-  border-radius: $global-radius;
+  border: 0;
+  border-radius: 0;
   font-family: inherit;
-  transform: translateZ(0);
-  box-shadow: inset 0 2px 0 0 rgba($base-color, 0.08), 0 0 0 1px rgba($base-color, 0.08), 0 1px 2px 0 rgba($base-color, 0.24);
-  transition: all 0.24s ease 0s;
-  
+  box-shadow: inset 0 0 0 1px $base-alpha-color;
+  border-radius: $base-border-radius;
+
+  /* Placeholder */
   &::placeholder {
-    color: tint($base-color, 64%);
+    opacity: 0.64;
   }
 
-  &:focus {
+  /* States */
+  &[disabled] {
+    @extend .disabled;
+  }
+
+  &[readonly] {
+    cursor: text;
+    opacity: 0.64;
+  }
+
+  &:hover {
+    box-shadow: inset 0 0 0 1px rgba($base-color, 0.24);
+  }
+
+  &:focus,
+  &--focus,
+  &:active,
+  &--active {
     outline: 0;
-    box-shadow: inset 0 2px 0 0 rgba($base-color, 0.08), 0 0 0 1px rgba($base-color, 0.32), 0 1px 2px 0 rgba($base-color, 0.24);
+    box-shadow: inset 0 0 0 1px rgba($base-color, 0.32);
   }
+
+  /* Animation */
+  transition: all 0.24s ease 0s;
 }
 
-select.form-control {
-  box-shadow: inset 0 -2px 0 0 rgba($base-color, 0.08);
-  cursor: pointer;
-}
 
-.form-control[disabled]
-fieldset[disabled] .form-control {
-  @extend .disabled;
-}
+/* Select form control
+   ========================================================================== */
 
-.form-control[readonly] {
-  cursor: text;
-  opacity: 0.64;
-}
-
-textarea.form-control {
-  height: auto;
-}
-
-input[type="search"] {
+select.form__control {
   -webkit-appearance: none;
-}
+  -moz-appearance: none;
+  appearance: none;
+  padding-right: 2rem;
+  cursor: pointer;
+  background-image: url('data:image/svg+xml;utf8,' + urlencode('<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="10px" height="5px" viewBox="0 0 10 5" enable-background="new 0 0 10 5" xml:space="preserve"><g><polygon fill="#{$link-color}" points="5,5 0,0 10,0  "/></g></svg>'));
+  background-position: calc(100% - 0.5rem) center;
+  background-repeat: no-repeat;
 
-.input-m {
-  padding: 0.5rem 0.5rem;
-  font-size: 0.875rem;
-  line-height: 1.5rem;
-  height: 2rem;
-}
+  /* Size modifiers */
 
-.input-l {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  line-height: 1.5rem;
-  height: 2.5rem;
-}
+  &.form__control--small,
+  &.form__control--medium {
+    padding-right: 2rem;
+    background-position: calc(100% - 0.5rem) center;
+  }
 
-.input-xl {
-  padding: 0.5rem 1rem;
-  font-size: 1.25rem;
-  line-height: 2rem;
-  height: 3rem;
-}
-
-.form-group {
-  @extend .clearfix;
-  margin-bottom: 1rem;
-}
-
-.input-group {
-  position: relative;
-  display: table;
-  border-collapse: separate;
-  width: 100%;
-}
-
-.input-group .form-control:first-child,
-.input-group-addon:first-child,
-.input-group-bttn:first-child > .bttn,
-.input-group-bttn:first-child > .bttn-group > .bttn,
-.input-group-bttn:first-child > .dropdown-toggle,
-.input-group-bttn:last-child > .bttn-group:not(:last-child) > .bttn {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-.input-group .form-control:last-child,
-.input-group-addon:last-child,
-.input-group-bttn:first-child > .bttn-group:not(:first-child) > .bttn,
-.input-group-bttn:first-child > .bttn:not(:first-child),
-.input-group-bttn:last-child > .bttn,
-.input-group-bttn:last-child > .bttn-group > .bttn {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.input-group .form-control {
-  position: relative;
-  float: left;
-  width: 100%;
-  margin-bottom: 0;
-  &:focus {
-    z-index: 2;
+  &.form__control--large,
+  &.form__control--xlarge {
+    padding-right: 2.25rem;
+    background-position: calc(100% - 0.75rem) center;
   }
 }
 
-.input-group-bttn {
-  position: relative;
-  font-size: 0;
-  width: 1%;
-  white-space: nowrap;
-  vertical-align: middle;
+/* IE specific */
+
+select.form__control::-ms-expand {
+  display: none;
 }
 
-.input-group .form-control,
-.input-group-bttn {
-  display: table-cell;
+/* Firefox specific */
+
+@-moz-document url-prefix() {
+  select.form__control {
+    text-overflow: '';
+    text-indent: -2px;
+  }
 }
+
+select.form__control:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 $base-font-color;
+}
+
+
+/* Textarea form control
+   ========================================================================== */
+
+textarea.form__control {
+  height: auto;
+  resize: none;
+}
+
+
+/* Input groups
+   ========================================================================== */
+
+.form__input-group {
+  display: flex;
+  width: 100%;
+  line-height: 0;
+}
+
+.form__input-addon + .form__input-addon,
+.form__input-addon + .button,
+.form__input-addon + .form__control,
+.form__control + .form__input-addon  {
+  margin-left: -1px;
+}
+
+.form__input-addon,
+.form__input-group > .button {
+  flex: 0 0 auto;
+}
+
+.form__input-group > .button {
+  position: relative;
+  z-index: 3;
+}
+
+.form__input-group .form__control {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 auto;
+  width: 1%;
+  margin-bottom: 0;
+}
+
+.form__input-addon {
+  line-height: 1.5rem;
+  font-size: 1rem;
+  padding: 0.25rem 0.75rem;
+  min-width: 2rem;
+  text-align: center;
+  background: tint($base-color, 96%);
+  color: rgba($base-font-color, 0.64);
+  border-radius: $base-border-radius;
+  box-shadow: inset 0 0 0 1px $base-alpha-color;
+  margin-bottom: 0;
+}
+
+.form__input-group > *:not(:first-child) {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+}
+
+.form__input-group > *:not(:last-child) {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
 
 legend,
 label {

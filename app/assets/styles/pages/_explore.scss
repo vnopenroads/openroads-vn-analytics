@@ -24,7 +24,7 @@
 }
 
 .map-options {
-  top: $global-padding * 2;
+  top: $global-padding;
   right: $global-padding;
 
   > *:last-child {
@@ -169,4 +169,19 @@
 
 .map__panel--form .bttn {
   margin-top: 0.25em;
+}
+
+
+.map-search {
+  top: $global-padding;
+  left: $global-padding;
+  right: auto;
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+
+  label {
+    @extend .visually-hidden;
+  }
 }

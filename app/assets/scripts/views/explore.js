@@ -13,6 +13,7 @@ import {
   removeVProMMsBBox,
   setPreviousLocation
 } from '../actions/action-creators';
+import MapSearch from '../components/map-search';
 import MapOptions from '../components/map-options';
 import MapLegend from '../components/map-legend';
 
@@ -115,6 +116,8 @@ var Explore = React.createClass({
     return (
       <div className='map-container' >
         <div id='map'></div>
+
+        <MapSearch />
 
         <MapOptions
           handleLayerChange={ this.handleLayerChange }

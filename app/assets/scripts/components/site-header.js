@@ -1,7 +1,6 @@
 'use strict';
 import React from 'react';
 import _ from 'lodash';
-import Search from './search';
 import Headerdrop from './headerdrop';
 import c from 'classnames';
 import { connect } from 'react-redux';
