@@ -94,7 +94,7 @@ const AATable = React.createClass({
 
   handleSort: function () {
     let sorted = _(this.props.data).sortBy(this.state.sortState.field);
-    if (this.state.sortState.order === 'desc') {
+    if (this.state.sortState.order === 'asc') {
       sorted = sorted.reverse();
     }
     return sorted.value();
@@ -142,6 +142,7 @@ const AATable = React.createClass({
   renderTableBody: function () {
     const propsLength = this.props.adminRoadProperties.length;
     let sorted = this.props.data.slice(0, propsLength - 1);
+    sorted = this.handleSort(sorted);
     return (
       <tbody>
       {_.map(sorted, (vpromm, i) => {
