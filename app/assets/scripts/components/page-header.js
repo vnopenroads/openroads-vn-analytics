@@ -46,11 +46,11 @@ var PageHeader = React.createClass({
         <div className='inner'>
           <div className='page__breadcrumbs'>
             <ul className='breadcrumbs'>
-              <li><Link to='/analytics'>Country</Link></li>
-              {level >= 1 ? <li><Link to={`/analytics/${adminID.parentID(1)}`}>Region</Link></li> : null}
-              {level >= 2 ? <li><Link to={`/analytics/${adminID.parentID(2)}`}>Province</Link></li> : null}
-              {level >= 3 ? <li><Link to={`/analytics/${adminID.parentID(3)}`}>Municipality</Link></li> : null}
-              {level >= 4 ? <li><Link to={`/analytics/${adminID.parentID(4)}`}>Barangay</Link></li> : null}
+              <li><Link to='/assets'>Country</Link></li>
+              {level >= 1 ? <li><Link to={`/assets/${adminID.parentID(1)}`}>Region</Link></li> : null}
+              {level >= 2 ? <li><Link to={`/assets/${adminID.parentID(2)}`}>Province</Link></li> : null}
+              {level >= 3 ? <li><Link to={`/assets/${adminID.parentID(3)}`}>Municipality</Link></li> : null}
+              {level >= 4 ? <li><Link to={`/assets/${adminID.parentID(4)}`}>Barangay</Link></li> : null}
             </ul>
           </div>
 

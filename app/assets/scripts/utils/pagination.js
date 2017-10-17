@@ -1,6 +1,6 @@
 
 /**
- * given range and road per page limit, makes config needed for analytics table pagination
+ * given range and road per page limit, makes config needed for assets table pagination
  * @func makePaginationConfig
  * @param numRoads {number} number of roads needing pagination
  * @param limit {number} limit to number of roads per page
