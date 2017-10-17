@@ -3,47 +3,6 @@
    ========================================================================== */
 
 .page--landing {
-  .site-header {
-    text-align: center;
-    .site {
-      &__title {
-        @extend .visually-hidden;
-      }
-
-      &__title, &__nav, &__lang {
-        float: none;
-        display: inline-block;
-        margin: 0 auto;
-      }
-
-      &__control {
-        text-align: center;
-      }
-
-      &__lang {
-        height: inherit;
-        margin-left: .5rem;
-        .drop-toggle {
-          text-decoration: none;
-        }
-      }
-
-      &__nav {
-        .drop > a {
-          text-decoration: none;
-        }
-        .toggle-menu,
-        .toggle-search,
-        .change-search-button {
-          display: none;
-        }
-      }
-    }
-    .search-wrapper {
-      display: none;
-    }
-
-  }
   .page {
     &__header--landing {
       @extend .antialiased;

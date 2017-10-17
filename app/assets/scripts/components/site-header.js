@@ -113,39 +113,44 @@ var SiteHeader = React.createClass({
             </h1>
           </div>
           <nav className='site__nav' role='navigation' ref='nav'>
-            <h2 className='site__menu-toggle'><a href='#menu-block'><span>{t('Menu')}</span></a></h2>
 
-            <div className='site__menu-block' id='menu-block'>
-              <h3 className='site__menu-title'>{t('Lang')}</h3>
-              <ul className='site__menu'>
-                <li><a href='#' className='site__menu-item' activeClassName='site__menu-item--active' title={t('Change language')}>{t('English')}</a></li>
-                <li><a href='#' className='site__menu-item' activeClassName='site__menu-item--active' title={t('Change language')}>{t('Vietnamese')}</a></li>
-              </ul>
+            <div className='site__nav-block site__nav-block--language'>
+              <h2 className='site__menu-toggle'><a href='#menu-block-language'><span>{t('Language')}</span></a></h2>
+              <div className='site__menu-block' id='menu-block-language'>
+                <ul className='site__menu'>
+                  <li><a href='#' className='site__menu-item' activeClassName='site__menu-item--active' title={t('Change language')}>{t('English')}</a></li>
+                  <li><a href='#' className='site__menu-item' activeClassName='site__menu-item--active' title={t('Change language')}>{t('Vietnamese')}</a></li>
+                </ul>
+              </div>
+            </div>
 
-              <h3 className='site__menu-title'>{t('Nav')}</h3>
-              <ul className='site__menu'>
-                <li><Link to={`/${getLanguage()}/analytics`} className='site__menu-item' activeClassName='site__menu-item--active' onClick={this.menuClickHandler} title={t('Visit')}>{t('Analytics')}</Link></li>
-                <li>
-                  <Link to={`/${getLanguage()}/explore`} className='site__menu-item' activeClassName='site__menu-item--active' onClick={this.menuClickHandler} title={t('Visit')}>
-                    <span>{t('Explore')}</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to={`/${getLanguage()}/editor`} className='site__menu-item' activeClassName='site__menu-item--active' onClick={this.menuClickHandler} title={t('Visit')}>
-                    <span>{t('Editor')}</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to={`/${getLanguage()}/tasks`} className='site__menu-item' activeClassName='site__menu-item--active' onClick={this.menuClickHandler} title={t('Visit')}>
-                    <span>{t('Tasks')}</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to={`/${getLanguage()}/upload`} className='site__menu-item' activeClassName='site__menu-item--active' onClick={this.menuClickHandler} title={t('Visit')}>
-                    <span>{t('Upload')}</span>
-                  </Link>
-                </li>
-              </ul>
+            <div className='site__nav-block site__nav-block--global'>
+              <h2 className='site__menu-toggle'><a href='#menu-block-global'><span>{t('Menu')}</span></a></h2>
+              <div className='site__menu-block' id='menu-block-global'>
+                <ul className='site__menu'>
+                  <li><Link to={`/${getLanguage()}/analytics`} className='site__menu-item' activeClassName='site__menu-item--active' onClick={this.menuClickHandler} title={t('Visit')}>{t('Analytics')}</Link></li>
+                  <li>
+                    <Link to={`/${getLanguage()}/explore`} className='site__menu-item' activeClassName='site__menu-item--active' onClick={this.menuClickHandler} title={t('Visit')}>
+                      <span>{t('Explore')}</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to={`/${getLanguage()}/editor`} className='site__menu-item' activeClassName='site__menu-item--active' onClick={this.menuClickHandler} title={t('Visit')}>
+                      <span>{t('Editor')}</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to={`/${getLanguage()}/tasks`} className='site__menu-item' activeClassName='site__menu-item--active' onClick={this.menuClickHandler} title={t('Visit')}>
+                      <span>{t('Tasks')}</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to={`/${getLanguage()}/upload`} className='site__menu-item' activeClassName='site__menu-item--active' onClick={this.menuClickHandler} title={t('Visit')}>
+                      <span>{t('Upload')}</span>
+                    </Link>
+                  </li>
+                </ul>
+              </div>
             </div>
             {/* 
             <div className='menu-wrapper'>
