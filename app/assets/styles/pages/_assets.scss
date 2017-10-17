@@ -1,8 +1,8 @@
 /* ==========================================================================
-   Page: Analytics
+   Page: Assets
    ========================================================================== */
 
-.analytics, .analytics-aa .site-header,
+.assets, .assets-aa .site-header,
 .editor .site-header,
 .explore .site-header  {
   .site__nav {
@@ -17,8 +17,8 @@
 
 .tasks .site-header .site__nav .search-wrapper { display: none; }
 
-.analytics,
-.analytics-aa {
+.assets,
+.assets-aa {
   .aa-main {
     @extend .row;
     @extend .row--centered;

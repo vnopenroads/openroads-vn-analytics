@@ -18,9 +18,9 @@ import Home from './views/home';
 import Editor from './views/editor';
 import Tasks from './views/tasks';
 import Explore from './views/explore';
-import Analytics from './views/analytics';
-import AnalyticsIndex from './views/analytics-index';
-import AnalyticsAA from './views/analytics-admin-area';
+import Assets from './views/assets';
+import AssetsIndex from './views/assets-index';
+import AssetsAA from './views/assets-admin-area';
 import AAFieldMap from './components/aa-field-map';
 import Upload from './views/upload';
 
@@ -65,13 +65,13 @@ render((
         <Route path='editor' component={Editor} pageClass='editor' />
         <Route path='editor/*' component={Editor} pageClass='editor' />
         <Route path='explore' component={Explore} pageClass='explore' />
-        <Route path='analytics' component={Analytics}>
-          <Route path='road' component={Analytics} >
-            <Route path=':vpromm' component={AAFieldMap} pageClass='analytics-aa'/>
+        <Route path='assets' component={Assets}>
+          <Route path='road' component={Assets} >
+            <Route path=':vpromm' component={AAFieldMap} pageClass='assets-aa'/>
           </Route>
-          <IndexRoute component={AnalyticsIndex} pageClass='analytics' />
-          <Route path=':aaId' component={AnalyticsAA} pageClass='analytics-aa' />
-          <Route path=':aaId/:aaIdSub' component={AnalyticsAA} pageClass='analytics-aa' />
+          <IndexRoute component={AssetsIndex} pageClass='assets' />
+          <Route path=':aaId' component={AssetsAA} pageClass='assets-aa' />
+          <Route path=':aaId/:aaIdSub' component={AssetsAA} pageClass='assets-aa' />
         </Route>
         <IndexRoute component={Home} pageClass='page--landing' />
         <Route path='*' component={UhOh}/>

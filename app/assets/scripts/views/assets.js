@@ -1,8 +1,8 @@
 'use strict';
 import React from 'react';
 
-var Analytics = React.createClass({
-  displayName: 'Analytics',
+var Assets = React.createClass({
+  displayName: 'Assets',
 
   propTypes: {
     _setCrossWalk: React.PropTypes.func,
@@ -26,4 +26,4 @@ var Analytics = React.createClass({
   }
 });
 
-module.exports = Analytics;
+module.exports = Assets;
