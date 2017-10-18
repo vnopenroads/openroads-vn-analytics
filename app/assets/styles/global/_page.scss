@@ -1,142 +1,5 @@
 /* ==========================================================================
-   Base
-   ========================================================================== */
-
-html {
-  box-sizing: border-box;
-}
-
-*, *:before, *:after, input[type="search"] {
-  box-sizing: inherit;
-}
-
-html, body {
-  height: 100%;
-  font-size: 100%;
-  line-height: 1.5;
-}
-
-body {
-  color: $base-font-color;
-  font-family: $base-font-family;
-  font-weight: $base-font-weight;
-  font-style: $base-font-style;
-  min-width: $row-min-width;
-  background: tint($base-color, 96%);
-}
-
-// Badges
-
-.badge {
-  @extend .antialiased;
-  display: inline-block;
-  min-width: 0.85rem;
-  padding: 0.225rem 0.5rem;
-  font-size: 0.75rem;
-  font-family: $base-font-family;
-  font-weight: $base-font-bold;
-  text-transform: uppercase;
-  line-height: 0.85rem;
-  color: #fff;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: baseline;
-  background-color: rgba($base-color, 0.4);
-  border-radius: $global-rounded;
-  margin-left: 0.25rem;
-}
-
-
-/* Links
-   ========================================================================== */
-
-a {
-  cursor: pointer;
-  color: $secondary-color;
-  transition: opacity 0.2s ease 0s;
-  transform: translateZ(0);
-  text-decoration: none;
-}
-
-a:visited {
-  color: $secondary-color;
-}
-
-a:hover {
-  opacity: 0.64;
-  outline: none;
-}
-
-a:active{
-  outline: none;
-  transform: translate(0, 1px);
-}
-
-
-/* Flag
-   ========================================================================== */
-
-.flag {
-  display: table;
-  width: 100%;
-}
-
-.flag__image,
-.flag__body {
-  display: table-cell;
-  vertical-align: middle;
-
-  .flag--top & {
-    vertical-align: top;
-  }
-
-  .flag--bottom & {
-    vertical-align: bottom;
-  }
-}
-
-.flag__image {
-  padding-right: 1rem;
-
-  > * {
-    display: block;
-    max-width: none;
-  }
-
-  .flag--rev & {
-    padding-right: 0;
-    padding-left: 1rem;
-  }
-}
-
-.flag__body {
-  width: 100%;
-}
-
-
-/* Rows
-   ========================================================================== */
-
-.row {
-  @extend .clearfix;
-  padding-left: $global-padding;
-  padding-right: $global-padding;
-
-  @include media(small-up) {
-    padding-left: $global-padding * 2;
-    padding-right: $global-padding * 2;
-  }
-}
-
-.row--centered {
-  max-width: $row-max-width;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-
-/* ==========================================================================
-   Structure
+   Global: Page
    ========================================================================== */
 
 
@@ -180,10 +43,10 @@ a:active{
 
 .site__title {
   margin: 0;
+  font-size: 0.75rem;
 
   strong {
     display: inline-block;
-    font-size: 0.75rem;
     text-transform: uppercase;
     padding: 0 0.25rem;
     background: rgba($secondary-color, 0.64);
@@ -241,6 +104,7 @@ a:active{
 
 .site__menu-toggle {
   margin: 0;
+  font-size: 1rem;
 
   a {
     line-height: 2rem;
@@ -287,6 +151,7 @@ a:active{
   border-radius: $global-radius;
   box-shadow: 0 0 0 2px rgba(#fff, 0.12);
   min-width: 10rem;
+  list-style: none;
 
   > li {
     &:first-child {
@@ -363,7 +228,7 @@ a:active{
     }
   }
   &__headline {
-    @include col(8/12);
+    @include column(8/12);
   }
   &__title {
     @extend .hd-l;
@@ -569,27 +434,27 @@ a:active{
 
   // .aa-stats__element:nth-child(1),
   // .aa-stats__element:nth-child(2) {
-  //   @include col(6/12, $cycle: 2);
+  //   @include column(6/12, $cycle: 2);
   //   margin-bottom: 2rem;
   //   @include media(small-up) {
-  //     @include col(6/12);
+  //     @include column(6/12);
   //   }
   //   @include media(large-up) {
-  //     @include col(3/12, $uncycle: 2);
+  //     @include column(3/12, $uncycle: 2);
   //     margin-bottom: 0;
   //   }
   // }
   // .aa-stats__element:nth-child(3),
   // .aa-stats__element:nth-child(4),
   // .aa-stats__element:nth-child(5) {
-  //   @include col(6/12, $cycle: 2);
+  //   @include column(6/12, $cycle: 2);
   //   margin-bottom: 2rem;
   //   @include media(small-up) {
-  //     @include col(4/12, $uncycle: 2);
+  //     @include column(4/12, $uncycle: 2);
   //     margin-bottom: 0;
   //   }
   //   @include media(large-up) {
-  //     @include col(2/12, $uncycle: 2);
+  //     @include column(2/12, $uncycle: 2);
   //     margin-bottom: 0;
   //   }
   // }
@@ -604,7 +469,7 @@ a:active{
   // }
 
   .aa-stats__element {
-    @include col(6/12, $cycle: 2);
+    @include column(6/12, $cycle: 2);
     margin-bottom: 2rem;
     font-size: 1rem;
     color: $base-color;
@@ -615,7 +480,7 @@ a:active{
     }
 
     @include media(small-up) {
-      @include col(3/12, $uncycle: 2);
+      @include column(3/12);
       margin-bottom: 0;
     }
 
@@ -669,7 +534,7 @@ a:active{
 
   .aa-stats__element {
     @include media(small-up) {
-      @include col(6/12);
+      @include column(6/12);
     }
     font-size: 1rem;
 
@@ -1032,9 +897,6 @@ a:active{
   }
 }
 
-
-
-
 .actions-menu {
   @extend .clearfix;
   /* Inline helper */
@@ -1057,32 +919,10 @@ a:active{
 }
 
 .page__actions {
-  @include col(4/12);
+  @include column(4/12);
 
   .actions-menu {
     float: right;
     // white-space: nowrap;
-  }
-}
-
-
-
-
-// IE < 10
-// Don't delete.
-.lt-ie10 {
-  #site-canvas {
-    display: none !important;
-  }
-  #nocando {
-    margin: 200px auto;
-    padding: 32px;
-    max-width: 440px;
-    background: #fff;
-    h1 {
-      font-size: 24px;
-      line-height: 1.1;
-      margin-bottom: 32px;
-    }
   }
 }

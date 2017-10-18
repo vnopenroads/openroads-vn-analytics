@@ -19,7 +19,7 @@ var MapSearch = React.createClass({
 
   render: function () {
     return (
-      <div className='map-panel map-search'>
+      <div className='panel panel--overlay map-panel map-search'>
         <form className='form-search' ref='searchForm'>
           <div className='form__group'>
             <label className='form__label' htmlFor='search-field'>Search</label>

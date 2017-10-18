@@ -39,10 +39,10 @@ const AATable = React.createClass({
       <thead>
         <tr>
           {_.map(displayHeader, (d) => {
-            let c = classnames('collecticons', {
-              'collecticons-sort-none': this.state.sortState.field !== d.key,
-              'collecticons-sort-asc': this.state.sortState.field === d.key && this.state.sortState.order === 'asc',
-              'collecticons-sort-desc': this.state.sortState.field === d.key && this.state.sortState.order === 'desc'
+            let c = classnames({
+              'collecticon-sort-none': this.state.sortState.field !== d.key,
+              'collecticon-sort-asc': this.state.sortState.field === d.key && this.state.sortState.order === 'asc',
+              'collecticon-sort-desc': this.state.sortState.field === d.key && this.state.sortState.order === 'desc'
             });
             return (
               <th key={d.key} onClick={this.sortLinkClickHandler.bind(null, d.key)}>
@@ -91,7 +91,7 @@ const AATable = React.createClass({
       <tbody>
         {_.map(sorted, (province, i) => {
           return (
-            <tr key={`province-${province.id}`} className={classnames('collecticon-sort-asc', {'alt': i % 2})}>
+            <tr key={`province-${province.id}`} className={classnames({'alt': i % 2})}>
               <th><Link onClick={(e) => { this.props._setAdmin({ id: province.id, name: province.name }); } } to={`${getLanguage()}/analytics/${province.route}`}>{province.name}</Link></th>
               <td>{province.field}</td>
               <td>{province.total}</td>

@@ -37,7 +37,7 @@ const MapLegend = React.createClass({
       worstColorLabel = stops[stops.length - 1][0];
     }
     return (
-      <div className='map-legend map-panel'>
+      <div className='panel panel--overlay map-legend'>
         <p className='map-legend-title'>{ title }</p>
         { continuous
           ? <div>

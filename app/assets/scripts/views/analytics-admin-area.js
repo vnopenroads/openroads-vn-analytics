@@ -186,16 +186,16 @@ var AnalyticsAA = React.createClass({
       const childClasses = children.map(child => c({'disabled': this.props.crosswalk['district'][child.id] === ''}));
       return (
         <nav className='a-subnav'>
-        <h2>{t('Districts')}</h2>
-        <ul className='a-children'>
-          {children.map((child, i) => {
-            var childKey = `${child}-${i}`;
-            return (
-              <li key={childKey} ><Link className={childClasses[i]} onClick={(e) => { this.clearAdminData(); this.props._setCrossWalk(); this.props._setSubAdminName(child.name_en); }}to={`/${getLanguage()}/analytics/${aaId}/${child.id}`}>{child.name_en}</Link>
-            </li>
-            );
-          })}
-        </ul>
+          <h2>{t('Districts')}</h2>
+          <ul className='a-children'>
+            {children.map((child, i) => {
+              var childKey = `${child}-${i}`;
+              return (
+                <li key={childKey} ><Link className={childClasses[i]} onClick={(e) => { this.clearAdminData(); this.props._setCrossWalk(); this.props._setSubAdminName(child.name_en); }}to={`/${getLanguage()}/analytics/${aaId}/${child.id}`}>{child.name_en}</Link>
+              </li>
+              );
+            })}
+          </ul>
         </nav>
       );
     } else {
@@ -205,7 +205,7 @@ var AnalyticsAA = React.createClass({
 
   renderDataDumpLinks: function (adminId) {
     return (
-      <a className='button button-secondary' href={`${config.provinceDumpBaseUrl}${adminId}.csv`}>{t('Download Roads')}</a>
+      <a className='button button--secondary-raised-dark' href={`${config.provinceDumpBaseUrl}${adminId}.csv`}>{t('Download Roads')}</a>
     );
   },
 

@@ -244,19 +244,19 @@
 
   @include media(small-up) {
     li {
-      @include column(4/12, $uncycle: 2, $cycle: 3);
+      @include column(4/12, $cycle: 3);
     }
   }
 
   @include media(medium-up) {
     li {
-      @include column(3/12, $uncycle: 3, $cycle: 4);
+      @include column(3/12, $cycle: 4);
     }
   }
 
   @include media(large-up) {
     li {
-      @include column(2/12, $uncycle: 4, $cycle: 6);
+      @include column(2/12, $cycle: 6);
     }
   }
 }

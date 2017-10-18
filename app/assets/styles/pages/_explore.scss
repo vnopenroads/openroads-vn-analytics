@@ -13,16 +13,6 @@
   width: 100%;
 }
 
-.map-panel {
-  position: absolute;
-  z-index: 10;
-  border-radius: $base-border-radius;
-  width: 16rem;
-  padding: $global-spacing;
-  background: #fff;
-  box-shadow: 0 0 0 2px rgba($base-color, 0.04);
-}
-
 .map-options {
   top: $global-padding;
   right: $global-padding;

@@ -173,7 +173,7 @@ gulp.task('collecticons', function (done) {
     '--font-name', 'collecticons',
     '--font-types', 'woff',
     '--style-format', 'sass',
-    '--style-dest', 'app/assets/styles/',
+    '--style-dest', 'app/assets/styles/core/',
     '--style-name', 'collecticons',
     '--class-name', 'collecticon',
     '--no-preview'
@@ -209,7 +209,7 @@ gulp.task('styles', function () {
           return v;
         }
       },
-      includePaths: require('node-bourbon').with(['node_modules/jeet/scss'])
+      includePaths: require('node-bourbon').with(['node_modules/jeet'])
     }))
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest('.tmp/assets/styles'))

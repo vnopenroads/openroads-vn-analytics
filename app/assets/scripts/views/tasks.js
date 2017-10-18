@@ -240,7 +240,7 @@ var Tasks = React.createClass({
   renderInstrumentPanel: function () {
     const { mode, renderedFeatures } = this.state;
     return (
-      <div className='map-options map-panel'>
+      <div className='panel panel--overlay map-options'>
         { renderedFeatures ? <h2>Showing {renderedFeatures.features.length} Roads</h2> : null }
         {mode ? null : (
           <div>
@@ -388,7 +388,7 @@ var Tasks = React.createClass({
 
   renderInflight: function () {
     return (
-      <div className='map-options map-panel'>
+      <div className='panel panel--overlay map-options'>
         <h2>{t('Performing action...')}</h2>
       </div>
     );

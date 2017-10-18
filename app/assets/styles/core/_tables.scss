@@ -12,6 +12,10 @@
     text-align: left;
     width: 100%;
 
+    // &, * {
+    //   font-family: helvetica;
+    // }
+
     td, th {
       padding: $global-spacing / 2;
     }
