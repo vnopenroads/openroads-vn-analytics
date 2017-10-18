@@ -1,0 +1,205 @@
+/* ==========================================================================
+   Map
+   ========================================================================== */
+
+.map {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+}
+
+
+/* Controls
+   ========================================================================== */
+
+.map__controls {
+  position: absolute;
+  z-index: 10;
+
+  > *:not(:last-child) {
+    margin-bottom: $global-spacing;
+  }
+
+  &--top-left {
+    top: $global-spacing;
+    left: $global-spacing;
+
+    @include media(xlarge-up) {
+      top: $global-spacing * 2;
+      left: $global-spacing * 2;
+    }
+  }
+
+  &--top-right {
+    top: $global-spacing;
+    right: $global-spacing;
+
+    @include media(xlarge-up) {
+      top: $global-spacing * 2;
+      right: $global-spacing * 2;
+    }
+  }
+
+  &--bottom-right {
+    bottom: $global-spacing * 2.5;
+    right: $global-spacing;
+
+    @include media(xlarge-up) {
+      right: $global-spacing * 2;
+    }
+  }
+
+  &--bottom-left {
+    bottom: $global-spacing * 2.5;
+    left: $global-spacing;
+
+    @include media(xlarge-up) {
+      left: $global-spacing * 2;
+    }
+  }
+}
+
+
+/* Search panel
+   ========================================================================== */
+
+/**
+ * View 'global/_panels.scss' for overall panel styling
+ */
+
+.search-panel {
+  .form__label {
+    @extend .visually-hidden;
+  }
+}
+
+
+/* Legend panel
+   ========================================================================== */
+
+/**
+ * View 'global/_panels.scss' for overall panel styling
+ */
+
+.legend-panel { }
+
+.map-legend-title {
+  font-weight: bold;
+  font-size: 0.75rem;
+  margin-bottom: $global-spacing / 2;
+}
+
+.map-legend-scale {
+  height: 15px;
+  background-image: linear-gradient(to right, #8CCA1B, #DA251D);
+}
+
+.map-legend-label {
+  float: left;
+  font-size: 0.75rem;
+  margin: 0;
+
+  &:last-child {
+    float: right;
+  }
+}
+
+.map__legend--split {
+  font-size: 0.75rem;
+
+  li {
+    width: 50%;
+    display: inline-block;
+    text-align: center;
+  }
+}
+
+.legend__line {
+  display: inline-block;
+  margin-bottom: 0.5em;
+  width: 50%;
+  height: 3px;
+}
+
+.legend__line--primary {
+  opacity: 0.8;
+  background-color: #FCF009;
+}
+
+.legend__line--secondary {
+  opacity: 0.2;
+  background-color: #000;
+}
+
+.map-options-label {
+  line-height: 1rem;
+  font-size: 0.75rem;
+  min-height: auto;
+}
+
+.map-options {
+  .empty {
+    font-style: italic;
+    opacity: 0.64;
+    font-size: 0.875rem;
+    line-height: 1rem;
+  }
+}
+
+.map__panel--selected {
+  margin: 0.75em 0 0.5em;
+  p {
+    font-weight: bold;
+  }
+}
+
+.map__panel--form .button {
+  margin-top: 0.25em;
+}
+
+
+/* Tasks panel
+   ========================================================================== */
+
+/**
+ * View 'global/_panels.scss' for overall panel styling
+ */
+
+.tasks-panel { }
+
+
+/* Tasks panel
+   ========================================================================== */
+
+/**
+ * View 'global/_panels.scss' for overall panel styling
+ */
+
+.properties-panel {
+  dl {
+    margin: 0;
+  }
+
+  dt, dd {
+    display: inline;
+  }
+
+  dt:after {
+    content: ':';
+  }
+
+  dt {
+    margin-right: 0.2em;
+  }
+
+  dd:after {
+    content: '\A';
+    white-space: pre;
+  }
+}

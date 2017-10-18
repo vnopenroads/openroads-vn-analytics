@@ -36,7 +36,7 @@ $base-alpha-color: rgba($base-color, 0.12);
 
 $root-font-size: 16px;
 
-$base-font-color: tint($base-color, 20%);
+$base-font-color: tint($base-color, 8%);
 $base-font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
 $base-font-style: normal;
 $base-font-light: 300;
@@ -48,40 +48,40 @@ $base-line-height: 1.5;
 
 $code-font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 
+$heading-font-family: $base-font-family;
+$base-font-light: 300;
+$heading-font-regular: 400;
+$heading-font-bold: 700;
+$heading-font-weight: $heading-font-bold;
+
 
 /* Decoration
    ========================================================================== */
 
 /* Border radius */
 
-$global-radius: 0.25rem;
-$semi-radius: $global-radius/2;
-$global-rounded: 60rem;
-
-// Future-proof
-
-$base-border-radius: 0.25rem; // to replace $global-radius
-$full-border-radius: 100vh; // to replace $global-rounded
-
-/* Shadowing */
-
-$brdr-rgba: rgba($base-color, 0.16); // border-like shadow
-$frame-rgba: rgba($base-color, 0.16);
-
-$flat-shadow-rgba: rgba($base-color, 0.08); // flat drop shadow
-$spread-shadow-rgba: rgba($base-color, 0.24); // spread drop shadow
+$base-border-radius: 0.25rem;
+$full-border-radius: 100vh;
 
 
 /* Sizing, spacing and media queries
    ========================================================================== */
 
-/* Row's min and max width */
+/* Sizing */
+
+$page-header-y: 0 !default;
+
+/* Spacing */
+
+$global-spacing: 1rem;
+
+/* Rows */
 
 $row-min-width: 320px;
 $row-max-width: 1280px;
 $jeet-max-width: $row-max-width; // reset jeet.gs max width
 
-/* Media query ranges */
+/* Media queries */
 
 $xsmall-range: (0, 543px);
 $small-range: (544px, 767px);
@@ -90,12 +90,3 @@ $large-range: (992px, 1199px);
 $xlarge-range: (1200px);
 
 $screen: "only screen";
-
-/* Paddings */
-
-$global-padding: 1rem;
-
-
-/* Spacing */
-
-$global-spacing: 1rem;

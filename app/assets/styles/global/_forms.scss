@@ -420,7 +420,7 @@ textarea.form__control {
 }
 
 .form__legend {
-  // @extend .heading-alt;
+  @extend .heading-alt;
   color: rgba($base-font-color, 0.64);
   font-size: 0.875rem;
   line-height: 1rem;
@@ -762,7 +762,7 @@ label[for] {
   }
 
   dt {
-    // @extend .heading-alt;
+    @extend .heading-alt;
     font-size: 0.75rem;
     line-height: 1.5rem;
     color: rgba($base-font-color, 0.64);

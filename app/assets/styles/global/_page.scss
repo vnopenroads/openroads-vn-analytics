@@ -44,13 +44,14 @@
 .site__title {
   margin: 0;
   font-size: 0.75rem;
+  line-height: 0;
 
   strong {
     display: inline-block;
     text-transform: uppercase;
     padding: 0 0.25rem;
     background: rgba($secondary-color, 0.64);
-    border-radius: $global-radius;
+    border-radius: $base-border-radius;
     margin-left: 0.5rem;
     line-height: 1.25rem;
   }
@@ -111,7 +112,7 @@
     height: 2rem;
     width: 2rem;
     text-align: center;
-    border-radius: $global-radius;
+    border-radius: $base-border-radius;
 
     &::before {
       line-height: inherit !important;
@@ -148,7 +149,7 @@
   flex-direction: column;
   padding: 0.5rem;
   background: $primary-color;
-  border-radius: $global-radius;
+  border-radius: $base-border-radius;
   box-shadow: 0 0 0 2px rgba(#fff, 0.12);
   min-width: 10rem;
   list-style: none;
@@ -164,7 +165,7 @@
 
     .site__nav-block--global & {
       @include media(medium-up) {
-        margin: 0 ($global-padding / 4);
+        margin: 0 ($global-spacing / 4);
       }
     }
   }
@@ -183,12 +184,12 @@
 .site__menu-item {
   display: block;
   line-height: 2rem;
-  padding: 0 ($global-padding / 2);
+  padding: 0 ($global-spacing / 2);
   font-weight: $base-font-bold;
 
   &--active {
     background: rgba(#fff, 0.12);
-    border-radius: $global-radius;
+    border-radius: $base-border-radius;
   }
 }   
 
@@ -220,18 +221,18 @@
     width: 100%;
     z-index: 1000;
     color: $base-font-color;
-    padding: $global-padding 0;
+    padding: $global-spacing 0;
     box-shadow: inset 0 -1px 0 0 rgba($base-color, 0.16);
 
     @include media(medium-up) {
-      padding: ($global-padding * 1.5) 0;
+      padding: ($global-spacing * 1.5) 0;
     }
   }
   &__headline {
     @include column(8/12);
   }
   &__title {
-    @extend .hd-l;
+    @extend .heading--large;
     margin: 0;
   }
 
@@ -285,7 +286,7 @@
   margin: 0 0 2rem 0;
   height: 0.75rem;
   position: relative;
-  box-shadow: 0 1px 0 0 $brdr-rgba;
+  box-shadow: 0 1px 0 0 $base-alpha-color;
 
   li {
     background: tint($base-color, 80%);
@@ -361,7 +362,7 @@
         &-legend {
           position: absolute;
           z-index: 10;
-          border: .1rem solid $frame-rgba;
+          border: .1rem solid $base-alpha-color;
           border-radius: $base-border-radius;
           width: 16rem;
           padding: $global-spacing;
@@ -410,23 +411,23 @@
 
 .aa-stats {
   &__title {
-    @extend .hd-s;
+    @extend .heading--small;
   }
   &__contents {
     background: #fff;
-    border-radius: $global-radius;
-    box-shadow: 0 0 0 2px $flat-shadow-rgba;
-    padding: $global-padding;
+    border-radius: $base-border-radius;
+    box-shadow: 0 0 0 2px $base-alpha-color;
+    padding: $global-spacing;
     overflow: hidden;
 
     @include media(medium-up) {
-      padding: $global-padding * 2;
+      padding: $global-spacing * 2;
     }
   }
 }
 
 .aa-stats--completeness {
-  padding: ($global-padding * 1.5) 0 ($global-padding * 1.5);
+  padding: ($global-spacing * 1.5) 0 ($global-spacing * 1.5);
 
   .aa-stats__title {
     @extend .visually-hidden;
@@ -569,7 +570,7 @@
 }
 
 .aa-stats--condition {
-  margin-bottom: $global-padding * 2;
+  margin-bottom: $global-spacing * 2;
   @include media(medium-up) {
     @include column(6/12);
     margin-bottom: 0;
@@ -584,8 +585,8 @@
 
 %empty-box {
   padding: 2rem;
-  border-radius: $global-radius;
-  border: 2px dashed $flat-shadow-rgba;
+  border-radius: $base-border-radius;
+  border: 2px dashed $base-alpha-color;
 }
 
 .aa-list {
@@ -622,7 +623,7 @@
   // Placeholder loading.
   &.placeholder {
     opacity: 0.5;
-    .hd-s {
+    .heading--small {
       background: #ddd;
       // font-size: 1.5rem;
       // line-height: 1;
@@ -694,7 +695,7 @@
     line-height: 1.25rem;
 
     td, th {
-      box-shadow: 0 1px 0 0 $brdr-rgba;
+      box-shadow: 0 1px 0 0 $base-alpha-color;
     }
 
     thead th {
@@ -721,10 +722,10 @@
 .aa-tofixtasks {
   margin-bottom: 2rem;
   &__title {
-    @extend .hd-s;
+    @extend .heading--small;
   }
   &__contents > ul > li {
-    margin-bottom: $global-padding * 2;
+    margin-bottom: $global-spacing * 2;
     &:last-child {
       margin-bottom: 0;
     }
@@ -735,9 +736,9 @@
     color: inherit;
     background: #fff;
     transition: background 200ms ease-in-out;
-    border-radius: $global-radius;
-    box-shadow: 0 0 0 2px $flat-shadow-rgba;
-    padding: $global-padding;
+    border-radius: $base-border-radius;
+    box-shadow: 0 0 0 2px $base-alpha-color;
+    padding: $global-spacing;
     &:visited, &:active {
       color: inherit;
     }
@@ -754,7 +755,7 @@
         font-size: 0.625rem;
         background: rgba($base-color, 0.16);
         padding: 0 0.5rem;
-        border-radius: $global-radius;
+        border-radius: $base-border-radius;
       }
     }
 
@@ -807,7 +808,7 @@
 
 .pagination {
   @extend .clearfix;
-  margin-top: $global-padding * 2;
+  margin-top: $global-spacing * 2;
   > li {
     float: left;
   }

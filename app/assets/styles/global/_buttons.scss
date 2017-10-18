@@ -42,8 +42,8 @@
 
   &::before,
   &::after,
-  [class^="uisi-"],
-  [class*=" uisi-"] {
+  [class^="collecticon-"],
+  [class*=" collecticon-"] {
     font-size: 1rem;
   }
 
@@ -213,7 +213,7 @@
   &::after {
     margin: 0;
   }
-  > *:not([class^="uisi-"]):not([class*=" uisi-"]) {
+  > *:not([class^="collecticon-"]):not([class*=" collecticon-"]) {
     @extend .visually-hidden;
   }
   :not(.button-group) & {

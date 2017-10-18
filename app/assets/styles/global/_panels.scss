@@ -3,15 +3,14 @@
    ========================================================================== */
 
 .panel {
-
-}
-
-.panel--overlay {
-  position: absolute;
-  z-index: 10;
-  border-radius: $base-border-radius;
-  width: 16rem;
-  padding: $global-spacing;
+  @extend .clearfix;
   background: #fff;
-  box-shadow: 0 0 0 2px rgba($base-color, 0.04);
+  padding: $global-spacing;
+  border-radius: $base-border-radius;
+  box-shadow: 0 0 0 4px rgba($base-color, 0.04);
+  width: 18rem;
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
 }

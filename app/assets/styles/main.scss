@@ -68,7 +68,6 @@
 @import "global/buttons";
 @import "global/forms";
 @import "global/overlays";
-@import "global/modals";
 @import "global/panels";
 @import "global/page";
 
@@ -85,7 +84,8 @@
 /* Components
    ========================================================================== */
 
-@import "components/piechart";
+@import "components/charts";
+@import "components/map";
 
 
 /* Core (cont.)

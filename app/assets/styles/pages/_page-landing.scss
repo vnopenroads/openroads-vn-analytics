@@ -49,7 +49,7 @@
         text-transform: uppercase;
         padding: 0 0.75rem;
         background: rgba($primary-color, 0.64);
-        border-radius: $global-radius;
+        border-radius: $base-border-radius;
         transform: translate(-50%, -100%);
 
         @include media(medium-up) {
@@ -65,7 +65,7 @@
     &__description--landing {
       width: 100%;
 
-      padding: 0 $global-padding;
+      padding: 0 $global-spacing;
       margin: 0 auto;
       font-weight: $base-font-bold;
       font-size: 1rem;
@@ -116,7 +116,7 @@
         box-shadow: 0 0 0 2px $secondary-color;
         border-radius: 0;
         width: 12rem;
-        border-radius: $global-radius;
+        border-radius: $base-border-radius;
         margin: 0 1rem;
         transition: all 0.24s ease 0s;
 

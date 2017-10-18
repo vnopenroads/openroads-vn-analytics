@@ -44,7 +44,7 @@
     padding: 0.5rem 1rem;
     margin: 1rem 0 2rem 0;
     border: 1px solid rgb(220, 220, 220);
-    border-radius: $global-radius;
+    border-radius: $base-border-radius;
     background-color: #FFF;
 
     h2 {
@@ -72,13 +72,13 @@
     width: 100%;
     margin: 0.4rem 0 0.5rem;
     height: 1rem;
-    border-radius: $global-radius;
+    border-radius: $base-border-radius;
     background: rgba($base-color, 0.12);
     border: 0;
 
     .meter__internal {
       height: 1rem;
-      border-radius: $global-radius;
+      border-radius: $base-border-radius;
       background-color: $info-color;
     }
 
@@ -92,7 +92,7 @@
       content: "";
       pointer-events: none;
       box-shadow: inset 0 0 0 1px rgba($base-color, 0.12);
-      border-radius: $global-radius;
+      border-radius: $base-border-radius;
     }
   }
 

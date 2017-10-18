@@ -114,20 +114,24 @@ var Explore = React.createClass({
 
   render: function () {
     return (
-      <div className='map-container' >
-        <div id='map'></div>
+      <figure className='map'>
+        <div className='map__media' id='map'></div>
 
-        <MapSearch />
+        <div className='map__controls map__controls--top-right'>
+          <MapSearch />
 
-        <MapOptions
-          handleLayerChange={ this.handleLayerChange }
-          handleShowNoVpromms={ this.handleShowNoVpromms }
-        />
+          <MapOptions
+            handleLayerChange={ this.handleLayerChange }
+            handleShowNoVpromms={ this.handleShowNoVpromms }
+          />
+        </div>
 
-        <MapLegend
-          layer={this.props.layer}
-        />
-      </div>
+        <div className='map__controls map__controls--bottom-right'>
+          <MapLegend
+            layer={this.props.layer}
+          />
+        </div>
+      </figure>
     );
   }
 });
