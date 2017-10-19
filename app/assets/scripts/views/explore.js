@@ -116,16 +116,13 @@ var Explore = React.createClass({
     return (
       <figure className='map'>
         <div className='map__media' id='map'></div>
-
         <div className='map__controls map__controls--top-right'>
           <MapSearch />
-
           <MapOptions
             handleLayerChange={ this.handleLayerChange }
             handleShowNoVpromms={ this.handleShowNoVpromms }
           />
         </div>
-
         <div className='map__controls map__controls--bottom-right'>
           <MapLegend
             layer={this.props.layer}

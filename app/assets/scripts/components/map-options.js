@@ -22,22 +22,23 @@ const MapOptions = React.createClass({
     return (
       <div className='panel options-panel'>
         <form className='form'>
-          <div className='form-group'>
-            <label className='map-options-label form__option form__option--custom-checkbox' htmlFor='show-no-vpromms'>
-              <input type='checkbox' name='show-no-vpromms' id='show-no-vpromms' value='show-no-vpromms' onChange={ e => this.props.handleShowNoVpromms(e) } />
-              <span className='form__option__text' data-title={`${t('These will have no properties')}.`}>{t('Show road without vPromMMS ID')}</span>
-              <span className='form__option__ui'></span>
-            </label>
-          </div>
-
-          <div className='form-group'>
-            <label className='map-options-label'>{t('Select visualized variable')}</label>
-            <select className='map__options--select' onChange={ e => this.props.handleLayerChange(e) }>
+          <div className='form__group'>
+            <label className='form__label'>{t('Visualized variable')}</label>
+            <select className='form__control' onChange={ e => this.props.handleLayerChange(e) }>
               <option value='iri'>{t('IRI')}</option>
               <option value='or_width'>{t('Width')}</option>
               <option value='or_condition'>{t('Condition')}</option>
               <option value='or_surface'>{t('Surface')}</option>
             </select>
+          </div>
+
+          <div className='form__group'>
+            <label className='form__label'>{t('Options')}</label>
+            <label for='switch3' className='form__option form__option--switch option fos-io' htmlFor='show-no-vpromms' data-title={`${t('These will have no properties')}.`}>
+              <input type='checkbox' name='show-no-vpromms' id='show-no-vpromms' value='show-no-vpromms' onChange={ e => this.props.handleShowNoVpromms(e) } />
+              <span className='form__option__ui'></span>
+              <span className='form__option__text'>{t('Road without vPromMMS ID')}</span>
+            </label>
           </div>
         </form>
       </div>
