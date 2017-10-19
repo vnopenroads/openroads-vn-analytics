@@ -20,22 +20,24 @@ var MapSearch = React.createClass({
   render: function () {
     return (
       <div className='panel search-panel'>
-        <form className='form'>
-          <div className='form__group search'>
-            <label className='form__label' htmlFor='search-field'>Search</label>
-            <div className='form__input-group form__input-group--medium'>
-              <select className='form__control'>
-                <option>Option 1</option>
-                <option>Option 2</option>
-                <option>Option 3</option>
-                <option>Option 4</option>
-                <option>Option 5</option>
-              </select>
-              <input type='text' id='search-field' name='search-field' className='form__control' placeholder='Search' />
-              <button type='button' className='search__button' title='Submit'><span>Search</span></button>
+        <div className='panel__body'>
+          <form className='form'>
+            <div className='form__group search'>
+              <label className='form__label' htmlFor='search-field'>Search</label>
+              <div className='form__input-group form__input-group--medium'>
+                <select className='form__control'>
+                  <option>Option 1</option>
+                  <option>Option 2</option>
+                  <option>Option 3</option>
+                  <option>Option 4</option>
+                  <option>Option 5</option>
+                </select>
+                <input type='text' id='search-field' name='search-field' className='form__control' placeholder='Search' />
+                <button type='button' className='search__button' title='Submit'><span>Search</span></button>
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     );
   }

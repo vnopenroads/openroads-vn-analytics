@@ -231,9 +231,11 @@ var Tasks = React.createClass({
     return (
       <div className='map__controls map__controls--top-left'>
         <figcaption className='panel properties-panel'>
-          <dl>
-            {displayList}
-          </dl>
+          <div className='panel__body'>
+            <dl>
+              {displayList}
+            </dl>
+          </div>
         </figcaption>
       </div>
     );
@@ -244,30 +246,39 @@ var Tasks = React.createClass({
     return (
       <div className='map__controls map__controls--top-right'>
         <div className='panel tasks-panel'>
-          { renderedFeatures ? <h2>Showing {renderedFeatures.features.length} Roads</h2> : null }
-          {mode ? null : (
-            <div>
-              <div className='form-group'>
-                <p>{`1. ${t('Select roads to work on')}.`}</p>
-                <div className='map__panel--selected'>
-                  {this.renderSelectedIds()}
+          {renderedFeatures ? (
+          <div className='panel__header'>
+            <div className='panel__headline'>
+              <h2 className='panel__title'>Task</h2>
+              <p className='panel__subtitle'>Showing {renderedFeatures.features.length} roads</p>
+            </div>
+          </div>
+          ) : null }
+          <div className='panel__body'>
+            {mode ? null : (
+              <div>
+                <div className='form-group'>
+                  <p>{`1. ${t('Select roads to work on')}.`}</p>
+                  <div className='map__panel--selected'>
+                    {this.renderSelectedIds()}
+                  </div>
+                </div>
+                <div className='form-group map__panel--form'>
+                  <p>{`2. ${t('Choose an action to perform')}.`}</p>
+                  <button className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length < 2})} type='button' onClick={this.onDedupe}>{t('Remove Duplicates')}</button>
+                  <br />
+                  <button className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length !== 1})} type='button' onClick={this.onJoin}>{t('Create Intersection')}</button>
+                </div>
+                <div className='form-group map__panel--form'>
+                  <button className='button button--base-raised-light' type='button' onClick={this.markAsDone}>{t('Finish task')}</button>
+                  <br />
+                  <button className='button button--secondary-raised-dark' type='button' onClick={this.next}>{t('Skip task')}</button>
                 </div>
               </div>
-              <div className='form-group map__panel--form'>
-                <p>{`2. ${t('Choose an action to perform')}.`}</p>
-                <button className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length < 2})} type='button' onClick={this.onDedupe}>{t('Remove Duplicates')}</button>
-                <br />
-                <button className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length !== 1})} type='button' onClick={this.onJoin}>{t('Create Intersection')}</button>
-              </div>
-              <div className='form-group map__panel--form'>
-                <button className='button button--base-raised-light' type='button' onClick={this.markAsDone}>{t('Finish task')}</button>
-                <br />
-                <button className='button button--secondary-raised-dark' type='button' onClick={this.next}>{t('Skip task')}</button>
-              </div>
-            </div>
-          )}
-          {mode === 'dedupe' ? this.renderDedupeMode() : null}
-          {mode === 'join' ? this.renderJoinMode() : null}
+            )}
+            {mode === 'dedupe' ? this.renderDedupeMode() : null}
+            {mode === 'join' ? this.renderJoinMode() : null}
+          </div>
         </div>
       </div>
     );
@@ -299,7 +310,7 @@ var Tasks = React.createClass({
         <p>{t('Click on a road to keep. The other roads here will be deleted.')}</p>
         <button className={c('button button--secondary-raised-dark', {disabled: !this.state.selectedIds.length})} type='button' onClick={this.commitDedupe}>{t('Confirm')}</button>
         <br />
-        <button className='buttonbutton--base-raised-dark' type='button' onClick={this.exitMode}>{t('Cancel')}</button>
+        <button className='button button--base-raised-dark' type='button' onClick={this.exitMode}>{t('Cancel')}</button>
       </div>
     );
   },
@@ -394,7 +405,9 @@ var Tasks = React.createClass({
     return (
       <div className='map__controls map__controls--top-right'>
         <div className='panel tasks-panel'>
-          <h2>{t('Performing action...')}</h2>
+          <div className='panel__body'>
+            <h2>{t('Performing action...')}</h2>
+          </div>
         </div>
       </div>
     );

@@ -21,26 +21,28 @@ const MapOptions = React.createClass({
   render: function () {
     return (
       <div className='panel options-panel'>
-        <form className='form'>
-          <div className='form__group'>
-            <label className='form__label'>{t('Visualized variable')}</label>
-            <select className='form__control' onChange={ e => this.props.handleLayerChange(e) }>
-              <option value='iri'>{t('IRI')}</option>
-              <option value='or_width'>{t('Width')}</option>
-              <option value='or_condition'>{t('Condition')}</option>
-              <option value='or_surface'>{t('Surface')}</option>
-            </select>
-          </div>
+        <div className='panel__body'>
+          <form className='form'>
+            <div className='form__group'>
+              <label className='form__label'>{t('Visualized variable')}</label>
+              <select className='form__control' onChange={ e => this.props.handleLayerChange(e) }>
+                <option value='iri'>{t('IRI')}</option>
+                <option value='or_width'>{t('Width')}</option>
+                <option value='or_condition'>{t('Condition')}</option>
+                <option value='or_surface'>{t('Surface')}</option>
+              </select>
+            </div>
 
-          <div className='form__group'>
-            <label className='form__label'>{t('Options')}</label>
-            <label for='switch3' className='form__option form__option--switch option fos-io' htmlFor='show-no-vpromms' data-title={`${t('These will have no properties')}.`}>
-              <input type='checkbox' name='show-no-vpromms' id='show-no-vpromms' value='show-no-vpromms' onChange={ e => this.props.handleShowNoVpromms(e) } />
-              <span className='form__option__ui'></span>
-              <span className='form__option__text'>{t('Road without vPromMMS ID')}</span>
-            </label>
-          </div>
-        </form>
+            <div className='form__group'>
+              <label className='form__label'>{t('Options')}</label>
+              <label for='switch3' className='form__option form__option--switch option fos-io' htmlFor='show-no-vpromms' data-title={`${t('These will have no properties')}.`}>
+                <input type='checkbox' name='show-no-vpromms' id='show-no-vpromms' value='show-no-vpromms' onChange={ e => this.props.handleShowNoVpromms(e) } />
+                <span className='form__option__ui'></span>
+                <span className='form__option__text'>{t('Road without vPromMMS ID')}</span>
+              </label>
+            </div>
+          </form>
+        </div>
       </div>
     );
   }

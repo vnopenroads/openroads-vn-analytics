@@ -38,25 +38,27 @@ const MapLegend = React.createClass({
     }
     return (
       <figcaption className='panel legend-panel'>
-        <h3 className='map-legend-title'>{ title }</h3>
-        { continuous
-          ? <div>
-            <div className='map-legend-scale'></div>
-            <p className='map-legend-label'>{ bestColorLabel }</p>
-            <p className='map-legend-label'>{ worstColorLabel }</p>
-          </div>
-          : <div>
-              <p className='empty'>{t('No available data.')}</p>
-            {/*
-            {stops.map(s =>
-              <div id={s[0]}>
-                <p>{ String(s[0]) }</p>
-                <div style={{ 'background-color': s[1], width: '20px', height: '20px' }}></div>
-              </div>
-            )}
-            */}
-          </div>
-        }
+        <div className='panel__body'>
+          <h3 className='map-legend-title'>{ title }</h3>
+          { continuous
+            ? <div>
+              <div className='map-legend-scale'></div>
+              <p className='map-legend-label'>{ bestColorLabel }</p>
+              <p className='map-legend-label'>{ worstColorLabel }</p>
+            </div>
+            : <div>
+                <p className='empty'>{t('No available data.')}</p>
+              {/*
+              {stops.map(s =>
+                <div id={s[0]}>
+                  <p>{ String(s[0]) }</p>
+                  <div style={{ 'background-color': s[1], width: '20px', height: '20px' }}></div>
+                </div>
+              )}
+              */}
+            </div>
+          }
+        </div>
       </figcaption>
     );
   }
