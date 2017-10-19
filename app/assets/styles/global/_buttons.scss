@@ -77,19 +77,19 @@
 /* Base Raised Light */
 
 .button--base-raised-light {
-  @include button-variation($base-color, "raised", "light");
+  @include button-variation($base-font-color, "raised", "light");
 }
 
 /* Base Raised Dark */
 
 .button--base-raised-dark {
-  @include button-variation($base-color, "raised", "dark");
+  @include button-variation($base-font-color, "raised", "dark");
 }
 
 /* Base Plain */
 
 .button--base-plain {
-  @include button-variation($base-color, "plain", "light");
+  @include button-variation($base-font-color, "plain", "light");
 }
 
 /* Primary Raised Light */

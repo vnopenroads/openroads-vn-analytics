@@ -73,9 +73,23 @@
  * View 'global/_panels.scss' for overall panel styling
  */
 
-.search-panel {
-  .form__label {
+.search-panel { }
+
+.search {
+ .form__label {
     @extend .visually-hidden;
+  }
+
+  // select {
+  //   width: 2rem;
+  // }
+}
+
+.search__button {
+  @extend .button, .button--secondary-raised-dark, .button--text-hidden;
+
+  &::before {
+    @extend %collecticon-magnifier-right;
   }
 }
 

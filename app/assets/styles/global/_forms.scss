@@ -278,8 +278,8 @@ textarea.form__control {
 
 .form__input-addon + .form__input-addon,
 .form__input-addon + .button,
-.form__input-addon + .form__control,
-.form__control + .form__input-addon  {
+.form__input-addon + .form__control:not(select),
+.form__control:not(select) + .form__input-addon  {
   margin-left: -$base-border-width;
 }
 
@@ -288,12 +288,17 @@ textarea.form__control {
   flex: 0 0 auto;
 }
 
-.form__input-group > .button {
+.form__input-group > select.form__control {
+  width: auto;
+}
+
+.form__input-group > .button,
+.form__input-group > select.form__control {
   position: relative;
   z-index: 3;
 }
 
-.form__input-group .form__control {
+.form__input-group .form__control:not(select) {
   position: relative;
   z-index: 2;
   flex: 1 1 auto;
