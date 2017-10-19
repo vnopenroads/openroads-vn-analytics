@@ -481,17 +481,6 @@ abbr[title] {
   text-transform: uppercase;
 }
 
-.heading-deco {
-  &::after {
-    content: '';
-    width: 2rem;
-    height: 1px;
-    background: $base-font-color;
-    display: block;
-    margin: calc(0.5em - 1px) 0 0 0;
-  }
-}
-
 h1 {
   @include heading(1.75rem);   // 28
 }
