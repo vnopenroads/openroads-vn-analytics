@@ -21,7 +21,7 @@
     }
 
     thead th {
-      background-color: $neutral;
+      background-color: tint($base-color, 96%);
       color: $base-color;
       height: 3.5rem;
       vertical-align: bottom;

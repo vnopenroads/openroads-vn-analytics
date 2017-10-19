@@ -8,10 +8,6 @@
 $base-color: #252525;                   // Asphalt
 $primary-color: #3d0a08;                // Aubergine
 $secondary-color: #da251d;              // Red
-$tertiary-color: #ffffff;               // Undefined
-
-// background for titles
-$neutral: #F2F2F2;                      // Gray
 
 /* State colors */
 
@@ -19,11 +15,6 @@ $danger-color: #E74C3C;                 // Alizarin
 $success-color: #2ECC71;                // Emerald
 $warning-color: #F1C40F;                // Sunflower
 $info-color: #3498DB;                   // Peter River
-
-
-/* Legacy colors */
-
-$alert-color: $danger-color;
 
 /* Helper colors */
 
@@ -62,6 +53,8 @@ $heading-font-weight: $heading-font-bold;
 
 $base-border-radius: 0.25rem;
 $full-border-radius: 100vh;
+
+$base-border-width: 2px;
 
 
 /* Sizing, spacing and media queries

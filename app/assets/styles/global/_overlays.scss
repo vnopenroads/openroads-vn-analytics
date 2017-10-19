@@ -6,7 +6,8 @@
 /* Data title
    ========================================================================== */
 
-*[data-title-rel]:hover {
+*[data-title-rel]:hover,
+*[data-title]:hover {
   position: relative;
 }
 
@@ -26,7 +27,7 @@
     border-radius: $base-border-radius;
     margin-bottom: 0.25rem;
     transform: translate(-50%, 0);
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     line-height: 1.5rem;
     color: #fff;
     text-align: center;

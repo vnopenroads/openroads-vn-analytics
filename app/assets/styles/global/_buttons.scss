@@ -282,7 +282,7 @@
   }
 
   > .button + .button {
-    margin-left: -1px;
+    margin-left: -$base-border-width;
   }
 }
 
@@ -313,7 +313,7 @@
   }
 
   > .button + .button {
-    margin-top: -1px;
+    margin-top: -$base-border-width;
   }
 }
 

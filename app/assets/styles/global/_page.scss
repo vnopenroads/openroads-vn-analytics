@@ -300,7 +300,7 @@
     background: $warning-color;
   }
   &--low li {
-    background: $alert-color;
+    background: $danger-color;
   }
   .value {
     font-size: 0.75rem;
@@ -699,8 +699,8 @@
     }
 
     thead th {
-      background: $neutral;
-      box-shadow: 0 1px 0 0 $neutral;
+      background: tint($base-color, 96%);
+      box-shadow: 0 1px 0 0 tint($base-color, 96%);
       font-weight: $base-font-bold;
     }
 
