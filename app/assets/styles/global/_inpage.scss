@@ -6,9 +6,8 @@
   &__header {
     @extend .antialiased;
     position: relative;
-    color: #fff;
     padding: ($global-spacing * 2) 0;
-    background-color: $primary-color;
+    background-color: transparent;
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
@@ -25,12 +24,12 @@
     &::after {
       position: absolute;
       z-index: 1;
-      top: 0;
+      bottom: 0;
       left: 0;
       width: 100%;
       height: $base-border-width;
       content: '';
-      background: rgba(#fff, 0.12);
+      background: rgba($base-color, 0.08);
     }
 
     @include media(medium-up) {
