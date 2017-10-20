@@ -97,7 +97,7 @@ var Editor = React.createClass({
   },
 
   makeIdHash: function (newXYZ) {
-    return `//orma.github.io/openroads-vn-iD/#map=${newXYZ.z}/${newXYZ.x}/${newXYZ.y}/`;
+    return `//editor.openroads-vn.com/#map=${newXYZ.z}/${newXYZ.x}/${newXYZ.y}/`;
   },
 
   componentDidMount: function () {
@@ -137,7 +137,7 @@ var Editor = React.createClass({
     // change the zoom level of iD
     const newiDSource = this.makeIdHash(newXYZ);
     this.hash = this.cleanUrl(newiDSource, config.editorUrl);
-    this.props.dispatch(replace(`/${getLanguage()}/editor/${this.hash}`));
+    // this.props.dispatch(replace(`/${getLanguage()}/editor/${this.hash}`));
     document.getElementById('main-frame').setAttribute('src', newiDSource);
   },
 
