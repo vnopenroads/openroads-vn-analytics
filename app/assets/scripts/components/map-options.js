@@ -18,13 +18,17 @@ const MapOptions = React.createClass({
     }
   },
 
+  componentWillMount: function () {
+    setLanguage(this.props.language);
+  },
+
   render: function () {
     return (
       <div className='map-options map-panel'>
         <div className='form-group'>
           <label className='map-options-label form__option form__option--custom-checkbox' htmlFor='show-no-vpromms'>
             <input type='checkbox' name='show-no-vpromms' id='show-no-vpromms' value='show-no-vpromms' onChange={ e => this.props.handleShowNoVpromms(e) } />
-            <span className='form__option__text' data-title={`${t('These will have no properties')}.`}>{t('Show road without VPromMMS ID')}</span>
+            <span className='form__option__text' data-title={`${t('These will have no properties')}.`}>{t('Show road without VPRoMMS ID')}</span>
             <span className='form__option__ui'></span>
           </label>
         </div>

@@ -159,7 +159,7 @@ var AnalyticsAA = React.createClass({
     let completionTailText = t('Information on VPRoMMS roads is not available');
     if (total !== 0) {
       completionMainText = completion.toFixed(2);
-      completionTailText = `% ${t('of VProMMS Ids have field data')} ${field.toLocaleString()} of ${total.toLocaleString()}`;
+      completionTailText = `% ${t('of VPRoMMS Ids have field data')} ${field.toLocaleString()} of ${total.toLocaleString()}`;
     }
     return {
       level: level,
