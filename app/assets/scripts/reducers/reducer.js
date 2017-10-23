@@ -573,7 +573,7 @@ const searchResultsDisplay = function (state = {show: false}, action) {
 };
 
 const defaultSearchType = {
-  searchType: ''
+  searchType: 'Admin'
 };
 
 const setSearchType = function (state = defaultSearchType, action) {
