@@ -35,7 +35,7 @@ const MapOptions = React.createClass({
 
             <div className='form__group'>
               <label className='form__label'>{t('Options')}</label>
-              <label for='switch3' className='form__option form__option--switch option fos-io' htmlFor='show-no-vpromms' data-title={`${t('These will have no properties')}.`}>
+              <label htmlFor='switch3' className='form__option form__option--switch option fos-io' htmlFor='show-no-vpromms' data-title={`${t('These will have no properties')}.`}>
                 <input type='checkbox' name='show-no-vpromms' id='show-no-vpromms' value='show-no-vpromms' onChange={ e => this.props.handleShowNoVpromms(e) } />
                 <span className='form__option__ui'></span>
                 <span className='form__option__text'>{t('Road without vPromMMS ID')}</span>
