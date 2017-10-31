@@ -101,12 +101,12 @@ var AssetsIndex = React.createClass({
       <div>
         <div className='a-header'>
           <div className='a-headline'>
-            <h1>{t('VProMMS Assets By Province')}</h1>
+            <h1>{t('VPRoMMS Assets By Province')}</h1>
           </div>
         </div>
 
         <div className='a-main__status'>
-          <h2><strong>{completionContent.completion.toFixed(2)}%</strong> {t('of VProMMS Ids have field data collected')} ({completionContent.accumulator.field} of {completionContent.accumulator.total})</h2>
+          <h2><strong>{completionContent.completion.toFixed(2)}%</strong> {t('of VPRoMMS Ids have field data collected')} ({completionContent.accumulator.field} of {completionContent.accumulator.total})</h2>
           <div className='meter'>
             <div className='meter__internal' style={{width: `${completionContent.completion}%`}}></div>
           </div>

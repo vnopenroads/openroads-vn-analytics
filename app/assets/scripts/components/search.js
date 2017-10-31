@@ -162,7 +162,7 @@ var Search = React.createClass({
 
   renderResults: function () {
     if (this.props.fetching) {
-      return (<p className='info'>Loading...</p>);
+      return (<p className='info'>{t('Loading...')}</p>);
     }
     // Group by type.
     var g = this.props.searchType === 'Admin' ? this.props.admins : this.props.filteredVProMMs;
@@ -176,7 +176,7 @@ var Search = React.createClass({
         _.forEach(g, (l, k) => {
           results.push(
             <dt key={`aa-type-admin-${l}-${k}`} className='drop-menu-sectitle'>
-              <strong>Admin Level - {k}</strong>
+              <strong>{t('Admin Level')} - {k}</strong>
             </dt>
           );
           _.forEach(l, (o, i) => {
