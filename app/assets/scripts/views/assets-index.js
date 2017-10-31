@@ -16,8 +16,8 @@ import {
 
 import AATable from '../components/aa-table-index';
 
-var AnalyticsIndex = React.createClass({
-  displayName: 'AnalyticsIndex',
+var AssetsIndex = React.createClass({
+  displayName: 'AssetsIndex',
 
   propTypes: {
     _fetchProvinces: React.PropTypes.func,
@@ -95,13 +95,13 @@ var AnalyticsIndex = React.createClass({
     return { accumulator: accumulator, completion: (accumulator.field / accumulator.total) };
   },
 
-  renderAnalyticsIndex: function () {
+  renderAssetsIndex: function () {
     const completionContent = this.makeCompletionContent();
     return (
       <div>
         <div className='a-header'>
           <div className='a-headline'>
-            <h1>{t('VPRoMMS Edits By Province')}</h1>
+            <h1>{t('VPRoMMS Assets By Province')}</h1>
           </div>
         </div>
 
@@ -119,7 +119,7 @@ var AnalyticsIndex = React.createClass({
   },
 
   render: function () {
-    return (this.props.VProMMsCountFetched && this.props.fieldCountsFetched) ? this.renderAnalyticsIndex() : (<div/>);
+    return (this.props.VProMMsCountFetched && this.props.fieldCountsFetched) ? this.renderAssetsIndex() : (<div/>);
   }
 });
 
@@ -152,4 +152,4 @@ function dispatcher (dispatch) {
   };
 }
 
-module.exports = connect(selector, dispatcher)(AnalyticsIndex);
+module.exports = connect(selector, dispatcher)(AssetsIndex);
