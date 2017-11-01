@@ -74,7 +74,7 @@ var SiteHeader = React.createClass({
     return isExplore || isEditor;
   },
 
-  // for the analytics and home page, hide search if open.
+  // for the assets and home page, hide search if open.
   setSearchDisplay: function (nextProps) {
     if (this.props.displaySearch && !this.isSearchAvailable(nextProps)) {
       this.props._showSearch(false);
@@ -117,8 +117,8 @@ var SiteHeader = React.createClass({
             <div className='menu-wrapper'>
               <ul className='global-menu' id='global-menu'>
                 <li>
-                  <Link to={`/${getLanguage()}/analytics`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
-                    <span>{t('Analytics')}</span>
+                  <Link to={`/${getLanguage()}/assets`} className='global-menu-item' activeClassName='global-menu-item--active' onClick={this.menuClickHandler}>
+                    <span>{t('Assets')}</span>
                   </Link>
                 </li>
                 <li>
@@ -185,7 +185,7 @@ var SiteHeader = React.createClass({
               alignment='right'>
               <ul className='drop-menu drop-menu--select' role='menu'>
               {
-                ['Admin', 'VProMMs'].map((l, i) => {
+                ['Admin', 'VPRoMMS'].map((l, i) => {
                   let cl = 'drop-menu-item';
                   return (
                     <li key={i}>

@@ -241,7 +241,7 @@ var Tasks = React.createClass({
     const { mode, renderedFeatures } = this.state;
     return (
       <div className='map-options map-panel'>
-        { renderedFeatures ? <h2>Showing {renderedFeatures.features.length} Roads</h2> : null }
+        { renderedFeatures ? <h2>{t('Showing')} {renderedFeatures.features.length} {t('Roads')}</h2> : null }
         {mode ? null : (
           <div>
             <div className='form-group'>
@@ -378,7 +378,7 @@ var Tasks = React.createClass({
   renderSelectedIds: function () {
     const { selectedIds } = this.state;
     if (!selectedIds.length) {
-      return <p className='empty'>{t('No roads selected yet. Click a road to select it.')}</p>;
+      return <p className='empty'>{`${t('No roads selected yet. Click a road to select it')}.`}</p>;
     }
     if (selectedIds.length === 1) {
       return <p>{t('1 road selected. Select at least another one.')}</p>;

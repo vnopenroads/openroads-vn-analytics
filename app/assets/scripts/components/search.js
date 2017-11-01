@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { t, getLanguage } from '../utils/i18n';
 import { isDescendent } from '../utils/dom';
 import {
-  fetchVProMMsids,
+  fetchFieldVProMMsIds,
   fetchVProMMsBbox,
   setFilteredVProMMs,
   fetchAdmins,
@@ -26,12 +26,14 @@ var Search = React.createClass({
     isEditor: React.PropTypes.bool,
     fetching: React.PropTypes.bool,
     fetchSearchResults: React.PropTypes.func,
+    lang: React.PropTypes.string,
     searchType: React.PropTypes.string,
     searchResultsDisplay: React.PropTypes.bool,
     vpromms: React.PropTypes.array,
+    query: React.PropTypes.string,
     filteredVProMMs: React.PropTypes.array,
     _setFilteredVProMMs: React.PropTypes.func,
-    _fetchVProMMsids: React.PropTypes.func,
+    _fetchFieldVProMMsIds: React.PropTypes.func,
     _fetchVProMMsBbox: React.PropTypes.func,
     _fetchAdmins: React.PropTypes.func,
     _clearAdmins: React.PropTypes.func,
@@ -46,6 +48,7 @@ var Search = React.createClass({
         this.refs.results.classList.add('search-results-show');
       } else {
         this.props._clearAdmins();
+        this.refs.results.classList.remove('search-results-show');
       }
     } else {
       if (searchVal.length >= 2) {
@@ -53,6 +56,7 @@ var Search = React.createClass({
         this.refs.results.classList.add('search-results-show');
       } else {
         this.props._setFilteredVProMMs([]);
+        this.refs.results.classList.remove('search-results-show');
       }
     }
   },
@@ -130,7 +134,7 @@ var Search = React.createClass({
   },
 
   componentDidMount: function () {
-    this.props._fetchVProMMsids('search');
+    this.props._fetchFieldVProMMsIds();
     document.addEventListener('click', this.onDocumentClick, false);
     document.addEventListener('keyup', this.onKeyup, false);
   },
@@ -140,9 +144,25 @@ var Search = React.createClass({
     document.removeEventListener('keyup', this.onKeyup, false);
   },
 
+  componentWillReceiveProps: function (nextProps) {
+    const newSearchType = (this.props.searchType !== nextProps.searchType);
+    const newLang = (this.props.lang !== nextProps.lang);
+    if (newSearchType || newLang) {
+      this.refs.searchBox.value = '';
+      this.refs.results.classList.remove('search-results-show');
+    }
+  },
+
+  renderPlaceHolder: function (results) {
+    if (this.refs.searchBox) {
+      results.push(<p className='info'>No results available. Please refine your search.</p>);
+      return results;
+    }
+  },
+
   renderResults: function () {
     if (this.props.fetching) {
-      return (<p className='info'>Loading...</p>);
+      return (<p className='info'>{t('Loading...')}</p>);
     }
     // Group by type.
     var g = this.props.searchType === 'Admin' ? this.props.admins : this.props.filteredVProMMs;
@@ -150,30 +170,21 @@ var Search = React.createClass({
     if (this.props.searchType === 'Admin') {
       // if no results are shown, prompt user with one of the two messages.
       if (!g.length) {
-        // in the case the search value is just a blank space (denoting nothing is searche for)
-        // provide a message that prompts users to search
-        if (this.refs.searchBox) {
-          var searchVal = _.trim(this.refs.searchBox.value);
-          if (/^(?![\s\S])/.test(searchVal)) {
-            results.push(<p className='info'>Please search for an Admin Area</p>);
-            // if the search term used does not have a db match, then let users
-          } else {
-            results.push(<p className='info'>No results available. Please refine your search.</p>);
-          }
-        }
+        this.renderPlaceHolder(results);
       } else {
         g = _.groupBy(g, (o) => o.level);
         _.forEach(g, (l, k) => {
           results.push(
-            <dt key={`aa-type-admin-${k}`} className='drop-menu-sectitle'>
-              <strong>Admin Level - {k}</strong>
+            <dt key={`aa-type-admin-${l}-${k}`} className='drop-menu-sectitle'>
+              <strong>{t('Admin Level')} - {k}</strong>
             </dt>
           );
           _.forEach(l, (o, i) => {
             results.push(
-              <dd key={`aa-type-admin-${k}-${i}`} className='drop-menu-result'>
+              <dd key={`aa-type-admin-${o}-${k}-${i}`} className='drop-menu-result'>
               <small><a onClick={(e) => {
-                const adminArea = this.props.admins.find(o => o.name_en === e.target.textContent).id;
+                const name = (getLanguage() === 'en') ? 'name_en' : 'name_vn';
+                const adminArea = this.props.admins.find(o => o[name] === e.target.textContent).id;
                 this.refs.results.classList.remove('search-results-show');
                 this.searchAdminArea(adminArea);
               }}>{getLanguage() === 'en' ? o.name_en : o.name_vn}</a></small>
@@ -183,18 +194,22 @@ var Search = React.createClass({
         });
       }
     } else {
-      _.forEach(g, (o, k) => {
-        results.push(
-        <dt key={`aa-type-vpromms-${k}`} className='drop-menu-sectitle'>
-          <a onClick={(e) => {
-            const vprommsId = e.target.textContent;
-            this.refs.results.classList.remove('search-results-show');
-            this.searchVProMMsID(vprommsId);
-          }}>
-            <strong>{o}</strong>
-          </a>
-        </dt>);
-      });
+      if (!g.length) {
+        this.renderPlaceHolder(results);
+      } else {
+        _.forEach(g, (o, k) => {
+          results.push(
+          <dt key={`aa-type-vpromms-${k}`} className='drop-menu-sectitle'>
+            <a onClick={(e) => {
+              const vprommsId = e.target.textContent;
+              this.refs.results.classList.remove('search-results-show');
+              this.searchVProMMsID(vprommsId);
+            }}>
+              <strong>{o}</strong>
+            </a>
+          </dt>);
+        });
+      }
     }
     return (
       <dl className='drop-menu'>
@@ -238,15 +253,17 @@ var Search = React.createClass({
 function selector (state) {
   return {
     admins: state.admins.units,
-    vpromms: state.VProMMSids.data,
+    vpromms: state.fieldVProMMsids.ids,
     filteredVProMMs: state.setFilteredVProMMs,
-    searchResultsDisplay: state.searchResultsDisplay.show
+    searchResultsDisplay: state.searchResultsDisplay.show,
+    query: state.search.query,
+    lang: state.language.current
   };
 }
 
 function dispatcher (dispatch) {
   return {
-    _fetchVProMMsids: (use) => dispatch(fetchVProMMsids(use)),
+    _fetchFieldVProMMsIds: () => dispatch(fetchFieldVProMMsIds()),
     _fetchVProMMsBbox: (vprommsId) => dispatch(fetchVProMMsBbox(vprommsId)),
     _setFilteredVProMMs: (filteredVProMMs) => dispatch(setFilteredVProMMs(filteredVProMMs)),
     _clearAdmins: () => dispatch(clearAdmins()),

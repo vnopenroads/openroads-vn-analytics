@@ -333,12 +333,12 @@ const VProMMSids = function (state = VProMMSidsDefaultState, action) {
   return state;
 };
 
-const VProMMSidsAnalyticsDefaultState = {
+const VProMMSidsAssetsDefaultState = {
   fetching: false,
   fetched: false
 };
 
-const VProMMSidsAnalytics = function (state = VProMMSidsAnalyticsDefaultState, action) {
+const VProMMSidsAssets = function (state = VProMMSidsAssetsDefaultState, action) {
   switch (action.type) {
     case actions.REQUEST_VPROMMS_IDS:
       state = _.cloneDeep(state);
@@ -846,7 +846,7 @@ export default combineReducers({
   setSearchType,
   setFilteredVProMMs,
   VProMMSids,
-  VProMMSidsAnalytics,
+  VProMMSidsAssets,
   VProMMsWayBbox,
   VProMMsidProperties,
   VProMMsAdminProperties,

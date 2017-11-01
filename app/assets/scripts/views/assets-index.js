@@ -16,8 +16,8 @@ import {
 
 import AATable from '../components/aa-table-index';
 
-var AnalyticsIndex = React.createClass({
-  displayName: 'AnalyticsIndex',
+var AssetsIndex = React.createClass({
+  displayName: 'AssetsIndex',
 
   propTypes: {
     _fetchProvinces: React.PropTypes.func,
@@ -95,18 +95,18 @@ var AnalyticsIndex = React.createClass({
     return { accumulator: accumulator, completion: (accumulator.field / accumulator.total) };
   },
 
-  renderAnalyticsIndex: function () {
+  renderAssetsIndex: function () {
     const completionContent = this.makeCompletionContent();
     return (
       <div>
         <div className='a-header'>
           <div className='a-headline'>
-            <h1>{t('VProMMS Edits By Province')}</h1>
+            <h1>{t('VPRoMMS Assets By Province')}</h1>
           </div>
         </div>
 
         <div className='a-main__status'>
-          <h2><strong>{completionContent.completion.toFixed(2)}%</strong> {t('of VProMMS Ids have field data collected')} ({completionContent.accumulator.field} of {completionContent.accumulator.total})</h2>
+          <h2><strong>{completionContent.completion.toFixed(2)}%</strong> {t('of VPRoMMS Ids have field data collected')} ({completionContent.accumulator.field} of {completionContent.accumulator.total})</h2>
           <div className='meter'>
             <div className='meter__internal' style={{width: `${completionContent.completion}%`}}></div>
           </div>
@@ -119,7 +119,7 @@ var AnalyticsIndex = React.createClass({
   },
 
   render: function () {
-    return (this.props.VProMMsCountFetched && this.props.fieldCountsFetched) ? this.renderAnalyticsIndex() : (<div/>);
+    return (this.props.VProMMsCountFetched && this.props.fieldCountsFetched) ? this.renderAssetsIndex() : (<div/>);
   }
 });
 
@@ -152,4 +152,4 @@ function dispatcher (dispatch) {
   };
 }
 
-module.exports = connect(selector, dispatcher)(AnalyticsIndex);
+module.exports = connect(selector, dispatcher)(AssetsIndex);

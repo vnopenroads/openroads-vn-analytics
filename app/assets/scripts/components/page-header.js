@@ -1,6 +1,7 @@
 'use strict';
 import React from 'react';
 import { Link } from 'react-router';
+import { t } from '../utils/i18n';
 import ID from '../utils/id';
 import Dropdown from '../components/dropdown';
 import config from '../config';
@@ -23,7 +24,7 @@ var PageHeader = React.createClass({
     }
 
     return data.dataAvailable ? (
-      <li><a href={`${config.api}/admin/${this.props.adminAreaId}?roadNetwork=true`} className='bttn-road-network' title='Download road network' target='_blank'>Download road network</a></li>
+      <li><a href={`${config.api}/admin/${this.props.adminAreaId}?roadNetwork=true`} className='bttn-road-network' title='Download road network' target='_blank'>{t('Download road network')}</a></li>
     ) : (
       <Dropdown element='li' className='dropdown center' triggerClassName='bttn-road-network disabled' triggerText='Download road network' evtClick={false}>
         <div className='drop-info'>
@@ -46,11 +47,11 @@ var PageHeader = React.createClass({
         <div className='inner'>
           <div className='page__breadcrumbs'>
             <ul className='breadcrumbs'>
-              <li><Link to='/analytics'>Country</Link></li>
-              {level >= 1 ? <li><Link to={`/analytics/${adminID.parentID(1)}`}>Region</Link></li> : null}
-              {level >= 2 ? <li><Link to={`/analytics/${adminID.parentID(2)}`}>Province</Link></li> : null}
-              {level >= 3 ? <li><Link to={`/analytics/${adminID.parentID(3)}`}>Municipality</Link></li> : null}
-              {level >= 4 ? <li><Link to={`/analytics/${adminID.parentID(4)}`}>Barangay</Link></li> : null}
+              <li><Link to='/assets'>Country</Link></li>
+              {level >= 1 ? <li><Link to={`/assets/${adminID.parentID(1)}`}>Region</Link></li> : null}
+              {level >= 2 ? <li><Link to={`/assets/${adminID.parentID(2)}`}>Province</Link></li> : null}
+              {level >= 3 ? <li><Link to={`/assets/${adminID.parentID(3)}`}>Municipality</Link></li> : null}
+              {level >= 4 ? <li><Link to={`/assets/${adminID.parentID(4)}`}>Barangay</Link></li> : null}
             </ul>
           </div>
 
