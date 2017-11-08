@@ -13,6 +13,7 @@ import {
   makeNWSE
 } from '../utils/zoom';
 import config from '../config';
+import MapSearch from '../components/map-search';
 
 var Editor = React.createClass({
   displayName: 'Editor',
@@ -149,9 +150,12 @@ var Editor = React.createClass({
     var globalZoomHash = `map=${this.props.globZ.toString()}/${this.props.globX.toString()}/${this.props.globY.toString()}`;
     var path = config.editorUrl + `#${globalZoomHash}`;
     return (
-      <div>
-       <iframe src={path} id='main-frame' name='main-frame' ref="iframe"></iframe>
-      </div>
+      <figure className='map'>
+        <iframe src={path} id='main-frame' name='main-frame' ref="iframe" className='map__media'></iframe>
+        <div className='map__controls map__controls--top-center'>
+          <MapSearch />
+        </div>
+      </figure>
     );
   }
 });

@@ -54,6 +54,16 @@
     }
   }
 
+  &--top-center {
+    top: $global-spacing;
+    left: 50%;
+    transform: translate(-50%, 0);
+
+    @include media(xlarge-up) {
+      top: $global-spacing * 2;
+    }
+  }
+
   &--bottom-right {
     bottom: $global-spacing * 2.5;
     right: $global-spacing;
