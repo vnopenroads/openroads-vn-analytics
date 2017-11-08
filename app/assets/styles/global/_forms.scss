@@ -279,7 +279,8 @@ textarea.form__control {
 .form__input-addon + .form__input-addon,
 .form__input-addon + .button,
 .form__input-addon + .form__control:not(select),
-.form__control:not(select) + .form__input-addon  {
+.form__control:not(select) + .form__input-addon,
+select.form__control + .form__control:not(select)  {
   margin-left: -$base-border-width;
 }
 
@@ -293,7 +294,8 @@ textarea.form__control {
 }
 
 .form__input-group > .button,
-.form__input-group > select.form__control {
+select.form__control:hover,
+select.form__control:focus {
   position: relative;
   z-index: 3;
 }
