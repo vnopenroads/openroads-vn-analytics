@@ -188,31 +188,27 @@ var MapSearch = React.createClass({
 
   render: function () {
     return (
-      <div className='panel search-panel'>
-        <div className='panel__body'>
-          <form className='form' onSubmit={this.onSearchSubmit}>
-            <div className='form__group search'>
-              <label className='form__label' htmlFor='search-field'>{t('Search')}</label>
-              <div className='form__input-group form__input-group--medium'>
-                <select className='form__control' onChange={this.onSearchTypeChange} value={this.props.searchType}>
-                  <option value='Admin'>Admin</option>
-                  <option value='VProMMs'>VProMMs</option>
-                </select>
-                <input
-                  type='text'
-                  id='search-field'
-                  name='search-field'
-                  className='form__control'
-                  placeholder='Search'
-                  value={this.state.searchVal}
-                  onChange={this.onSearchQueryChange} />
-                <button type='button' className='search__button' title='Submit' onClick={this.onSearchSubmit}><span>{t('Search')}</span></button>
-              </div>
-              {this.renderResults()}
-            </div>
-          </form>
+      <form className='form search' onSubmit={this.onSearchSubmit}>
+        <div className='form__group'>
+          <label className='form__label' htmlFor='search-field'>{t('Search')}</label>
+          <div className='form__input-group form__input-group--medium'>
+            <select className='form__control' onChange={this.onSearchTypeChange} value={this.props.searchType}>
+              <option value='Admin'>Admin</option>
+              <option value='VProMMs'>VProMMs</option>
+            </select>
+            <input
+              type='text'
+              id='search-field'
+              name='search-field'
+              className='form__control'
+              placeholder='Search'
+              value={this.state.searchVal}
+              onChange={this.onSearchQueryChange} />
+            <button type='button' className='search__button' title='Submit' onClick={this.onSearchSubmit}><span>{t('Search')}</span></button>
+          </div>
+          {this.renderResults()}
         </div>
-      </div>
+      </form>
     );
   }
 });

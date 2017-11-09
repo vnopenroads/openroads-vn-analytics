@@ -417,14 +417,29 @@ var Tasks = React.createClass({
     const { hoverId } = this.state;
     const { task, taskError, osmInflight } = this.props;
     return (
-      <div className='task-container'>
-        <figure className='map'>
-          <div className='map__media' id='map'></div>
-        </figure>
-        {!task || taskError ? this.renderPlaceholder() : null}
-        {hoverId ? this.renderPropertiesOverlay() : null}
-        {osmInflight ? this.renderInflight() : this.renderInstrumentPanel()}
-      </div>
+      <section className='inpage inpage--alt'>
+        <header className='inpage__header'>
+          <div className='inner'>
+            <div className='inpage__headline'>
+              <h1 className='inpage__title'>{t('Tasks')}</h1>
+            </div>
+          </div>
+        </header>
+        <div className='inpage__body'>
+          <div className='inner'>
+
+            <div className='task-container'>
+              <figure className='map'>
+                <div className='map__media' id='map'></div>
+              </figure>
+              {!task || taskError ? this.renderPlaceholder() : null}
+              {hoverId ? this.renderPropertiesOverlay() : null}
+              {osmInflight ? this.renderInflight() : this.renderInstrumentPanel()}
+            </div>
+
+          </div>
+        </div>
+      </section>
     );
   }
 });

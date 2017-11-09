@@ -198,7 +198,10 @@
    ========================================================================== */
 
 .site-body {
+  display: flex;
+  flex-direction: column;
   position: relative;
+  z-index: 1;
   flex: 1;
 
   .inner {

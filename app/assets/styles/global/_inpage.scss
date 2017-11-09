@@ -3,54 +3,39 @@
    ========================================================================== */
 
 .inpage {
-  &__header {
-    @extend .antialiased;
-    position: relative;
-    padding: $global-spacing 0;
-    background-color: transparent;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: cover;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 
-    > * {
-      position: relative;
-      z-index: 2;
+  .inpage__header {
+    @extend .antialiased;
+    background: $primary-color;
+    color: #fff;
+    padding: $global-spacing 0;
+    position: relative;
+    z-index: 99999;
+    transition: all 0.24s ease 0s;
+
+    @include media(medium-up) {
+      padding: $global-spacing 0;
     }
 
     > .inner {
-      @extend .row, .row--centered;
-    }
-
-    &::after {
-      position: absolute;
-      z-index: 1;
-      bottom: 0;
-      left: 0;
+      @extend .row;
+      max-width: none;
+      display: flex;
       width: 100%;
-      height: $base-border-width;
-      content: '';
-      background: rgba($base-color, 0.08);
-    }
-
-    @include media(medium-up) {
-      padding: ($global-spacing * 2) 0;
     }
   }
 
   &__headline {
-    @include column(12/12);
-
     > *:last-child {
       margin-bottom: 0;
-    }
-
-    @include media(medium-up) {
-      @include column(10/12);
     }
   }
 
   &__title {
-    @extend .heading, .heading--xlarge;
+    @extend .heading, .heading--medium;
   }
 
   &__subtitle {
@@ -79,7 +64,15 @@
     }
   }
 
+  .inpage__actions {
+    flex: 1 1 auto;
+    text-align: right;
+    font-size: 0;
+    white-space: nowrap;
+  }
+
   &__body {
+    flex: 1;
     padding: ($global-spacing * 2) 0;
 
     > .inner {
@@ -92,6 +85,22 @@
 
     @include media(medium-up) {
       padding: ($global-spacing * 3) 0;
+    }
+  }
+}
+
+
+/* Modifiers
+   ========================================================================== */
+
+.inpage--alt {
+  .inpage__body {
+    position: relative;
+    padding: 0;
+
+    > .inner {
+      padding: 0;
+      max-width: none;
     }
   }
 }

@@ -2,3 +2,12 @@
    Page: Explore
    ========================================================================== */
 
+.explore {
+  .inpage__headline {
+    display: none;
+
+    @include media(small-up) {
+      display: block;
+    }
+  }
+}

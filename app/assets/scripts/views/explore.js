@@ -3,8 +3,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import mapboxgl from 'mapbox-gl';
-
 import config from '../config';
+import { t } from '../utils/i18n';
 import lineColors from '../utils/line-colors';
 import {
   selectExploreMapLayer,
@@ -114,21 +114,36 @@ var Explore = React.createClass({
 
   render: function () {
     return (
-      <figure className='map'>
-        <div className='map__media' id='map'></div>
-        <div className='map__controls map__controls--top-right'>
-          <MapSearch />
-          <MapOptions
-            handleLayerChange={ this.handleLayerChange }
-            handleShowNoVpromms={ this.handleShowNoVpromms }
-          />
+      <section className='inpage inpage--alt'>
+        <header className='inpage__header'>
+          <div className='inner'>
+            <div className='inpage__headline'>
+              <h1 className='inpage__title'>{t('Explore')}</h1>
+            </div>
+            <div className='inpage__actions'>
+              <MapSearch />
+            </div>
+          </div>
+        </header>
+        <div className='inpage__body'>
+          <div className='inner'>
+            <figure className='map'>
+              <div className='map__media' id='map'></div>
+              <div className='map__controls map__controls--top-right'>
+                <MapOptions
+                  handleLayerChange={ this.handleLayerChange }
+                  handleShowNoVpromms={ this.handleShowNoVpromms }
+                />
+              </div>
+              <div className='map__controls map__controls--bottom-right'>
+                <MapLegend
+                  layer={this.props.layer}
+                />
+              </div>
+            </figure>
+          </div>
         </div>
-        <div className='map__controls map__controls--bottom-right'>
-          <MapLegend
-            layer={this.props.layer}
-          />
-        </div>
-      </figure>
+      </section>
     );
   }
 });

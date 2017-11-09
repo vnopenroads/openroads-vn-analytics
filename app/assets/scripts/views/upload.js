@@ -1,15 +1,16 @@
 'use strict';
 import React from 'react';
 import config from '../config';
+import { t } from '../utils/i18n';
 
 var Upload = React.createClass({
   render: function () {
     return (
-      <section classNmae='inpage'>
+      <section className='inpage'>
         <header className='inpage__header'>
           <div className='inner'>
             <div className='inpage__headline'>
-              <h1 className='inpage__title'>Upload</h1>
+              <h1 className='inpage__title'>{t('Upload')}</h1>
             </div>
           </div>
         </header>
