@@ -3,7 +3,7 @@ node_modules
 bower_components
 .sass-cache
 test/bower_components
-app/assets/styles/_collecticons.scss
+app/assets/styles/core/_collecticons.scss
 
 ## Build
 .DS_Store

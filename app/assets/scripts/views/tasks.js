@@ -229,42 +229,57 @@ var Tasks = React.createClass({
       <dd key={`${key}-value`}>{t(`${properties[key] || '--'}`)}</dd>
     ]).filter(Boolean);
     return (
-      <aside className='properties__overlay'>
-        <dl>
-          {displayList}
-        </dl>
-      </aside>
+      <div className='map__controls map__controls--top-left'>
+        <figcaption className='panel properties-panel'>
+          <div className='panel__body'>
+            <dl>
+              {displayList}
+            </dl>
+          </div>
+        </figcaption>
+      </div>
     );
   },
 
   renderInstrumentPanel: function () {
     const { mode, renderedFeatures } = this.state;
     return (
-      <div className='map-options map-panel'>
-        { renderedFeatures ? <h2>{t('Showing')} {renderedFeatures.features.length} {t('Roads')}</h2> : null }
-        {mode ? null : (
-          <div>
-            <div className='form-group'>
-              <p>{`1. ${t('Select roads to work on')}.`}</p>
-              <div className='map__panel--selected'>
-                {this.renderSelectedIds()}
-              </div>
-            </div>
-            <div className='form-group map__panel--form'>
-              <p>{`2. ${t('Choose an action to perform')}.`}</p>
-              <button className={c('bttn bttn-m bttn-secondary', {disabled: this.state.selectedIds.length < 2})} type='button' onClick={this.onDedupe}>{t('Remove Duplicates')}</button>
-              <br />
-              <button className={c('bttn bttn-m bttn-secondary', {disabled: this.state.selectedIds.length !== 1})} type='button' onClick={this.onJoin}>{t('Create Intersection')}</button>
-            </div>
-            <div className='form-group map__panel--form'>
-              <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.markAsDone}>{t('Finish task')}</button>
-              <br />
-              <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.next}>{t('Skip task')}</button>
+      <div className='map__controls map__controls--top-right'>
+        <div className='panel tasks-panel'>
+          {renderedFeatures ? (
+          <div className='panel__header'>
+            <div className='panel__headline'>
+              <h2 className='panel__title'>{t('Task')}</h2>
+              <p className='panel__subtitle'>{t('Showing')} {renderedFeatures.features.length} {t('Roads')}</p>
             </div>
           </div>
-        )}
-        {mode === 'dedupe' ? this.renderDedupeMode() : null}
-        {mode === 'join' ? this.renderJoinMode() : null}
+          ) : null }
+          <div className='panel__body'>
+            {mode ? null : (
+              <div>
+                <div className='form-group'>
+                  <p>{`1. ${t('Select roads to work on')}.`}</p>
+                  <div className='map__panel--selected'>
+                    {this.renderSelectedIds()}
+                  </div>
+                </div>
+                <div className='form-group map__panel--form'>
+                  <p>{`2. ${t('Choose an action to perform')}.`}</p>
+                  <button className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length < 2})} type='button' onClick={this.onDedupe}>{t('Remove Duplicates')}</button>
+                  <br />
+                  <button className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length !== 1})} type='button' onClick={this.onJoin}>{t('Create Intersection')}</button>
+                </div>
+                <div className='form-group map__panel--form'>
+                  <button className='button button--base-raised-light' type='button' onClick={this.markAsDone}>{t('Finish task')}</button>
+                  <br />
+                  <button className='button button--secondary-raised-dark' type='button' onClick={this.next}>{t('Skip task')}</button>
+                </div>
+              </div>
+            )}
+            {mode === 'dedupe' ? this.renderDedupeMode() : null}
+            {mode === 'join' ? this.renderJoinMode() : null}
+          </div>
+        </div>
       </div>
     );
   },
@@ -293,9 +308,9 @@ var Tasks = React.createClass({
       <div className='form-group map__panel--form'>
         <h2>{t('Remove Duplicate Roads')}</h2>
         <p>{t('Click on a road to keep. The other roads here will be deleted.')}</p>
-        <button className={c('bttn bttn-m bttn-secondary', {disabled: !this.state.selectedIds.length})} type='button' onClick={this.commitDedupe}>{t('Confirm')}</button>
+        <button className={c('button button--secondary-raised-dark', {disabled: !this.state.selectedIds.length})} type='button' onClick={this.commitDedupe}>{t('Confirm')}</button>
         <br />
-        <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.exitMode}>{t('Cancel')}</button>
+        <button className='button button--base-raised-dark' type='button' onClick={this.exitMode}>{t('Cancel')}</button>
       </div>
     );
   },
@@ -305,9 +320,9 @@ var Tasks = React.createClass({
       <div className='form-group map__panel--form'>
         <h2>Create an Intersection</h2>
         <p>Click on a road to create an intersection with.</p>
-        <button className={c('bttn bttn-m bttn-secondary', {disabled: this.state.selectedIds.length !== 2})} type='button' onClick={this.commitJoin}>{t('Confirm')}</button>
+        <button className={c('button button--secondary-raised-dark', {disabled: this.state.selectedIds.length !== 2})} type='button' onClick={this.commitJoin}>{t('Confirm')}</button>
         <br />
-        <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.exitMode}>{t('Cancel')}</button>
+        <button className='button button--base-raised-dark' type='button' onClick={this.exitMode}>{t('Cancel')}</button>
       </div>
     );
   },
@@ -388,8 +403,12 @@ var Tasks = React.createClass({
 
   renderInflight: function () {
     return (
-      <div className='map-options map-panel'>
-        <h2>{t('Performing action...')}</h2>
+      <div className='map__controls map__controls--top-right'>
+        <div className='panel tasks-panel'>
+          <div className='panel__body'>
+            <h2>{t('Performing action...')}</h2>
+          </div>
+        </div>
       </div>
     );
   },
@@ -398,14 +417,29 @@ var Tasks = React.createClass({
     const { hoverId } = this.state;
     const { task, taskError, osmInflight } = this.props;
     return (
-      <div className='task-container'>
-        <div className='map-container'>
-          <div id='map' />
+      <section className='inpage inpage--alt'>
+        <header className='inpage__header'>
+          <div className='inner'>
+            <div className='inpage__headline'>
+              <h1 className='inpage__title'>{t('Tasks')}</h1>
+            </div>
+          </div>
+        </header>
+        <div className='inpage__body'>
+          <div className='inner'>
+
+            <div className='task-container'>
+              <figure className='map'>
+                <div className='map__media' id='map'></div>
+              </figure>
+              {!task || taskError ? this.renderPlaceholder() : null}
+              {hoverId ? this.renderPropertiesOverlay() : null}
+              {osmInflight ? this.renderInflight() : this.renderInstrumentPanel()}
+            </div>
+
+          </div>
         </div>
-        {!task || taskError ? this.renderPlaceholder() : null}
-        {hoverId ? this.renderPropertiesOverlay() : null}
-        {osmInflight ? this.renderInflight() : this.renderInstrumentPanel()}
-      </div>
+      </section>
     );
   }
 });

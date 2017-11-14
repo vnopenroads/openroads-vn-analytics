@@ -1,0 +1,85 @@
+/* ==========================================================================
+   Variables
+   ========================================================================== */
+
+/* Colors
+   ========================================================================== */
+
+$base-color: #252525;                   // Asphalt
+$primary-color: #3d0a08;                // Aubergine
+$secondary-color: #da251d;              // Red
+
+/* State colors */
+
+$danger-color: #E74C3C;                 // Alizarin
+$success-color: #2ECC71;                // Emerald
+$warning-color: #F1C40F;                // Sunflower
+$info-color: #3498DB;                   // Peter River
+
+/* Helper colors */
+
+$link-color: $secondary-color;
+$base-alpha-color: rgba($base-color, 0.12);
+
+
+/* Typography
+   ========================================================================== */
+
+$root-font-size: 16px;
+
+$base-font-color: tint($base-color, 16%);
+$base-font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$base-font-style: normal;
+$base-font-light: 300;
+$base-font-regular: 400;
+$base-font-bold: 700;
+$base-font-weight: $base-font-light;
+$base-font-size: 1rem;
+$base-line-height: 1.5;
+
+$code-font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+
+$heading-font-family: $base-font-family;
+$base-font-light: 300;
+$heading-font-regular: 400;
+$heading-font-bold: 700;
+$heading-font-weight: $heading-font-bold;
+
+
+/* Decoration
+   ========================================================================== */
+
+/* Border radius */
+
+$base-border-radius: 0.25rem;
+$full-border-radius: 100vh;
+
+$base-border-width: 2px;
+
+
+/* Sizing, spacing and media queries
+   ========================================================================== */
+
+/* Sizing */
+
+$page-header-y: 0 !default;
+
+/* Spacing */
+
+$global-spacing: 1rem;
+
+/* Rows */
+
+$row-min-width: 320px;
+$row-max-width: 1280px;
+$jeet-max-width: $row-max-width; // reset jeet.gs max width
+
+/* Media queries */
+
+$xsmall-range: (0, 543px);
+$small-range: (544px, 767px);
+$medium-range: (768px, 991px);
+$large-range: (992px, 1199px);
+$xlarge-range: (1200px);
+
+$screen: "only screen";

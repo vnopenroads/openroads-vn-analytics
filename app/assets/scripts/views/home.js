@@ -18,10 +18,9 @@ var Home = React.createClass({
         <div className='page__body--landing'>
           <div className='inner'>
             <h2>{t('Access and improve Road Networks')}</h2>
-            <p className='description'></p>
-            <p className='description'>{t('Work with the OpenRoads project to close this critical information gap and create a comprehensive road network  of Vietnam')}</p>
-            <Link to={`/${getLanguage()}/assets`} className='bttn-explore'>{t('View assets')}</Link>
-            <Link to={`/${getLanguage()}/explore`} className='bttn-explore'>{t('Explore road network')}</Link>
+            <p className='description'>{t('Work with the OpenRoads project to close this critical information gap and create a comprehensive road network of Vietnam')}</p>
+            <Link to={`/${getLanguage()}/assets`} className='button-explore'>{t('View assets')}</Link>
+            <Link to={`/${getLanguage()}/explore`} className='button-explore'>{t('Explore on map')}</Link>
           </div>
         </div>
       </section>

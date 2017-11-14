@@ -1,13 +1,8 @@
 /* ==========================================================================
-   Page: Explore
+   Page: Upload
    ========================================================================== */
 
-.explore {
-  .inpage__headline {
-    display: none;
 
-    @include media(small-up) {
-      display: block;
-    }
-  }
+.upload-form {
+  max-width: 48rem;
 }

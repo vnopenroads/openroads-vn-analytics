@@ -2,21 +2,6 @@
    Page: Assets
    ========================================================================== */
 
-.assets, .assets-aa .site-header,
-.editor .site-header,
-.explore .site-header  {
-  .site__nav {
-    .toggle-menu,
-    .toggle-search,
-    .search-wrapper {
-      display: none;
-    }
-  }
-}
-
-
-.tasks .site-header .site__nav .search-wrapper { display: none; }
-
 .assets,
 .assets-aa {
   .aa-main {
@@ -59,7 +44,7 @@
     padding: 0.5rem 1rem;
     margin: 1rem 0 2rem 0;
     border: 1px solid rgb(220, 220, 220);
-    border-radius: $global-radius;
+    border-radius: $base-border-radius;
     background-color: #FFF;
 
     h2 {
@@ -87,13 +72,13 @@
     width: 100%;
     margin: 0.4rem 0 0.5rem;
     height: 1rem;
-    border-radius: $global-radius;
+    border-radius: $base-border-radius;
     background: rgba($base-color, 0.12);
     border: 0;
 
     .meter__internal {
       height: 1rem;
-      border-radius: $global-radius;
+      border-radius: $base-border-radius;
       background-color: $info-color;
     }
 
@@ -107,7 +92,7 @@
       content: "";
       pointer-events: none;
       box-shadow: inset 0 0 0 1px rgba($base-color, 0.12);
-      border-radius: $global-radius;
+      border-radius: $base-border-radius;
     }
   }
 
@@ -116,13 +101,13 @@
   }
 }
 
-// Tables
 
+// Tables
 
 .table { margin-bottom: 2rem; }
 
 .a-table-action {
-  @extend .bttn, .bttn-s, .bttn-base-light;
+  @extend .button, .button--small, .button--base-raised-light;
   margin: 0 ($global-spacing / 4) 0 0;
   min-width: 5rem;
 }
@@ -151,8 +136,8 @@
   opacity: 0;
 }
 
-.bttn-table-expand {
-  @extend .bttn, .bttn-s, .bttn-base-light;
+.button-table-expand {
+  @extend .button, .button--small, .button--base-raised-light;
   min-width: 4.5rem;
 
   * {
@@ -168,12 +153,12 @@
   }
 }
 
-.bttn-table-expand--show::after {
-  @extend %collecticons-sm-chevron-down;
+.button-table-expand--show::after {
+  @extend %collecticon-sm-chevron-down;
 }
 
-.bttn-table-expand--hide::after {
-  @extend %collecticons-sm-chevron-up;
+.button-table-expand--hide::after {
+  @extend %collecticon-sm-chevron-up;
 }
 
 .table-properties-list {
@@ -247,7 +232,7 @@
     }
 
     &::before {
-      @extend %collecticons-sm-chevron-right;
+      @extend %collecticon-sm-chevron-right;
       position: absolute;
       top: 50%;
       left: 0;
@@ -259,19 +244,19 @@
 
   @include media(small-up) {
     li {
-      @include column(4/12, $uncycle: 2, $cycle: 3);
+      @include column(4/12, $cycle: 3);
     }
   }
 
   @include media(medium-up) {
     li {
-      @include column(3/12, $uncycle: 3, $cycle: 4);
+      @include column(3/12, $cycle: 4);
     }
   }
 
   @include media(large-up) {
     li {
-      @include column(2/12, $uncycle: 4, $cycle: 6);
+      @include column(2/12, $cycle: 6);
     }
   }
 }

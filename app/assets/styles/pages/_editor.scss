@@ -2,6 +2,16 @@
    Page: Editor
    ========================================================================== */
 
+.editor {
+  .inpage__headline {
+    display: none;
+
+    @include media(small-up) {
+      display: block;
+    }
+  }
+}
+
 #main-frame {
   border: none;
   display: block;

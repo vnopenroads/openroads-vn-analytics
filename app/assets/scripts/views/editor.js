@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { push, replace } from 'react-router-redux';
 import { setGlobalZoom } from '../actions/action-creators';
-import { getLanguage } from '../utils/i18n';
+import { t, getLanguage } from '../utils/i18n';
 import {
   transformGeoToPixel,
   pixelDistances,
@@ -13,6 +13,7 @@ import {
   makeNWSE
 } from '../utils/zoom';
 import config from '../config';
+import MapSearch from '../components/map-search';
 
 var Editor = React.createClass({
   displayName: 'Editor',
@@ -149,9 +150,25 @@ var Editor = React.createClass({
     var globalZoomHash = `map=${this.props.globZ.toString()}/${this.props.globX.toString()}/${this.props.globY.toString()}`;
     var path = config.editorUrl + `#${globalZoomHash}`;
     return (
-      <div>
-       <iframe src={path} id='main-frame' name='main-frame' ref="iframe"></iframe>
-      </div>
+      <section className='inpage inpage--alt'>
+        <header className='inpage__header'>
+          <div className='inner'>
+            <div className='inpage__headline'>
+              <h1 className='inpage__title'>{t('Editor')}</h1>
+            </div>
+            <div className='inpage__actions'>
+              <MapSearch />
+            </div>
+          </div>
+        </header>
+        <div className='inpage__body'>
+          <div className='inner'>
+            <figure className='map'>
+              <iframe src={path} id='main-frame' name='main-frame' ref="iframe" className='map__media'></iframe>
+            </figure>
+          </div>
+        </div>
+      </section>
     );
   }
 });

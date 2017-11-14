@@ -1,0 +1,94 @@
+/* ==========================================================================
+   Map search
+   ========================================================================== */
+
+.search {
+  display: inline-block;
+  position: relative;
+  color: $base-font-color;
+  margin: 0;
+  width: 100%;
+  text-align: left;
+  font-size: 1rem;
+
+  @include media(small-up) {
+    max-width: 24rem;
+  }
+
+ .form__label {
+    @extend .visually-hidden;
+  }
+
+  .form__group {
+    position: relative;
+  }
+}
+
+#search-field {
+  padding-right: 2.5rem;
+}
+
+.search__button {
+  @extend .button, .button--secondary-raised-dark, .button--text-hidden;
+
+  &::before {
+    @extend %collecticon-magnifier-right;
+  }
+}
+
+.search__clear {
+  @extend .button, .button--base-plain, .button--text-hidden;
+  position: absolute;
+  top: 0;
+  right: 2rem;
+  z-index: 3;
+  border-radius: none;
+  color: tint($base-color, 64%);
+
+  &::before {
+    @extend %collecticon-disc-xmark;
+  }
+}
+
+.search-results {
+  position: absolute;
+  margin-top: $global-spacing / 4;
+  width: 100%;
+  right: 0;
+  background: #fff;
+  box-shadow: 0 0 8px $base-border-width $base-alpha-color;
+  border-radius: $base-border-radius / 2;
+  padding: $global-spacing;
+
+  > .inner {
+    max-height: 8rem;
+    overflow: auto;
+    padding: 0;
+
+    > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .info {
+    opacity: 0.64;
+    font-size: 0.875rem;
+    line-height: 1rem;
+    font-style: italic;
+    margin-bottom: 0;
+  }
+
+  h4 {
+    margin-bottom: 0.25rem;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    a {
+      display: block;
+    }
+  }
+}
