@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { t, getLanguage } from '../utils/i18n';
 import {
   setSearchType,
-  fetchVProMMsids,
+  fetchFieldVProMMsIds,
   fetchVProMMsBbox,
   setFilteredVProMMs,
   fetchAdmins,
@@ -22,12 +22,13 @@ var MapSearch = React.createClass({
     vpromms: React.PropTypes.array,
     admins: React.PropTypes.array,
     filteredVProMMs: React.PropTypes.array,
+    lang: React.PropTypes.string,
     _setSearchType: React.PropTypes.func,
     _fetchAdmins: React.PropTypes.func,
     _clearAdmins: React.PropTypes.func,
     _setFilteredVProMMs: React.PropTypes.func,
     _fetchVProMMsBbox: React.PropTypes.func,
-    _fetchVProMMsids: React.PropTypes.func,
+    _fetchFieldVProMMsIds: React.PropTypes.func,
     _fetchAdminBbox: React.PropTypes.func
   },
 
@@ -39,8 +40,27 @@ var MapSearch = React.createClass({
   },
 
   componentDidMount: function () {
-    this.props._fetchVProMMsids('search');
+    this.props._fetchFieldVProMMsIds();
     this.search = _.debounce(this.search, 300);
+  },
+
+  componentWillUnmount: function () {
+    this.props._clearAdmins();
+    this.props._setFilteredVProMMs([]);
+  },
+
+  componentWillReceiveProps: function (nextProps) {
+    if (this.props.lang !== nextProps.lang) {
+      this.setState({ searchVal: '', showResults: false });
+      this.props._clearAdmins();
+      this.props._setFilteredVProMMs([]);
+    }
+  },
+
+  onClearSearch: function (e) {
+    this.setState({ searchVal: '', showResults: false });
+    this.props._clearAdmins();
+    this.props._setFilteredVProMMs([]);
   },
 
   onSearchTypeChange: function (e) {
@@ -120,6 +140,7 @@ var MapSearch = React.createClass({
   onVprommClick: function (id, e) {
     e.preventDefault();
     this.searchVProMMsID(id);
+    this.setState({ searchVal: id });
   },
 
   renderResults: function () {
@@ -204,8 +225,9 @@ var MapSearch = React.createClass({
               placeholder='Search'
               value={this.state.searchVal}
               onChange={this.onSearchQueryChange} />
-            <button type='button' className='search__button' title='Submit' onClick={this.onSearchSubmit}><span>{t('Search')}</span></button>
+            <button type='button' className='search__button' title={t('Search')} onClick={this.onSearchSubmit}><span>{t('Search')}</span></button>
           </div>
+          {this.state.searchVal !== '' && <button type='button' className='search__clear' title={t('Clear search')} onClick={this.onClearSearch}><span>{t('Clear search')}</span></button> }
           {this.renderResults()}
         </div>
       </form>
@@ -217,15 +239,16 @@ function selector (state) {
   return {
     searchType: state.setSearchType.searchType,
     admins: state.admins.units,
-    vpromms: state.VProMMSids.data,
+    vpromms: state.fieldVProMMsids.ids,
     filteredVProMMs: state.setFilteredVProMMs,
-    fetching: state.VProMMSids.fetching || state.admins.fetching
+    fetching: state.VProMMSids.fetching || state.admins.fetching,
+    lang: state.language.current
   };
 }
 
 function dispatcher (dispatch) {
   return {
-    _fetchVProMMsids: (...args) => dispatch(fetchVProMMsids(...args)),
+    _fetchFieldVProMMsIds: (...args) => dispatch(fetchFieldVProMMsIds(...args)),
     _setSearchType: (...args) => dispatch(setSearchType(...args)),
     _setFilteredVProMMs: (filteredVProMMs) => dispatch(setFilteredVProMMs(filteredVProMMs)),
     _clearAdmins: () => dispatch(clearAdmins()),

@@ -86,7 +86,7 @@ var SiteHeader = React.createClass({
               <h2 className='site__menu-toggle'><a href='#menu-block-global' onClick={this.toggleMenuHandler.bind(null, 'actions')} data-hook='menu-block-trigger'><span>{t('Menu')}</span></a></h2>
               <div className='site__menu-block' id='menu-block-global'>
                 <ul className='site__menu'>
-                  <li><Link to={`/${getLanguage()}/analytics`} className='site__menu-item' activeClassName='site__menu-item--active' title={t('Visit')}>{t('Analytics')}</Link></li>
+                  <li><Link to={`/${getLanguage()}/assets`} className='site__menu-item' activeClassName='site__menu-item--active' title={t('Visit')}>{t('Assets')}</Link></li>
                   <li>
                     <Link to={`/${getLanguage()}/explore`} className='site__menu-item' activeClassName='site__menu-item--active' title={t('Visit')}>
                       <span>{t('Explore')}</span>

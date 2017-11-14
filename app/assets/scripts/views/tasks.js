@@ -249,8 +249,8 @@ var Tasks = React.createClass({
           {renderedFeatures ? (
           <div className='panel__header'>
             <div className='panel__headline'>
-              <h2 className='panel__title'>Task</h2>
-              <p className='panel__subtitle'>Showing {renderedFeatures.features.length} roads</p>
+              <h2 className='panel__title'>{t('Task')}</h2>
+              <p className='panel__subtitle'>{t('Showing')} {renderedFeatures.features.length} {t('Roads')}</p>
             </div>
           </div>
           ) : null }
@@ -393,7 +393,7 @@ var Tasks = React.createClass({
   renderSelectedIds: function () {
     const { selectedIds } = this.state;
     if (!selectedIds.length) {
-      return <p className='empty'>{t('No roads selected yet. Click a road to select it.')}</p>;
+      return <p className='empty'>{`${t('No roads selected yet. Click a road to select it')}.`}</p>;
     }
     if (selectedIds.length === 1) {
       return <p>{t('1 road selected. Select at least another one.')}</p>;

@@ -11,7 +11,7 @@ import { t, getLanguage, setLanguage } from '../utils/i18n';
 import { fetchVProMMsBbox, removeAdminInfo } from '../actions/action-creators';
 
 const displayHeader = [
-  {key: 'id', value: 'VProMMS ID'},
+  {key: 'id', value: 'VPRoMMS ID'},
   {key: 'FieldData', value: 'Field Data'}
 ];
 
@@ -94,7 +94,7 @@ const AATable = React.createClass({
 
   handleSort: function () {
     let sorted = _(this.props.data).sortBy(this.state.sortState.field);
-    if (this.state.sortState.order === 'desc') {
+    if (this.state.sortState.order === 'asc') {
       sorted = sorted.reverse();
     }
     return sorted.value();
@@ -103,7 +103,7 @@ const AATable = React.createClass({
   renderFieldMapButtons: function (vprommExists, id) {
     return (
       <div className='a-table-actions'>
-        <Link className='a-table-action' to={`/${getLanguage()}/analytics/road/${id}/`}>{t('Explore')}</Link>
+        <Link className='a-table-action' to={`/${getLanguage()}/assets/road/${id}/`}>{t('Explore')}</Link>
         <a className='a-table-action' href={`${api}/field/geometries/${id}?grouped=false&download=true`}>{t('Download')}</a>
       </div>
     );
@@ -142,11 +142,12 @@ const AATable = React.createClass({
   renderTableBody: function () {
     const propsLength = this.props.adminRoadProperties.length;
     let sorted = this.props.data.slice(0, propsLength - 1);
+    sorted = this.handleSort(sorted);
     return (
       <tbody>
       {_.map(sorted, (vpromm, i) => {
         const vprommFieldInDB = (this.props.fieldRoads.includes(vpromm));
-        let propBtnLabel = this.state.expandedId === vpromm ? 'Hide' : 'Show';
+        let propBtnLabel = this.state.expandedId === vpromm ? t('Hide') : t('Show');
         let propBtnClass = classnames('button-table-expand', {
           'button-table-expand--show': this.state.expandedId !== vpromm,
           'button-table-expand--hide': this.state.expandedId === vpromm
@@ -160,7 +161,7 @@ const AATable = React.createClass({
             const adminProp = this.props.adminRoadProperties.find((prop) => prop.id === vpromm);
             if (adminProp) {
               _.forEach(adminProp.properties, (prop, key, j) => {
-                roadPropDropDown.push(<dt key={`${vpromm}-${key}-${j}-key`}>{key}</dt>);
+                roadPropDropDown.push(<dt key={`${vpromm}-${key}-${j}-key`}>{t(key)}</dt>);
                 roadPropDropDown.push(<dd key={`${vpromm}-${key}-${j}-prop`}>{prop}</dd>);
               });
             } else {

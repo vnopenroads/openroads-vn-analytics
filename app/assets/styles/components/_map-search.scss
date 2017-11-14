@@ -18,6 +18,14 @@
  .form__label {
     @extend .visually-hidden;
   }
+
+  .form__group {
+    position: relative;
+  }
+}
+
+#search-field {
+  padding-right: 2.5rem;
 }
 
 .search__button {
@@ -25,6 +33,20 @@
 
   &::before {
     @extend %collecticon-magnifier-right;
+  }
+}
+
+.search__clear {
+  @extend .button, .button--base-plain, .button--text-hidden;
+  position: absolute;
+  top: 0;
+  right: 2rem;
+  z-index: 3;
+  border-radius: none;
+  color: tint($base-color, 64%);
+
+  &::before {
+    @extend %collecticon-disc-xmark;
   }
 }
 
@@ -40,7 +62,7 @@
 
   > .inner {
     max-height: 8rem;
-    overflow: scroll;
+    overflow: auto;
     padding: 0;
 
     > *:last-child {

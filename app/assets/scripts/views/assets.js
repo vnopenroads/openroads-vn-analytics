@@ -2,8 +2,8 @@
 import React from 'react';
 import { t } from '../utils/i18n';
 
-var Analytics = React.createClass({
-  displayName: 'Analytics',
+var Assets = React.createClass({
+  displayName: 'Assets',
 
   propTypes: {
     _setCrossWalk: React.PropTypes.func,
@@ -20,7 +20,7 @@ var Analytics = React.createClass({
         <header className='inpage__header'>
           <div className='inner'>
             <div className='inpage__headline'>
-              <h1 className='inpage__title'>{t('Analytics')}</h1>
+              <h1 className='inpage__title'>{t('Assets')}</h1>
             </div>
           </div>
         </header>
@@ -36,4 +36,4 @@ var Analytics = React.createClass({
   }
 });
 
-module.exports = Analytics;
+module.exports = Assets;

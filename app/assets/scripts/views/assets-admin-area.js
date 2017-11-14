@@ -32,8 +32,8 @@ import {
 
 import config from '../config';
 
-var AnalyticsAA = React.createClass({
-  displayName: 'AnalyticsAA',
+var AssetsAA = React.createClass({
+  displayName: 'AssetsAA',
 
   propTypes: {
     _fetchVProMMsids: React.PropTypes.func,
@@ -109,7 +109,7 @@ var AnalyticsAA = React.createClass({
       // go back to the parent admin, not the same admin w/different language per the default.
       if (nextProps.location.action === 'POP') {
         if (sameAdmin && !sameLanguage) {
-          const path = (level === 'district') ? `/${getLanguage()}/analytics/${this.props.params.aaId}` : `/${getLanguage()}/analytics/`;
+          const path = (level === 'district') ? `/${getLanguage()}/assets/${this.props.params.aaId}` : `/${getLanguage()}/assets/`;
           this.props.history.push(path);
         }
       }
@@ -147,7 +147,7 @@ var AnalyticsAA = React.createClass({
     return getAdminName(this.props.crosswalk, idFinder, level, this.props.adminInfo);
   },
 
-  makeAdminAnalyticsContent: function () {
+  makeAdminAssetsContent: function () {
     const level = !this.props.params.aaIdSub ? 'province' : 'district';
     const idFinder = (level === 'province') ? { aaId: this.props.params.aaId } : { aaIdSub: this.props.params.aaIdSub };
     const id = getAdminId(this.props.crosswalk, idFinder, level);
@@ -159,7 +159,7 @@ var AnalyticsAA = React.createClass({
     let completionTailText = t('Information on VPRoMMS roads is not available');
     if (total !== 0) {
       completionMainText = completion.toFixed(2);
-      completionTailText = `% ${t('of VProMMS Ids have field data')} ${field.toLocaleString()} of ${total.toLocaleString()}`;
+      completionTailText = `% ${t('of VPRoMMS Ids have field data')} ${field.toLocaleString()} of ${total.toLocaleString()}`;
     }
     return {
       level: level,
@@ -186,16 +186,16 @@ var AnalyticsAA = React.createClass({
       const childClasses = children.map(child => c({'disabled': this.props.crosswalk['district'][child.id] === ''}));
       return (
         <nav className='a-subnav'>
-          <h2>{t('Districts')}</h2>
-          <ul className='a-children'>
-            {children.map((child, i) => {
-              var childKey = `${child}-${i}`;
-              return (
-                <li key={childKey} ><Link className={childClasses[i]} onClick={(e) => { this.clearAdminData(); this.props._setCrossWalk(); this.props._setSubAdminName(child.name_en); }}to={`/${getLanguage()}/analytics/${aaId}/${child.id}`}>{child.name_en}</Link>
-              </li>
-              );
-            })}
-          </ul>
+        <h2>{t('Districts')}</h2>
+        <ul className='a-children'>
+          {children.map((child, i) => {
+            var childKey = `${child}-${i}`;
+            return (
+              <li key={childKey} ><Link className={childClasses[i]} onClick={(e) => { this.clearAdminData(); this.props._setCrossWalk(); this.props._setSubAdminName(child.name_en); }}to={`/${getLanguage()}/assets/${aaId}/${child.id}`}>{child.name_en}</Link>
+            </li>
+            );
+          })}
+        </ul>
         </nav>
       );
     } else {
@@ -219,9 +219,9 @@ var AnalyticsAA = React.createClass({
     }
   },
 
-  renderAnalyticsAdmin: function () {
+  renderAssetsAdmin: function () {
     setLanguage(this.props.language);
-    const adminContent = this.makeAdminAnalyticsContent();
+    const adminContent = this.makeAdminAssetsContent();
 
     // There's no reason for this to be repeated from above,
     // but the admin-crosswalking logic is convoluted  so it was expedient.
@@ -264,7 +264,7 @@ var AnalyticsAA = React.createClass({
     const roadsFetched = (this.props.fieldFetched && this.props.VProMMsCountFetched);
     return (
       <div ref='a-admin-area' className='a-admin-area-show'>
-        {roadsFetched ? this.renderAnalyticsAdmin() : (<div/>)}
+        {roadsFetched ? this.renderAssetsAdmin() : (<div/>)}
       </div>
     );
   }
@@ -313,5 +313,5 @@ function dispatcher (dispatch) {
   };
 }
 
-module.exports = connect(selector, dispatcher)(AnalyticsAA);
+module.exports = connect(selector, dispatcher)(AssetsAA);
 
