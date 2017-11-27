@@ -12,18 +12,24 @@ export default () => (
     </header>
     <div className='inpage__body'>
       <div className='inner'>
-        <h1 className='inpage__title'>First Question Title</h1>
-        <p>lorem ipsum dolores sed...</p>
+        <section className="question">
+          <h1 className='inpage__title'>First Question Title</h1>
+          <p>lorem ipsum dolores sed...</p>
+        </section>
 
-        <h1 className='inpage__title'>Second Question Title</h1>
-        <p>lorem ipsum dolores sed...</p>
+        <section className="question">
+          <h1 className='inpage__title'>Second Question Title</h1>
+          <p>lorem ipsum dolores sed...</p>
+        </section>
 
-        <form action="mailto:dphan2@worldbank.org" method="GET">
-          <p>
-            If you have any remaining questions
-            <button className="button button--base-raised-light">email us</button>
-          </p>
-        </form>
+        <section>
+          <form action="mailto:dphan2@worldbank.org" method="GET">
+            <p>
+              If you have any remaining questions
+              <button className="button button--base-raised-light">email us</button>
+            </p>
+          </form>
+        </section>
       </div>
     </div>
   </section>
