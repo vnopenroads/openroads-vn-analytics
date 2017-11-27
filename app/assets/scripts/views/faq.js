@@ -10,6 +10,21 @@ export default () => (
         </div>
       </div>
     </header>
-    <div className='inpage__body' />
+    <div className='inpage__body'>
+      <div className='inner'>
+        <h1 className='inpage__title'>First Question Title</h1>
+        <p>lorem ipsum dolores sed...</p>
+
+        <h1 className='inpage__title'>Second Question Title</h1>
+        <p>lorem ipsum dolores sed...</p>
+
+        <form action="mailto:dphan2@worldbank.org" method="GET">
+          <p>
+            If you have any remaining questions
+            <button className="button button--base-raised-light">email us</button>
+          </p>
+        </form>
+      </div>
+    </div>
   </section>
 );
