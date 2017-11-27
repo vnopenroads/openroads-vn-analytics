@@ -107,6 +107,11 @@ var SiteHeader = React.createClass({
                       <span>{t('Upload')}</span>
                     </Link>
                   </li>
+                  <li>
+                    <Link to={`/${getLanguage()}/faq`} className='site__menu-item' activeClassName='site__menu-item--active' title={t('Visit')}>
+                      <span>{t('FAQ')}</span>
+                    </Link>
+                  </li>
                 </ul>
               </div>
             </div>
