@@ -13,14 +13,16 @@ import { createModifyLineString } from '../utils/to-osm';
 import { t } from '../utils/i18n';
 
 import {
-  fetchNextWayTask,
   markTaskAsDone,
   setGlobalZoom,
   queryOsm,
-  reloadCurrentTask,
   modifyWaysWithNewPoint,
   deleteEntireWays
 } from '../actions/action-creators';
+import {
+  fetchNextWayTask,
+  reloadCurrentTask
+} from '../redux/modules/tasks';
 
 const source = 'collisions';
 const roadHoverId = 'road-hover';

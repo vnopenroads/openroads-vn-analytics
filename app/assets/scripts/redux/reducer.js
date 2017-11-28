@@ -2,6 +2,9 @@ import { combineReducers } from 'redux';
 import { routeReducer } from 'react-router-redux';
 import _ from 'lodash';
 import * as actions from '../actions/action-types';
+import waytasks, {
+  RELOAD_WAY_TASK
+} from './modules/tasks';
 import { ADMIN_MAP } from '../constants';
 
 
@@ -102,41 +105,6 @@ const stats = function (state = {fetching: false, fetched: false, data: null}, a
   return state;
 };
 
-const waytasksDefaultState = {
-  fetching: false,
-  fetched: false,
-  data: null,
-  id: null
-};
-const waytasks = function (state = waytasksDefaultState, action) {
-  switch (action.type) {
-    case actions.REQUEST_WAY_TASK:
-      console.log('REQUEST_WAY_TASK');
-      state = _.cloneDeep(state);
-      state.error = null;
-      state.fetching = true;
-      break;
-    case actions.RECEIVE_WAY_TASK:
-      console.log('RECEIVE_WAY_TASK');
-      state = _.cloneDeep(state);
-      if (action.error) {
-        state.error = action.error;
-      } else {
-        state.data = action.json.data;
-        state.id = action.json.id;
-      }
-      state.fetching = false;
-      state.fetched = true;
-      break;
-    case actions.RELOAD_WAY_TASK:
-      console.log('RELOAD_WAY_TASK');
-      state = _.cloneDeep(state);
-      state.id = null;
-      state.data = null;
-      break;
-  }
-  return state;
-};
 
 const osmChangeState = {
   fetching: false,
@@ -163,7 +131,7 @@ const osmChange = function (state = osmChangeState, action) {
       state.fetching = false;
       state.fetched = true;
       break;
-    case actions.RELOAD_WAY_TASK:
+    case RELOAD_WAY_TASK:
       console.log('RELOAD_WAY_TASK');
       state = _.cloneDeep(state);
       state.fetched = false;

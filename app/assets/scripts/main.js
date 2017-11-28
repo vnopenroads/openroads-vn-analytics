@@ -19,6 +19,7 @@ import AssetsAA from './views/assets-admin-area';
 import AAFieldMap from './components/aa-field-map';
 import Upload from './views/upload';
 
+
 // check if link target is one of the languages in the i18n file
 // if it is, set that as the language
 function validateLanguage (nextState, replace) {
