@@ -165,7 +165,9 @@ var Tasks = React.createClass({
     });
   },
 
-  componentWillReceiveProps: function ({taskId, task, lastUpdated}) {
+  componentWillReceiveProps: function ({ taskId, task, lastUpdated }) {
+    // TODO - ANTIPATTERN: should not mirror properties task and taskId in state
+
     if (taskId && taskId !== this.state.currentTaskId) {
       // We've queried and received a new task
       this.setState({
@@ -375,7 +377,7 @@ var Tasks = React.createClass({
 
   next: function () {
     this.map.setFilter(roadSelected, ['all', ['in', '_id', '']]);
-    this.props.skipTask(this.state.currentTaskId); // TODO - why duplicate currentTaskId in component state?
+    this.props.skipTask(this.state.currentTaskId);
     this.setState({ selectedIds: [], mode: null }, this.props.fetchNextTask);
   },
 
