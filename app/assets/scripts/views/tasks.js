@@ -1,6 +1,9 @@
 'use strict';
 
 import React from 'react';
+import {
+  debounce
+} from 'lodash';
 import { connect } from 'react-redux';
 import mapboxgl from 'mapbox-gl';
 import config from '../config';
@@ -98,18 +101,14 @@ var Tasks = React.createClass({
     }).addControl(new mapboxgl.NavigationControl(), 'bottom-left');
 
     this.onMapLoaded(() => {
-      let makeXYZ = function () {
-        const xyz = map.getCenter();
-        xyz.zoom = map.getZoom();
-        return xyz;
-      };
-
       map.on('zoom', () => {
-        this.props._setGlobalZoom(makeXYZ());
+        const { lat, lng } = map.getCenter();
+        this.props._setGlobalZoom({ lat, lng, zoom: map.getZoom() });
       });
 
       map.on('moveend', () => {
-        this.props._setGlobalZoom(makeXYZ());
+        const { lat, lng } = map.getCenter();
+        this.props._setGlobalZoom({ lat, lng, zoom: map.getZoom() });
       });
 
       map.on('mousemove', (e) => {
@@ -462,7 +461,7 @@ export default connect(
       dispatch(modifyWaysWithNewPoint(features, point));
     },
     _deleteWays: function (taskId, wayIds) { dispatch(deleteEntireWays(taskId, wayIds)); },
-    _setGlobalZoom: function (...args) { dispatch(setGlobalZoom(...args)); } // TODO - debounce
+    _setGlobalZoom: debounce((mapPosition) => dispatch(setGlobalZoom(mapPosition)), 100, { leading: true, trailing: true })
   })
 )(Tasks);
 
