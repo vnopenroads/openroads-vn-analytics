@@ -79,7 +79,7 @@ var Tasks = React.createClass({
   },
 
   propTypes: {
-    _fetchNextTask: React.PropTypes.func,
+    fetchNextTask: React.PropTypes.func,
     _setGlobalZoom: React.PropTypes.func,
     _queryOsm: React.PropTypes.func,
     _reloadCurrentTask: React.PropTypes.func,
@@ -92,10 +92,6 @@ var Tasks = React.createClass({
     task: React.PropTypes.object,
     taskId: React.PropTypes.number,
     taskCount: React.PropTypes.number
-  },
-
-  componentWillMount: function () {
-    this.fetchNextTask();
   },
 
   componentDidMount: function () {
@@ -186,11 +182,6 @@ var Tasks = React.createClass({
         mode: null
       });
     }
-  },
-
-  // TODO - delete
-  fetchNextTask: function () {
-    this.props._fetchNextTask();
   },
 
   onMapLoaded: function (fn) {
@@ -385,7 +376,7 @@ var Tasks = React.createClass({
   next: function () {
     this.map.setFilter(roadSelected, ['all', ['in', '_id', '']]);
     this.props.skipTask(this.state.currentTaskId); // TODO - why duplicate currentTaskId in component state?
-    this.setState({ selectedIds: [], mode: null }, this.fetchNextTask);
+    this.setState({ selectedIds: [], mode: null }, this.props.fetchNextTask);
   },
 
   renderSelectedIds: function () {
@@ -465,7 +456,7 @@ export default compose(
       lastUpdated: state.osmChange.taskId
     }),
     dispatch => ({
-      _fetchNextTask: () => dispatch(fetchNextWayTaskEpic()),
+      fetchNextTask: () => dispatch(fetchNextWayTaskEpic()),
       fetchTaskCount: () => dispatch(fetchWayTaskCountEpic()),
       skipTask: (id) => dispatch(skipTask(id)),
       _markTaskAsDone: function (taskId) { dispatch(markTaskAsDone(taskId)); },
@@ -480,6 +471,7 @@ export default compose(
   ),
   lifecycle({
     componentDidMount: function () {
+      this.props.fetchNextTask();
       this.props.fetchTaskCount();
     }
   })
