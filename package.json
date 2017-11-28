@@ -96,7 +96,6 @@
     "react-router": "^2.0.0-rc5",
     "react-router-redux": "^2.0.4",
     "redux": "^3.2.1",
-    "redux-logger": "^3.0.1",
     "redux-thunk": "^1.0.3",
     "turf-extent": "^1.0.4",
     "turf-point": "^2.0.1",
