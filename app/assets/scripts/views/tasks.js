@@ -4,6 +4,10 @@ import React from 'react';
 import {
   debounce
 } from 'lodash';
+import {
+  compose,
+  lifecycle
+} from 'recompose';
 import { connect } from 'react-redux';
 import mapboxgl from 'mapbox-gl';
 import config from '../config';
@@ -23,8 +27,9 @@ import {
   deleteEntireWays
 } from '../actions/action-creators';
 import {
-  fetchNextWayTask,
-  reloadCurrentTask
+  fetchNextWayTaskEpic,
+  reloadCurrentTaskEpic,
+  fetchWayTaskCountEpic
 } from '../redux/modules/tasks';
 
 const source = 'collisions';
@@ -84,7 +89,8 @@ var Tasks = React.createClass({
     osmInflight: React.PropTypes.bool,
     meta: React.PropTypes.object,
     task: React.PropTypes.object,
-    taskId: React.PropTypes.number
+    taskId: React.PropTypes.number,
+    taskCount: React.PropTypes.number
   },
 
   componentWillMount: function () {
@@ -236,13 +242,18 @@ var Tasks = React.createClass({
 
   renderInstrumentPanel: function () {
     const { mode, renderedFeatures } = this.state;
+    const { taskCount } = this.props;
+
     return (
       <div className='map__controls map__controls--top-right'>
         <div className='panel tasks-panel'>
           {renderedFeatures ? (
           <div className='panel__header'>
             <div className='panel__headline'>
-              <h2 className='panel__title'>{t('Task')}</h2>
+              <div>
+                <h2 className='panel__title'>{t('Task')}</h2>
+                {taskCount && <p className='panel__subtitle tasks-remaining'>({taskCount} {t('Tasks Remaining')})</p>}
+              </div>
               <p className='panel__subtitle'>{t('Showing')} {renderedFeatures.features.length} {t('Roads')}</p>
             </div>
           </div>
@@ -445,24 +456,33 @@ var Tasks = React.createClass({
 });
 
 
-export default connect(
-  state => ({
-    task: state.waytasks.geoJSON,
-    taskId: state.waytasks.id,
-    status: state.waytasks.status,
-    osmInflight: state.osmChange.fetching,
-    lastUpdated: state.osmChange.taskId
-  }),
-  dispatch => ({
-    _fetchNextTask: function (skippedTasks) { dispatch(fetchNextWayTask(skippedTasks)); },
-    _markTaskAsDone: function (taskId) { dispatch(markTaskAsDone(taskId)); },
-    _queryOsm: function (taskId, payload) { dispatch(queryOsm(taskId, payload)); },
-    _reloadCurrentTask: function (taskId) { dispatch(reloadCurrentTask(taskId)); },
-    _modifyWaysWithNewPoint: function (features, point) {
-      dispatch(modifyWaysWithNewPoint(features, point));
-    },
-    _deleteWays: function (taskId, wayIds) { dispatch(deleteEntireWays(taskId, wayIds)); },
-    _setGlobalZoom: debounce((mapPosition) => dispatch(setGlobalZoom(mapPosition)), 100, { leading: true, trailing: true })
+export default compose(
+  connect(
+    state => ({
+      task: state.waytasks.geoJSON,
+      taskId: state.waytasks.id,
+      taskCount: state.waytasks.taskCount,
+      status: state.waytasks.status,
+      osmInflight: state.osmChange.fetching,
+      lastUpdated: state.osmChange.taskId
+    }),
+    dispatch => ({
+      _fetchNextTask: function (skippedTasks) { dispatch(fetchNextWayTaskEpic(skippedTasks)); },
+      fetchTaskCount: () => dispatch(fetchWayTaskCountEpic()),
+      _markTaskAsDone: function (taskId) { dispatch(markTaskAsDone(taskId)); },
+      _queryOsm: function (taskId, payload) { dispatch(queryOsm(taskId, payload)); },
+      _reloadCurrentTask: function (taskId) { dispatch(reloadCurrentTaskEpic(taskId)); },
+      _modifyWaysWithNewPoint: function (features, point) {
+        dispatch(modifyWaysWithNewPoint(features, point));
+      },
+      _deleteWays: function (taskId, wayIds) { dispatch(deleteEntireWays(taskId, wayIds)); },
+      _setGlobalZoom: debounce((mapPosition) => dispatch(setGlobalZoom(mapPosition)), 100, { leading: true, trailing: true })
+    })
+  ),
+  lifecycle({
+    componentDidMount: function () {
+      this.props.fetchTaskCount();
+    }
   })
 )(Tasks);
 

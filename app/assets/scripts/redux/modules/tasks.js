@@ -8,6 +8,9 @@ export const FETCH_WAY_TASK = 'FETCH_WAY_TASK';
 export const FETCH_WAY_TASK_SUCCESS = 'FETCH_WAY_TASK_SUCCESS';
 export const FETCH_WAY_TASK_ERROR = 'FETCH_WAY_TASK_ERROR';
 export const RELOAD_WAY_TASK = 'REQUEST_RELOAD_WAY_TASK';
+export const FETCH_WAY_TASK_COUNT = 'FETCH_WAY_TASK_COUNT';
+export const FETCH_WAY_TASK_COUNT_SUCCESS = 'FETCH_WAY_TASK_COUNT_SUCCESS';
+export const FETCH_WAY_TASK_COUNT_ERROR = 'FETCH_WAY_TASK_COUNT_ERROR';
 
 
 /**
@@ -19,12 +22,14 @@ export const fetchWayTaskSuccess = (id, geoJSON) => ({
   id,
   geoJSON
 });
-export const fetchWayTaskError = () => ({
-  type: FETCH_WAY_TASK_ERROR
-});
+export const fetchWayTaskError = () => ({ type: FETCH_WAY_TASK_ERROR });
 export const reloadWayTask = () => ({ type: RELOAD_WAY_TASK });
+export const fetchWayTaskCount = () => ({ type: FETCH_WAY_TASK_COUNT });
+export const fetchWayTaskCountSuccess = count => ({ type: FETCH_WAY_TASK_COUNT_SUCCESS, count });
+export const fetchWayTaskCountError = count => ({ type: FETCH_WAY_TASK_COUNT_ERROR });
 
-export const fetchNextWayTask = skippedTasks => dispatch => {
+
+export const fetchNextWayTaskEpic = skippedTasks => dispatch => {
   dispatch(fetchWayTask());
 
   const url = Array.isArray(skippedTasks) && skippedTasks.length ?
@@ -51,7 +56,8 @@ export const fetchNextWayTask = skippedTasks => dispatch => {
     });
 };
 
-export const reloadCurrentTask = taskId => dispatch => {
+
+export const reloadCurrentTaskEpic = taskId => dispatch => {
   dispatch(reloadWayTask());
 
   return fetch(`${config.api}/tasks/${taskId}`)
@@ -67,8 +73,23 @@ export const reloadCurrentTask = taskId => dispatch => {
       });
       return dispatch(fetchWayTaskSuccess(json.id, json.data));
     }, e => {
-      console.log('Error reloading task', e);
+      console.error('Error reloading task', e);
       return dispatch(fetchWayTaskError());
+    });
+};
+
+
+export const fetchWayTaskCountEpic = () => dispatch => {
+  dispatch(fetchWayTaskCount());
+
+  new Promise((resolve) => {
+    setTimeout(() => resolve(10), 1000);
+  })
+    .then(count => {
+      dispatch(fetchWayTaskCountSuccess(count));
+    }, (e) => {
+      console.error('Error requesting task count', e);
+      dispatch(fetchWayTaskCountError());
     });
 };
 
@@ -79,14 +100,21 @@ export const reloadCurrentTask = taskId => dispatch => {
 export default (
   state = {
     status: 'complete',
-    data: null,
-    id: null
+    countStatus: 'complete',
+    id: null,
+    geoJSON: null
   },
   action
 ) => {
   if (action.type === FETCH_WAY_TASK) {
     return Object.assign({}, state, {
       status: 'pending'
+    });
+  } else if (action.type === RELOAD_WAY_TASK) { // TODO - can this just be combined w/ FETCH_WAY_TASK?
+    return Object.assign({}, state, {
+      status: 'pending',
+      id: null,
+      geoJSON: null
     });
   } else if (action.type === FETCH_WAY_TASK_SUCCESS) {
     return Object.assign({}, state, {
@@ -98,11 +126,19 @@ export default (
     return Object.assign({}, state, {
       status: 'error'
     });
-  } else if (action.type === RELOAD_WAY_TASK) {
+  } else if (action.type === FETCH_WAY_TASK_COUNT) {
     return Object.assign({}, state, {
-      status: 'pending',
-      id: null,
-      data: null
+      taskCount: action.count,
+      countStatus: 'pending'
+    });
+  } else if (action.type === FETCH_WAY_TASK_COUNT_SUCCESS) {
+    return Object.assign({}, state, {
+      taskCount: action.count,
+      countStatus: 'complete'
+    });
+  } else if (action.type === FETCH_WAY_TASK_COUNT_ERROR) {
+    return Object.assign({}, state, {
+      countStatus: 'error'
     });
   }
 
