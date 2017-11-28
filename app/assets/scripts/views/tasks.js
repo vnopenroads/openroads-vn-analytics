@@ -29,7 +29,8 @@ import {
 import {
   fetchNextWayTaskEpic,
   reloadCurrentTaskEpic,
-  fetchWayTaskCountEpic
+  fetchWayTaskCountEpic,
+  skipTask
 } from '../redux/modules/tasks';
 
 const source = 'collisions';
@@ -72,7 +73,6 @@ var Tasks = React.createClass({
       currentTaskId: null,
       renderedFeatures: null,
       mode: null,
-      skippedTasks: [],
       hoverId: null,
       selectedIds: []
     };
@@ -85,6 +85,7 @@ var Tasks = React.createClass({
     _reloadCurrentTask: React.PropTypes.func,
     _markTaskAsDone: React.PropTypes.func,
     _deleteWays: React.PropTypes.func,
+    skipTask: React.PropTypes.func,
 
     osmInflight: React.PropTypes.bool,
     meta: React.PropTypes.object,
@@ -189,7 +190,7 @@ var Tasks = React.createClass({
 
   // TODO - delete
   fetchNextTask: function () {
-    this.props._fetchNextTask(this.state.skippedTasks);
+    this.props._fetchNextTask();
   },
 
   onMapLoaded: function (fn) {
@@ -382,12 +383,9 @@ var Tasks = React.createClass({
   },
 
   next: function () {
-    // Deselect roads.
     this.map.setFilter(roadSelected, ['all', ['in', '_id', '']]);
-
-    // Add the skipped task to state, so we can request one we haven't gotten yet.
-    const skippedTasks = this.state.skippedTasks.concat([this.state.currentTaskId]);
-    this.setState({ selectedIds: [], skippedTasks, mode: null }, this.fetchNextTask);
+    this.props.skipTask(this.state.currentTaskId); // TODO - why duplicate currentTaskId in component state?
+    this.setState({ selectedIds: [], mode: null }, this.fetchNextTask);
   },
 
   renderSelectedIds: function () {
@@ -467,8 +465,9 @@ export default compose(
       lastUpdated: state.osmChange.taskId
     }),
     dispatch => ({
-      _fetchNextTask: function (skippedTasks) { dispatch(fetchNextWayTaskEpic(skippedTasks)); },
+      _fetchNextTask: () => dispatch(fetchNextWayTaskEpic()),
       fetchTaskCount: () => dispatch(fetchWayTaskCountEpic()),
+      skipTask: (id) => dispatch(skipTask(id)),
       _markTaskAsDone: function (taskId) { dispatch(markTaskAsDone(taskId)); },
       _queryOsm: function (taskId, payload) { dispatch(queryOsm(taskId, payload)); },
       _reloadCurrentTask: function (taskId) { dispatch(reloadCurrentTaskEpic(taskId)); },

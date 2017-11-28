@@ -11,6 +11,7 @@ export const RELOAD_WAY_TASK = 'REQUEST_RELOAD_WAY_TASK';
 export const FETCH_WAY_TASK_COUNT = 'FETCH_WAY_TASK_COUNT';
 export const FETCH_WAY_TASK_COUNT_SUCCESS = 'FETCH_WAY_TASK_COUNT_SUCCESS';
 export const FETCH_WAY_TASK_COUNT_ERROR = 'FETCH_WAY_TASK_COUNT_ERROR';
+export const SKIP_TASK = 'SKIP_TASK';
 
 
 /**
@@ -27,13 +28,15 @@ export const reloadWayTask = () => ({ type: RELOAD_WAY_TASK });
 export const fetchWayTaskCount = () => ({ type: FETCH_WAY_TASK_COUNT });
 export const fetchWayTaskCountSuccess = count => ({ type: FETCH_WAY_TASK_COUNT_SUCCESS, count });
 export const fetchWayTaskCountError = count => ({ type: FETCH_WAY_TASK_COUNT_ERROR });
+export const skipTask = id => ({ type: SKIP_TASK, id });
 
 
-export const fetchNextWayTaskEpic = skippedTasks => dispatch => {
+export const fetchNextWayTaskEpic = () => (dispatch, getState) => {
   dispatch(fetchWayTask());
 
-  const url = Array.isArray(skippedTasks) && skippedTasks.length ?
-    `${config.api}/tasks/next?skip=${skippedTasks.join(',')}` :
+  const skipped = getState().waytasks.skipped;
+  const url = skipped.length > 0 ?
+    `${config.api}/tasks/next?skip=${skipped.join(',')}` :
     `${config.api}/tasks/next`;
 
   return fetch(url)
@@ -102,7 +105,8 @@ export default (
     status: 'complete',
     countStatus: 'complete',
     id: null,
-    geoJSON: null
+    geoJSON: null,
+    skipped: []
   },
   action
 ) => {
@@ -139,6 +143,10 @@ export default (
   } else if (action.type === FETCH_WAY_TASK_COUNT_ERROR) {
     return Object.assign({}, state, {
       countStatus: 'error'
+    });
+  } else if (action.type === SKIP_TASK) {
+    return Object.assign({}, state, {
+      skipped: state.skipped.concat(action.id)
     });
   }
 
