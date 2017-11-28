@@ -18,7 +18,8 @@ import {
   setGlobalZoom,
   queryOsm,
   reloadCurrentTask,
-  modifyWaysWithNewPoint
+  modifyWaysWithNewPoint,
+  deleteEntireWays
 } from '../actions/action-creators';
 
 const source = 'collisions';
@@ -73,6 +74,7 @@ var Tasks = React.createClass({
     _queryOsm: React.PropTypes.func,
     _reloadCurrentTask: React.PropTypes.func,
     _markTaskAsDone: React.PropTypes.func,
+    _deleteWays: React.PropTypes.func,
 
     osmInflight: React.PropTypes.bool,
     meta: React.PropTypes.object,
@@ -331,11 +333,7 @@ var Tasks = React.createClass({
     const { selectedIds, renderedFeatures, currentTaskId } = this.state;
     const { features } = renderedFeatures;
     const toDelete = features.filter(feature => selectedIds[0] !== feature.properties._id);
-    this.props._queryOsm(currentTaskId, {
-      delete: {
-        way: toDelete.map(feature => ({id: feature.properties._id}))
-      }
-    });
+    this.props._deleteWays(currentTaskId, toDelete.map(feature => feature.properties._id));
     this.props._markTaskAsDone(toDelete.map(feature => feature.properties._id));
   },
 
@@ -463,6 +461,7 @@ function dispatcher (dispatch) {
     _modifyWaysWithNewPoint: function (features, point) {
       dispatch(modifyWaysWithNewPoint(features, point));
     },
+    _deleteWays: function (taskId, wayIds) { dispatch(deleteEntireWays(taskId, wayIds)); },
     _setGlobalZoom: function (...args) { dispatch(setGlobalZoom(...args)); }
   };
 }
