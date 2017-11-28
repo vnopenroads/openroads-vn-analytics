@@ -44,7 +44,7 @@ export const fetchNextWayTaskEpic = () => (dispatch, getState) => {
       if (response.status === 404) {
         throw new Error('No tasks remaining');
       } else if (response.status >= 400) {
-        throw new Error('Connection error');
+        throw new Error(response.statusText);
       }
       return response.json();
     })
@@ -66,15 +66,15 @@ export const reloadCurrentTaskEpic = taskId => dispatch => {
   return fetch(`${config.api}/tasks/${taskId}`)
     .then(response => {
       if (response.status >= 400) {
-        throw new Error('Bad response');
+        throw new Error(response.statusText);
       }
       return response.json();
     })
-    .then(json => {
-      json.data.features.forEach(feature => {
+    .then(({ id, data }) => {
+      data.features.forEach(feature => {
         feature.properties._id = feature.meta.id;
       });
-      return dispatch(fetchWayTaskSuccess(json.id, json.data));
+      return dispatch(fetchWayTaskSuccess(id, data));
     }, e => {
       console.error('Error reloading task', e);
       return dispatch(fetchWayTaskError());
@@ -85,12 +85,16 @@ export const reloadCurrentTaskEpic = taskId => dispatch => {
 export const fetchWayTaskCountEpic = () => dispatch => {
   dispatch(fetchWayTaskCount());
 
-  new Promise((resolve) => {
-    setTimeout(() => resolve(10), 1000);
-  })
-    .then(count => {
+  fetch(`${config.api}/tasks/count`)
+    .then(response => {
+      if (response.status >= 400) {
+        throw new Error(response.statusText);
+      }
+      return response.json();
+    })
+    .then(({ count }) => {
       dispatch(fetchWayTaskCountSuccess(count));
-    }, (e) => {
+    }, e => {
       console.error('Error requesting task count', e);
       dispatch(fetchWayTaskCountError());
     });

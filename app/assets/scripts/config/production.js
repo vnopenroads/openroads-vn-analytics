@@ -6,7 +6,8 @@ var logo = require('./logo');
 module.exports = {
   environment: 'production',
   consoleMessage: logo,
-  api: 'http://api.openroads-vn.com',
+  // api: 'http://api.openroads-vn.com',
+  api: 'http://localhost:4000',
   mbToken: 'pk.eyJ1Ijoib3BlbnJvYWRzIiwiYSI6InJ0aUQ2N3MifQ.R3hdFqriZr6kEUr-j_FYpg',
   editorUrl: '//editor.openroads-vn.com/',
   roadNetTileLayerUrl: 'http://api.openroads-vn.com:3000/dashboard/{z}/{x}/{y}.png',
