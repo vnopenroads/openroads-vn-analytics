@@ -17,6 +17,7 @@
   },
   "rules": {
     "no-multiple-empty-lines": 0,
+    "operator-linebreak": 0,
     "react/display-name": 0,
     "react/jsx-no-duplicate-props": 2,
     "react/jsx-no-undef": 2,

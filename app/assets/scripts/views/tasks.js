@@ -81,8 +81,7 @@ var Tasks = React.createClass({
     osmInflight: React.PropTypes.bool,
     meta: React.PropTypes.object,
     task: React.PropTypes.object,
-    taskId: React.PropTypes.number,
-    taskError: React.PropTypes.string
+    taskId: React.PropTypes.number
   },
 
   componentWillMount: function () {
@@ -212,16 +211,6 @@ var Tasks = React.createClass({
       padding: 25
     });
     map.setFilter(roadSelected, ['in', '_id'].concat(this.state.selectedIds));
-  },
-
-  renderPlaceholder: function () {
-    const { taskError } = this.props;
-    const message = taskError || 'Loading your first task...';
-    return (
-      <div className='placeholder__fullscreen'>
-        <h3 className='placeholder__message'>{t(message)}</h3>
-      </div>
-    );
   },
 
   renderPropertiesOverlay: function () {
@@ -415,7 +404,7 @@ var Tasks = React.createClass({
 
   render: function () {
     const { hoverId } = this.state;
-    const { task, taskError, osmInflight } = this.props;
+    const { osmInflight } = this.props;
     return (
       <section className='inpage inpage--alt'>
         <header className='inpage__header'>
@@ -432,7 +421,18 @@ var Tasks = React.createClass({
               <figure className='map'>
                 <div className='map__media' id='map'></div>
               </figure>
-              {!task || taskError ? this.renderPlaceholder() : null}
+              {
+                status === 'error' &&
+                  <div className='placeholder__fullscreen'>
+                    <h3 className='placeholder__message'>{t('Error')}</h3>
+                  </div>
+              }
+              {
+                status === 'pending' &&
+                  <div className='placeholder__fullscreen'>
+                    <h3 className='placeholder__message'>{t('Loading')}</h3>
+                  </div>
+              }
               {hoverId ? this.renderPropertiesOverlay() : null}
               {osmInflight ? this.renderInflight() : this.renderInstrumentPanel()}
             </div>
@@ -444,18 +444,16 @@ var Tasks = React.createClass({
   }
 });
 
-function selector (state) {
-  return {
+
+export default connect(
+  state => ({
     task: state.waytasks.data,
     taskId: state.waytasks.id,
-    taskError: state.waytasks.error,
+    status: state.waytasks.status,
     osmInflight: state.osmChange.fetching,
     lastUpdated: state.osmChange.taskId
-  };
-}
-
-function dispatcher (dispatch) {
-  return {
+  }),
+  dispatch => ({
     _fetchNextTask: function (skippedTasks) { dispatch(fetchNextWayTask(skippedTasks)); },
     _markTaskAsDone: function (taskId) { dispatch(markTaskAsDone(taskId)); },
     _queryOsm: function (taskId, payload) { dispatch(queryOsm(taskId, payload)); },
@@ -464,11 +462,9 @@ function dispatcher (dispatch) {
       dispatch(modifyWaysWithNewPoint(features, point));
     },
     _deleteWays: function (taskId, wayIds) { dispatch(deleteEntireWays(taskId, wayIds)); },
-    _setGlobalZoom: function (...args) { dispatch(setGlobalZoom(...args)); }
-  };
-}
-
-module.exports = connect(selector, dispatcher)(Tasks);
+    _setGlobalZoom: function (...args) { dispatch(setGlobalZoom(...args)); } // TODO - debounce
+  })
+)(Tasks);
 
 function findIndex (haystack, fn) {
   let idx = -1;

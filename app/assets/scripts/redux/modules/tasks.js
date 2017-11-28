@@ -1,34 +1,37 @@
-import _ from 'lodash';
 import config from '../../config';
 
 
 /**
  * constants
  */
-export const REQUEST_WAY_TASK = 'REQUEST_WAY_TASK';
-export const RECEIVE_WAY_TASK = 'RECEIVE_WAY_TASK';
+export const FETCH_WAY_TASK = 'FETCH_WAY_TASK';
+export const FETCH_WAY_TASK_SUCCESS = 'FETCH_WAY_TASK_SUCCESS';
+export const FETCH_WAY_TASK_ERROR = 'FETCH_WAY_TASK_ERROR';
 export const RELOAD_WAY_TASK = 'REQUEST_RELOAD_WAY_TASK';
 
 
 /**
  * action creators
  */
-export const requestWayTask = () => ({ type: REQUEST_WAY_TASK });
-export const reloadWayTask = () => ({ type: RELOAD_WAY_TASK });
-export const receiveWayTask = (json, error = null) => ({
-  type: RECEIVE_WAY_TASK,
-  json: json,
+export const fetchWayTask = () => ({ type: FETCH_WAY_TASK });
+export const fetchWayTaskSuccess = json => ({
+  type: FETCH_WAY_TASK_SUCCESS,
+  json,
+  receivedAt: Date.now()
+});
+export const fetchWayTaskError = error => ({
+  type: FETCH_WAY_TASK_ERROR,
   error,
   receivedAt: Date.now()
 });
+export const reloadWayTask = () => ({ type: RELOAD_WAY_TASK });
 
 export const fetchNextWayTask = skippedTasks => dispatch => {
-  dispatch(requestWayTask());
+  dispatch(fetchWayTask());
 
-  let url = `${config.api}/tasks/next`;
-  if (Array.isArray(skippedTasks) && skippedTasks.length) {
-    url += `?skip=${skippedTasks.join(',')}`;
-  }
+  const url = Array.isArray(skippedTasks) && skippedTasks.length ?
+    `${config.api}/tasks/next?skip=${skippedTasks.join(',')}` :
+    `${config.api}/tasks/next`;
 
   return fetch(url)
     .then(response => {
@@ -43,19 +46,17 @@ export const fetchNextWayTask = skippedTasks => dispatch => {
       json.data.features.forEach(feature => {
         feature.properties._id = feature.meta.id;
       });
-      return dispatch(receiveWayTask(json));
+      return dispatch(fetchWayTaskSuccess(json));
     }, e => {
-      console.log('e', e);
-      return dispatch(receiveWayTask(null, e.message));
+      console.error('Error requesting task', e);
+      return dispatch(fetchWayTaskError(e.message));
     });
 };
 
 export const reloadCurrentTask = taskId => dispatch => {
   dispatch(reloadWayTask());
-  dispatch(requestWayTask());
 
-  let url = `${config.api}/tasks/${taskId}`;
-  return fetch(url)
+  return fetch(`${config.api}/tasks/${taskId}`)
     .then(response => {
       if (response.status >= 400) {
         throw new Error('Bad response');
@@ -66,10 +67,10 @@ export const reloadCurrentTask = taskId => dispatch => {
       json.data.features.forEach(feature => {
         feature.properties._id = feature.meta.id;
       });
-      return dispatch(receiveWayTask(json));
+      return dispatch(fetchWayTaskSuccess(json));
     }, e => {
-      console.log('e', e);
-      return dispatch(receiveWayTask(null, 'Data not available'));
+      console.log('Error reloading task', e);
+      return dispatch(fetchWayTaskError('Data not available'));
     });
 };
 
@@ -79,38 +80,34 @@ export const reloadCurrentTask = taskId => dispatch => {
  */
 export default (
   state = {
-    fetching: false,
-    fetched: false,
+    status: 'complete',
+    error: null,
     data: null,
     id: null
   },
   action
 ) => {
-  switch (action.type) {
-    case REQUEST_WAY_TASK:
-      console.log('REQUEST_WAY_TASK');
-      state = _.cloneDeep(state);
-      state.error = null;
-      state.fetching = true;
-      break;
-    case RECEIVE_WAY_TASK:
-      console.log('RECEIVE_WAY_TASK');
-      state = _.cloneDeep(state);
-      if (action.error) {
-        state.error = action.error;
-      } else {
-        state.data = action.json.data;
-        state.id = action.json.id;
-      }
-      state.fetching = false;
-      state.fetched = true;
-      break;
-    case RELOAD_WAY_TASK:
-      console.log('RELOAD_WAY_TASK');
-      state = _.cloneDeep(state);
-      state.id = null;
-      state.data = null;
-      break;
+  if (action.type === FETCH_WAY_TASK) {
+    return Object.assign({}, state, {
+      status: 'pending'
+    });
+  } else if (action.type === FETCH_WAY_TASK_SUCCESS) {
+    return Object.assign({}, state, {
+      data: action.json.data,
+      id: action.json.id,
+      status: 'complete'
+    });
+  } else if (action.type === FETCH_WAY_TASK_ERROR) {
+    return Object.assign({}, state, {
+      status: 'error'
+    });
+  } else if (action.type === RELOAD_WAY_TASK) {
+    return Object.assign({}, state, {
+      status: 'pending',
+      id: null,
+      data: null
+    });
   }
+
   return state;
 };
