@@ -181,6 +181,7 @@ var Tasks = React.createClass({
     }
   },
 
+  // TODO - delete
   fetchNextTask: function () {
     this.props._fetchNextTask(this.state.skippedTasks);
   },
@@ -446,7 +447,7 @@ var Tasks = React.createClass({
 
 export default connect(
   state => ({
-    task: state.waytasks.data,
+    task: state.waytasks.geoJSON,
     taskId: state.waytasks.id,
     status: state.waytasks.status,
     osmInflight: state.osmChange.fetching,

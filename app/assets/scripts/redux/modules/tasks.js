@@ -14,15 +14,13 @@ export const RELOAD_WAY_TASK = 'REQUEST_RELOAD_WAY_TASK';
  * action creators
  */
 export const fetchWayTask = () => ({ type: FETCH_WAY_TASK });
-export const fetchWayTaskSuccess = json => ({
+export const fetchWayTaskSuccess = (id, geoJSON) => ({
   type: FETCH_WAY_TASK_SUCCESS,
-  json,
-  receivedAt: Date.now()
+  id,
+  geoJSON
 });
-export const fetchWayTaskError = error => ({
-  type: FETCH_WAY_TASK_ERROR,
-  error,
-  receivedAt: Date.now()
+export const fetchWayTaskError = () => ({
+  type: FETCH_WAY_TASK_ERROR
 });
 export const reloadWayTask = () => ({ type: RELOAD_WAY_TASK });
 
@@ -46,10 +44,10 @@ export const fetchNextWayTask = skippedTasks => dispatch => {
       json.data.features.forEach(feature => {
         feature.properties._id = feature.meta.id;
       });
-      return dispatch(fetchWayTaskSuccess(json));
+      return dispatch(fetchWayTaskSuccess(json.id, json.data));
     }, e => {
       console.error('Error requesting task', e);
-      return dispatch(fetchWayTaskError(e.message));
+      return dispatch(fetchWayTaskError());
     });
 };
 
@@ -67,10 +65,10 @@ export const reloadCurrentTask = taskId => dispatch => {
       json.data.features.forEach(feature => {
         feature.properties._id = feature.meta.id;
       });
-      return dispatch(fetchWayTaskSuccess(json));
+      return dispatch(fetchWayTaskSuccess(json.id, json.data));
     }, e => {
       console.log('Error reloading task', e);
-      return dispatch(fetchWayTaskError('Data not available'));
+      return dispatch(fetchWayTaskError());
     });
 };
 
@@ -81,7 +79,6 @@ export const reloadCurrentTask = taskId => dispatch => {
 export default (
   state = {
     status: 'complete',
-    error: null,
     data: null,
     id: null
   },
@@ -93,8 +90,8 @@ export default (
     });
   } else if (action.type === FETCH_WAY_TASK_SUCCESS) {
     return Object.assign({}, state, {
-      data: action.json.data,
-      id: action.json.id,
+      geoJSON: action.geoJSON,
+      id: action.id,
       status: 'complete'
     });
   } else if (action.type === FETCH_WAY_TASK_ERROR) {
