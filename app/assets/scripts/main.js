@@ -4,11 +4,8 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router, Route, Redirect, IndexRoute, hashHistory } from 'react-router';
-import { createStore, applyMiddleware, compose } from 'redux';
-import thunkMiddleware from 'redux-thunk';
-import { syncHistory } from 'react-router-redux';
-import reducer from './reducers/reducer';
 import { isValidLanguage, setLanguage } from './utils/i18n';
+import store from './redux/store';
 
 import UhOh from './views/uhoh';
 import App from './views/app';
@@ -21,15 +18,6 @@ import AssetsIndex from './views/assets-index';
 import AssetsAA from './views/assets-admin-area';
 import AAFieldMap from './components/aa-field-map';
 import Upload from './views/upload';
-
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
-const store = createStore(
-  reducer,
-  composeEnhancers(
-    applyMiddleware(syncHistory(hashHistory), thunkMiddleware)
-  )
-);
 
 // check if link target is one of the languages in the i18n file
 // if it is, set that as the language

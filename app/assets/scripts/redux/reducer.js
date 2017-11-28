@@ -1,9 +1,10 @@
-import _ from 'lodash';
 import { combineReducers } from 'redux';
 import { routeReducer } from 'react-router-redux';
-
+import _ from 'lodash';
 import * as actions from '../actions/action-types';
 import { ADMIN_MAP } from '../constants';
+
+
 
 const admins = function (state = {units: [], fetching: false, fetched: false}, action) {
   switch (action.type) {
@@ -819,7 +820,9 @@ const subadminName = function (state = {name: ''}, action) {
   return state;
 };
 
+
 export default combineReducers({
+  routing: routeReducer,
   admin,
   admins,
   adminInfo,
@@ -840,7 +843,6 @@ export default combineReducers({
   provinces,
   roadNetworkStatus,
   roadIdCount,
-  routing: routeReducer,
   searchDisplay,
   searchResultsDisplay,
   setSearchType,
