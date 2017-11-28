@@ -331,7 +331,7 @@ export function deleteEntireWays (taskId, wayIds) {
     dispatch(requestOsmChange());
 
     const nodeIds = [];
-    fetch(`${config.api}/api/0.6/ways?nodes=true&ways=${wayIds.join(',')}`)
+    fetch(`${config.api}/api/0.6/ways?nodes=true&excludeDoubleLinkedNodes=true&ways=${wayIds.join(',')}`)
     .then(response => {
       if (response.status >= 400) {
         throw new Error('Bad response');
