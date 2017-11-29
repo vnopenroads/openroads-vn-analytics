@@ -5,13 +5,14 @@
 To set up the development environment for this website, you'll need to install the following on your system:
 
 - Node (v6.11) & Npm ([nvm](https://github.com/creationix/nvm) usage is advised)
+- [yarn](https://yarnpkg.com/en/docs/install)
 
 > The versions mentioned are the ones used during development. It could work with newer ones.
   Run `nvm use` to activate the correct version.
 
 After these basic requirements are met, run the following commands in the website's folder:
 ```
-$ npm install
+$ yarn install
 ```
 
 ### Getting started
