@@ -394,9 +394,9 @@ var Tasks = React.createClass({
       return <p className='empty'>{`${t('No roads selected yet. Click a road to select it')}.`}</p>;
     }
     if (selectedIds.length === 1) {
-      return <p>{t('1 road selected. Select at least another one.')}</p>;
+      return <p>{t('1 road selected. Select at least one more')}</p>;
     }
-    return <p>{`${selectedIds.length} ${t('roads')} ${t('selected')}.`}</p>;
+    return <p>{`${selectedIds.length} ${t('roads selected')}.`}</p>;
   },
 
   renderInflight: function () {

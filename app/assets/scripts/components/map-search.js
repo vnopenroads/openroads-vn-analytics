@@ -151,7 +151,7 @@ var MapSearch = React.createClass({
     if (this.props.fetching) {
       return (
         <div className='search-results'>
-          <p className='info'>Loading...</p>
+          <p className='info'>{t('Loading')}...</p>
         </div>
       );
     }
@@ -165,7 +165,7 @@ var MapSearch = React.createClass({
         contents = _(data)
           .groupBy(o => o.level)
           .reduce((acc, level, key) => {
-            acc.push(<h4 key={`aa-type-admin-${key}`}>Admin Level - {key}</h4>);
+            acc.push(<h4 key={`aa-type-admin-${key}`}>{t('Admin Level')} - {key}</h4>);
 
             let adminAreas = level.reduce((_acc, o) => {
               return _acc.concat(<li key={o.id}><a href='#' onClick={this.onAAClick.bind(null, o)}>{getLanguage() === 'en' ? o.name_en : o.name_vn}</a></li>);
@@ -177,12 +177,12 @@ var MapSearch = React.createClass({
           }, []);
       } else {
         if (this.state.searchVal) {
-          contents = <p className='info' key='no-results'>No results available. Please refine your search.</p>;
+          contents = <p className='info' key='no-results'>{t('No results available. Please refine your search')}</p>;
         }
       }
     } else if (this.props.searchType === 'VProMMs' && this.state.searchVal.length >= 2) {
       if (!data.length) {
-        contents = <p className='info' key='no-results'>No results available. Please refine your search.</p>;
+        contents = <p className='info' key='no-results'>{t('No results available. Please refine your search')}</p>;
       } else {
         contents = [<h4 key={`vpromms-title`}>VProMMs</h4>];
 
@@ -214,7 +214,7 @@ var MapSearch = React.createClass({
           <label className='form__label' htmlFor='search-field'>{t('Search')}</label>
           <div className='form__input-group form__input-group--medium'>
             <select className='form__control' onChange={this.onSearchTypeChange} value={this.props.searchType}>
-              <option value='Admin'>Admin</option>
+              <option value='Admin'>{t('Admin')}</option>
               <option value='VProMMs'>VProMMs</option>
             </select>
             <input
@@ -222,7 +222,7 @@ var MapSearch = React.createClass({
               id='search-field'
               name='search-field'
               className='form__control'
-              placeholder='Search'
+              placeholder={t('Search')}
               value={this.state.searchVal}
               onChange={this.onSearchQueryChange} />
             <button type='button' className='search__button' title={t('Search')} onClick={this.onSearchSubmit}><span>{t('Search')}</span></button>
