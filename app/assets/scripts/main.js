@@ -24,9 +24,7 @@ import Faq from './views/faq';
 // check if link target is one of the languages in the i18n file
 // if it is, set that as the language
 function validateLanguage (nextState, replace) {
-  if (isValidLanguage(nextState.params.lang)) {
-    setLanguage(nextState.params.lang);
-  } else {
+  if (!isValidLanguage(nextState.params.lang)) {
     replace('/en/404');
   }
 }
@@ -34,6 +32,7 @@ function validateLanguage (nextState, replace) {
 render((
   <Provider store={store}>
     <Router history={hashHistory}>
+      <Redirect from='/' to='/en' />
       <Route path='/:lang' component={App} onEnter={validateLanguage}>
         <Route path='tasks' component={Tasks} pageClass='tasks' />
         <Route path='upload' component={Upload} pageClass='upload' />
@@ -52,7 +51,6 @@ render((
         <IndexRoute component={Home} pageClass='page--landing' />
         <Route path='*' component={UhOh}/>
       </Route>
-      <Redirect from='/' to='/en' />
     </Router>
   </Provider>
 ), document.querySelector('.site-canvas'));

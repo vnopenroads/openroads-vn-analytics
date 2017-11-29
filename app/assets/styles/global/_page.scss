@@ -107,12 +107,16 @@
   margin: 0;
   font-size: 1rem;
 
-  a {
+  button {
+    background: transparent;
+    color: white;
+    border: 0;
     line-height: 2rem;
     height: 2rem;
     width: 2rem;
     text-align: center;
-    border-radius: $base-border-radius;
+    cursor: pointer;
+    border-radius: 0;
 
     &::before {
       line-height: inherit !important;
@@ -128,7 +132,7 @@
   }
 
   .site__nav-block--language & {
-    a::before {
+    button::before {
       @extend %collecticon-globe;
     }
   }
