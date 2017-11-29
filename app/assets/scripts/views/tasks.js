@@ -127,7 +127,7 @@ var Tasks = React.createClass({
           id = '';
         }
 
-        this.setState({hoverId: id});
+        this.setState({hoverId: id}); // eslint-disable-line react/no-did-mount-set-state
         map.setFilter(roadHoverId, ['==', '_id', id]);
       });
 
@@ -159,7 +159,7 @@ var Tasks = React.createClass({
           }
 
           map.setFilter(roadSelected, ['in', '_id'].concat(selectedIds));
-          this.setState({ selectedIds });
+          this.setState({ selectedIds }); // eslint-disable-line react/no-did-mount-set-state
         }
       });
     });
