@@ -42,7 +42,7 @@ const MapOptions = React.createClass({
               <label className='form__option form__option--switch option fos-io' htmlFor='show-no-vpromms' data-title={`${t('These will have no properties')}.`}>
                 <input type='checkbox' name='show-no-vpromms' id='show-no-vpromms' value='show-no-vpromms' onChange={ e => this.props.handleShowNoVpromms(e) } />
                 <span className='form__option__ui'></span>
-                <span className='form__option__text'>{t('Road without vPromMMS ID')}</span>
+                <span className='form__option__text'>{t('Road without VPRoMMS ID')}</span>
               </label>
             </div>
           </form>
