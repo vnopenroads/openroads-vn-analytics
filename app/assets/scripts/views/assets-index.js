@@ -1,6 +1,10 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
+import {
+  compose,
+  getContext
+} from 'recompose';
 import _ from 'lodash';
 import T from '../components/T';
 import {
@@ -126,33 +130,29 @@ var AssetsIndex = React.createClass({
   }
 });
 
-// /////////////////////////////////////////////////////////////////// //
-// Connect functions
 
-function selector (state) {
-  return {
-    provinces: state.provinces.data.province,
-    provincesFetched: state.provinces.fetched,
-    fieldIdCount: state.fieldIdCount.counts,
-    fieldCountsFetched: state.fieldIdCount.fetched,
-    VProMMsCount: state.roadIdCount.counts,
-    VProMMsCountFetched: state.roadIdCount.fetched,
-    crosswalk: state.crosswalk,
-    crosswalkSet: state.crosswalk.set
-  };
-}
-
-function dispatcher (dispatch) {
-  return {
-    _fetchProvinces: () => dispatch(fetchProvinces()),
-    _fetchVProMMsIdsCount: (level) => dispatch(fetchVProMMsIdsCount(level)),
-    _fetchFieldVProMsIdsCount: (level) => dispatch(fetchFieldVProMsIdsCount(level)),
-    _removeVProMMsIdsCount: () => dispatch(removeVProMMsIdsCount()),
-    _removeCrosswalk: () => dispatch(removeCrosswalk()),
-    _removeProvinces: () => dispatch(removeProvinces()),
-    _setCrossWalk: () => dispatch(setCrossWalk()),
-    _setPreviousLocation: () => dispatch(setPreviousLocation())
-  };
-}
-
-module.exports = connect(selector, dispatcher)(AssetsIndex);
+export default compose(
+  getContext({ language: React.PropTypes.string }),
+  connect(
+    state => ({
+      provinces: state.provinces.data.province,
+      provincesFetched: state.provinces.fetched,
+      fieldIdCount: state.fieldIdCount.counts,
+      fieldCountsFetched: state.fieldIdCount.fetched,
+      VProMMsCount: state.roadIdCount.counts,
+      VProMMsCountFetched: state.roadIdCount.fetched,
+      crosswalk: state.crosswalk,
+      crosswalkSet: state.crosswalk.set
+    }),
+    dispatch => ({
+      _fetchProvinces: () => dispatch(fetchProvinces()),
+      _fetchVProMMsIdsCount: (level) => dispatch(fetchVProMMsIdsCount(level)),
+      _fetchFieldVProMsIdsCount: (level) => dispatch(fetchFieldVProMsIdsCount(level)),
+      _removeVProMMsIdsCount: () => dispatch(removeVProMMsIdsCount()),
+      _removeCrosswalk: () => dispatch(removeCrosswalk()),
+      _removeProvinces: () => dispatch(removeProvinces()),
+      _setCrossWalk: () => dispatch(setCrossWalk()),
+      _setPreviousLocation: () => dispatch(setPreviousLocation())
+    })
+  )
+)(AssetsIndex);

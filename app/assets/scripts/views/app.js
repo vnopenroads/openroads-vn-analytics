@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import {
   compose,
-  withContext,
-  getContext
+  withContext
 } from 'recompose';
 import { fetchSearchResults, cleanSearchResults } from '../actions/action-creators';
 import SiteHeader from '../components/site-header';

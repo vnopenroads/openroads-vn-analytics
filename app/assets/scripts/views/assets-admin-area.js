@@ -1,7 +1,11 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
-import { t, getLanguage, setLanguage } from '../utils/i18n';
+import {
+  compose,
+  getContext
+} from 'recompose';
+import T from '../components/T';
 import { makePaginationConfig } from '../utils/pagination';
 import { makeIdTest, getAdminId, getAdminName } from '../utils/admin-level';
 import { Link } from 'react-router';
@@ -105,11 +109,11 @@ var AssetsAA = React.createClass({
       const sameLanguage = (this.props.params.lang === nextProps.params.lang);
       const level = !this.props.params.aaIdSub ? 'province' : 'district';
       const sameAdmin = level === 'province' ? (this.props.params.aaId === nextProps.params.aaId) : (this.props.params.aaIdSub === nextProps.params.aaIdSub);
-      // if back button is pressed right after the langauge was updated,
+      // if back button is pressed right after the language was updated,
       // go back to the parent admin, not the same admin w/different language per the default.
       if (nextProps.location.action === 'POP') {
         if (sameAdmin && !sameLanguage) {
-          const path = (level === 'district') ? `/${getLanguage()}/assets/${this.props.params.aaId}` : `/${getLanguage()}/assets/`;
+          const path = (level === 'district') ? `/${nextProps.language}/assets/${this.props.params.aaId}` : `/${nextProps.language}/assets/`;
           this.props.history.push(path);
         }
       }
@@ -155,12 +159,15 @@ var AssetsAA = React.createClass({
     const total = this.props.VProMMsCount.length > 0 ? this.props.VProMMsCount[0].total_roads : 0;
     const field = this.props.fieldRoads.length;
     const completion = (total !== 0) ? ((field / total) * 100) : 0;
+
     let completionMainText;
-    let completionTailText = t('Information on VPRoMMS roads is not available');
+    let completionTailText = <T>Information on VPRoMMS roads is not available</T>;
+
     if (total !== 0) {
       completionMainText = completion.toFixed(2);
-      completionTailText = `% ${t('of VPRoMMS Ids have field data')} ${field.toLocaleString()} of ${total.toLocaleString()}`;
+      completionTailText = <span>% <T>of VPRoMMS Ids have field data</T> <em>({field} / {total})</em></span>;
     }
+
     return {
       level: level,
       total: total,
@@ -186,12 +193,12 @@ var AssetsAA = React.createClass({
       const childClasses = children.map(child => c({'disabled': this.props.crosswalk['district'][child.id] === ''}));
       return (
         <nav className='a-subnav'>
-        <h2>{t('Districts')}</h2>
+        <h2><T>Districts</T></h2>
         <ul className='a-children'>
           {children.map((child, i) => {
             var childKey = `${child}-${i}`;
             return (
-              <li key={childKey} ><Link className={childClasses[i]} onClick={(e) => { this.clearAdminData(); this.props._setCrossWalk(); this.props._setSubAdminName(child.name_en); }}to={`/${getLanguage()}/assets/${aaId}/${child.id}`}>{child.name_en}</Link>
+              <li key={childKey} ><Link className={childClasses[i]} onClick={(e) => { this.clearAdminData(); this.props._setCrossWalk(); this.props._setSubAdminName(child.name_en); }}to={`/${this.props.language}/assets/${aaId}/${child.id}`}>{child.name_en}</Link>
             </li>
             );
           })}
@@ -205,22 +212,27 @@ var AssetsAA = React.createClass({
 
   renderDataDumpLinks: function (adminId) {
     return (
-      <a className='button button--secondary-raised-dark' href={`${config.provinceDumpBaseUrl}${adminId}.csv`}>{t('Download Roads')}</a>
+      <a className='button button--secondary-raised-dark' href={`${config.provinceDumpBaseUrl}${adminId}.csv`}><T>Download Roads</T></a>
     );
   },
 
   renderTable: function (adminContent) {
     if (adminContent.total && this.props.adminRoadProperties) {
-      return (<AATable data={this.props.adminRoads} fieldRoads={this.props.fieldRoads} propertiesData={this.props.adminRoadProperties} />);
+      return (
+        <AATable
+          data={this.props.adminRoads}
+          fieldRoads={this.props.fieldRoads}
+          propertiesData={this.props.adminRoadProperties}
+        />
+      );
     } else if (this.props.VProMMsCount[0]) {
-      return (<div className='a-subnav'><h2>Loading Table</h2></div>);
+      return <div className='a-subnav'><h2>Loading Table</h2></div>;
     } else {
-      return (<div/>);
+      return <div/>;
     }
   },
 
   renderAssetsAdmin: function () {
-    setLanguage(this.props.language);
     const adminContent = this.makeAdminAssetsContent();
 
     // There's no reason for this to be repeated from above,
@@ -245,12 +257,14 @@ var AssetsAA = React.createClass({
         <div>
           {/* commune (district child) lists are not rendered */}
           { this.renderAdminChildren(this.props.adminInfo.children, adminContent) }
+
           <div className='a-main__status'>
             <h2><strong>{adminContent.completionMainText}</strong>{adminContent.completionTailText}</h2>
             <div className='meter'>
               <div className='meter__internal' style={{width: `${adminContent.completion}%`}}></div>
             </div>
           </div>
+
           <div>
             { this.renderTable(adminContent) }
             {((this.props.pagination.pages > 1) && this.props.adminRoadsFetched) ? <Paginator pagination={this.props.pagination} crosswalk={this.props.crosswalk} adminInfo={this.props.adminInfo} params={this.props.params} /> : <div/>}
@@ -270,48 +284,46 @@ var AssetsAA = React.createClass({
   }
 });
 
-function selector (state) {
-  return {
-    adminInfo: state.adminInfo.data,
-    adminInfoFetched: state.adminInfo.fetched,
-    adminRoads: state.adminRoads.ids,
-    adminRoadsFetched: state.adminRoads.fetched,
-    adminRoadProperties: state.VProMMsAdminProperties.data,
-    adminRoadPropertiesFetched: state.VProMMsAdminProperties.fetched,
-    crosswalk: state.crosswalk,
-    crosswalkSet: state.crosswalk.set,
-    fieldRoads: state.fieldRoads.ids,
-    fieldFetched: state.fieldRoads.fetched,
-    language: state.language.current,
-    VProMMsCount: state.roadIdCount.counts,
-    VProMMsCountFetched: state.roadIdCount.fetched,
-    pagination: state.pagination,
-    previousLocation: state.previousLocation.path,
-    subadminName: state.subadminName.name
-  };
-}
 
-function dispatcher (dispatch) {
-  return {
-    _fetchAdminVProMMsProps: (ids, level, limit, offset) => dispatch(fetchAdminVProMMsProps(ids, level, limit, offset)),
-    _fetchAdminRoads: (ids, level, limit, offset) => dispatch(fetchAdminRoads(ids, level, limit, offset)),
-    _fetchFieldRoads: (idTest, level) => dispatch(fetchFieldRoads(idTest, level)),
-    _fetchVProMMsIdsCount: (idTest, level) => dispatch(fetchVProMMsIdsCount(idTest, level)),
-    _fetchAdminInfo: (id, level) => dispatch(fetchAdminInfo(id, level)),
-    _removeAdminInfo: () => dispatch(removeAdminInfo()),
-    _removeFieldRoads: () => dispatch(removeFieldRoads()),
-    _removeAdminRoads: () => dispatch(removeAdminRoads()),
-    _removeCrosswalk: () => dispatch(removeCrosswalk()),
-    _removeFieldVProMMsIdsCount: () => dispatch(removeFieldVProMMsIdsCount()),
-    _removeAdminVProMMsProps: () => dispatch(removeAdminVProMMsProps()),
-    _removeVProMMsIdsCount: () => dispatch(removeVProMMsIdsCount()),
-    _setCrossWalk: () => dispatch(setCrossWalk()),
-    _setPreviousLocation: (location) => dispatch(setPreviousLocation(location)),
-    _setPagination: (paginationConfig) => dispatch(setPagination(paginationConfig)),
-    _setSubAdminName: (name) => dispatch(setSubAdminName(name)),
-    _updatePagination: (paginationUpdates) => dispatch(updatePagination(paginationUpdates))
-  };
-}
-
-module.exports = connect(selector, dispatcher)(AssetsAA);
+export default compose(
+  getContext({ language: React.PropTypes.string }),
+  connect(
+    state => ({
+      adminInfo: state.adminInfo.data,
+      adminInfoFetched: state.adminInfo.fetched,
+      adminRoads: state.adminRoads.ids,
+      adminRoadsFetched: state.adminRoads.fetched,
+      adminRoadProperties: state.VProMMsAdminProperties.data,
+      adminRoadPropertiesFetched: state.VProMMsAdminProperties.fetched,
+      crosswalk: state.crosswalk,
+      crosswalkSet: state.crosswalk.set,
+      fieldRoads: state.fieldRoads.ids,
+      fieldFetched: state.fieldRoads.fetched,
+      VProMMsCount: state.roadIdCount.counts,
+      VProMMsCountFetched: state.roadIdCount.fetched,
+      pagination: state.pagination,
+      previousLocation: state.previousLocation.path,
+      subadminName: state.subadminName.name
+    }),
+    dispatch => ({
+      _fetchAdminVProMMsProps: (ids, level, limit, offset) => dispatch(fetchAdminVProMMsProps(ids, level, limit, offset)),
+      _fetchAdminRoads: (ids, level, limit, offset) => dispatch(fetchAdminRoads(ids, level, limit, offset)),
+      _fetchFieldRoads: (idTest, level) => dispatch(fetchFieldRoads(idTest, level)),
+      _fetchVProMMsIdsCount: (idTest, level) => dispatch(fetchVProMMsIdsCount(idTest, level)),
+      _fetchAdminInfo: (id, level) => dispatch(fetchAdminInfo(id, level)),
+      _removeAdminInfo: () => dispatch(removeAdminInfo()),
+      _removeFieldRoads: () => dispatch(removeFieldRoads()),
+      _removeAdminRoads: () => dispatch(removeAdminRoads()),
+      _removeCrosswalk: () => dispatch(removeCrosswalk()),
+      _removeFieldVProMMsIdsCount: () => dispatch(removeFieldVProMMsIdsCount()),
+      _removeAdminVProMMsProps: () => dispatch(removeAdminVProMMsProps()),
+      _removeVProMMsIdsCount: () => dispatch(removeVProMMsIdsCount()),
+      _setCrossWalk: () => dispatch(setCrossWalk()),
+      _setPreviousLocation: (location) => dispatch(setPreviousLocation(location)),
+      _setPagination: (paginationConfig) => dispatch(setPagination(paginationConfig)),
+      _setSubAdminName: (name) => dispatch(setSubAdminName(name)),
+      _updatePagination: (paginationUpdates) => dispatch(updatePagination(paginationUpdates))
+    })
+  )
+)(AssetsAA);
 
