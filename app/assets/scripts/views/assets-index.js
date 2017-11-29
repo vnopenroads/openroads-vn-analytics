@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { t } from '../utils/i18n';
+import T from '../components/T';
 import {
   fetchProvinces,
   fetchVProMMsIdsCount,
@@ -101,12 +101,15 @@ var AssetsIndex = React.createClass({
       <div>
         <div className='a-header'>
           <div className='a-headline'>
-            <h1>{t('VPRoMMS Assets By Province')}</h1>
+            <h1><T>VPRoMMS Assets By Province</T></h1>
           </div>
         </div>
 
         <div className='a-main__status'>
-          <h2><strong>{completionContent.completion.toFixed(2)}%</strong> {t('of VPRoMMS Ids have field data collected')} ({completionContent.accumulator.field} of {completionContent.accumulator.total})</h2>
+          <h2>
+            <strong>{completionContent.completion.toFixed(2)}% </strong>
+            <T>of VPRoMMS Ids have field data collected</T> ({completionContent.accumulator.field} of {completionContent.accumulator.total})
+          </h2>
           <div className='meter'>
             <div className='meter__internal' style={{width: `${completionContent.completion}%`}}></div>
           </div>
