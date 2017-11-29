@@ -485,16 +485,6 @@ const admin = function (state = defaultAdmin, action) {
   return state;
 };
 
-const searchDisplay = function (state = {show: false}, action) {
-  switch (action.type) {
-    case actions.DISPLAY_SEARCH:
-      state = _.cloneDeep(state);
-      state.show = action.bool;
-      break;
-  }
-  return state;
-};
-
 const searchResultsDisplay = function (state = {show: false}, action) {
   switch (action.type) {
     case actions.DISPLAY_SEARCH_RESULTS:
@@ -775,7 +765,6 @@ export default combineReducers({
   provinces,
   roadNetworkStatus,
   roadIdCount,
-  searchDisplay,
   searchResultsDisplay,
   setSearchType,
   setFilteredVProMMs,

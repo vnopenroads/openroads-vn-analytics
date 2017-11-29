@@ -794,13 +794,6 @@ export function removeAdminVProMMsProps () {
 //                             Search                            //
 // ////////////////////////////////////////////////////////////////
 
-export function showSearch (bool) {
-  return {
-    type: actions.DISPLAY_SEARCH,
-    bool: bool
-  };
-}
-
 export function showSearchResults (bool) {
   return {
     type: actions.DISPLAY_SEARCH_RESULTS,
