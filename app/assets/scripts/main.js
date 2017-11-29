@@ -4,7 +4,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router, Route, Redirect, IndexRoute, hashHistory } from 'react-router';
-import { isValidLanguage, setLanguage } from './utils/i18n';
+import { isValidLanguage } from './utils/i18n';
 import store from './redux/store';
 
 import UhOh from './views/uhoh';
