@@ -71,7 +71,7 @@
     "gulp-uglify": "^1.5.2",
     "gulp-useref": "^3.0.5",
     "gulp-util": "^3.0.7",
-    "jeet": "^6.1.2",
+    "jeet": "7.1.0",
     "mocha": "^3.5.0",
     "node-bourbon": "^4.2.3",
     "node-notifier": "^4.5.0",
@@ -81,9 +81,9 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
+    "@turf/bbox": "^5.0.0",
     "@turf/line-intersect": "^5.0.3",
     "@turf/point-on-line": "^5.0.3",
-    "@turf/bbox": "^5.0.0",
     "babel-polyfill": "^6.3.14",
     "classnames": "^2.2.5",
     "global-mercator": "^2.8.4",
@@ -95,10 +95,11 @@
     "react-redux": "^4.3.0",
     "react-router": "^2.0.0-rc5",
     "react-router-redux": "^2.0.4",
+    "recompose": "^0.26.0",
     "redux": "^3.2.1",
-    "redux-logger": "^3.0.1",
     "redux-thunk": "^1.0.3",
     "turf-extent": "^1.0.4",
-    "turf-point": "^2.0.1"
+    "turf-point": "^2.0.1",
+    "xml-reader": "^2.4.3"
   }
 }

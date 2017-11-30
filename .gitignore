@@ -3,7 +3,7 @@ node_modules
 bower_components
 .sass-cache
 test/bower_components
-app/assets/styles/_collecticons.scss
+app/assets/styles/core/_collecticons.scss
 
 ## Build
 .DS_Store
@@ -14,6 +14,7 @@ npm-debug.log
 ## Locals
 app/assets/scripts/config/local.js
 .resources/
+package-lock.json
 
 ## no swaps
 */**/*.swp

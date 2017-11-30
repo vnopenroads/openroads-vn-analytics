@@ -4,7 +4,7 @@
   background: #fff;
   overflow: hidden;
   border: 1px solid rgb(220, 220, 220);;
-  border-radius: $global-radius;
+  border-radius: $base-border-radius;
   margin-bottom: 10rem;
 
   table {
@@ -12,12 +12,16 @@
     text-align: left;
     width: 100%;
 
+    // &, * {
+    //   font-family: helvetica;
+    // }
+
     td, th {
       padding: $global-spacing / 2;
     }
 
     thead th {
-      background-color: $neutral;
+      background-color: tint($base-color, 96%);
       color: $base-color;
       height: 3.5rem;
       vertical-align: bottom;

@@ -205,10 +205,7 @@ var AssetsAA = React.createClass({
 
   renderDataDumpLinks: function (adminId) {
     return (
-      <div>
-        <h3 classNam='a-header'>{t('Admin Chilren')}</h3>
-        <a className='bttn bttn-secondary' href={`${config.provinceDumpBaseUrl}${adminId}.csv`}>{t('Download Roads')}</a>
-      </div>
+      <a className='button button--secondary-raised-dark' href={`${config.provinceDumpBaseUrl}${adminId}.csv`}>{t('Download Roads')}</a>
     );
   },
 

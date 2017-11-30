@@ -1,0 +1,106 @@
+/* ==========================================================================
+   Global: Inpage
+   ========================================================================== */
+
+.inpage {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  .inpage__header {
+    @extend .antialiased;
+    background: $primary-color;
+    color: #fff;
+    padding: $global-spacing 0;
+    position: relative;
+    z-index: 99999;
+    transition: all 0.24s ease 0s;
+
+    @include media(medium-up) {
+      padding: $global-spacing 0;
+    }
+
+    > .inner {
+      @extend .row;
+      max-width: none;
+      display: flex;
+      width: 100%;
+    }
+  }
+
+  &__headline {
+    > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__title {
+    @extend .heading, .heading--medium;
+  }
+
+  &__subtitle {
+    position: relative;
+    @extend .heading-alt;
+    color: rgba($base-font-color, 0.64);
+    font-size: 0.875rem;
+    line-height: 1rem;
+    margin: ($global-spacing / 4) 0;
+
+    &:first-child {
+      margin-top: -1.25rem;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    @include media(medium-up) {
+      font-size: 1rem;
+      line-height: 1.25rem;
+
+      &:first-child {
+        margin-top: -1.5rem;
+      }
+    }
+  }
+
+  .inpage__actions {
+    flex: 1 1 auto;
+    text-align: right;
+    font-size: 0;
+    white-space: nowrap;
+  }
+
+  &__body {
+    flex: 1;
+    padding: ($global-spacing * 2) 0;
+
+    > .inner {
+      @extend .row, .row--centered;
+    }
+
+    > *:last-child {
+      margin-bottom: 0;
+    }
+
+    @include media(medium-up) {
+      padding: ($global-spacing * 3) 0;
+    }
+  }
+}
+
+
+/* Modifiers
+   ========================================================================== */
+
+.inpage--alt {
+  .inpage__body {
+    position: relative;
+    padding: 0;
+
+    > .inner {
+      padding: 0;
+      max-width: none;
+    }
+  }
+}

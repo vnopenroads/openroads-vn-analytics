@@ -1,6 +1,13 @@
 'use strict';
 
 import React from 'react';
+import {
+  debounce
+} from 'lodash';
+import {
+  compose,
+  lifecycle
+} from 'recompose';
 import { connect } from 'react-redux';
 import mapboxgl from 'mapbox-gl';
 import config from '../config';
@@ -13,13 +20,18 @@ import { createModifyLineString } from '../utils/to-osm';
 import { t } from '../utils/i18n';
 
 import {
-  fetchNextWayTask,
-  markTaskAsDone,
   setGlobalZoom,
   queryOsm,
-  reloadCurrentTask,
-  modifyWaysWithNewPoint
+  modifyWaysWithNewPoint,
+  deleteEntireWays
 } from '../actions/action-creators';
+import {
+  fetchNextWayTaskEpic,
+  reloadCurrentTaskEpic,
+  fetchWayTaskCountEpic,
+  markWayTaskPendingEpic,
+  skipTask
+} from '../redux/modules/tasks';
 
 const source = 'collisions';
 const roadHoverId = 'road-hover';
@@ -61,28 +73,25 @@ var Tasks = React.createClass({
       currentTaskId: null,
       renderedFeatures: null,
       mode: null,
-      skippedTasks: [],
       hoverId: null,
       selectedIds: []
     };
   },
 
   propTypes: {
-    _fetchNextTask: React.PropTypes.func,
+    fetchNextTask: React.PropTypes.func,
     _setGlobalZoom: React.PropTypes.func,
     _queryOsm: React.PropTypes.func,
     _reloadCurrentTask: React.PropTypes.func,
     _markTaskAsDone: React.PropTypes.func,
+    _deleteWays: React.PropTypes.func,
+    skipTask: React.PropTypes.func,
 
     osmInflight: React.PropTypes.bool,
     meta: React.PropTypes.object,
     task: React.PropTypes.object,
     taskId: React.PropTypes.number,
-    taskError: React.PropTypes.string
-  },
-
-  componentWillMount: function () {
-    this.fetchNextTask();
+    taskCount: React.PropTypes.number
   },
 
   componentDidMount: function () {
@@ -95,18 +104,14 @@ var Tasks = React.createClass({
     }).addControl(new mapboxgl.NavigationControl(), 'bottom-left');
 
     this.onMapLoaded(() => {
-      let makeXYZ = function () {
-        const xyz = map.getCenter();
-        xyz.zoom = map.getZoom();
-        return xyz;
-      };
-
       map.on('zoom', () => {
-        this.props._setGlobalZoom(makeXYZ());
+        const { lat, lng } = map.getCenter();
+        this.props._setGlobalZoom({ lat, lng, zoom: map.getZoom() });
       });
 
       map.on('moveend', () => {
-        this.props._setGlobalZoom(makeXYZ());
+        const { lat, lng } = map.getCenter();
+        this.props._setGlobalZoom({ lat, lng, zoom: map.getZoom() });
       });
 
       map.on('mousemove', (e) => {
@@ -122,7 +127,7 @@ var Tasks = React.createClass({
           id = '';
         }
 
-        this.setState({hoverId: id});
+        this.setState({hoverId: id}); // eslint-disable-line react/no-did-mount-set-state
         map.setFilter(roadHoverId, ['==', '_id', id]);
       });
 
@@ -154,13 +159,15 @@ var Tasks = React.createClass({
           }
 
           map.setFilter(roadSelected, ['in', '_id'].concat(selectedIds));
-          this.setState({ selectedIds });
+          this.setState({ selectedIds }); // eslint-disable-line react/no-did-mount-set-state
         }
       });
     });
   },
 
-  componentWillReceiveProps: function ({taskId, task, lastUpdated}) {
+  componentWillReceiveProps: function ({ taskId, task, lastUpdated }) {
+    // TODO - ANTIPATTERN: should not mirror properties task and taskId in state
+
     if (taskId && taskId !== this.state.currentTaskId) {
       // We've queried and received a new task
       this.setState({
@@ -177,10 +184,6 @@ var Tasks = React.createClass({
         mode: null
       });
     }
-  },
-
-  fetchNextTask: function () {
-    this.props._fetchNextTask(this.state.skippedTasks);
   },
 
   onMapLoaded: function (fn) {
@@ -210,16 +213,6 @@ var Tasks = React.createClass({
     map.setFilter(roadSelected, ['in', '_id'].concat(this.state.selectedIds));
   },
 
-  renderPlaceholder: function () {
-    const { taskError } = this.props;
-    const message = taskError || 'Loading your first task...';
-    return (
-      <div className='placeholder__fullscreen'>
-        <h3 className='placeholder__message'>{t(message)}</h3>
-      </div>
-    );
-  },
-
   renderPropertiesOverlay: function () {
     const { hoverId } = this.state;
     const { task } = this.props;
@@ -229,42 +222,62 @@ var Tasks = React.createClass({
       <dd key={`${key}-value`}>{t(`${properties[key] || '--'}`)}</dd>
     ]).filter(Boolean);
     return (
-      <aside className='properties__overlay'>
-        <dl>
-          {displayList}
-        </dl>
-      </aside>
+      <div className='map__controls map__controls--top-left'>
+        <figcaption className='panel properties-panel'>
+          <div className='panel__body'>
+            <dl>
+              {displayList}
+            </dl>
+          </div>
+        </figcaption>
+      </div>
     );
   },
 
   renderInstrumentPanel: function () {
     const { mode, renderedFeatures } = this.state;
+    const { taskCount } = this.props;
+
     return (
-      <div className='map-options map-panel'>
-        { renderedFeatures ? <h2>{t('Showing')} {renderedFeatures.features.length} {t('Roads')}</h2> : null }
-        {mode ? null : (
-          <div>
-            <div className='form-group'>
-              <p>{`1. ${t('Select roads to work on')}.`}</p>
-              <div className='map__panel--selected'>
-                {this.renderSelectedIds()}
+      <div className='map__controls map__controls--top-right'>
+        <div className='panel tasks-panel'>
+          {renderedFeatures ? (
+          <div className='panel__header'>
+            <div className='panel__headline'>
+              <div>
+                <h2 className='panel__title'>{t('Task')}</h2>
+                {taskCount && <p className='panel__subtitle tasks-remaining'>({taskCount} {t('Tasks Remaining')})</p>}
               </div>
-            </div>
-            <div className='form-group map__panel--form'>
-              <p>{`2. ${t('Choose an action to perform')}.`}</p>
-              <button className={c('bttn bttn-m bttn-secondary', {disabled: this.state.selectedIds.length < 2})} type='button' onClick={this.onDedupe}>{t('Remove Duplicates')}</button>
-              <br />
-              <button className={c('bttn bttn-m bttn-secondary', {disabled: this.state.selectedIds.length !== 1})} type='button' onClick={this.onJoin}>{t('Create Intersection')}</button>
-            </div>
-            <div className='form-group map__panel--form'>
-              <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.markAsDone}>{t('Finish task')}</button>
-              <br />
-              <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.next}>{t('Skip task')}</button>
+              <p className='panel__subtitle'>{t('Showing')} {renderedFeatures.features.length} {t('Roads')}</p>
             </div>
           </div>
-        )}
-        {mode === 'dedupe' ? this.renderDedupeMode() : null}
-        {mode === 'join' ? this.renderJoinMode() : null}
+          ) : null }
+          <div className='panel__body'>
+            {mode ? null : (
+              <div>
+                <div className='form-group'>
+                  <p>{`1. ${t('Select roads to work on')}.`}</p>
+                  <div className='map__panel--selected'>
+                    {this.renderSelectedIds()}
+                  </div>
+                </div>
+                <div className='form-group map__panel--form'>
+                  <p>{`2. ${t('Choose an action to perform')}.`}</p>
+                  <button className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length < 2})} type='button' onClick={this.onDedupe}>{t('Remove Duplicates')}</button>
+                  <br />
+                  <button className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length !== 1})} type='button' onClick={this.onJoin}>{t('Create Intersection')}</button>
+                </div>
+                <div className='form-group map__panel--form'>
+                  <button className='button button--base-raised-light' type='button' onClick={this.markAsDone}>{t('Finish task')}</button>
+                  <br />
+                  <button className='button button--secondary-raised-dark' type='button' onClick={this.next}>{t('Skip task')}</button>
+                </div>
+              </div>
+            )}
+            {mode === 'dedupe' ? this.renderDedupeMode() : null}
+            {mode === 'join' ? this.renderJoinMode() : null}
+          </div>
+        </div>
       </div>
     );
   },
@@ -293,9 +306,9 @@ var Tasks = React.createClass({
       <div className='form-group map__panel--form'>
         <h2>{t('Remove Duplicate Roads')}</h2>
         <p>{t('Click on a road to keep. The other roads here will be deleted.')}</p>
-        <button className={c('bttn bttn-m bttn-secondary', {disabled: !this.state.selectedIds.length})} type='button' onClick={this.commitDedupe}>{t('Confirm')}</button>
+        <button className={c('button button--secondary-raised-dark', {disabled: !this.state.selectedIds.length})} type='button' onClick={this.commitDedupe}>{t('Confirm')}</button>
         <br />
-        <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.exitMode}>{t('Cancel')}</button>
+        <button className='button button--base-raised-dark' type='button' onClick={this.exitMode}>{t('Cancel')}</button>
       </div>
     );
   },
@@ -305,9 +318,9 @@ var Tasks = React.createClass({
       <div className='form-group map__panel--form'>
         <h2>Create an Intersection</h2>
         <p>Click on a road to create an intersection with.</p>
-        <button className={c('bttn bttn-m bttn-secondary', {disabled: this.state.selectedIds.length !== 2})} type='button' onClick={this.commitJoin}>{t('Confirm')}</button>
+        <button className={c('button button--secondary-raised-dark', {disabled: this.state.selectedIds.length !== 2})} type='button' onClick={this.commitJoin}>{t('Confirm')}</button>
         <br />
-        <button className='bttn bttn-m bttn-secondary' type='button' onClick={this.exitMode}>{t('Cancel')}</button>
+        <button className='button button--base-raised-dark' type='button' onClick={this.exitMode}>{t('Cancel')}</button>
       </div>
     );
   },
@@ -316,11 +329,7 @@ var Tasks = React.createClass({
     const { selectedIds, renderedFeatures, currentTaskId } = this.state;
     const { features } = renderedFeatures;
     const toDelete = features.filter(feature => selectedIds[0] !== feature.properties._id);
-    this.props._queryOsm(currentTaskId, {
-      delete: {
-        way: toDelete.map(feature => ({id: feature.properties._id}))
-      }
-    });
+    this.props._deleteWays(currentTaskId, toDelete.map(feature => feature.properties._id));
     this.props._markTaskAsDone(toDelete.map(feature => feature.properties._id));
   },
 
@@ -362,17 +371,14 @@ var Tasks = React.createClass({
   markAsDone: function () {
     // This function is different from #next, in that it allows you
     // to specify all visible roads as 'done'
-    this.props._markTaskAsDone(this.state.renderedFeatures.features.map(feature => feature.properties._id));
+    this.props._markTaskAsDone(this.state.renderedFeatures.features.map(feature => Number(feature.properties._id)));
     this.next();
   },
 
   next: function () {
-    // Deselect roads.
     this.map.setFilter(roadSelected, ['all', ['in', '_id', '']]);
-
-    // Add the skipped task to state, so we can request one we haven't gotten yet.
-    const skippedTasks = this.state.skippedTasks.concat([this.state.currentTaskId]);
-    this.setState({ selectedIds: [], skippedTasks, mode: null }, this.fetchNextTask);
+    this.props.skipTask(this.state.currentTaskId);
+    this.setState({ selectedIds: [], mode: null }, this.props.fetchNextTask);
   },
 
   renderSelectedIds: function () {
@@ -381,59 +387,97 @@ var Tasks = React.createClass({
       return <p className='empty'>{`${t('No roads selected yet. Click a road to select it')}.`}</p>;
     }
     if (selectedIds.length === 1) {
-      return <p>{t('1 road selected. Select at least another one.')}</p>;
+      return <p>{t('1 road selected. Select at least one more')}</p>;
     }
-    return <p>{`${selectedIds.length} ${t('roads')} ${t('selected')}.`}</p>;
+    return <p>{`${selectedIds.length} ${t('roads selected')}.`}</p>;
   },
 
   renderInflight: function () {
     return (
-      <div className='map-options map-panel'>
-        <h2>{t('Performing action...')}</h2>
+      <div className='map__controls map__controls--top-right'>
+        <div className='panel tasks-panel'>
+          <div className='panel__body'>
+            <h2>{t('Performing action...')}</h2>
+          </div>
+        </div>
       </div>
     );
   },
 
   render: function () {
     const { hoverId } = this.state;
-    const { task, taskError, osmInflight } = this.props;
+    const { osmInflight } = this.props;
     return (
-      <div className='task-container'>
-        <div className='map-container'>
-          <div id='map' />
+      <section className='inpage inpage--alt'>
+        <header className='inpage__header'>
+          <div className='inner'>
+            <div className='inpage__headline'>
+              <h1 className='inpage__title'>{t('Tasks')}</h1>
+            </div>
+          </div>
+        </header>
+        <div className='inpage__body'>
+          <div className='inner'>
+
+            <div className='task-container'>
+              <figure className='map'>
+                <div className='map__media' id='map'></div>
+              </figure>
+              {
+                status === 'error' &&
+                  <div className='placeholder__fullscreen'>
+                    <h3 className='placeholder__message'>{t('Error')}</h3>
+                  </div>
+              }
+              {
+                status === 'pending' &&
+                  <div className='placeholder__fullscreen'>
+                    <h3 className='placeholder__message'>{t('Loading')}</h3>
+                  </div>
+              }
+              {hoverId ? this.renderPropertiesOverlay() : null}
+              {osmInflight ? this.renderInflight() : this.renderInstrumentPanel()}
+            </div>
+
+          </div>
         </div>
-        {!task || taskError ? this.renderPlaceholder() : null}
-        {hoverId ? this.renderPropertiesOverlay() : null}
-        {osmInflight ? this.renderInflight() : this.renderInstrumentPanel()}
-      </div>
+      </section>
     );
   }
 });
 
-function selector (state) {
-  return {
-    task: state.waytasks.data,
-    taskId: state.waytasks.id,
-    taskError: state.waytasks.error,
-    osmInflight: state.osmChange.fetching,
-    lastUpdated: state.osmChange.taskId
-  };
-}
 
-function dispatcher (dispatch) {
-  return {
-    _fetchNextTask: function (skippedTasks) { dispatch(fetchNextWayTask(skippedTasks)); },
-    _markTaskAsDone: function (taskId) { dispatch(markTaskAsDone(taskId)); },
-    _queryOsm: function (taskId, payload) { dispatch(queryOsm(taskId, payload)); },
-    _reloadCurrentTask: function (taskId) { dispatch(reloadCurrentTask(taskId)); },
-    _modifyWaysWithNewPoint: function (features, point) {
-      dispatch(modifyWaysWithNewPoint(features, point));
-    },
-    _setGlobalZoom: function (...args) { dispatch(setGlobalZoom(...args)); }
-  };
-}
-
-module.exports = connect(selector, dispatcher)(Tasks);
+export default compose(
+  connect(
+    state => ({
+      task: state.waytasks.geoJSON,
+      taskId: state.waytasks.id,
+      taskCount: state.waytasks.taskCount,
+      status: state.waytasks.status,
+      osmInflight: state.osmChange.fetching,
+      lastUpdated: state.osmChange.taskId
+    }),
+    dispatch => ({
+      fetchNextTask: () => dispatch(fetchNextWayTaskEpic()),
+      fetchTaskCount: () => dispatch(fetchWayTaskCountEpic()),
+      skipTask: (id) => dispatch(skipTask(id)),
+      _markTaskAsDone: (taskIds) => dispatch(markWayTaskPendingEpic(taskIds)),
+      _queryOsm: function (taskId, payload) { dispatch(queryOsm(taskId, payload)); },
+      _reloadCurrentTask: function (taskId) { dispatch(reloadCurrentTaskEpic(taskId)); },
+      _modifyWaysWithNewPoint: function (features, point) {
+        dispatch(modifyWaysWithNewPoint(features, point));
+      },
+      _deleteWays: function (taskId, wayIds) { dispatch(deleteEntireWays(taskId, wayIds)); },
+      _setGlobalZoom: debounce((mapPosition) => dispatch(setGlobalZoom(mapPosition)), 100, { leading: true, trailing: true })
+    })
+  ),
+  lifecycle({
+    componentDidMount: function () {
+      this.props.fetchNextTask();
+      this.props.fetchTaskCount();
+    }
+  })
+)(Tasks);
 
 function findIndex (haystack, fn) {
   let idx = -1;

@@ -1,0 +1,9 @@
+.tasks {
+  .panel__title {
+    display: inline;
+  }
+  .panel__subtitle.tasks-remaining {
+    display: inline;
+    padding-left: 8px;
+  }
+}

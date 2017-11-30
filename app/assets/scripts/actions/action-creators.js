@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch';
 import _ from 'lodash';
+import XmlReader from 'xml-reader';
 import * as actions from './action-types';
 import config from '../config';
 
@@ -164,108 +165,10 @@ export function fetchAdminStats (id = null) {
   };
 }
 
-// ////////////////////////////////////////////////////////////////
-//                          WAYTASKS                             //
-// ////////////////////////////////////////////////////////////////
-
-function requestWayTask () {
-  return {
-    type: actions.REQUEST_WAY_TASK
-  };
-}
-
-function reloadWayTask () {
-  return {
-    type: actions.RELOAD_WAY_TASK
-  };
-}
-
-function receiveWayTask (json, error = null) {
-  return {
-    type: actions.RECEIVE_WAY_TASK,
-    json: json,
-    error,
-    receivedAt: Date.now()
-  };
-}
-
-export function fetchNextWayTask (skippedTasks) {
-  return function (dispatch) {
-    dispatch(requestWayTask());
-
-    let url = `${config.api}/tasks/next`;
-    if (Array.isArray(skippedTasks) && skippedTasks.length) {
-      url += `?skip=${skippedTasks.join(',')}`;
-    }
-    return fetch(url)
-      .then(response => {
-        if (response.status === 404) {
-          throw new Error('No tasks remaining');
-        } else if (response.status >= 400) {
-          throw new Error('Connection error');
-        }
-        return response.json();
-      })
-      .then(json => {
-        json.data.features.forEach(feature => {
-          feature.properties._id = feature.meta.id;
-        });
-        return dispatch(receiveWayTask(json));
-      }, e => {
-        console.log('e', e);
-        return dispatch(receiveWayTask(null, e.message));
-      });
-  };
-}
-
-export function reloadCurrentTask (taskId) {
-  return function (dispatch) {
-    dispatch(reloadWayTask());
-    dispatch(requestWayTask());
-    let url = `${config.api}/tasks/${taskId}`;
-    return fetch(url)
-      .then(response => {
-        if (response.status >= 400) {
-          throw new Error('Bad response');
-        }
-        return response.json();
-      })
-      .then(json => {
-        json.data.features.forEach(feature => {
-          feature.properties._id = feature.meta.id;
-        });
-        return dispatch(receiveWayTask(json));
-      }, e => {
-        console.log('e', e);
-        return dispatch(receiveWayTask(null, 'Data not available'));
-      });
-  };
-}
 
 // ////////////////////////////////////////////////////////////////
 //                        osm changesets                         //
 // ////////////////////////////////////////////////////////////////
-
-export function markTaskAsDone (taskIds) {
-  let ids = Array.isArray(taskIds) ? taskIds : [taskIds];
-  return function (dispatch) {
-    putPendingTask({way_ids: ids});
-  };
-}
-
-function putPendingTask (ids) {
-  let url = `${config.api}/tasks/pending`;
-  return fetch(url, {
-    method: 'PUT',
-    body: objectToBlob(ids)
-  }).then(response => {
-    if (response.status >= 400) {
-      throw new Error('Could not update task status');
-    }
-    return response;
-  });
-}
-
 function requestOsmChange () {
   return {
     type: actions.REQUEST_OSM_CHANGE
@@ -284,19 +187,19 @@ function completeOsmChange (taskId, error = null) {
 export function queryOsm (taskId, payload) {
   return function (dispatch) {
     dispatch(requestOsmChange());
-    createChangeset(dispatch, upload);
-
-    function upload (changesetId) {
-      let url = `${config.api}/changeset/${changesetId}/upload`;
-      return fetch(url, {
-        method: 'POST',
-        body: objectToBlob({ osmChange: payload })
-      })
-      .then(() => {
-        return dispatch(completeOsmChange(taskId));
-      });
-    }
+    createChangeset(dispatch, changesetId => uploadChangeset(dispatch, taskId, payload, changesetId));
   };
+}
+
+function uploadChangeset (dispatch, taskId, payload, changesetId) {
+  let url = `${config.api}/changeset/${changesetId}/upload`;
+  return fetch(url, {
+    method: 'POST',
+    body: objectToBlob({ osmChange: payload })
+  })
+  .then(() => {
+    return dispatch(completeOsmChange(taskId));
+  });
 }
 
 function createChangeset (dispatch, cb) {
@@ -320,6 +223,47 @@ function createChangeset (dispatch, cb) {
 
 function objectToBlob (obj) {
   return new Blob([JSON.stringify(obj, null, 2)], {type: 'application/json'});
+}
+
+// Since the geojson that powers the tasks endpoint doesn't include node IDs,
+// we must query the XML endpoint to get these IDs, then format them into
+// a `delete` action.
+export function deleteEntireWays (taskId, wayIds) {
+  return function (dispatch) {
+    dispatch(requestOsmChange());
+
+    const nodeIds = [];
+    fetch(`${config.api}/api/0.6/ways?nodes=true&excludeDoubleLinkedNodes=true&ways=${wayIds.join(',')}`)
+    .then(response => {
+      if (response.status >= 400) {
+        throw new Error('Bad response');
+      }
+      return response.text();
+    }).then(parseXml, e => {
+      return dispatch(completeOsmChange(null, e));
+    });
+
+    function parseXml (xmlDoc) {
+      let reader = XmlReader.create({stream: true});
+      reader.on('tag:node', node => {
+        if (node.attributes.id) {
+          nodeIds.push(node.attributes.id);
+        }
+      });
+      reader.on('done', formatPayload);
+      reader.parse(xmlDoc);
+    }
+
+    function formatPayload () {
+      let payload = {
+        delete: {
+          node: nodeIds.map(id => ({ id })),
+          way: wayIds.map(id => ({ id }))
+        }
+      };
+      createChangeset(dispatch, changesetId => uploadChangeset(dispatch, taskId, payload, changesetId));
+    }
+  };
 }
 
 // ////////////////////////////////////////////////////////////////

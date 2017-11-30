@@ -57,10 +57,10 @@ const AATable = React.createClass({
       <thead>
         <tr>
           {_.map(displayHeader, (d) => {
-            let c = classnames('collecticons', {
-              'collecticons-sort-none': this.state.sortState.field !== d.key,
-              'collecticons-sort-asc': this.state.sortState.field === d.key && this.state.sortState.order === 'asc',
-              'collecticons-sort-desc': this.state.sortState.field === d.key && this.state.sortState.order === 'desc'
+            let c = classnames({
+              'collecticon-sort-none': this.state.sortState.field !== d.key,
+              'collecticon-sort-asc': this.state.sortState.field === d.key && this.state.sortState.order === 'asc',
+              'collecticon-sort-desc': this.state.sortState.field === d.key && this.state.sortState.order === 'desc'
             });
             return (
               <th key={d.key} onClick={this.sortLinkClickHandler.bind(null, d.key)}>
@@ -148,9 +148,9 @@ const AATable = React.createClass({
       {_.map(sorted, (vpromm, i) => {
         const vprommFieldInDB = (this.props.fieldRoads.includes(vpromm));
         let propBtnLabel = this.state.expandedId === vpromm ? t('Hide') : t('Show');
-        let propBtnClass = classnames('bttn-table-expand', {
-          'bttn-table-expand--show': this.state.expandedId !== vpromm,
-          'bttn-table-expand--hide': this.state.expandedId === vpromm
+        let propBtnClass = classnames('button-table-expand', {
+          'button-table-expand--show': this.state.expandedId !== vpromm,
+          'button-table-expand--hide': this.state.expandedId === vpromm
         });
         let propContainerClass = classnames('table-properties', {
           'table-properties--hidden': this.state.expandedId !== vpromm
