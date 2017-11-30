@@ -3,6 +3,10 @@ import _ from 'lodash';
 import XmlReader from 'xml-reader';
 import * as actions from './action-types';
 import config from '../config';
+import {
+  fetchWayTaskEpic
+} from '../redux/modules/tasks';
+
 
 // ////////////////////////////////////////////////////////////////
 //                       ADMIN SUBREGIONS                        //
@@ -169,40 +173,9 @@ export function fetchAdminStats (id = null) {
 // ////////////////////////////////////////////////////////////////
 //                        osm changesets                         //
 // ////////////////////////////////////////////////////////////////
-function requestOsmChange () {
-  return {
-    type: actions.REQUEST_OSM_CHANGE
-  };
-}
+const requestOsmChange = () => ({ type: actions.REQUEST_OSM_CHANGE });
 
-function completeOsmChange (taskId, error = null) {
-  return {
-    type: actions.COMPLETE_OSM_CHANGE,
-    taskId,
-    error,
-    receivedAt: Date.now()
-  };
-}
-
-export function queryOsm (taskId, payload) {
-  return function (dispatch) {
-    dispatch(requestOsmChange());
-    createChangeset(dispatch, changesetId => uploadChangeset(dispatch, taskId, payload, changesetId));
-  };
-}
-
-function uploadChangeset (dispatch, taskId, payload, changesetId) {
-  let url = `${config.api}/changeset/${changesetId}/upload`;
-  return fetch(url, {
-    method: 'POST',
-    body: objectToBlob({ osmChange: payload })
-  })
-  .then(() => {
-    return dispatch(completeOsmChange(taskId));
-  });
-}
-
-function createChangeset (dispatch, cb) {
+const createChangeset = (dispatch, cb) => {
   const changesetUrl = `${config.api}/changeset/create`;
   const details = {
     uid: 555555,
@@ -219,10 +192,36 @@ function createChangeset (dispatch, cb) {
   }).then(cb, e => {
     return dispatch(completeOsmChange(null, e));
   });
-}
+};
 
-function objectToBlob (obj) {
+const uploadChangeset = (dispatch, taskId, payload, changesetId) => {
+  return fetch(`${config.api}/changeset/${changesetId}/upload`, {
+    method: 'POST',
+    body: objectToBlob({ osmChange: payload })
+  })
+  .then(() => {
+    // TODO - completeOsmChange shouldn't run until after fetchWayTask refreshes task geometry
+    dispatch(fetchWayTaskEpic(taskId));
+    dispatch(completeOsmChange(taskId));
+  });
+};
+
+const completeOsmChange = (taskId, error = null) => ({
+  type: actions.COMPLETE_OSM_CHANGE,
+  taskId,
+  error,
+  receivedAt: Date.now()
+});
+
+const objectToBlob = (obj) => {
   return new Blob([JSON.stringify(obj, null, 2)], {type: 'application/json'});
+};
+
+export function queryOsm (taskId, payload) {
+  return function (dispatch) {
+    dispatch(requestOsmChange());
+    createChangeset(dispatch, changesetId => uploadChangeset(dispatch, taskId, payload, changesetId));
+  };
 }
 
 // Since the geojson that powers the tasks endpoint doesn't include node IDs,

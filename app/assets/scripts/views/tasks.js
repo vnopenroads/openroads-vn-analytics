@@ -27,7 +27,7 @@ import {
 } from '../actions/action-creators';
 import {
   fetchNextWayTaskEpic,
-  reloadCurrentTaskEpic,
+  fetchWayTaskEpic,
   fetchWayTaskCountEpic,
   markWayTaskPendingEpic,
   skipTask
@@ -82,11 +82,9 @@ var Tasks = React.createClass({
     fetchNextTask: React.PropTypes.func,
     _setGlobalZoom: React.PropTypes.func,
     _queryOsm: React.PropTypes.func,
-    _reloadCurrentTask: React.PropTypes.func,
     _markTaskAsDone: React.PropTypes.func,
     _deleteWays: React.PropTypes.func,
     skipTask: React.PropTypes.func,
-
     osmInflight: React.PropTypes.bool,
     meta: React.PropTypes.object,
     task: React.PropTypes.object,
@@ -176,8 +174,9 @@ var Tasks = React.createClass({
       }, () => this.onMapLoaded(() => this.syncMap()));
     } else if (lastUpdated && lastUpdated === this.state.currentTaskId) {
       // We've just successfully completed an osm changeset
-      // Reload the task to sync UI with API
-      this.props._reloadCurrentTask(this.state.currentTaskId);
+
+      // TODO - move this state into redux store so it can be modified directly by actions
+      // specifically, COMPLETE_OSM_CHANGE
       this.setState({
         currentTaskId: null,
         selectedIds: [],
@@ -329,7 +328,10 @@ var Tasks = React.createClass({
     const { selectedIds, renderedFeatures, currentTaskId } = this.state;
     const { features } = renderedFeatures;
     const toDelete = features.filter(feature => selectedIds[0] !== feature.properties._id);
+
     this.props._deleteWays(currentTaskId, toDelete.map(feature => feature.properties._id));
+
+    // TODO - should deduping mark task as done?
     this.props._markTaskAsDone(toDelete.map(feature => feature.properties._id));
   },
 
@@ -340,6 +342,7 @@ var Tasks = React.createClass({
     const line2 = features.find(f => f.properties._id === selectedIds[1]);
     const intersectingFeatures = intersect(line1, line2);
     const changes = [];
+
     if (!intersectingFeatures.features.length) {
       // lines don't intersect, join them from the nearest endpoint of line 1
       // find the end of line 1 that's closest to line 2
@@ -363,8 +366,12 @@ var Tasks = React.createClass({
       changes.push(insertPointOnLine(line1, intersection));
       changes.push(insertPointOnLine(line2, intersection));
     }
+
     const changeset = createModifyLineString(changes);
+
     this.props._queryOsm(currentTaskId, changeset);
+
+    // TODO - should deduping mark task as done?
     this.props._markTaskAsDone([line1.properties._id, line2.properties._id]);
   },
 
@@ -462,17 +469,14 @@ export default compose(
       fetchTaskCount: () => dispatch(fetchWayTaskCountEpic()),
       skipTask: (id) => dispatch(skipTask(id)),
       _markTaskAsDone: (taskIds) => dispatch(markWayTaskPendingEpic(taskIds)),
-      _queryOsm: function (taskId, payload) { dispatch(queryOsm(taskId, payload)); },
-      _reloadCurrentTask: function (taskId) { dispatch(reloadCurrentTaskEpic(taskId)); },
-      _modifyWaysWithNewPoint: function (features, point) {
-        dispatch(modifyWaysWithNewPoint(features, point));
-      },
-      _deleteWays: function (taskId, wayIds) { dispatch(deleteEntireWays(taskId, wayIds)); },
-      _setGlobalZoom: debounce((mapPosition) => dispatch(setGlobalZoom(mapPosition)), 100, { leading: true, trailing: true })
+      _queryOsm: (taskId, payload) => dispatch(queryOsm(taskId, payload)),
+      _deleteWays: (taskId, wayIds) => dispatch(deleteEntireWays(taskId, wayIds)),
+      _setGlobalZoom: debounce((mapPosition) => dispatch(setGlobalZoom(mapPosition)), 500, { leading: true, trailing: true })
     })
   ),
   lifecycle({
     componentDidMount: function () {
+      // TODO - data fetching for this page should be moved into a route container
       this.props.fetchNextTask();
       this.props.fetchTaskCount();
     }
