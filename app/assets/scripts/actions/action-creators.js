@@ -165,108 +165,10 @@ export function fetchAdminStats (id = null) {
   };
 }
 
-// ////////////////////////////////////////////////////////////////
-//                          WAYTASKS                             //
-// ////////////////////////////////////////////////////////////////
-
-function requestWayTask () {
-  return {
-    type: actions.REQUEST_WAY_TASK
-  };
-}
-
-function reloadWayTask () {
-  return {
-    type: actions.RELOAD_WAY_TASK
-  };
-}
-
-function receiveWayTask (json, error = null) {
-  return {
-    type: actions.RECEIVE_WAY_TASK,
-    json: json,
-    error,
-    receivedAt: Date.now()
-  };
-}
-
-export function fetchNextWayTask (skippedTasks) {
-  return function (dispatch) {
-    dispatch(requestWayTask());
-
-    let url = `${config.api}/tasks/next`;
-    if (Array.isArray(skippedTasks) && skippedTasks.length) {
-      url += `?skip=${skippedTasks.join(',')}`;
-    }
-    return fetch(url)
-      .then(response => {
-        if (response.status === 404) {
-          throw new Error('No tasks remaining');
-        } else if (response.status >= 400) {
-          throw new Error('Connection error');
-        }
-        return response.json();
-      })
-      .then(json => {
-        json.data.features.forEach(feature => {
-          feature.properties._id = feature.meta.id;
-        });
-        return dispatch(receiveWayTask(json));
-      }, e => {
-        console.log('e', e);
-        return dispatch(receiveWayTask(null, e.message));
-      });
-  };
-}
-
-export function reloadCurrentTask (taskId) {
-  return function (dispatch) {
-    dispatch(reloadWayTask());
-    dispatch(requestWayTask());
-    let url = `${config.api}/tasks/${taskId}`;
-    return fetch(url)
-      .then(response => {
-        if (response.status >= 400) {
-          throw new Error('Bad response');
-        }
-        return response.json();
-      })
-      .then(json => {
-        json.data.features.forEach(feature => {
-          feature.properties._id = feature.meta.id;
-        });
-        return dispatch(receiveWayTask(json));
-      }, e => {
-        console.log('e', e);
-        return dispatch(receiveWayTask(null, 'Data not available'));
-      });
-  };
-}
 
 // ////////////////////////////////////////////////////////////////
 //                        osm changesets                         //
 // ////////////////////////////////////////////////////////////////
-
-export function markTaskAsDone (taskIds) {
-  let ids = Array.isArray(taskIds) ? taskIds : [taskIds];
-  return function (dispatch) {
-    putPendingTask({way_ids: ids});
-  };
-}
-
-function putPendingTask (ids) {
-  let url = `${config.api}/tasks/pending`;
-  return fetch(url, {
-    method: 'PUT',
-    body: objectToBlob(ids)
-  }).then(response => {
-    if (response.status >= 400) {
-      throw new Error('Could not update task status');
-    }
-    return response;
-  });
-}
-
 function requestOsmChange () {
   return {
     type: actions.REQUEST_OSM_CHANGE

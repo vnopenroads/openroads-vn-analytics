@@ -1,6 +1,13 @@
 'use strict';
 
 import React from 'react';
+import {
+  debounce
+} from 'lodash';
+import {
+  compose,
+  lifecycle
+} from 'recompose';
 import { connect } from 'react-redux';
 import mapboxgl from 'mapbox-gl';
 import config from '../config';
@@ -13,14 +20,18 @@ import { createModifyLineString } from '../utils/to-osm';
 import { t } from '../utils/i18n';
 
 import {
-  fetchNextWayTask,
-  markTaskAsDone,
   setGlobalZoom,
   queryOsm,
-  reloadCurrentTask,
   modifyWaysWithNewPoint,
   deleteEntireWays
 } from '../actions/action-creators';
+import {
+  fetchNextWayTaskEpic,
+  reloadCurrentTaskEpic,
+  fetchWayTaskCountEpic,
+  markWayTaskPendingEpic,
+  skipTask
+} from '../redux/modules/tasks';
 
 const source = 'collisions';
 const roadHoverId = 'road-hover';
@@ -62,29 +73,25 @@ var Tasks = React.createClass({
       currentTaskId: null,
       renderedFeatures: null,
       mode: null,
-      skippedTasks: [],
       hoverId: null,
       selectedIds: []
     };
   },
 
   propTypes: {
-    _fetchNextTask: React.PropTypes.func,
+    fetchNextTask: React.PropTypes.func,
     _setGlobalZoom: React.PropTypes.func,
     _queryOsm: React.PropTypes.func,
     _reloadCurrentTask: React.PropTypes.func,
     _markTaskAsDone: React.PropTypes.func,
     _deleteWays: React.PropTypes.func,
+    skipTask: React.PropTypes.func,
 
     osmInflight: React.PropTypes.bool,
     meta: React.PropTypes.object,
     task: React.PropTypes.object,
     taskId: React.PropTypes.number,
-    taskError: React.PropTypes.string
-  },
-
-  componentWillMount: function () {
-    this.fetchNextTask();
+    taskCount: React.PropTypes.number
   },
 
   componentDidMount: function () {
@@ -97,18 +104,14 @@ var Tasks = React.createClass({
     }).addControl(new mapboxgl.NavigationControl(), 'bottom-left');
 
     this.onMapLoaded(() => {
-      let makeXYZ = function () {
-        const xyz = map.getCenter();
-        xyz.zoom = map.getZoom();
-        return xyz;
-      };
-
       map.on('zoom', () => {
-        this.props._setGlobalZoom(makeXYZ());
+        const { lat, lng } = map.getCenter();
+        this.props._setGlobalZoom({ lat, lng, zoom: map.getZoom() });
       });
 
       map.on('moveend', () => {
-        this.props._setGlobalZoom(makeXYZ());
+        const { lat, lng } = map.getCenter();
+        this.props._setGlobalZoom({ lat, lng, zoom: map.getZoom() });
       });
 
       map.on('mousemove', (e) => {
@@ -124,7 +127,7 @@ var Tasks = React.createClass({
           id = '';
         }
 
-        this.setState({hoverId: id});
+        this.setState({hoverId: id}); // eslint-disable-line react/no-did-mount-set-state
         map.setFilter(roadHoverId, ['==', '_id', id]);
       });
 
@@ -156,13 +159,15 @@ var Tasks = React.createClass({
           }
 
           map.setFilter(roadSelected, ['in', '_id'].concat(selectedIds));
-          this.setState({ selectedIds });
+          this.setState({ selectedIds }); // eslint-disable-line react/no-did-mount-set-state
         }
       });
     });
   },
 
-  componentWillReceiveProps: function ({taskId, task, lastUpdated}) {
+  componentWillReceiveProps: function ({ taskId, task, lastUpdated }) {
+    // TODO - ANTIPATTERN: should not mirror properties task and taskId in state
+
     if (taskId && taskId !== this.state.currentTaskId) {
       // We've queried and received a new task
       this.setState({
@@ -179,10 +184,6 @@ var Tasks = React.createClass({
         mode: null
       });
     }
-  },
-
-  fetchNextTask: function () {
-    this.props._fetchNextTask(this.state.skippedTasks);
   },
 
   onMapLoaded: function (fn) {
@@ -212,16 +213,6 @@ var Tasks = React.createClass({
     map.setFilter(roadSelected, ['in', '_id'].concat(this.state.selectedIds));
   },
 
-  renderPlaceholder: function () {
-    const { taskError } = this.props;
-    const message = taskError || 'Loading your first task...';
-    return (
-      <div className='placeholder__fullscreen'>
-        <h3 className='placeholder__message'>{t(message)}</h3>
-      </div>
-    );
-  },
-
   renderPropertiesOverlay: function () {
     const { hoverId } = this.state;
     const { task } = this.props;
@@ -245,13 +236,18 @@ var Tasks = React.createClass({
 
   renderInstrumentPanel: function () {
     const { mode, renderedFeatures } = this.state;
+    const { taskCount } = this.props;
+
     return (
       <div className='map__controls map__controls--top-right'>
         <div className='panel tasks-panel'>
           {renderedFeatures ? (
           <div className='panel__header'>
             <div className='panel__headline'>
-              <h2 className='panel__title'>{t('Task')}</h2>
+              <div>
+                <h2 className='panel__title'>{t('Task')}</h2>
+                {taskCount && <p className='panel__subtitle tasks-remaining'>({taskCount} {t('Tasks Remaining')})</p>}
+              </div>
               <p className='panel__subtitle'>{t('Showing')} {renderedFeatures.features.length} {t('Roads')}</p>
             </div>
           </div>
@@ -375,17 +371,14 @@ var Tasks = React.createClass({
   markAsDone: function () {
     // This function is different from #next, in that it allows you
     // to specify all visible roads as 'done'
-    this.props._markTaskAsDone(this.state.renderedFeatures.features.map(feature => feature.properties._id));
+    this.props._markTaskAsDone(this.state.renderedFeatures.features.map(feature => Number(feature.properties._id)));
     this.next();
   },
 
   next: function () {
-    // Deselect roads.
     this.map.setFilter(roadSelected, ['all', ['in', '_id', '']]);
-
-    // Add the skipped task to state, so we can request one we haven't gotten yet.
-    const skippedTasks = this.state.skippedTasks.concat([this.state.currentTaskId]);
-    this.setState({ selectedIds: [], skippedTasks, mode: null }, this.fetchNextTask);
+    this.props.skipTask(this.state.currentTaskId);
+    this.setState({ selectedIds: [], mode: null }, this.props.fetchNextTask);
   },
 
   renderSelectedIds: function () {
@@ -413,7 +406,7 @@ var Tasks = React.createClass({
 
   render: function () {
     const { hoverId } = this.state;
-    const { task, taskError, osmInflight } = this.props;
+    const { osmInflight } = this.props;
     return (
       <section className='inpage inpage--alt'>
         <header className='inpage__header'>
@@ -430,7 +423,18 @@ var Tasks = React.createClass({
               <figure className='map'>
                 <div className='map__media' id='map'></div>
               </figure>
-              {!task || taskError ? this.renderPlaceholder() : null}
+              {
+                status === 'error' &&
+                  <div className='placeholder__fullscreen'>
+                    <h3 className='placeholder__message'>{t('Error')}</h3>
+                  </div>
+              }
+              {
+                status === 'pending' &&
+                  <div className='placeholder__fullscreen'>
+                    <h3 className='placeholder__message'>{t('Loading')}</h3>
+                  </div>
+              }
               {hoverId ? this.renderPropertiesOverlay() : null}
               {osmInflight ? this.renderInflight() : this.renderInstrumentPanel()}
             </div>
@@ -442,31 +446,38 @@ var Tasks = React.createClass({
   }
 });
 
-function selector (state) {
-  return {
-    task: state.waytasks.data,
-    taskId: state.waytasks.id,
-    taskError: state.waytasks.error,
-    osmInflight: state.osmChange.fetching,
-    lastUpdated: state.osmChange.taskId
-  };
-}
 
-function dispatcher (dispatch) {
-  return {
-    _fetchNextTask: function (skippedTasks) { dispatch(fetchNextWayTask(skippedTasks)); },
-    _markTaskAsDone: function (taskId) { dispatch(markTaskAsDone(taskId)); },
-    _queryOsm: function (taskId, payload) { dispatch(queryOsm(taskId, payload)); },
-    _reloadCurrentTask: function (taskId) { dispatch(reloadCurrentTask(taskId)); },
-    _modifyWaysWithNewPoint: function (features, point) {
-      dispatch(modifyWaysWithNewPoint(features, point));
-    },
-    _deleteWays: function (taskId, wayIds) { dispatch(deleteEntireWays(taskId, wayIds)); },
-    _setGlobalZoom: function (...args) { dispatch(setGlobalZoom(...args)); }
-  };
-}
-
-module.exports = connect(selector, dispatcher)(Tasks);
+export default compose(
+  connect(
+    state => ({
+      task: state.waytasks.geoJSON,
+      taskId: state.waytasks.id,
+      taskCount: state.waytasks.taskCount,
+      status: state.waytasks.status,
+      osmInflight: state.osmChange.fetching,
+      lastUpdated: state.osmChange.taskId
+    }),
+    dispatch => ({
+      fetchNextTask: () => dispatch(fetchNextWayTaskEpic()),
+      fetchTaskCount: () => dispatch(fetchWayTaskCountEpic()),
+      skipTask: (id) => dispatch(skipTask(id)),
+      _markTaskAsDone: (taskIds) => dispatch(markWayTaskPendingEpic(taskIds)),
+      _queryOsm: function (taskId, payload) { dispatch(queryOsm(taskId, payload)); },
+      _reloadCurrentTask: function (taskId) { dispatch(reloadCurrentTaskEpic(taskId)); },
+      _modifyWaysWithNewPoint: function (features, point) {
+        dispatch(modifyWaysWithNewPoint(features, point));
+      },
+      _deleteWays: function (taskId, wayIds) { dispatch(deleteEntireWays(taskId, wayIds)); },
+      _setGlobalZoom: debounce((mapPosition) => dispatch(setGlobalZoom(mapPosition)), 100, { leading: true, trailing: true })
+    })
+  ),
+  lifecycle({
+    componentDidMount: function () {
+      this.props.fetchNextTask();
+      this.props.fetchTaskCount();
+    }
+  })
+)(Tasks);
 
 function findIndex (haystack, fn) {
   let idx = -1;
