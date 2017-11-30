@@ -20,7 +20,6 @@ import { createModifyLineString } from '../utils/to-osm';
 import { t } from '../utils/i18n';
 
 import {
-  markTaskAsDone,
   setGlobalZoom,
   queryOsm,
   modifyWaysWithNewPoint,
@@ -30,6 +29,7 @@ import {
   fetchNextWayTaskEpic,
   reloadCurrentTaskEpic,
   fetchWayTaskCountEpic,
+  markWayTaskPendingEpic,
   skipTask
 } from '../redux/modules/tasks';
 
@@ -371,7 +371,7 @@ var Tasks = React.createClass({
   markAsDone: function () {
     // This function is different from #next, in that it allows you
     // to specify all visible roads as 'done'
-    this.props._markTaskAsDone(this.state.renderedFeatures.features.map(feature => feature.properties._id));
+    this.props._markTaskAsDone(this.state.renderedFeatures.features.map(feature => Number(feature.properties._id)));
     this.next();
   },
 
@@ -461,7 +461,7 @@ export default compose(
       fetchNextTask: () => dispatch(fetchNextWayTaskEpic()),
       fetchTaskCount: () => dispatch(fetchWayTaskCountEpic()),
       skipTask: (id) => dispatch(skipTask(id)),
-      _markTaskAsDone: function (taskId) { dispatch(markTaskAsDone(taskId)); },
+      _markTaskAsDone: (taskIds) => dispatch(markWayTaskPendingEpic(taskIds)),
       _queryOsm: function (taskId, payload) { dispatch(queryOsm(taskId, payload)); },
       _reloadCurrentTask: function (taskId) { dispatch(reloadCurrentTaskEpic(taskId)); },
       _modifyWaysWithNewPoint: function (features, point) {

@@ -101,6 +101,25 @@ export const fetchWayTaskCountEpic = () => dispatch => {
 };
 
 
+export const markWayTaskPendingEpic = way_ids => dispatch => {
+  dispatch({ type: 'MARK_WAY_TASK_PENDING' });
+
+  return fetch(`${config.api}/tasks/pending`, {
+    method: 'PUT',
+    body: new Blob([JSON.stringify({ way_ids: way_ids })], { type: 'application/json' })
+  })
+    .then(response => {
+      if (response.status >= 400) {
+        console.error('Error marking task as pending', response.statuxText);
+        dispatch({ type: 'MARK_WAY_TASK_PENDING_ERROR' });
+      }
+
+      dispatch({ type: 'MARK_WAY_TASK_PENDING_SUCCESS' });
+      dispatch(fetchWayTaskCountEpic());
+    });
+};
+
+
 /**
  * reducer
  */
