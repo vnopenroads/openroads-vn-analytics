@@ -803,61 +803,6 @@ label[for] {
 }
 
 
-/* Form columns (simple grid system)
-   ========================================================================== */
-
-.form__hascol {
-  @extend .clearfix;
-  margin-bottom: $global-spacing;
-
-  > *:not(.form__option) {
-    margin: ($global-spacing) 0 0 0;
-  }
-}
-
-.form__hascol--2 {
-  > * {
-    $col-group: 2;
-    @include column(6/12, $cycle: $col-group);
-
-    @for $child from 1 through $col-group {
-      &:nth-child(#{$child}) {
-        margin-top: 0;
-      }
-      #{$child}: #{$child + 1}; 
-    }
-  }
-}
-
-.form__hascol--3 {
-  > * {
-    $col-group: 3;
-    @include column(4/12, $cycle: $col-group);
-
-    @for $child from 1 through $col-group {
-      &:nth-child(#{$child}) {
-        margin-top: 0;
-      }
-      #{$child}: #{$child + 1}; 
-    }
-  }
-}
-
-.form__hascol--4 {
-  > * {
-    $col-group: 4;
-    @include column(3/12, $cycle: $col-group);
-
-    @for $child from 1 through $col-group {
-      &:nth-child(#{$child}) {
-        margin-top: 0;
-      }
-      #{$child}: #{$child + 1}; 
-    }
-  }
-}
-
-
 /* Form misc
    ========================================================================== */
 
