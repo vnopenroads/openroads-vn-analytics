@@ -2,9 +2,13 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
+import {
+  compose,
+  getContext
+} from 'recompose';
 import mapboxgl from 'mapbox-gl';
+import T from '../components/T';
 import config from '../config';
-import { t } from '../utils/i18n';
 import lineColors from '../utils/line-colors';
 import {
   selectExploreMapLayer,
@@ -16,6 +20,7 @@ import {
 import MapSearch from '../components/map-search';
 import MapOptions from '../components/map-options';
 import MapLegend from '../components/map-legend';
+
 
 var Explore = React.createClass({
   displayName: 'Explore',
@@ -72,6 +77,7 @@ var Explore = React.createClass({
 
   handleLayerChange: function (e) {
     const property = e.target.value;
+    // TODO - don't pass dispatch to component
     this.props.dispatch(selectExploreMapLayer(property));
     this.map.setPaintProperty(
       'conflated',
@@ -82,6 +88,8 @@ var Explore = React.createClass({
 
   handleShowNoVpromms: function (e) {
     const show = e.target.checked;
+
+    // TODO - don't pass dispatch to component
     this.props.dispatch(exploreMapShowNoVpromms(show));
     if (show) {
       this.map.setFilter('conflated', null);
@@ -107,18 +115,13 @@ var Explore = React.createClass({
     }
   },
 
-  shouldComponentUpdate: function (nextProps) {
-    if (nextProps.vprommsBbox.length === 0) { return false; }
-    return true;
-  },
-
   render: function () {
     return (
       <section className='inpage inpage--alt'>
         <header className='inpage__header'>
           <div className='inner'>
             <div className='inpage__headline'>
-              <h1 className='inpage__title'>{t('Explore')}</h1>
+              <h1 className='inpage__title'><T>Explore</T></h1>
             </div>
             <div className='inpage__actions'>
               <MapSearch />
@@ -148,24 +151,23 @@ var Explore = React.createClass({
   }
 });
 
-function selector (state) {
-  return {
-    layer: state.exploreMap.layer,
-    globX: state.globZoom.x,
-    globY: state.globZoom.y,
-    globZ: state.globZoom.z,
-    vprommsBbox: state.VProMMsWayBbox.bbox,
-    adminBbox: state.adminBbox.bbox
-  };
-}
 
-function dispatcher (dispatch) {
-  return {
-    dispatch,
-    _removeVProMMsBBox: function () { dispatch(removeVProMMsBBox()); },
-    _setGlobalZoom: function (xyzObj) { dispatch(setGlobalZoom(xyzObj)); },
-    _setPreviousLocation: function (location) { dispatch(setPreviousLocation(location)); }
-  };
-}
-
-module.exports = connect(selector, dispatcher)(Explore);
+export default compose(
+  getContext({ language: React.PropTypes.string }),
+  connect(
+    state => ({
+      layer: state.exploreMap.layer,
+      globX: state.globZoom.x,
+      globY: state.globZoom.y,
+      globZ: state.globZoom.z,
+      vprommsBbox: state.VProMMsWayBbox.bbox,
+      adminBbox: state.adminBbox.bbox
+    }),
+    dispatch => ({
+      dispatch,
+      _removeVProMMsBBox: function () { dispatch(removeVProMMsBBox()); },
+      _setGlobalZoom: function (xyzObj) { dispatch(setGlobalZoom(xyzObj)); },
+      _setPreviousLocation: function (location) { dispatch(setPreviousLocation(location)); }
+    })
+  )
+)(Explore);

@@ -1,8 +1,14 @@
 'use strict';
 import React from 'react';
 import _ from 'lodash';
+import {
+  compose,
+  getContext
+} from 'recompose';
 import { connect } from 'react-redux';
-import { t, getLanguage } from '../utils/i18n';
+import T, {
+  translate
+} from './T';
 import {
   setSearchType,
   fetchFieldVProMMsIds,
@@ -13,6 +19,7 @@ import {
   fetchAdminBbox
 } from '../actions/action-creators';
 
+
 var MapSearch = React.createClass({
   displayName: 'MapSearch',
 
@@ -22,7 +29,7 @@ var MapSearch = React.createClass({
     vpromms: React.PropTypes.array,
     admins: React.PropTypes.array,
     filteredVProMMs: React.PropTypes.array,
-    lang: React.PropTypes.string,
+    language: React.PropTypes.string,
     _setSearchType: React.PropTypes.func,
     _fetchAdmins: React.PropTypes.func,
     _clearAdmins: React.PropTypes.func,
@@ -50,7 +57,7 @@ var MapSearch = React.createClass({
   },
 
   componentWillReceiveProps: function (nextProps) {
-    if (this.props.lang !== nextProps.lang) {
+    if (this.props.language !== nextProps.language) {
       this.setState({ searchVal: '', showResults: false });
       this.props._clearAdmins();
       this.props._setFilteredVProMMs([]);
@@ -134,7 +141,7 @@ var MapSearch = React.createClass({
   onAAClick: function (aa, e) {
     e.preventDefault();
     this.searchAdminArea(aa.id);
-    this.setState({ searchVal: getLanguage() === 'en' ? aa.name_en : aa.name_vn });
+    this.setState({ searchVal: this.props.language === 'en' ? aa.name_en : aa.name_vn });
   },
 
   onVprommClick: function (id, e) {
@@ -151,7 +158,7 @@ var MapSearch = React.createClass({
     if (this.props.fetching) {
       return (
         <div className='search-results'>
-          <p className='info'>{t('Loading')}...</p>
+          <p className='info'><T>Loading</T>...</p>
         </div>
       );
     }
@@ -165,10 +172,10 @@ var MapSearch = React.createClass({
         contents = _(data)
           .groupBy(o => o.level)
           .reduce((acc, level, key) => {
-            acc.push(<h4 key={`aa-type-admin-${key}`}>{t('Admin Level')} - {key}</h4>);
+            acc.push(<h4 key={`aa-type-admin-${key}`}><T>Admin Level</T> - {key}</h4>);
 
             let adminAreas = level.reduce((_acc, o) => {
-              return _acc.concat(<li key={o.id}><a href='#' onClick={this.onAAClick.bind(null, o)}>{getLanguage() === 'en' ? o.name_en : o.name_vn}</a></li>);
+              return _acc.concat(<li key={o.id}><a href='#' onClick={this.onAAClick.bind(null, o)}>{this.props.language === 'en' ? o.name_en : o.name_vn}</a></li>);
             }, []);
 
             acc.push(<ul key={`aa-admins-${key}`}>{adminAreas}</ul>);
@@ -177,12 +184,12 @@ var MapSearch = React.createClass({
           }, []);
       } else {
         if (this.state.searchVal) {
-          contents = <p className='info' key='no-results'>{t('No results available. Please refine your search')}</p>;
+          contents = <p className='info' key='no-results'><T>No results available. Please refine your search</T></p>;
         }
       }
     } else if (this.props.searchType === 'VProMMs' && this.state.searchVal.length >= 2) {
       if (!data.length) {
-        contents = <p className='info' key='no-results'>{t('No results available. Please refine your search')}</p>;
+        contents = <p className='info' key='no-results'><T>No results available. Please refine your search</T></p>;
       } else {
         contents = [<h4 key={`vpromms-title`}>VProMMs</h4>];
 
@@ -208,13 +215,15 @@ var MapSearch = React.createClass({
   },
 
   render: function () {
+    const { language, searchType } = this.props;
+
     return (
       <form className='form search' onSubmit={this.onSearchSubmit}>
         <div className='form__group'>
-          <label className='form__label' htmlFor='search-field'>{t('Search')}</label>
+          <label className='form__label' htmlFor='search-field'><T>Search</T></label>
           <div className='form__input-group form__input-group--medium'>
-            <select className='form__control' onChange={this.onSearchTypeChange} value={this.props.searchType}>
-              <option value='Admin'>{t('Admin')}</option>
+            <select className='form__control' onChange={this.onSearchTypeChange} value={searchType}>
+              <option value='Admin'>{translate(language, 'Admin')}</option>
               <option value='VProMMs'>VProMMs</option>
             </select>
             <input
@@ -222,40 +231,56 @@ var MapSearch = React.createClass({
               id='search-field'
               name='search-field'
               className='form__control'
-              placeholder={t('Search')}
+              placeholder={translate(language, 'Search')}
               value={this.state.searchVal}
               onChange={this.onSearchQueryChange} />
-            <button type='button' className='search__button' title={t('Search')} onClick={this.onSearchSubmit}><span>{t('Search')}</span></button>
+            <button
+              type='button'
+              className='search__button'
+              onClick={this.onSearchSubmit}
+            >
+              <span><T>Search</T></span>
+            </button>
           </div>
-          {this.state.searchVal !== '' && <button type='button' className='search__clear' title={t('Clear search')} onClick={this.onClearSearch}><span>{t('Clear search')}</span></button> }
+
+          {this.state.searchVal !== '' &&
+            <button
+              type='button'
+              className='search__clear'
+              title={translate(language, 'Clear search')}
+              onClick={this.onClearSearch}
+            >
+              <span><T>Clear search</T></span>
+            </button>
+          }
+
           {this.renderResults()}
+
         </div>
       </form>
     );
   }
 });
 
-function selector (state) {
-  return {
-    searchType: state.setSearchType.searchType,
-    admins: state.admins.units,
-    vpromms: state.fieldVProMMsids.ids,
-    filteredVProMMs: state.setFilteredVProMMs,
-    fetching: state.VProMMSids.fetching || state.admins.fetching,
-    lang: state.language.current
-  };
-}
 
-function dispatcher (dispatch) {
-  return {
-    _fetchFieldVProMMsIds: (...args) => dispatch(fetchFieldVProMMsIds(...args)),
-    _setSearchType: (...args) => dispatch(setSearchType(...args)),
-    _setFilteredVProMMs: (filteredVProMMs) => dispatch(setFilteredVProMMs(filteredVProMMs)),
-    _clearAdmins: () => dispatch(clearAdmins()),
-    _fetchAdmins: (id) => dispatch(fetchAdmins(id)),
-    _fetchVProMMsBbox: (vprommsId) => dispatch(fetchVProMMsBbox(vprommsId)),
-    _fetchAdminBbox: (id) => dispatch(fetchAdminBbox(id))
-  };
-}
-
-module.exports = connect(selector, dispatcher)(MapSearch);
+export default compose(
+  getContext({ language: React.PropTypes.string }),
+  connect(
+    state => ({
+      searchType: state.setSearchType.searchType,
+      admins: state.admins.units,
+      vpromms: state.fieldVProMMsids.ids,
+      filteredVProMMs: state.setFilteredVProMMs,
+      fetching: state.VProMMSids.fetching || state.admins.fetching
+    }),
+    dispatch => ({
+      _fetchFieldVProMMsIds: (...args) => dispatch(fetchFieldVProMMsIds(...args)),
+      _setSearchType: (...args) => dispatch(setSearchType(...args)),
+      _setFilteredVProMMs: (filteredVProMMs) => dispatch(setFilteredVProMMs(filteredVProMMs)),
+      _clearAdmins: () => dispatch(clearAdmins()),
+      _fetchAdmins: (id) => dispatch(fetchAdmins(id)),
+      _fetchVProMMsBbox: (vprommsId) => dispatch(fetchVProMMsBbox(vprommsId)),
+      _fetchAdminBbox: (id) => dispatch(fetchAdminBbox(id))
+    })
+  )
+)(MapSearch);
