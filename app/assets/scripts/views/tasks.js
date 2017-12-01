@@ -165,10 +165,8 @@ var Tasks = React.createClass({
   },
 
   componentWillReceiveProps: function ({ task: nextTask, taskId: nextTaskId, osmStatus: nextOsmStatus }) {
-    // TODO - ANTIPATTERN: should not mirror properties task and taskId in state
-
     if (this.props.task !== nextTask) {
-      console.log('render new task geoJson');
+      // TODO - ANTIPATTERN: should not mirror properties task and taskId in state
       this.setState({ renderedFeatures: nextTask }, () => this.onMapLoaded(() => this.syncMap()));
     } else if (this.props.osmStatus === 'pending' && nextOsmStatus === 'complete') {
       // We've just successfully completed an osm changeset
