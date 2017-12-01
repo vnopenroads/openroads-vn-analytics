@@ -18,6 +18,7 @@ import AssetsIndex from './views/assets-index';
 import AssetsAA from './views/assets-admin-area';
 import AAFieldMap from './components/aa-field-map';
 import Upload from './views/upload';
+import Faq from './views/faq';
 
 
 // check if link target is one of the languages in the i18n file
@@ -39,6 +40,7 @@ render((
         <Route path='editor' component={Editor} pageClass='editor' />
         <Route path='editor/*' component={Editor} pageClass='editor' />
         <Route path='explore' component={Explore} pageClass='explore' />
+        <Route path='faq' component={Faq} pageClass='faq' />
         <Route path='assets' component={Assets}>
           <Route path='road' component={Assets} >
             <Route path=':vpromm' component={AAFieldMap} pageClass='assets-aa'/>
