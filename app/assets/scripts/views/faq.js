@@ -14,7 +14,7 @@ const Faq = ({ language }) => (
     <div className='inpage__body'>
       <div className='inner'>
         {/* EXAMPLE QUESTION
-          language === 'en ?
+          language === 'en' ?
             <section className="question">
               <h3 className='inpage__title'>ADD ENGLISH QUESTION TITLE HERE</h3>
               <p>ADD ENGLISH QUESTION ANSWER HERE</p>
