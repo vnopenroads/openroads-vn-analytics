@@ -5,34 +5,40 @@ import config from '../../config';
  * constants
  */
 export const FETCH_WAY_TASK = 'FETCH_WAY_TASK';
+export const FETCH_NEXT_WAY_TASK = 'FETCH_NEXT_WAY_TASK';
 export const FETCH_WAY_TASK_SUCCESS = 'FETCH_WAY_TASK_SUCCESS';
 export const FETCH_WAY_TASK_ERROR = 'FETCH_WAY_TASK_ERROR';
-export const RELOAD_WAY_TASK = 'REQUEST_RELOAD_WAY_TASK';
 export const FETCH_WAY_TASK_COUNT = 'FETCH_WAY_TASK_COUNT';
 export const FETCH_WAY_TASK_COUNT_SUCCESS = 'FETCH_WAY_TASK_COUNT_SUCCESS';
 export const FETCH_WAY_TASK_COUNT_ERROR = 'FETCH_WAY_TASK_COUNT_ERROR';
+export const MARK_WAY_TASK_PENDING = 'MARK_WAY_TASK_PENDING';
+export const MARK_WAY_TASK_PENDING_SUCCESS = 'MARK_WAY_TASK_PENDING_SUCCESS';
+export const MARK_WAY_TASK_PENDING_ERROR = 'MARK_WAY_TASK_PENDING_ERROR';
 export const SKIP_TASK = 'SKIP_TASK';
 
 
 /**
  * action creators
  */
-export const fetchWayTask = () => ({ type: FETCH_WAY_TASK });
+export const fetchWayTask = (id) => ({ type: FETCH_WAY_TASK, id });
+export const fetchNextWayTask = () => ({ type: FETCH_NEXT_WAY_TASK });
 export const fetchWayTaskSuccess = (id, geoJSON) => ({
   type: FETCH_WAY_TASK_SUCCESS,
   id,
   geoJSON
 });
 export const fetchWayTaskError = () => ({ type: FETCH_WAY_TASK_ERROR });
-export const reloadWayTask = () => ({ type: RELOAD_WAY_TASK });
 export const fetchWayTaskCount = () => ({ type: FETCH_WAY_TASK_COUNT });
 export const fetchWayTaskCountSuccess = count => ({ type: FETCH_WAY_TASK_COUNT_SUCCESS, count });
 export const fetchWayTaskCountError = count => ({ type: FETCH_WAY_TASK_COUNT_ERROR });
+export const markWayTaskPending = () => ({ type: MARK_WAY_TASK_PENDING });
+export const markWayTaskPendingSuccess = () => ({ type: MARK_WAY_TASK_PENDING_SUCCESS });
+export const markWayTaskPendingError = () => ({ type: MARK_WAY_TASK_PENDING_ERROR });
 export const skipTask = id => ({ type: SKIP_TASK, id });
 
 
 export const fetchNextWayTaskEpic = () => (dispatch, getState) => {
-  dispatch(fetchWayTask());
+  dispatch(fetchNextWayTask());
 
   const skipped = getState().waytasks.skipped;
   const url = skipped.length > 0 ?
@@ -60,8 +66,8 @@ export const fetchNextWayTaskEpic = () => (dispatch, getState) => {
 };
 
 
-export const reloadCurrentTaskEpic = taskId => dispatch => {
-  dispatch(reloadWayTask());
+export const fetchWayTaskEpic = taskId => (dispatch, getState) => {
+  dispatch(fetchWayTask(taskId));
 
   return fetch(`${config.api}/tasks/${taskId}`)
     .then(response => {
@@ -102,7 +108,7 @@ export const fetchWayTaskCountEpic = () => dispatch => {
 
 
 export const markWayTaskPendingEpic = way_ids => dispatch => {
-  dispatch({ type: 'MARK_WAY_TASK_PENDING' });
+  dispatch(markWayTaskPending());
 
   return fetch(`${config.api}/tasks/pending`, {
     method: 'PUT',
@@ -110,12 +116,11 @@ export const markWayTaskPendingEpic = way_ids => dispatch => {
   })
     .then(response => {
       if (response.status >= 400) {
-        console.error('Error marking task as pending', response.statuxText);
-        dispatch({ type: 'MARK_WAY_TASK_PENDING_ERROR' });
+        console.error('Error marking task as pending', response.statusText);
+        dispatch(markWayTaskPendingError());
       }
 
-      dispatch({ type: 'MARK_WAY_TASK_PENDING_SUCCESS' });
-      dispatch(fetchWayTaskCountEpic());
+      dispatch(markWayTaskPendingSuccess());
     });
 };
 
@@ -137,11 +142,9 @@ export default (
     return Object.assign({}, state, {
       status: 'pending'
     });
-  } else if (action.type === RELOAD_WAY_TASK) { // TODO - can this just be combined w/ FETCH_WAY_TASK?
+  } else if (action.type === FETCH_NEXT_WAY_TASK) {
     return Object.assign({}, state, {
-      status: 'pending',
-      id: null,
-      geoJSON: null
+      status: 'pending'
     });
   } else if (action.type === FETCH_WAY_TASK_SUCCESS) {
     return Object.assign({}, state, {

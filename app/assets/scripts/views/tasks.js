@@ -16,22 +16,22 @@ import c from 'classnames';
 import intersect from '@turf/line-intersect';
 import pointOnLine from '@turf/point-on-line';
 import point from 'turf-point';
-import { createModifyLineString } from '../utils/to-osm';
-import { t } from '../utils/i18n';
-
 import {
-  setGlobalZoom,
-  queryOsm,
-  modifyWaysWithNewPoint,
-  deleteEntireWays
+  setGlobalZoom
 } from '../actions/action-creators';
 import {
+  queryOsmEpic,
+  deleteEntireWaysEpic
+} from '../redux/modules/osm';
+import {
   fetchNextWayTaskEpic,
-  reloadCurrentTaskEpic,
   fetchWayTaskCountEpic,
   markWayTaskPendingEpic,
   skipTask
 } from '../redux/modules/tasks';
+import { createModifyLineString } from '../utils/to-osm';
+import { t } from '../utils/i18n';
+
 
 const source = 'collisions';
 const roadHoverId = 'road-hover';
@@ -70,7 +70,6 @@ const layerIds = layers.map(layer => layer.id);
 var Tasks = React.createClass({
   getInitialState: function () {
     return {
-      currentTaskId: null,
       renderedFeatures: null,
       mode: null,
       hoverId: null,
@@ -82,12 +81,12 @@ var Tasks = React.createClass({
     fetchNextTask: React.PropTypes.func,
     _setGlobalZoom: React.PropTypes.func,
     _queryOsm: React.PropTypes.func,
-    _reloadCurrentTask: React.PropTypes.func,
     _markTaskAsDone: React.PropTypes.func,
     _deleteWays: React.PropTypes.func,
     skipTask: React.PropTypes.func,
-
-    osmInflight: React.PropTypes.bool,
+    fetchTaskCount: React.PropTypes.func,
+    osmStatus: React.PropTypes.string,
+    taskStatus: React.PropTypes.string,
     meta: React.PropTypes.object,
     task: React.PropTypes.object,
     taskId: React.PropTypes.number,
@@ -165,21 +164,16 @@ var Tasks = React.createClass({
     });
   },
 
-  componentWillReceiveProps: function ({ taskId, task, lastUpdated }) {
-    // TODO - ANTIPATTERN: should not mirror properties task and taskId in state
-
-    if (taskId && taskId !== this.state.currentTaskId) {
-      // We've queried and received a new task
-      this.setState({
-        currentTaskId: taskId,
-        renderedFeatures: task
-      }, () => this.onMapLoaded(() => this.syncMap()));
-    } else if (lastUpdated && lastUpdated === this.state.currentTaskId) {
+  componentWillReceiveProps: function ({ task: nextTask, taskId: nextTaskId, osmStatus: nextOsmStatus }) {
+    if (this.props.task !== nextTask) {
+      // TODO - ANTIPATTERN: should not mirror properties task and taskId in state
+      this.setState({ renderedFeatures: nextTask }, () => this.onMapLoaded(() => this.syncMap()));
+    } else if (this.props.osmStatus === 'pending' && nextOsmStatus === 'complete') {
       // We've just successfully completed an osm changeset
-      // Reload the task to sync UI with API
-      this.props._reloadCurrentTask(this.state.currentTaskId);
+
+      // TODO - move this state into redux store so it can be modified directly by actions
+      // specifically, COMPLETE_OSM_CHANGE
       this.setState({
-        currentTaskId: null,
         selectedIds: [],
         mode: null
       });
@@ -236,46 +230,38 @@ var Tasks = React.createClass({
 
   renderInstrumentPanel: function () {
     const { mode, renderedFeatures } = this.state;
-    const { taskCount } = this.props;
+    const { taskCount, osmStatus } = this.props;
+
+    if (osmStatus === 'pending') {
+      return (
+        <div className='map__controls map__controls--top-right'>
+          <div className='panel tasks-panel'>
+            <div className='panel__body'>
+              <h2>{t('Performing action...')}</h2>
+            </div>
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div className='map__controls map__controls--top-right'>
         <div className='panel tasks-panel'>
-          {renderedFeatures ? (
-          <div className='panel__header'>
-            <div className='panel__headline'>
-              <div>
-                <h2 className='panel__title'>{t('Task')}</h2>
-                {taskCount && <p className='panel__subtitle tasks-remaining'>({taskCount} {t('Tasks Remaining')})</p>}
+          {renderedFeatures &&
+            <div className='panel__header'>
+              <div className='panel__headline'>
+                <div>
+                  <h2 className='panel__title'>{t('Task')}</h2>
+                  {taskCount && <p className='panel__subtitle tasks-remaining'>({taskCount} {t('Tasks Remaining')})</p>}
+                </div>
+                <p className='panel__subtitle'>{t('Showing')} {renderedFeatures.features.length} {t('Roads')}</p>
               </div>
-              <p className='panel__subtitle'>{t('Showing')} {renderedFeatures.features.length} {t('Roads')}</p>
             </div>
-          </div>
-          ) : null }
+          }
           <div className='panel__body'>
-            {mode ? null : (
-              <div>
-                <div className='form-group'>
-                  <p>{`1. ${t('Select roads to work on')}.`}</p>
-                  <div className='map__panel--selected'>
-                    {this.renderSelectedIds()}
-                  </div>
-                </div>
-                <div className='form-group map__panel--form'>
-                  <p>{`2. ${t('Choose an action to perform')}.`}</p>
-                  <button className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length < 2})} type='button' onClick={this.onDedupe}>{t('Remove Duplicates')}</button>
-                  <br />
-                  <button className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length !== 1})} type='button' onClick={this.onJoin}>{t('Create Intersection')}</button>
-                </div>
-                <div className='form-group map__panel--form'>
-                  <button className='button button--base-raised-light' type='button' onClick={this.markAsDone}>{t('Finish task')}</button>
-                  <br />
-                  <button className='button button--secondary-raised-dark' type='button' onClick={this.next}>{t('Skip task')}</button>
-                </div>
-              </div>
-            )}
-            {mode === 'dedupe' ? this.renderDedupeMode() : null}
-            {mode === 'join' ? this.renderJoinMode() : null}
+            { mode === null && this.renderSelectMode() }
+            { mode === 'dedupe' && this.renderDedupeMode() }
+            { mode === 'join' && this.renderJoinMode() }
           </div>
         </div>
       </div>
@@ -293,6 +279,7 @@ var Tasks = React.createClass({
       type: 'FeatureCollection',
       features: selectedIds.map(id => task.features.find(f => f.properties._id === id))
     };
+
     this.setState({mode: 'dedupe', renderedFeatures: selectedFeatures, selectedIds: []}, this.syncMap);
   },
 
@@ -325,21 +312,73 @@ var Tasks = React.createClass({
     );
   },
 
+  renderSelectMode: function () {
+    return (
+      <div>
+        <div className='form-group'>
+          <p>{`1. ${t('Select roads to work on')}.`}</p>
+          <div className='map__panel--selected'>
+            {this.renderSelectedIds()}
+          </div>
+        </div>
+        <div className='form-group map__panel--form'>
+          <p>{`2. ${t('Choose an action to perform')}.`}</p>
+          <button
+            className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length < 2})}
+            type='button'
+            onClick={this.onDedupe}
+          >
+            {t('Remove Duplicates')}
+          </button>
+          <br />
+          <button
+            className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length !== 1})}
+            type='button'
+            onClick={this.onJoin}
+          >
+            {t('Create Intersection')}
+          </button>
+        </div>
+        <div className='form-group map__panel--form'>
+          <button
+            className='button button--base-raised-light'
+            type='button'
+            onClick={this.markAsDone}
+          >
+            {t('Finish task')}
+          </button>
+          <br />
+          <button
+            className='button button--secondary-raised-dark'
+            type='button'
+            onClick={this.next}
+          >
+            {t('Skip task')}
+          </button>
+        </div>
+      </div>
+    );
+  },
+
   commitDedupe: function () {
-    const { selectedIds, renderedFeatures, currentTaskId } = this.state;
+    const { selectedIds, renderedFeatures } = this.state;
     const { features } = renderedFeatures;
     const toDelete = features.filter(feature => selectedIds[0] !== feature.properties._id);
-    this.props._deleteWays(currentTaskId, toDelete.map(feature => feature.properties._id));
+
+    this.props._deleteWays(this.props.taskId, toDelete.map(feature => feature.properties._id));
+
+    // TODO - should deduping mark task as done?
     this.props._markTaskAsDone(toDelete.map(feature => feature.properties._id));
   },
 
   commitJoin: function () {
-    const { selectedIds, renderedFeatures, currentTaskId } = this.state;
+    const { selectedIds, renderedFeatures } = this.state;
     const { features } = renderedFeatures;
     const line1 = features.find(f => f.properties._id === selectedIds[0]);
     const line2 = features.find(f => f.properties._id === selectedIds[1]);
     const intersectingFeatures = intersect(line1, line2);
     const changes = [];
+
     if (!intersectingFeatures.features.length) {
       // lines don't intersect, join them from the nearest endpoint of line 1
       // find the end of line 1 that's closest to line 2
@@ -363,8 +402,12 @@ var Tasks = React.createClass({
       changes.push(insertPointOnLine(line1, intersection));
       changes.push(insertPointOnLine(line2, intersection));
     }
+
     const changeset = createModifyLineString(changes);
-    this.props._queryOsm(currentTaskId, changeset);
+
+    this.props._queryOsm(this.props.taskId, changeset);
+
+    // TODO - should deduping mark task as done?
     this.props._markTaskAsDone([line1.properties._id, line2.properties._id]);
   },
 
@@ -372,12 +415,13 @@ var Tasks = React.createClass({
     // This function is different from #next, in that it allows you
     // to specify all visible roads as 'done'
     this.props._markTaskAsDone(this.state.renderedFeatures.features.map(feature => Number(feature.properties._id)));
+    this.props.fetchTaskCount();
     this.next();
   },
 
   next: function () {
     this.map.setFilter(roadSelected, ['all', ['in', '_id', '']]);
-    this.props.skipTask(this.state.currentTaskId);
+    this.props.skipTask(this.props.taskId);
     this.setState({ selectedIds: [], mode: null }, this.props.fetchNextTask);
   },
 
@@ -392,21 +436,10 @@ var Tasks = React.createClass({
     return <p>{`${selectedIds.length} ${t('roads selected')}.`}</p>;
   },
 
-  renderInflight: function () {
-    return (
-      <div className='map__controls map__controls--top-right'>
-        <div className='panel tasks-panel'>
-          <div className='panel__body'>
-            <h2>{t('Performing action...')}</h2>
-          </div>
-        </div>
-      </div>
-    );
-  },
-
   render: function () {
+    const { taskId, taskStatus } = this.props;
     const { hoverId } = this.state;
-    const { osmInflight } = this.props;
+
     return (
       <section className='inpage inpage--alt'>
         <header className='inpage__header'>
@@ -424,19 +457,23 @@ var Tasks = React.createClass({
                 <div className='map__media' id='map'></div>
               </figure>
               {
-                status === 'error' &&
+                hoverId && this.renderPropertiesOverlay()
+              }
+              {
+                taskStatus === 'error' &&
                   <div className='placeholder__fullscreen'>
                     <h3 className='placeholder__message'>{t('Error')}</h3>
                   </div>
               }
               {
-                status === 'pending' &&
+                !taskId && taskStatus === 'pending' &&
                   <div className='placeholder__fullscreen'>
                     <h3 className='placeholder__message'>{t('Loading')}</h3>
                   </div>
               }
-              {hoverId ? this.renderPropertiesOverlay() : null}
-              {osmInflight ? this.renderInflight() : this.renderInstrumentPanel()}
+              {
+                this.renderInstrumentPanel()
+              }
             </div>
 
           </div>
@@ -453,26 +490,22 @@ export default compose(
       task: state.waytasks.geoJSON,
       taskId: state.waytasks.id,
       taskCount: state.waytasks.taskCount,
-      status: state.waytasks.status,
-      osmInflight: state.osmChange.fetching,
-      lastUpdated: state.osmChange.taskId
+      taskStatus: state.waytasks.status,
+      osmStatus: state.osmChange.status
     }),
     dispatch => ({
       fetchNextTask: () => dispatch(fetchNextWayTaskEpic()),
       fetchTaskCount: () => dispatch(fetchWayTaskCountEpic()),
       skipTask: (id) => dispatch(skipTask(id)),
       _markTaskAsDone: (taskIds) => dispatch(markWayTaskPendingEpic(taskIds)),
-      _queryOsm: function (taskId, payload) { dispatch(queryOsm(taskId, payload)); },
-      _reloadCurrentTask: function (taskId) { dispatch(reloadCurrentTaskEpic(taskId)); },
-      _modifyWaysWithNewPoint: function (features, point) {
-        dispatch(modifyWaysWithNewPoint(features, point));
-      },
-      _deleteWays: function (taskId, wayIds) { dispatch(deleteEntireWays(taskId, wayIds)); },
-      _setGlobalZoom: debounce((mapPosition) => dispatch(setGlobalZoom(mapPosition)), 100, { leading: true, trailing: true })
+      _queryOsm: (taskId, payload) => dispatch(queryOsmEpic(taskId, payload)),
+      _deleteWays: (taskId, wayIds) => dispatch(deleteEntireWaysEpic(taskId, wayIds)),
+      _setGlobalZoom: debounce((mapPosition) => dispatch(setGlobalZoom(mapPosition)), 500, { leading: true, trailing: true })
     })
   ),
   lifecycle({
     componentDidMount: function () {
+      // TODO - data fetching for this page should be moved into a route container
       this.props.fetchNextTask();
       this.props.fetchTaskCount();
     }
