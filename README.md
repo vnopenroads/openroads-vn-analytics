@@ -101,12 +101,12 @@ The site FAQ are defined in the file [`/app/assets/scripts/views/faq.js`](https:
 {
   language === 'en' ?
     <section className="question">
-      <h3 className='inpage__title'>ADD ENGLISH QUESTION TITLE HERE</h3>
-      <p>ADD ENGLISH QUESTION ANSWER HERE</p>
+      <h3 className='inpage__title'>ADD ENGLISH QUESTION HERE</h3>
+      <p>ADD ENGLISH ANSWER HERE</p>
     </section> :
     <section className="question">
-      <h3 className='inpage__title'>ADD VIETNAMESE QUESTION TITLE HERE</h3>
-      <p>ADD VIETNAMESE QUESTION ANSWER HERE</p>
+      <h3 className='inpage__title'>ADD VIETNAMESE QUESTION HERE</h3>
+      <p>ADD VIETNAMESE ANSWER HERE</p>
     </section>
 }
 ```
