@@ -128,8 +128,8 @@ const Faq = ({ language }) => (
         <section>
           <form action="mailto:dphan2@worldbank.org?subject=Question regarding ORMA not answered in FAQ" method="GET">
             <p>
-              If you have any remaining questions
-              <button className="button button--base-raised-light">email us</button>
+              {t('If you have any remaining questions')}
+              <button className="button button--base-raised-light">{t('email us')}</button>
             </p>
           </form>
         </section>
