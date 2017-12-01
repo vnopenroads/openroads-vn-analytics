@@ -241,41 +241,21 @@ var Tasks = React.createClass({
     return (
       <div className='map__controls map__controls--top-right'>
         <div className='panel tasks-panel'>
-          {renderedFeatures ? (
-          <div className='panel__header'>
-            <div className='panel__headline'>
-              <div>
-                <h2 className='panel__title'>{t('Task')}</h2>
-                {taskCount && <p className='panel__subtitle tasks-remaining'>({taskCount} {t('Tasks Remaining')})</p>}
+          {renderedFeatures &&
+            <div className='panel__header'>
+              <div className='panel__headline'>
+                <div>
+                  <h2 className='panel__title'>{t('Task')}</h2>
+                  {taskCount && <p className='panel__subtitle tasks-remaining'>({taskCount} {t('Tasks Remaining')})</p>}
+                </div>
+                <p className='panel__subtitle'>{t('Showing')} {renderedFeatures.features.length} {t('Roads')}</p>
               </div>
-              <p className='panel__subtitle'>{t('Showing')} {renderedFeatures.features.length} {t('Roads')}</p>
             </div>
-          </div>
-          ) : null }
+          }
           <div className='panel__body'>
-            {mode ? null : (
-              <div>
-                <div className='form-group'>
-                  <p>{`1. ${t('Select roads to work on')}.`}</p>
-                  <div className='map__panel--selected'>
-                    {this.renderSelectedIds()}
-                  </div>
-                </div>
-                <div className='form-group map__panel--form'>
-                  <p>{`2. ${t('Choose an action to perform')}.`}</p>
-                  <button className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length < 2})} type='button' onClick={this.onDedupe}>{t('Remove Duplicates')}</button>
-                  <br />
-                  <button className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length !== 1})} type='button' onClick={this.onJoin}>{t('Create Intersection')}</button>
-                </div>
-                <div className='form-group map__panel--form'>
-                  <button className='button button--base-raised-light' type='button' onClick={this.markAsDone}>{t('Finish task')}</button>
-                  <br />
-                  <button className='button button--secondary-raised-dark' type='button' onClick={this.next}>{t('Skip task')}</button>
-                </div>
-              </div>
-            )}
-            {mode === 'dedupe' ? this.renderDedupeMode() : null}
-            {mode === 'join' ? this.renderJoinMode() : null}
+            { mode === null && this.renderSelectMode() }
+            { mode === 'dedupe' && this.renderDedupeMode() }
+            { mode === 'join' && this.renderJoinMode() }
           </div>
         </div>
       </div>
@@ -321,6 +301,30 @@ var Tasks = React.createClass({
         <button className={c('button button--secondary-raised-dark', {disabled: this.state.selectedIds.length !== 2})} type='button' onClick={this.commitJoin}>{t('Confirm')}</button>
         <br />
         <button className='button button--base-raised-dark' type='button' onClick={this.exitMode}>{t('Cancel')}</button>
+      </div>
+    );
+  },
+
+  renderSelectMode: function () {
+    return (
+      <div>
+        <div className='form-group'>
+          <p>{`1. ${t('Select roads to work on')}.`}</p>
+          <div className='map__panel--selected'>
+            {this.renderSelectedIds()}
+          </div>
+        </div>
+        <div className='form-group map__panel--form'>
+          <p>{`2. ${t('Choose an action to perform')}.`}</p>
+          <button className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length < 2})} type='button' onClick={this.onDedupe}>{t('Remove Duplicates')}</button>
+          <br />
+          <button className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length !== 1})} type='button' onClick={this.onJoin}>{t('Create Intersection')}</button>
+        </div>
+        <div className='form-group map__panel--form'>
+          <button className='button button--base-raised-light' type='button' onClick={this.markAsDone}>{t('Finish task')}</button>
+          <br />
+          <button className='button button--secondary-raised-dark' type='button' onClick={this.next}>{t('Skip task')}</button>
+        </div>
       </div>
     );
   },
