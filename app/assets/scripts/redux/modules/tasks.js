@@ -110,7 +110,7 @@ export const markWayTaskPendingEpic = way_ids => dispatch => {
   })
     .then(response => {
       if (response.status >= 400) {
-        console.error('Error marking task as pending', response.statuxText);
+        console.error('Error marking task as pending', response.statusText);
         dispatch({ type: 'MARK_WAY_TASK_PENDING_ERROR' });
       }
 

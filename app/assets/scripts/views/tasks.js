@@ -20,8 +20,8 @@ import {
   setGlobalZoom
 } from '../actions/action-creators';
 import {
-  queryOsm,
-  deleteEntireWays
+  queryOsmEpic,
+  deleteEntireWaysEpic
 } from '../redux/modules/osm';
 import {
   fetchNextWayTaskEpic,
@@ -469,8 +469,8 @@ export default compose(
       fetchTaskCount: () => dispatch(fetchWayTaskCountEpic()),
       skipTask: (id) => dispatch(skipTask(id)),
       _markTaskAsDone: (taskIds) => dispatch(markWayTaskPendingEpic(taskIds)),
-      _queryOsm: (taskId, payload) => dispatch(queryOsm(taskId, payload)),
-      _deleteWays: (taskId, wayIds) => dispatch(deleteEntireWays(taskId, wayIds)),
+      _queryOsm: (taskId, payload) => dispatch(queryOsmEpic(taskId, payload)),
+      _deleteWays: (taskId, wayIds) => dispatch(deleteEntireWaysEpic(taskId, wayIds)),
       _setGlobalZoom: debounce((mapPosition) => dispatch(setGlobalZoom(mapPosition)), 500, { leading: true, trailing: true })
     })
   ),
