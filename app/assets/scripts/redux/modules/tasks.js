@@ -11,6 +11,9 @@ export const FETCH_WAY_TASK_ERROR = 'FETCH_WAY_TASK_ERROR';
 export const FETCH_WAY_TASK_COUNT = 'FETCH_WAY_TASK_COUNT';
 export const FETCH_WAY_TASK_COUNT_SUCCESS = 'FETCH_WAY_TASK_COUNT_SUCCESS';
 export const FETCH_WAY_TASK_COUNT_ERROR = 'FETCH_WAY_TASK_COUNT_ERROR';
+export const MARK_WAY_TASK_PENDING = 'MARK_WAY_TASK_PENDING';
+export const MARK_WAY_TASK_PENDING_SUCCESS = 'MARK_WAY_TASK_PENDING_SUCCESS';
+export const MARK_WAY_TASK_PENDING_ERROR = 'MARK_WAY_TASK_PENDING_ERROR';
 export const SKIP_TASK = 'SKIP_TASK';
 
 
@@ -28,6 +31,9 @@ export const fetchWayTaskError = () => ({ type: FETCH_WAY_TASK_ERROR });
 export const fetchWayTaskCount = () => ({ type: FETCH_WAY_TASK_COUNT });
 export const fetchWayTaskCountSuccess = count => ({ type: FETCH_WAY_TASK_COUNT_SUCCESS, count });
 export const fetchWayTaskCountError = count => ({ type: FETCH_WAY_TASK_COUNT_ERROR });
+export const markWayTaskPending = () => ({ type: MARK_WAY_TASK_PENDING });
+export const markWayTaskPendingSuccess = () => ({ type: MARK_WAY_TASK_PENDING_SUCCESS });
+export const markWayTaskPendingError = () => ({ type: MARK_WAY_TASK_PENDING_ERROR });
 export const skipTask = id => ({ type: SKIP_TASK, id });
 
 
@@ -102,7 +108,7 @@ export const fetchWayTaskCountEpic = () => dispatch => {
 
 
 export const markWayTaskPendingEpic = way_ids => dispatch => {
-  dispatch({ type: 'MARK_WAY_TASK_PENDING' });
+  dispatch(markWayTaskPending());
 
   return fetch(`${config.api}/tasks/pending`, {
     method: 'PUT',
@@ -111,10 +117,10 @@ export const markWayTaskPendingEpic = way_ids => dispatch => {
     .then(response => {
       if (response.status >= 400) {
         console.error('Error marking task as pending', response.statusText);
-        dispatch({ type: 'MARK_WAY_TASK_PENDING_ERROR' });
+        dispatch(markWayTaskPendingError());
       }
 
-      dispatch({ type: 'MARK_WAY_TASK_PENDING_SUCCESS' });
+      dispatch(markWayTaskPendingSuccess());
     });
 };
 
