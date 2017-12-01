@@ -61,7 +61,7 @@ export const queryOsmEpic = (taskId, payload) => (dispatch) => {
   createChangesetRequest(taskId, payload)
     .then(changesetId => uploadChangesetRequest(changesetId, taskId, payload))
     .then(() => {
-      dispatch(fetchWayTaskEpic(taskId));
+      dispatch(fetchWayTaskEpic(taskId)); // TODO - if refresh 404s, task has been deleted and user should no longer edit the now-stale geometry
       dispatch(completeOsmChange(taskId));
     })
     .catch(e => {
@@ -103,7 +103,7 @@ export const deleteEntireWaysEpic = (taskId, wayIds) => (dispatch) => {
         createChangesetRequest(taskId, payload)
           .then(changesetId => uploadChangesetRequest(changesetId, taskId, payload))
           .then(() => {
-            dispatch(fetchWayTaskEpic(taskId));
+            dispatch(fetchWayTaskEpic(taskId)); // TODO - if refresh 404s, task has been deleted and user should no longer edit the now-stale geometry
             dispatch(completeOsmChange(taskId));
           })
           .catch(e => {

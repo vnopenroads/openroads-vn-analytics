@@ -115,7 +115,6 @@ export const markWayTaskPendingEpic = way_ids => dispatch => {
       }
 
       dispatch({ type: 'MARK_WAY_TASK_PENDING_SUCCESS' });
-      dispatch(fetchWayTaskCountEpic());
     });
 };
 

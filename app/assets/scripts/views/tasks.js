@@ -85,6 +85,7 @@ var Tasks = React.createClass({
     _markTaskAsDone: React.PropTypes.func,
     _deleteWays: React.PropTypes.func,
     skipTask: React.PropTypes.func,
+    fetchTaskCount: React.PropTypes.func,
     osmInflight: React.PropTypes.bool,
     meta: React.PropTypes.object,
     task: React.PropTypes.object,
@@ -379,6 +380,7 @@ var Tasks = React.createClass({
     // This function is different from #next, in that it allows you
     // to specify all visible roads as 'done'
     this.props._markTaskAsDone(this.state.renderedFeatures.features.map(feature => Number(feature.properties._id)));
+    this.props.fetchTaskCount();
     this.next();
   },
 
