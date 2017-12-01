@@ -88,3 +88,28 @@ username = your.username
 in addition to adding and pulling new translations into the site, so too will translations need to be approved using the [transifex web editor](https://docs.transifex.com/translation/translating-with-the-web-editor). Documentation on how to do so is [here](https://docs.transifex.com/translation/reviewing-strings).
 
 Also, if a manager needs to add new translators, [here](https://docs.transifex.com/translation/translating-with-the-web-editor) is the documentation, and if a new translator needs guidance for translating, [here](https://docs.transifex.com/translation/translating-with-the-web-editor) is the documentation
+
+##### Adding new questions to FAQ
+The site FAQ are defined in the file [`/app/assets/scripts/views/faq.js`](https://github.com/orma/openroads-vn-analytics/blob/develop/app/assets/scripts/views/faq.js).  To edit:
+
+* sign in to github
+* follow a link to the [faq file](https://github.com/orma/openroads-vn-analytics/blob/develop/app/assets/scripts/views/faq.js)
+* click on the **edit** pencil button on the top right of the file
+* copy and paste the following text below the list of existing questions, inserting the question and answer in english and vietnamese
+
+```javascript
+{
+  language === 'en' ?
+    <section className="question">
+      <h3 className='inpage__title'>ADD ENGLISH QUESTION TITLE HERE</h3>
+      <p>ADD ENGLISH QUESTION ANSWER HERE</p>
+    </section> :
+    <section className="question">
+      <h3 className='inpage__title'>ADD VIETNAMESE QUESTION TITLE HERE</h3>
+      <p>ADD VIETNAMESE QUESTION ANSWER HERE</p>
+    </section>
+}
+```
+
+* click **Commit changes** at the bottom of the page
+* email Development Seed to deploy the site
