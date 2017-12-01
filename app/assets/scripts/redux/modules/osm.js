@@ -1,6 +1,5 @@
 import XmlReader from 'xml-reader';
 import {
-  RELOAD_WAY_TASK,
   fetchWayTaskEpic
 } from './tasks';
 import config from '../../config';
@@ -40,33 +39,30 @@ const uploadChangesetRequest = (changesetId, taskId, payload) => (
  * constants
  */
 export const REQUEST_OSM_CHANGE = 'REQUEST_OSM_CHANGE';
-export const COMPLETE_OSM_CHANGE = 'COMPLETE_OSM_CHANGE';
+export const REQUEST_OSM_CHANGE_SUCCESS = 'REQUEST_OSM_CHANGE_SUCCESS';
+export const REQUEST_OSM_CHANGE_ERROR = 'REQUEST_OSM_CHANGE_ERROR';
 
 
 /**
  * action creators
  */
-const requestOsmChange = () => ({ type: REQUEST_OSM_CHANGE });
-const completeOsmChange = (taskId, error = null) => ({
-  type: COMPLETE_OSM_CHANGE,
-  taskId,
-  error,
-  receivedAt: Date.now()
-});
+export const requestOsmChange = (taskId) => ({ type: REQUEST_OSM_CHANGE, taskId });
+export const requestOsmChangeSuccess = (taskId) => ({ type: REQUEST_OSM_CHANGE_SUCCESS, taskId });
+export const requestOsmChangeError = (taskId) => ({ type: REQUEST_OSM_CHANGE_ERROR, taskId });
 
 
 export const queryOsmEpic = (taskId, payload) => (dispatch) => {
-  dispatch(requestOsmChange());
+  dispatch(requestOsmChange(taskId));
 
   createChangesetRequest(taskId, payload)
     .then(changesetId => uploadChangesetRequest(changesetId, taskId, payload))
     .then(() => {
-      dispatch(fetchWayTaskEpic(taskId)); // TODO - if refresh 404s, task has been deleted and user should no longer edit the now-stale geometry
-      dispatch(completeOsmChange(taskId));
+      dispatch(fetchWayTaskEpic(taskId));
+      dispatch(requestOsmChangeSuccess(taskId));
     })
     .catch(e => {
       console.error('Error querying Osm', e);
-      dispatch(completeOsmChange(null, e));
+      dispatch(requestOsmChangeError(taskId));
     });
 };
 
@@ -74,7 +70,7 @@ export const queryOsmEpic = (taskId, payload) => (dispatch) => {
 // we must query the XML endpoint to get these IDs, then format them into
 // a `delete` action.
 export const deleteEntireWaysEpic = (taskId, wayIds) => (dispatch) => {
-  dispatch(requestOsmChange());
+  dispatch(requestOsmChange(taskId));
 
   fetch(`${config.api}/api/0.6/ways?nodes=true&excludeDoubleLinkedNodes=true&ways=${wayIds.join(',')}`)
     .then(response => {
@@ -103,12 +99,12 @@ export const deleteEntireWaysEpic = (taskId, wayIds) => (dispatch) => {
         createChangesetRequest(taskId, payload)
           .then(changesetId => uploadChangesetRequest(changesetId, taskId, payload))
           .then(() => {
-            dispatch(fetchWayTaskEpic(taskId)); // TODO - if refresh 404s, task has been deleted and user should no longer edit the now-stale geometry
-            dispatch(completeOsmChange(taskId));
+            dispatch(fetchWayTaskEpic(taskId));
+            dispatch(requestOsmChangeSuccess(taskId));
           })
           .catch(e => {
             console.error('Error Deleting Way', e);
-            dispatch(completeOsmChange(null, e));
+            dispatch(requestOsmChangeError(taskId));
           });
       });
       reader.parse(xmlResponse);
@@ -122,37 +118,22 @@ export const deleteEntireWaysEpic = (taskId, wayIds) => (dispatch) => {
  */
 export default (
   state = {
-    fetching: false,
-    fetched: false,
-    taskId: null,
-    error: null
+    status: 'complete'
   },
   action
 ) => {
   switch (action.type) {
     case REQUEST_OSM_CHANGE:
       return Object.assign({}, state, {
-        error: null,
-        fetching: true
+        status: 'pending'
       });
-    case COMPLETE_OSM_CHANGE:
-      if (action.error) {
-        return Object.assign({}, state, {
-          error: action.error,
-          fetching: false,
-          fetched: true
-        });
-      }
-
+    case REQUEST_OSM_CHANGE_SUCCESS:
       return Object.assign({}, state, {
-        taskId: action.taskId,
-        fetching: false,
-        fetched: true
+        status: 'complete'
       });
-    case RELOAD_WAY_TASK:
+    case REQUEST_OSM_CHANGE_ERROR:
       return Object.assign({}, state, {
-        fetched: false,
-        taskId: false
+        status: 'error'
       });
   }
 

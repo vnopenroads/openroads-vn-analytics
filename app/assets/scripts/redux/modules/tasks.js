@@ -20,7 +20,7 @@ export const SKIP_TASK = 'SKIP_TASK';
 /**
  * action creators
  */
-export const fetchWayTask = () => ({ type: FETCH_WAY_TASK });
+export const fetchWayTask = (id) => ({ type: FETCH_WAY_TASK, id });
 export const fetchNextWayTask = () => ({ type: FETCH_NEXT_WAY_TASK });
 export const fetchWayTaskSuccess = (id, geoJSON) => ({
   type: FETCH_WAY_TASK_SUCCESS,
@@ -66,8 +66,8 @@ export const fetchNextWayTaskEpic = () => (dispatch, getState) => {
 };
 
 
-export const fetchWayTaskEpic = taskId => dispatch => {
-  dispatch(fetchWayTask());
+export const fetchWayTaskEpic = taskId => (dispatch, getState) => {
+  dispatch(fetchWayTask(taskId));
 
   return fetch(`${config.api}/tasks/${taskId}`)
     .then(response => {
