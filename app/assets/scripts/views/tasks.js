@@ -16,22 +16,22 @@ import c from 'classnames';
 import intersect from '@turf/line-intersect';
 import pointOnLine from '@turf/point-on-line';
 import point from 'turf-point';
-import { createModifyLineString } from '../utils/to-osm';
-import { t } from '../utils/i18n';
-
 import {
-  setGlobalZoom,
-  queryOsm,
-  modifyWaysWithNewPoint,
-  deleteEntireWays
+  setGlobalZoom
 } from '../actions/action-creators';
 import {
+  queryOsm,
+  deleteEntireWays
+} from '../redux/modules/osm';
+import {
   fetchNextWayTaskEpic,
-  fetchWayTaskEpic,
   fetchWayTaskCountEpic,
   markWayTaskPendingEpic,
   skipTask
 } from '../redux/modules/tasks';
+import { createModifyLineString } from '../utils/to-osm';
+import { t } from '../utils/i18n';
+
 
 const source = 'collisions';
 const roadHoverId = 'road-hover';
