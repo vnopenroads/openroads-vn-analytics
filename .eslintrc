@@ -16,6 +16,8 @@
     "jsx": true
   },
   "rules": {
+    "no-spaced-func": 0,
+    "no-unexpected-multiline": 0,
     "no-multiple-empty-lines": 0,
     "operator-linebreak": 0,
     "react/display-name": 0,

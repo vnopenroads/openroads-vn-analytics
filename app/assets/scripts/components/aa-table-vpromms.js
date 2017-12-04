@@ -143,7 +143,7 @@ const AATable = React.createClass({
               roadPropDropDown.push(<dd key={`${vpromm}-prop`}></dd>);
             }
           } else {
-            roadPropDropDown.push(<p>Data Loading</p>);
+            roadPropDropDown.push(<p><T>Loading</T></p>);
           }
         }
 
