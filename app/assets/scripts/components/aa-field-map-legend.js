@@ -1,6 +1,6 @@
 import React from 'react';
 import lineColors from '../utils/line-colors';
-import { t } from '../utils/i18n';
+import T from './t';
 
 const AAFieldMapLegend = React.createClass({
   displayName: 'AAFieldMapLegend',
@@ -30,7 +30,7 @@ const AAFieldMapLegend = React.createClass({
   render: function () {
     return (
       <div className='aa-map-legend'>
-        <h3 className='aa-map-legend-title'>{t('Field Data Sources')}</h3>
+        <h3 className='aa-map-legend-title'><T>Field Data Sources</T></h3>
         <ul>
           {this.renderLegendElements()}
         </ul>
