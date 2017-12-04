@@ -8,7 +8,7 @@ import {
 import { connect } from 'react-redux';
 import T, {
   translate
-} from './T';
+} from './t';
 import {
   setSearchType,
   fetchFieldVProMMsIds,

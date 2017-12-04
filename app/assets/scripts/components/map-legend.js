@@ -3,7 +3,7 @@ import {
   getContext
 } from 'recompose';
 import lineColors from '../utils/line-colors';
-import T from './T';
+import T from './t';
 
 
 const renderTitle = (layer) => {

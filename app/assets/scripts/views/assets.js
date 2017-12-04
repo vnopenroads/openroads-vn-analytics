@@ -1,6 +1,6 @@
 'use strict';
 import React from 'react';
-import T from '../components/T';
+import T from '../components/t';
 
 const Assets = ({ children }) => (
   <section className='inpage inpage--alt'>

@@ -5,7 +5,7 @@ import {
 } from 'recompose';
 import T, {
   translate
-} from '../components/T';
+} from '../components/t';
 
 
 const Faq = ({ language }) => (

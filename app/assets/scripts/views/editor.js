@@ -7,7 +7,7 @@ import {
   getContext
 } from 'recompose';
 import { setGlobalZoom } from '../actions/action-creators';
-import T from '../components/T';
+import T from '../components/t';
 import {
   transformGeoToPixel,
   pixelDistances,

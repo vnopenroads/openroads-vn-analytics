@@ -30,7 +30,7 @@ import {
   skipTask
 } from '../redux/modules/tasks';
 import { createModifyLineString } from '../utils/to-osm';
-import T from '../components/T';
+import T from '../components/t';
 
 
 const source = 'collisions';

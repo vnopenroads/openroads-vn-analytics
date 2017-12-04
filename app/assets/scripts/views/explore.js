@@ -7,7 +7,7 @@ import {
   getContext
 } from 'recompose';
 import mapboxgl from 'mapbox-gl';
-import T from '../components/T';
+import T from '../components/t';
 import config from '../config';
 import lineColors from '../utils/line-colors';
 import {

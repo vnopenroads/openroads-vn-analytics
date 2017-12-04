@@ -4,7 +4,7 @@ import {
 } from 'recompose';
 import T, {
   translate
-} from './T';
+} from './t';
 
 
 const MapOptions = ({ language, handleLayerChange, handleShowNoVpromms }) => (

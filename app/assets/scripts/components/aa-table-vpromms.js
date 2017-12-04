@@ -10,7 +10,7 @@ import _ from 'lodash';
 import classnames from 'classnames';
 import { api } from '../config';
 import { Link } from 'react-router';
-import T from './T';
+import T from './t';
 import { fetchVProMMsBbox, removeAdminInfo } from '../actions/action-creators';
 
 

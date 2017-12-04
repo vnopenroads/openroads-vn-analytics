@@ -12,7 +12,7 @@ import {
 } from 'react-router';
 import T, {
   translate
-} from './T';
+} from './t';
 
 
 const SiteHeader = ({

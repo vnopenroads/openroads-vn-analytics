@@ -6,7 +6,7 @@ import {
   getContext
 } from 'recompose';
 import _ from 'lodash';
-import T from '../components/T';
+import T from '../components/t';
 import {
   fetchProvinces,
   fetchVProMMsIdsCount,

@@ -1,7 +1,7 @@
 'use strict';
 import React from 'react';
 import c from 'classnames';
-import T from './T';
+import T from './t';
 import { connect } from 'react-redux';
 import {
   updateClickedPage,

@@ -5,7 +5,7 @@ import {
   compose,
   getContext
 } from 'recompose';
-import T from '../components/T';
+import T from '../components/t';
 import { makePaginationConfig } from '../utils/pagination';
 import { makeIdTest, getAdminId, getAdminName } from '../utils/admin-level';
 import { Link } from 'react-router';

@@ -5,7 +5,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import _ from 'lodash';
-import T from './T';
+import T from './t';
 import classnames from 'classnames';
 import { setAdmin } from '../actions/action-creators';
 import {

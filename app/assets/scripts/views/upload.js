@@ -1,7 +1,7 @@
 'use strict';
 import React from 'react';
 import config from '../config';
-import T from '../components/T';
+import T from '../components/t';
 
 
 var Upload = React.createClass({
