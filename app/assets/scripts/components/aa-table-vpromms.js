@@ -75,7 +75,7 @@ const AATable = React.createClass({
             />
             <span><T>Field Data</T></span>
           </th>
-          <th className='table-properties-head'>Properties</th>
+          <th className='table-properties-head'><T>Properties</T></th>
         </tr>
       </thead>
     );

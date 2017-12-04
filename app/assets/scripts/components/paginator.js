@@ -1,7 +1,7 @@
 'use strict';
 import React from 'react';
 import c from 'classnames';
-import { t } from '../utils/i18n';
+import T from './T';
 import { connect } from 'react-redux';
 import {
   updateClickedPage,
@@ -49,8 +49,13 @@ var Paginator = React.createClass({
     const previousIndex = limit * previousPage;
     const prevClassName = c('button', 'button-base-light', {'disabled': (currentPage === 1)});
     nav.push(
-      <li key={`pagination-previous-button`}>
-        <button className={prevClassName} onClick={(e) => { (currentPage > 1) ? this.props._updatePagination(previousIndex, previousPage) : ''; } }>{t('Previous')}</button>
+      <li key="pagination-previous-button">
+        <button
+          className={prevClassName}
+          onClick={(e) => { (currentPage > 1) ? this.props._updatePagination(previousIndex, previousPage) : ''; } }
+        >
+          <T>Previous</T>
+        </button>
       </li>
     );
     for (var i = currentPage - 1; i < lastPage; i++) {
@@ -72,7 +77,12 @@ var Paginator = React.createClass({
     const nextClassName = c('button', 'button-base-light', {'disabled': (lastPage === numPages)});
     nav.push(
       <li key={`pagination-next-button`}>
-        <button className={nextClassName} onClick={(e) => { (currentPage !== numPages) ? this.props._updatePagination(nextIndex, nextPage) : ''; } }>{t('Next')}</button>
+        <button
+          className={nextClassName}
+          onClick={(e) => { (currentPage !== numPages) ? this.props._updatePagination(nextIndex, nextPage) : ''; } }
+        >
+          <T>Next</T>
+        </button>
       </li>
     );
     return { pages: pages, nav: nav };
