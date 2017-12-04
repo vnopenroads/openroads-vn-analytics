@@ -10,7 +10,9 @@ import {
   Link,
   withRouter
 } from 'react-router';
-import { t } from '../utils/i18n';
+import T, {
+  translate
+} from './T';
 
 
 const SiteHeader = ({
@@ -32,7 +34,7 @@ const SiteHeader = ({
           <h2 className='site__menu-toggle'>
             <button
               onClick={toggleLanguageBlock}
-              title={t('Change language')}
+              title={translate(language, 'Change Language')}
             />
           </h2>
           <div className='site__menu-block'>
@@ -50,7 +52,7 @@ const SiteHeader = ({
                   className={`site__menu-item ${language === 'vi' ? 'site__menu-item--active' : ''}`}
                   onClick={toggleLanguageBlock}
                 >
-                  Vietnamese
+                  Tiếng Việt
                 </Link>
               </li>
             </ul>
@@ -60,9 +62,8 @@ const SiteHeader = ({
           <h2 className='site__menu-toggle'>
             <button
               onClick={toggleMenuDropDown}
-              title={t('Change language')}
             >
-              {t('Menu')}
+              <T>Menu</T>
             </button>
           </h2>
           <div className='site__menu-block' id='menu-block-global'>
@@ -73,9 +74,8 @@ const SiteHeader = ({
                   className='site__menu-item'
                   activeClassName='site__menu-item--active'
                   onClick={toggleMenuDropDown}
-                  title={t('Visit')}
                 >
-                  {t('Assets')}
+                  <T>Assets</T>
                 </Link>
               </li>
               <li>
@@ -84,9 +84,8 @@ const SiteHeader = ({
                   className='site__menu-item'
                   activeClassName='site__menu-item--active'
                   onClick={toggleMenuDropDown}
-                  title={t('Visit')}
                 >
-                  <span>{t('Explore')}</span>
+                  <T>Explore</T>
                 </Link>
               </li>
               <li>
@@ -95,9 +94,8 @@ const SiteHeader = ({
                   className='site__menu-item'
                   activeClassName='site__menu-item--active'
                   onClick={toggleMenuDropDown}
-                  title={t('Visit')}
                 >
-                  <span>{t('Editor')}</span>
+                  <T>Editor</T>
                 </Link>
               </li>
               <li>
@@ -106,9 +104,8 @@ const SiteHeader = ({
                   className='site__menu-item'
                   activeClassName='site__menu-item--active'
                   onClick={toggleMenuDropDown}
-                  title={t('Visit')}
                 >
-                  <span>{t('Tasks')}</span>
+                  <T>Tasks</T>
                 </Link>
               </li>
               <li>
@@ -117,9 +114,8 @@ const SiteHeader = ({
                   className='site__menu-item'
                   activeClassName='site__menu-item--active'
                   onClick={toggleMenuDropDown}
-                  title={t('Visit')}
                 >
-                  <span>{t('Upload')}</span>
+                  <T>Upload</T>
                 </Link>
               </li>
               <li>
@@ -128,9 +124,8 @@ const SiteHeader = ({
                   className='site__menu-item'
                   activeClassName='site__menu-item--active'
                   onClick={toggleMenuDropDown}
-                  title={t('Visit')}
                 >
-                  <span>{t('FAQ')}</span>
+                  <T>FAQ</T>
                 </Link>
               </li>
             </ul>
