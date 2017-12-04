@@ -34,6 +34,39 @@ const TableColumnHeader = withHandlers({
   ));
 
 
+const TableRow = ({
+  id, name, route, field, total, language, setAdmin
+}) => (
+  <tr
+    key={`province-${id}`}
+  >
+    <td>
+      <button>X</button>
+      <button>Y</button>
+    </td>
+    <td>
+      {/* TODO - admin shouldn't be stored in both redux and url */}
+      <Link
+        onClick={(e) => setAdmin({ id: id, name: name })}
+        to={`${language}/assets/${route}`}
+      >
+        <strong>{name}</strong>
+      </Link>
+    </td>
+    <td>{field}</td>
+    <td>{total}</td>
+    <td>
+      <div className='meter'>
+        <div
+          className='meter__internal'
+          style={ total > 0 ? {width: `${field / total * 100}%`} : {width: 0}}
+        />
+      </div>
+    </td>
+  </tr>
+);
+
+
 const AATable = React.createClass({
   displayName: 'AATable',
 
@@ -81,34 +114,15 @@ const AATable = React.createClass({
     return sorted.value();
   },
 
-  renderTableBody: function () {
-    const sorted = this.handleSort(this.props.data);
-    return (
-      <tbody>
-        {_.map(sorted, (province, i) => {
-          return (
-            <tr key={`province-${province.id}`} className={classnames({'alt': i % 2})}>
-              <th><Link onClick={(e) => { this.props._setAdmin({ id: province.id, name: province.name }); } } to={`${this.props.language}/assets/${province.route}`}>{province.name}</Link></th>
-              <td>{province.field}</td>
-              <td>{province.total}</td>
-              <td>
-                <div className='meter'>
-                  <div className='meter__internal' style={ province.total > 0 ? {width: `${province.field / province.total * 100}%`} : {width: 0}}></div>
-                </div>
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    );
-  },
-
   render: function () {
+    const { data, language, _setAdmin } = this.props;
+
     return (
       <div className='table'>
         <table>
           <thead>
             <tr>
+              <th/>
               {
                 [['name', 'Province'], ['field', 'Field'], ['total', 'Total'], ['progress', 'Progress']]
                   .map(([columnKey, columnLabel]) => (
@@ -124,7 +138,20 @@ const AATable = React.createClass({
               }
             </tr>
           </thead>
-          {this.renderTableBody()}
+          <tbody>
+            {_.map(this.handleSort(data), ({ id, name, route, field, total }) => (
+              <TableRow
+                key={id}
+                id={id}
+                name={name}
+                route={route}
+                field={field}
+                total={total}
+                language={language}
+                setAdmin={_setAdmin}
+              />
+            ))}
+          </tbody>
         </table>
       </div>
     );
