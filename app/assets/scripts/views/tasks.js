@@ -30,7 +30,7 @@ import {
   skipTask
 } from '../redux/modules/tasks';
 import { createModifyLineString } from '../utils/to-osm';
-import { t } from '../utils/i18n';
+import T from '../components/T';
 
 
 const source = 'collisions';
@@ -212,8 +212,8 @@ var Tasks = React.createClass({
     const { task } = this.props;
     const properties = task.features.find(c => hoverId === c.properties._id).properties;
     const displayList = Object.keys(properties).map(key => key.charAt(0) === '_' ? null : [
-      <dt key={`${key}-key`}><strong>{t('key')}</strong></dt>,
-      <dd key={`${key}-value`}>{t(`${properties[key] || '--'}`)}</dd>
+      <dt key={`${key}-key`}><strong><T>key</T></strong></dt>,
+      <dd key={`${key}-value`}>{properties[key] ? <T>properties[key]</T> : '--'}</dd>
     ]).filter(Boolean);
     return (
       <div className='map__controls map__controls--top-left'>
@@ -237,7 +237,7 @@ var Tasks = React.createClass({
         <div className='map__controls map__controls--top-right'>
           <div className='panel tasks-panel'>
             <div className='panel__body'>
-              <h2>{t('Performing action...')}</h2>
+              <h2><T>Performing action...</T></h2>
             </div>
           </div>
         </div>
@@ -251,10 +251,10 @@ var Tasks = React.createClass({
             <div className='panel__header'>
               <div className='panel__headline'>
                 <div>
-                  <h2 className='panel__title'>{t('Task')}</h2>
-                  {taskCount && <p className='panel__subtitle tasks-remaining'>({taskCount} {t('Tasks Remaining')})</p>}
+                  <h2 className='panel__title'><T>Task</T></h2>
+                  {taskCount && <p className='panel__subtitle tasks-remaining'>({taskCount} <T>Tasks Remaining</T>)</p>}
                 </div>
-                <p className='panel__subtitle'>{t('Showing')} {renderedFeatures.features.length} {t('Roads')}</p>
+                <p className='panel__subtitle'><T>Showing</T> {renderedFeatures.features.length} <T>Roads</T></p>
               </div>
             </div>
           }
@@ -291,11 +291,11 @@ var Tasks = React.createClass({
   renderDedupeMode: function () {
     return (
       <div className='form-group map__panel--form'>
-        <h2>{t('Remove Duplicate Roads')}</h2>
-        <p>{t('Click on a road to keep. The other roads here will be deleted.')}</p>
-        <button className={c('button button--secondary-raised-dark', {disabled: !this.state.selectedIds.length})} type='button' onClick={this.commitDedupe}>{t('Confirm')}</button>
+        <h2><T>Remove Duplicate Roads</T></h2>
+        <p><T>Click on a road to keep. The other roads here will be deleted.</T></p>
+        <button className={c('button button--secondary-raised-dark', {disabled: !this.state.selectedIds.length})} type='button' onClick={this.commitDedupe}><T>Confirm</T></button>
         <br />
-        <button className='button button--base-raised-dark' type='button' onClick={this.exitMode}>{t('Cancel')}</button>
+        <button className='button button--base-raised-dark' type='button' onClick={this.exitMode}><T>Cancel</T></button>
       </div>
     );
   },
@@ -305,9 +305,9 @@ var Tasks = React.createClass({
       <div className='form-group map__panel--form'>
         <h2>Create an Intersection</h2>
         <p>Click on a road to create an intersection with.</p>
-        <button className={c('button button--secondary-raised-dark', {disabled: this.state.selectedIds.length !== 2})} type='button' onClick={this.commitJoin}>{t('Confirm')}</button>
+        <button className={c('button button--secondary-raised-dark', {disabled: this.state.selectedIds.length !== 2})} type='button' onClick={this.commitJoin}><T>Confirm</T></button>
         <br />
-        <button className='button button--base-raised-dark' type='button' onClick={this.exitMode}>{t('Cancel')}</button>
+        <button className='button button--base-raised-dark' type='button' onClick={this.exitMode}><T>Cancel</T></button>
       </div>
     );
   },
@@ -316,19 +316,19 @@ var Tasks = React.createClass({
     return (
       <div>
         <div className='form-group'>
-          <p>{`1. ${t('Select roads to work on')}.`}</p>
+          <p>1. <T>Select roads to work on</T></p>
           <div className='map__panel--selected'>
             {this.renderSelectedIds()}
           </div>
         </div>
         <div className='form-group map__panel--form'>
-          <p>{`2. ${t('Choose an action to perform')}.`}</p>
+          <p>2. <T>Choose an action to perform</T></p>
           <button
             className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length < 2})}
             type='button'
             onClick={this.onDedupe}
           >
-            {t('Remove Duplicates')}
+            <T>Remove Duplicates</T>
           </button>
           <br />
           <button
@@ -336,7 +336,7 @@ var Tasks = React.createClass({
             type='button'
             onClick={this.onJoin}
           >
-            {t('Create Intersection')}
+            <T>Create Intersection</T>
           </button>
         </div>
         <div className='form-group map__panel--form'>
@@ -345,7 +345,7 @@ var Tasks = React.createClass({
             type='button'
             onClick={this.markAsDone}
           >
-            {t('Finish task')}
+            <T>Finish task</T>
           </button>
           <br />
           <button
@@ -353,7 +353,7 @@ var Tasks = React.createClass({
             type='button'
             onClick={this.next}
           >
-            {t('Skip task')}
+            <T>Skip task</T>
           </button>
         </div>
       </div>
@@ -428,12 +428,12 @@ var Tasks = React.createClass({
   renderSelectedIds: function () {
     const { selectedIds } = this.state;
     if (!selectedIds.length) {
-      return <p className='empty'>{`${t('No roads selected yet. Click a road to select it')}.`}</p>;
+      return <p className='empty'><T>No roads selected yet. Click a road to select it</T></p>;
     }
     if (selectedIds.length === 1) {
-      return <p>{t('1 road selected. Select at least one more')}</p>;
+      return <p><T>1 road selected. Select at least one more</T></p>;
     }
-    return <p>{`${selectedIds.length} ${t('roads selected')}.`}</p>;
+    return <p>{selectedIds.length} <T>roads selected</T></p>;
   },
 
   render: function () {
@@ -445,7 +445,7 @@ var Tasks = React.createClass({
         <header className='inpage__header'>
           <div className='inner'>
             <div className='inpage__headline'>
-              <h1 className='inpage__title'>{t('Tasks')}</h1>
+              <h1 className='inpage__title'><T>Tasks</T></h1>
             </div>
           </div>
         </header>
@@ -462,13 +462,13 @@ var Tasks = React.createClass({
               {
                 taskStatus === 'error' &&
                   <div className='placeholder__fullscreen'>
-                    <h3 className='placeholder__message'>{t('Error')}</h3>
+                    <h3 className='placeholder__message'><T>Error</T></h3>
                   </div>
               }
               {
                 !taskId && taskStatus === 'pending' &&
                   <div className='placeholder__fullscreen'>
-                    <h3 className='placeholder__message'>{t('Loading')}</h3>
+                    <h3 className='placeholder__message'><T>Loading</T></h3>
                   </div>
               }
               {
