@@ -135,7 +135,7 @@ const AATable = React.createClass({
             const adminProp = this.props.adminRoadProperties.find((prop) => prop.id === vpromm);
             if (adminProp) {
               _.forEach(adminProp.properties, (prop, key, j) => {
-                roadPropDropDown.push(<dt key={`${vpromm}-${key}-${j}-key`}>{key}</dt>);
+                roadPropDropDown.push(<dt key={`${vpromm}-${key}-${j}-key`}><T>{key}</T></dt>);
                 roadPropDropDown.push(<dd key={`${vpromm}-${key}-${j}-prop`}>{prop}</dd>);
               });
             } else {
