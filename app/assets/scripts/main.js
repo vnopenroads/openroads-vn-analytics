@@ -4,7 +4,6 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router, Route, Redirect, IndexRoute, hashHistory } from 'react-router';
-import { isValidLanguage, setLanguage } from './utils/i18n';
 import store from './redux/store';
 
 import UhOh from './views/uhoh';
@@ -21,19 +20,17 @@ import Upload from './views/upload';
 import Faq from './views/faq';
 
 
-// check if link target is one of the languages in the i18n file
-// if it is, set that as the language
-function validateLanguage (nextState, replace) {
-  if (isValidLanguage(nextState.params.lang)) {
-    setLanguage(nextState.params.lang);
-  } else {
+const validateLanguage = ({ params: { lang } }, replace) => {
+  if (lang !== 'en' && lang !== 'vi') {
     replace('/en/404');
   }
-}
+};
+
 
 render((
   <Provider store={store}>
     <Router history={hashHistory}>
+      <Redirect from='/' to='/en' />
       <Route path='/:lang' component={App} onEnter={validateLanguage}>
         <Route path='tasks' component={Tasks} pageClass='tasks' />
         <Route path='upload' component={Upload} pageClass='upload' />
@@ -52,7 +49,6 @@ render((
         <IndexRoute component={Home} pageClass='page--landing' />
         <Route path='*' component={UhOh}/>
       </Route>
-      <Redirect from='/' to='/en' />
     </Router>
   </Provider>
 ), document.querySelector('.site-canvas'));

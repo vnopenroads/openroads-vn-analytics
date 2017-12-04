@@ -1,13 +1,19 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { t } from '../utils/i18n';
+import {
+  compose,
+  getContext
+} from 'recompose';
+import T, {
+  translate
+} from '../components/t';
+
 
 const Faq = ({ language }) => (
   <section className='inpage'>
     <header className='inpage__header'>
       <div className='inner'>
         <div className='inpage__headline'>
-          <h1 className='inpage__title'>{t('Frequently Asked Questions')}</h1>
+          <h1 className='inpage__title'><T>Frequently Asked Questions</T></h1>
         </div>
       </div>
     </header>
@@ -127,9 +133,9 @@ const Faq = ({ language }) => (
 
         <section>
           <p>
-            {t('If you have any remaining questions')}
-            <a href={`mailto:dphan2@worldbank.org?subject=${t('Question regarding ORMA, not answered in the FAQ')}`}>
-              <button className="button button--base-raised-light">{t('email us')}</button>
+            <T>If you have any remaining questions</T>
+            <a href={`mailto:dphan2@worldbank.org?subject=${translate(language, 'Question regarding ORMA, not answered in the FAQ')}`}>
+              <button className="button button--base-raised-light"><T>email us</T></button>
             </a>
           </p>
         </section>
@@ -138,8 +144,6 @@ const Faq = ({ language }) => (
   </section>
 );
 
-export default connect(
-  state => ({
-    language: state.language.current
-  })
+export default compose(
+  getContext({ language: React.PropTypes.string })
 )(Faq);

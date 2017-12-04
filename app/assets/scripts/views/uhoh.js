@@ -1,15 +1,17 @@
 'use strict';
 import React from 'react';
-import { t } from '../utils/i18n';
+import T from '../components/t';
+
 
 var UhOh = React.createClass({
   displayName: 'UhOh',
 
   render: function () {
     return (
-      <div>
-        <h2>404 Not found</h2>
-        <p>{t('UhOh that is a bummer.')}</p>
+      <div className='inpage__body'>
+        <div className='inner'>
+          <h2><T>Page Not Found</T></h2>
+        </div>
       </div>
     );
   }
