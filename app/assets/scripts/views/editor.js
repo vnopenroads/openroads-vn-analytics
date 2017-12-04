@@ -2,8 +2,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { push, replace } from 'react-router-redux';
+import {
+  compose,
+  getContext
+} from 'recompose';
 import { setGlobalZoom } from '../actions/action-creators';
-import { t, getLanguage } from '../utils/i18n';
+import T from '../components/T';
 import {
   transformGeoToPixel,
   pixelDistances,
@@ -25,6 +29,7 @@ var Editor = React.createClass({
     globX: React.PropTypes.number,
     globY: React.PropTypes.number,
     globZ: React.PropTypes.number,
+    language: React.PropTypes.string.isRequired,
     vprommsBbox: React.PropTypes.array,
     adminBbox: React.PropTypes.array
   },
@@ -58,7 +63,7 @@ var Editor = React.createClass({
       switch (e.data.id) {
         case 'or-editor':
           this.hash = this.cleanUrl(e.data.url, config.editorUrl);
-          this.props.dispatch(replace(`/${getLanguage()}/editor/${this.hash}`));
+          this.props.dispatch(replace(`/${this.props.language}/editor/${this.hash}`));
           break;
       }
     } else if (e.data.type === 'navigate') {
@@ -142,10 +147,6 @@ var Editor = React.createClass({
     document.getElementById('main-frame').setAttribute('src', newiDSource);
   },
 
-  shouldComponentUpdate: function (nextProps) {
-    return false;
-  },
-
   render: function () {
     var globalZoomHash = `map=${this.props.globZ.toString()}/${this.props.globX.toString()}/${this.props.globY.toString()}`;
     var path = config.editorUrl + `#${globalZoomHash}`;
@@ -154,7 +155,7 @@ var Editor = React.createClass({
         <header className='inpage__header'>
           <div className='inner'>
             <div className='inpage__headline'>
-              <h1 className='inpage__title'>{t('Editor')}</h1>
+              <h1 className='inpage__title'><T>Editor</T></h1>
             </div>
             <div className='inpage__actions'>
               <MapSearch />
@@ -173,22 +174,20 @@ var Editor = React.createClass({
   }
 });
 
-function selector (state) {
-  return {
-    globX: state.globZoom.x,
-    globY: state.globZoom.y,
-    globZ: state.globZoom.z,
-    vprommsBbox: state.VProMMsWayBbox.bbox,
-    adminBbox: state.adminBbox.bbox
 
-  };
-}
-
-function dispatcher (dispatch) {
-  return {
-    dispatch,
-    _setGlobalZoom: function (url) { dispatch(setGlobalZoom(url)); }
-  };
-}
-
-module.exports = connect(selector, dispatcher)(Editor);
+module.exports = compose(
+  getContext({ language: React.PropTypes.string }),
+  connect(
+    state => ({
+      globX: state.globZoom.x,
+      globY: state.globZoom.y,
+      globZ: state.globZoom.z,
+      vprommsBbox: state.VProMMsWayBbox.bbox,
+      adminBbox: state.adminBbox.bbox
+    }),
+    dispatch => ({
+      dispatch,
+      _setGlobalZoom: function (url) { dispatch(setGlobalZoom(url)); }
+    })
+  )
+)(Editor);
