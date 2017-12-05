@@ -103,7 +103,7 @@ const TableRow = withHandlers({
             <td className='table-properties-cell'>
               <button
                 type='button'
-                className={`button-table-expand ${expandedId ? 'button-table-expand--show' : 'button-table-expand--hide'}`}
+                className={`button-table-expand ${expandedId === vpromm ? 'button-table-expand--show' : 'button-table-expand--hide'}`}
                 onClick={propertiesButtonClick}
               >
                 <span>{expandedId === vpromm ? <T>Hide</T> : <T>Show</T>}</span>
