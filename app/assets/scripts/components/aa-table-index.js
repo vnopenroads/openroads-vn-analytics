@@ -2,12 +2,10 @@
 // (combine aa-table-index.js and aa-table-vromms.js into single component)
 
 import React from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import _ from 'lodash';
 import T from './t';
 import classnames from 'classnames';
-import { setAdmin } from '../actions/action-creators';
 import {
   compose,
   withHandlers,
@@ -35,21 +33,11 @@ const TableColumnHeader = withHandlers({
 
 
 const TableRow = ({
-  id, name, route, field, total, language, setAdmin
+  id, name, route, field, total, language
 }) => (
-  <tr
-    key={`province-${id}`}
-  >
+  <tr>
     <td>
-      <button>X</button>
-      <button>Y</button>
-    </td>
-    <td>
-      {/* TODO - admin shouldn't be stored in both redux and url */}
-      <Link
-        onClick={(e) => setAdmin({ id: id, name: name })}
-        to={`${language}/assets/${route}`}
-      >
+      <Link to={`${language}/assets/${route}`}>
         <strong>{name}</strong>
       </Link>
     </td>
@@ -71,7 +59,6 @@ const AATable = React.createClass({
   displayName: 'AATable',
 
   propTypes: {
-    _setAdmin: React.PropTypes.func.isRequired,
     data: React.PropTypes.array.isRequired,
     language: React.PropTypes.string.isRequired
   },
@@ -115,14 +102,13 @@ const AATable = React.createClass({
   },
 
   render: function () {
-    const { data, language, _setAdmin } = this.props;
+    const { data, language } = this.props;
 
     return (
       <div className='table'>
         <table>
           <thead>
             <tr>
-              <th/>
               {
                 [['name', 'Province'], ['field', 'Field'], ['total', 'Total'], ['progress', 'Progress']]
                   .map(([columnKey, columnLabel]) => (
@@ -148,7 +134,6 @@ const AATable = React.createClass({
                 field={field}
                 total={total}
                 language={language}
-                setAdmin={_setAdmin}
               />
             ))}
           </tbody>
@@ -160,9 +145,5 @@ const AATable = React.createClass({
 
 
 export default compose(
-  getContext({ language: React.PropTypes.string }),
-  connect(
-    null,
-    dispatch => ({ _setAdmin: (admin) => dispatch(setAdmin(admin)) })
-  )
+  getContext({ language: React.PropTypes.string })
 )(AATable);

@@ -472,19 +472,6 @@ const globZoom = function (state = globZoomDefault, action) {
   return state;
 };
 
-const defaultAdmin = { id: '', name: '' };
-
-const admin = function (state = defaultAdmin, action) {
-  switch (action.type) {
-    case actions.SET_ADMIN:
-      state = _.cloneDeep(state);
-      state.id = action.id;
-      state.name = action.name;
-      break;
-  }
-  return state;
-};
-
 const searchResultsDisplay = function (state = {show: false}, action) {
   switch (action.type) {
     case actions.DISPLAY_SEARCH_RESULTS:
@@ -735,7 +722,6 @@ const subadminName = function (state = {name: ''}, action) {
 
 export default combineReducers({
   routing: routeReducer,
-  admin,
   admins,
   adminInfo,
   adminBbox,
