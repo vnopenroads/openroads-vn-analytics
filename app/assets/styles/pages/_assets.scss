@@ -116,6 +116,22 @@
   width: 20rem;
 }
 
+.table-properties-head.button-column {
+  width: 70px;
+}
+
+td.table-properties-cell-edit-delete {
+  button {
+    cursor: pointer;
+    border: none;
+    padding: 5px;
+    background-color: transparent;
+    &::before {
+      color: #666;
+    }
+  }
+}
+
 .table-properties-head,
 .table-properties-cell {
   text-align: left;

@@ -40,7 +40,6 @@ var AssetsAA = React.createClass({
   displayName: 'AssetsAA',
 
   propTypes: {
-    _fetchVProMMsids: React.PropTypes.func,
     _fetchVProMMsIdsCount: React.PropTypes.func,
     _fetchFieldVProMMsids: React.PropTypes.func,
     _fetchAdminVProMMsProps: React.PropTypes.func,

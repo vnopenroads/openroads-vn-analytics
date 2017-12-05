@@ -62,17 +62,25 @@ const TableRow = withHandlers({
 
     return (
       <tr>
-        <th>
+        <td className="table-properties-cell-edit-delete">
+          <button
+            type="button"
+            className="collecticon-trash-bin"
+          />
+          <button
+            type="button"
+            className="collecticon-pencil"
+          />
+        </td>
+        <td>
           {vprommFieldInDB ?
             <Link to={`/${language}/explore`}>
               <strong>{vpromm}</strong>
             </Link> :
             vpromm
           }
-        </th>
-        <td
-          className={vprommFieldInDB ? 'added' : 'not-added'}
-        >
+        </td>
+        <td className={vprommFieldInDB ? 'added' : 'not-added'}>
           { vprommFieldInDB &&
             <div className='a-table-actions'>
               <Link
@@ -117,19 +125,7 @@ const AATable = React.createClass({
   displayName: 'AATable',
 
   propTypes: {
-    aaId: React.PropTypes.string,
     data: React.PropTypes.array,
-    province: React.PropTypes.string,
-    provinceName: React.PropTypes.string,
-    routeParams: React.PropTypes.func,
-    sources: React.PropTypes.array,
-    _fetchVProMMSidsSources: React.PropTypes.func,
-    _fetchVProMMsBbox: React.PropTypes.func,
-    _removeAdminInfo: React.PropTypes.func,
-    fetched: React.PropTypes.bool,
-    properties: React.PropTypes.object,
-    propertiesData: React.PropTypes.array,
-    propertiesFetched: React.PropTypes.bool,
     fieldRoads: React.PropTypes.array,
     language: React.PropTypes.string,
     adminRoadProperties: React.PropTypes.array,
@@ -176,6 +172,7 @@ const AATable = React.createClass({
         <table>
           <thead>
             <tr>
+              <th className="table-properties-head button-column" />
               <TableColumnHeader
                 columnKey="id"
                 label="VPRoMMS ID"
@@ -216,7 +213,6 @@ export default compose(
   getContext({ language: React.PropTypes.string }),
   connect(
     state => ({
-      properties: state.VProMMsidProperties.properties,
       fieldIds: state.fieldVProMMsids.ids,
       adminRoadProperties: state.VProMMsAdminProperties.data,
       adminRoadPropertiesFetched: state.VProMMsAdminProperties.fetched
