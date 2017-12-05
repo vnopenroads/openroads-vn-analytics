@@ -3,7 +3,8 @@
 import React from 'react';
 import {
   compose,
-  getContext
+  getContext,
+  withHandlers
 } from 'recompose';
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -11,7 +12,105 @@ import classnames from 'classnames';
 import { api } from '../config';
 import { Link } from 'react-router';
 import T from './t';
-import { fetchVProMMsBbox, removeAdminInfo } from '../actions/action-creators';
+
+
+const TableColumnHeader = withHandlers({
+  sortLink: ({ columnKey, sortLinkHandler }) => () => sortLinkHandler(columnKey)
+})
+  (({ columnKey, label, sortField, sortOrder, sortLink }) => (
+    <th
+      onClick={sortLink}
+    >
+      <i
+        className={classnames({
+          'collecticon-sort-none': sortField !== columnKey,
+          'collecticon-sort-asc': sortField === columnKey && sortOrder === 'asc',
+          'collecticon-sort-desc': sortField === columnKey && sortOrder === 'desc'
+        })}
+      />
+      <T>{label}</T>
+    </th>
+  ));
+
+
+const TableRow = withHandlers({
+  propertiesButtonClick: ({ vpromm, toggleProperties }) => () => toggleProperties(vpromm)
+})
+  (({
+    vpromm, fieldRoads, adminRoadProperties, adminRoadPropertiesFetched,
+    vprommFieldInDB, expandedId, language, propertiesButtonClick
+  }) => {
+    // TODO - properly render props dropdown
+    const roadPropDropDown = [];
+
+    if (adminRoadPropertiesFetched) {
+      if (adminRoadProperties.length !== 0) {
+        const adminProp = adminRoadProperties.find((prop) => prop.id === vpromm);
+        if (adminProp) {
+          _.forEach(adminProp.properties, (prop, key, j) => {
+            roadPropDropDown.push(<dt key={`${vpromm}-${key}-${j}-key`}>{key}</dt>);
+            roadPropDropDown.push(<dd key={`${vpromm}-${key}-${j}-prop`}>{prop}</dd>);
+          });
+        } else {
+          roadPropDropDown.push(<dt key={`${vpromm}-key`}></dt>);
+          roadPropDropDown.push(<dd key={`${vpromm}-prop`}></dd>);
+        }
+      } else {
+        roadPropDropDown.push(<p><T>Loading</T></p>);
+      }
+    }
+
+    return (
+      <tr>
+        <th>
+          {vprommFieldInDB ?
+            <Link to={`/${language}/explore`}>
+              <strong>{vpromm}</strong>
+            </Link> :
+            vpromm
+          }
+        </th>
+        <td
+          className={vprommFieldInDB ? 'added' : 'not-added'}
+        >
+          { vprommFieldInDB &&
+            <div className='a-table-actions'>
+              <Link
+                className='a-table-action'
+                to={`/${language}/assets/road/${vpromm}/`}
+              >
+                <T>Explore</T>
+              </Link>
+              <a
+                className='a-table-action'
+                href={`${api}/field/geometries/${vpromm}?grouped=false&download=true`}
+              >
+                <T>Download</T>
+              </a>
+            </div>
+          }
+        </td>
+        {
+          adminRoadProperties.length !== 0 ?
+            <td className='table-properties-cell'>
+              <button
+                type='button'
+                className={`button-table-expand ${expandedId ? 'button-table-expand--show' : 'button-table-expand--hide'}`}
+                onClick={propertiesButtonClick}
+              >
+                <span>{expandedId === vpromm ? <T>Hide</T> : <T>Show</T>}</span>
+              </button>
+              <div
+                className={`table-properties ${expandedId !== vpromm ? 'table-properties--hidden' : ''}`}
+              >
+                <dl className='table-properties-list'>{roadPropDropDown}</dl>
+              </div>
+            </td> :
+            <td/>
+        }
+      </tr>
+    );
+  });
 
 
 const AATable = React.createClass({
@@ -39,165 +138,73 @@ const AATable = React.createClass({
 
   getInitialState: function () {
     return {
-      sortState: {
-        field: 'inTheDatabase',
-        order: 'desc',
-        expandedId: null
-      }
+      sortField: 'id',
+      sortOrder: 'desc',
+      expandedId: null
     };
   },
 
-  renderTableHead: function () {
-    return (
-      <thead>
-        <tr>
-          <th
-            onClick={this.sortLinkClickHandler.bind(null, 'id')}
-          >
-            <i
-              className={classnames({
-                'collecticon-sort-none': this.state.sortState.field !== 'id',
-                'collecticon-sort-asc': this.state.sortState.field === 'id' && this.state.sortState.order === 'asc',
-                'collecticon-sort-desc': this.state.sortState.field === 'id' && this.state.sortState.order === 'desc'
-              })}
-            />
-            <span><T>VPRoMMS ID</T></span>
-          </th>
-          <th
-            onClick={this.sortLinkClickHandler.bind(null, 'FieldData')}
-          >
-            <i
-              className={classnames({
-                'collecticon-sort-none': this.state.sortState.field !== 'FieldData',
-                'collecticon-sort-asc': this.state.sortState.field === 'FieldData' && this.state.sortState.order === 'asc',
-                'collecticon-sort-desc': this.state.sortState.field === 'FieldData' && this.state.sortState.order === 'desc'
-              })}
-            />
-            <span><T>Field Data</T></span>
-          </th>
-          <th className='table-properties-head'><T>Properties</T></th>
-        </tr>
-      </thead>
-    );
-  },
+  sortLinkClickHandler: function (field) {
+    let { sortField, sortOrder } = this.state;
 
-  sortLinkClickHandler: function (field, e) {
-    e.preventDefault();
-    let {field: sortField, order: sortOrder} = this.state.sortState;
-    let order = 'asc';
-    // Same field, switch order; different field, reset order.
     if (sortField === field) {
-      order = sortOrder === 'asc' ? 'desc' : 'asc';
+      this.setState({
+        sortOrder: sortOrder === 'asc' ? 'desc' : 'asc'
+      });
+    } else {
+      this.setState({
+        sortField: field,
+        sortOrder: 'desc'
+      });
     }
-
-    this.setState({
-      sortState: {
-        field,
-        order
-      }
-    });
   },
 
-  handleSort: function () {
-    let sorted = _(this.props.data).sortBy(this.state.sortState.field);
-    if (this.state.sortState.order === 'asc') {
-      sorted = sorted.reverse();
-    }
-    return sorted.value();
-  },
-
-  onPropertiesClick: function (vprommId) {
-    let curId = this.state.expandedId;
-    let newId = curId === vprommId ? null : vprommId;
-    this.setState({expandedId: newId});
-  },
-
-  renderTableBody: function () {
-    const propsLength = this.props.adminRoadProperties.length;
-    let sorted = this.props.data.slice(0, propsLength - 1);
-    sorted = this.handleSort(sorted);
-
-    return (
-      <tbody>
-      {_.map(sorted, (vpromm, i) => {
-        const vprommFieldInDB = (this.props.fieldRoads.includes(vpromm));
-        let propBtnClass = classnames('button-table-expand', {
-          'button-table-expand--show': this.state.expandedId !== vpromm,
-          'button-table-expand--hide': this.state.expandedId === vpromm
-        });
-        let propContainerClass = classnames('table-properties', {
-          'table-properties--hidden': this.state.expandedId !== vpromm
-        });
-        const roadPropDropDown = [];
-
-        if (this.props.adminRoadPropertiesFetched) {
-          if (this.props.adminRoadProperties.length !== 0) {
-            const adminProp = this.props.adminRoadProperties.find((prop) => prop.id === vpromm);
-            if (adminProp) {
-              _.forEach(adminProp.properties, (prop, key, j) => {
-                roadPropDropDown.push(<dt key={`${vpromm}-${key}-${j}-key`}>{key}</dt>);
-                roadPropDropDown.push(<dd key={`${vpromm}-${key}-${j}-prop`}>{prop}</dd>);
-              });
-            } else {
-              roadPropDropDown.push(<dt key={`${vpromm}-key`}></dt>);
-              roadPropDropDown.push(<dd key={`${vpromm}-prop`}></dd>);
-            }
-          } else {
-            roadPropDropDown.push(<p><T>Loading</T></p>);
-          }
-        }
-
-        return (
-          <tr key={vpromm} className={classnames({'alt': i % 2})}>
-            <th>
-              {vprommFieldInDB ?
-                <Link
-                  to={`/${this.props.language}/explore`}
-                  onClick={(e) => {
-                    this.props._removeAdminInfo();
-                    this.props._fetchVProMMsBbox(vpromm);
-                  }}
-                >
-                  <strong>{vpromm}</strong>
-                </Link> :
-                vpromm
-              }
-            </th>
-            <td
-              className={classnames({'added': vprommFieldInDB, 'not-added': !vprommFieldInDB})}
-            >
-              { vprommFieldInDB &&
-                <div className='a-table-actions'>
-                  <Link className='a-table-action' to={`/${this.props.language}/assets/road/${vpromm}/`}><T>Explore</T></Link>
-                  <a className='a-table-action' href={`${api}/field/geometries/${vpromm}?grouped=false&download=true`}><T>Download</T></a>
-                </div>
-              }
-            </td>
-            {
-              this.props.adminRoadProperties.length !== 0 ?
-                <td className='table-properties-cell'>
-                  <button type='button' className={propBtnClass} onClick={this.onPropertiesClick.bind(null, vpromm)}>
-                    <span>{this.state.expandedId === vpromm ? <T>Hide</T> : <T>Show</T>}</span>
-                  </button>
-                  <div className={propContainerClass}>
-                    <dl className='table-properties-list'>{roadPropDropDown}</dl>
-                  </div>
-                </td> :
-                <td/>
-            }
-          </tr>
-        );
-      })}
-      </tbody>
-    );
+  toggleProperties: function (vprommId) {
+    this.setState({ expandedId: this.state.expandedId === vprommId ? null : vprommId });
   },
 
   render: function () {
+    const {
+      adminRoadProperties, data, fieldRoads, adminRoadPropertiesFetched, language
+    } = this.props;
+    const {
+      expandedId, sortField, sortOrder
+    } = this.state;
+
     return (
       <div className='table'>
         <table>
-          {this.renderTableHead()}
-          {this.renderTableBody()}
+          <thead>
+            <tr>
+              <TableColumnHeader
+                columnKey="id"
+                label="VPRoMMS ID"
+                sortField={sortField}
+                sortOrder={sortOrder}
+                sortLinkHandler={this.sortLinkClickHandler}
+              />
+              <th className='table-properties-head'><T>Field Data</T></th>
+              <th className='table-properties-head'><T>Properties</T></th>
+            </tr>
+          </thead>
+          <tbody>
+            {_.map(
+              _.orderBy(data, _.identity, [sortOrder]),
+              (vpromm) => (
+                <TableRow
+                  key={vpromm}
+                  vpromm={vpromm}
+                  fieldRoads={fieldRoads}
+                  adminRoadProperties={adminRoadProperties}
+                  adminRoadPropertiesFetched={adminRoadPropertiesFetched}
+                  vprommFieldInDB={fieldRoads.includes(vpromm)}
+                  expandedId={expandedId}
+                  language={language}
+                  toggleProperties={this.toggleProperties}
+                />
+              )
+            )}
+          </tbody>
         </table>
       </div>
     );
@@ -213,10 +220,6 @@ export default compose(
       fieldIds: state.fieldVProMMsids.ids,
       adminRoadProperties: state.VProMMsAdminProperties.data,
       adminRoadPropertiesFetched: state.VProMMsAdminProperties.fetched
-    }),
-    dispatch => ({
-      _fetchVProMMsBbox: (id, source) => dispatch(fetchVProMMsBbox(id, source)),
-      _removeAdminInfo: () => dispatch(removeAdminInfo())
     })
   )
 )(AATable);

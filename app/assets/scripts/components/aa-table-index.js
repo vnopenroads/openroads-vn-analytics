@@ -65,28 +65,24 @@ const AATable = React.createClass({
 
   getInitialState: function () {
     return {
-      sortState: {
-        field: 'name',
-        order: 'asc'
-      }
+      sortField: 'name',
+      sortOrder: 'asc'
     };
   },
 
   sortLinkClickHandler: function (field) {
-    const { field: sortField, order: sortOrder } = this.state.sortState;
-    let order = 'asc';
+    let { sortField, sortOrder } = this.state;
 
-    // Same field, switch order; different field, reset order.
     if (sortField === field) {
-      order = sortOrder === 'asc' ? 'desc' : 'asc';
+      this.setState({
+        sortOrder: sortOrder === 'asc' ? 'desc' : 'asc'
+      });
+    } else {
+      this.setState({
+        sortField: field,
+        sortOrder: 'desc'
+      });
     }
-
-    this.setState({
-      sortState: {
-        field,
-        order
-      }
-    });
   },
 
   handleSort: function () {
@@ -94,11 +90,7 @@ const AATable = React.createClass({
     if (sortField === 'progress') {
       sortField = 'percentageComplete';
     }
-    let sorted = _(this.props.data).sortBy(sortField);
-    if (this.state.sortState.order === 'desc') {
-      sorted = sorted.reverse();
-    }
-    return sorted.value();
+    return _.orderBy(this.props.data, [sortField], [this.state.sortOrder]);
   },
 
   render: function () {
@@ -116,8 +108,8 @@ const AATable = React.createClass({
                       key={columnLabel}
                       columnKey={columnKey}
                       label={columnLabel}
-                      sortField={this.state.sortState.field}
-                      sortOrder={this.state.sortState.order}
+                      sortField={this.state.sortField}
+                      sortOrder={this.state.sortOrder}
                       sortLinkHandler={this.sortLinkClickHandler}
                     />
                   ))
