@@ -21,6 +21,10 @@ By default, the local deployment will use the production API. If you run a local
 
 Run `yarn run build` to compile all site resources into a `dist` folder. This folder can be deployed on a remote host, and act as the full production website.
 
+## Continuous integration
+
+A CI server takes care of deployment to production; any merge to the `master` branch will deploy.
+
 ## Architecture
 
 ![](https://user-images.githubusercontent.com/4959135/33675125-8936e5da-da7f-11e7-8853-1f3552f1c2b5.png)
