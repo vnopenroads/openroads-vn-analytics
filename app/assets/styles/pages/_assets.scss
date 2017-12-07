@@ -104,7 +104,20 @@
 
 // Tables
 
-.table { margin-bottom: 2rem; }
+.table {
+  margin-bottom: 2rem;
+  
+  .delete-row {
+    p {
+      margin-bottom: 4px;
+      line-height: 42px;
+    }
+    button {
+      margin: 0 8px;
+      padding: 2px 12px;
+    }
+  }
+}
 
 .a-table-action {
   @extend .button, .button--small, .button--base-raised-light;

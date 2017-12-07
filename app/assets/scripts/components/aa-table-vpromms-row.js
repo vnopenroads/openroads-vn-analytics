@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   compose,
-  withHandlers,
   withStateHandlers
 } from 'recompose';
 import { connect } from 'react-redux';
@@ -18,7 +17,7 @@ const RowPropertiesList = ({
 }) => {
   // TODO - properly render props dropdown
   const roadPropDropDown = [];
-  
+
   if (adminRoadProperties.length !== 0) {
     const adminProp = adminRoadProperties.find((prop) => prop.id === vpromm);
     if (adminProp) {
@@ -122,27 +121,47 @@ const RowEditView = ({ language, showReadView }) => (
       <button
         type="button"
         className="collecticon-xmark"
-        title={translate(language, 'Delete Road')}
+        title={translate(language, 'Cancel')}
         onClick={showReadView}
       />
     </td>
   </tr>
 );
 
-const RowDeleteView = ({ language, showReadView }) => (
-  <tr>
+const RowDeleteView = ({ vpromm, language, showReadView, confirmDelete }) => (
+  <tr
+    className="delete-row"
+  >
     <td
       className="table-properties-cell-view-buttons"
-      colSpan="4"
     >
       <button
         type="button"
         className="collecticon-xmark"
-        title={translate(language, 'Delete Road')}
+        title={translate(language, 'Cancel')}
         onClick={showReadView}
       />
-  </td>
-</tr>
+    </td>
+    <td
+      colSpan="3"
+    >
+      <p>
+        <T>Are you sure you want to delete VPRoMMS</T> <strong>{vpromm}</strong>?
+        <button
+          className="button button--secondary-raised-dark"
+          onClick={confirmDelete}
+        >
+          Delete
+        </button>
+        <button
+          className="button button--base-raised-light"
+          onClick={showReadView}
+        >
+          Cancel
+        </button>
+      </p>
+    </td>
+  </tr>
 );
 
 const TableRow = (props) => {
@@ -159,9 +178,9 @@ const TableRow = (props) => {
 export default compose(
   connect(
     null,
-    dispatch => ({
-      deleteRow: () => () => {},
-      editRow: () => () => {}
+    (dispatch, { vpromm }) => ({
+      confirmDelete: () => console.log('DELETE', vpromm),
+      confirmEdit: () => () => console.log('EDIT', vpromm)
     })
   ),
   withStateHandlers(
