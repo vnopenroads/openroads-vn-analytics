@@ -14,7 +14,7 @@ import T from './t';
 
 
 const AATable = ({
-  adminRoadProperties, data, fieldRoads, adminRoadPropertiesFetched, language,
+  adminRoadProperties, data, fieldRoads, language,
   sortField, sortOrder, sortColumnAction
 }) => (
   <div className='table'>
@@ -42,7 +42,6 @@ const AATable = ({
               vpromm={vpromm}
               fieldRoads={fieldRoads}
               adminRoadProperties={adminRoadProperties}
-              adminRoadPropertiesFetched={adminRoadPropertiesFetched}
               vprommFieldInDB={fieldRoads.includes(vpromm)}
               language={language}
             />
@@ -58,8 +57,7 @@ AATable.propTypes = {
   data: React.PropTypes.array,
   fieldRoads: React.PropTypes.array,
   language: React.PropTypes.string,
-  adminRoadProperties: React.PropTypes.array,
-  adminRoadPropertiesFetched: React.PropTypes.bool
+  adminRoadProperties: React.PropTypes.array
 };
 
 
@@ -68,8 +66,7 @@ export default compose(
   connect(
     state => ({
       fieldIds: state.fieldVProMMsids.ids,
-      adminRoadProperties: state.VProMMsAdminProperties.data,
-      adminRoadPropertiesFetched: state.VProMMsAdminProperties.fetched
+      adminRoadProperties: state.VProMMsAdminProperties.data
     })
   ),
   withStateHandlers(

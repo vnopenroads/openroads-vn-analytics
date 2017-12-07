@@ -13,45 +13,62 @@ import T, {
 } from './t';
 
 
-const TableRow = ({
-  vpromm, fieldRoads, adminRoadProperties, adminRoadPropertiesFetched,
-  vprommFieldInDB, language, editRoad, newRoadId, expandProperties,
-  toggleExpandProperties, deleteRoadHandler, toggleEditRow, updateNewRoadId
+const RowPropertiesList = ({
+  vpromm, adminRoadProperties, expandProperties, toggleExpandProperties
 }) => {
   // TODO - properly render props dropdown
   const roadPropDropDown = [];
-
-  if (adminRoadPropertiesFetched) {
-    if (adminRoadProperties.length !== 0) {
-      const adminProp = adminRoadProperties.find((prop) => prop.id === vpromm);
-      if (adminProp) {
-        _.forEach(adminProp.properties, (prop, key, j) => {
-          roadPropDropDown.push(<dt key={`${vpromm}-${key}-${j}-key`}>{key}</dt>);
-          roadPropDropDown.push(<dd key={`${vpromm}-${key}-${j}-prop`}>{prop}</dd>);
-        });
-      } else {
-        roadPropDropDown.push(<dt key={`${vpromm}-key`}></dt>);
-        roadPropDropDown.push(<dd key={`${vpromm}-prop`}></dd>);
-      }
+  
+  if (adminRoadProperties.length !== 0) {
+    const adminProp = adminRoadProperties.find((prop) => prop.id === vpromm);
+    if (adminProp) {
+      _.forEach(adminProp.properties, (prop, key, j) => {
+        roadPropDropDown.push(<dt key={`${vpromm}-${key}-${j}-key`}>{key}</dt>);
+        roadPropDropDown.push(<dd key={`${vpromm}-${key}-${j}-prop`}>{prop}</dd>);
+      });
     } else {
-      roadPropDropDown.push(<p><T>Loading</T></p>);
+      roadPropDropDown.push(<dt key={`${vpromm}-key`}></dt>);
+      roadPropDropDown.push(<dd key={`${vpromm}-prop`}></dd>);
     }
   }
 
+  return adminRoadProperties.length !== 0 ?
+    <td className='table-properties-cell'>
+      <button
+        type='button'
+        className={`button-table-expand ${expandProperties ? 'button-table-expand--show' : 'button-table-expand--hide'}`}
+        onClick={toggleExpandProperties}
+      >
+        <span>{expandProperties ? <T>Hide</T> : <T>Show</T>}</span>
+      </button>
+      <div
+        className={`table-properties ${!expandProperties ? 'table-properties--hidden' : ''}`}
+      >
+        <dl className='table-properties-list'>{roadPropDropDown}</dl>
+      </div>
+    </td> :
+    <td/>;
+};
+
+const RowReadView = ({
+  vpromm, fieldRoads, adminRoadProperties,
+  vprommFieldInDB, language, editRoad, newRoadId, expandProperties,
+  toggleExpandProperties, showDeleteView, showEditView, updateNewRoadId
+}) => {
   return (
     <tr>
-      <td className="table-properties-cell-edit-delete">
+      <td className="table-properties-cell-view-buttons">
         <button
           type="button"
           className="collecticon-trash-bin"
           title={translate(language, 'Delete Road')}
-          onClick={deleteRoadHandler}
+          onClick={showDeleteView}
         />
         <button
           type="button"
           className="collecticon-pencil"
           title={translate(language, 'Edit Road')}
-          onClick={toggleEditRow}
+          onClick={showEditView}
         />
       </td>
       <td>
@@ -86,31 +103,56 @@ const TableRow = ({
           </div>
         }
       </td>
-      {
-        adminRoadProperties.length !== 0 ?
-          <td className='table-properties-cell'>
-            <button
-              type='button'
-              className={`button-table-expand ${expandProperties ? 'button-table-expand--show' : 'button-table-expand--hide'}`}
-              onClick={toggleExpandProperties}
-            >
-              <span>{expandProperties ? <T>Hide</T> : <T>Show</T>}</span>
-            </button>
-            <div
-              className={`table-properties ${!expandProperties ? 'table-properties--hidden' : ''}`}
-            >
-              <dl className='table-properties-list'>{roadPropDropDown}</dl>
-            </div>
-          </td> :
-          <td/>
-      }
+      <RowPropertiesList
+        vpromm={vpromm}
+        adminRoadProperties={adminRoadProperties}
+        expandProperties={expandProperties}
+        toggleExpandProperties={toggleExpandProperties}
+      />
     </tr>
   );
 };
 
+const RowEditView = ({ language, showReadView }) => (
+  <tr>
+    <td
+      className="table-properties-cell-view-buttons"
+      colSpan="4"
+    >
+      <button
+        type="button"
+        className="collecticon-xmark"
+        title={translate(language, 'Delete Road')}
+        onClick={showReadView}
+      />
+    </td>
+  </tr>
+);
 
-TableRow.propTypes = {
+const RowDeleteView = ({ language, showReadView }) => (
+  <tr>
+    <td
+      className="table-properties-cell-view-buttons"
+      colSpan="4"
+    >
+      <button
+        type="button"
+        className="collecticon-xmark"
+        title={translate(language, 'Delete Road')}
+        onClick={showReadView}
+      />
+  </td>
+</tr>
+);
 
+const TableRow = (props) => {
+  if (props.viewState === 'read') {
+    return <RowReadView {...props} />;
+  } else if (props.viewState === 'edit') {
+    return <RowEditView {...props} />;
+  } else if (props.viewState === 'delete') {
+    return <RowDeleteView {...props} />;
+  }
 };
 
 
@@ -123,14 +165,15 @@ export default compose(
     })
   ),
   withStateHandlers(
-    ({ vpromm }) => ({ editRoad: false, newRoadId: vpromm, expandProperties: false }),
+    ({ vpromm }) => ({
+      viewState: 'read', newRoadId: vpromm, expandProperties: false
+    }),
     {
-      toggleEditRow: ({ editRoad }) => () => ({ editRoad: !editRoad }),
+      showReadView: () => () => ({ viewState: 'read' }),
+      showEditView: () => () => ({ viewState: 'edit' }),
+      showDeleteView: () => () => ({ viewState: 'delete' }),
       toggleExpandProperties: ({ expandProperties }) => () => ({ expandProperties: !expandProperties }),
       updateNewRoadId: () => (e) => ({ newRoadId: e.target.value })
     }
-  ),
-  withHandlers({
-    deleteRoadHandler: () => () => {}
-  })
+  )
 )(TableRow);
