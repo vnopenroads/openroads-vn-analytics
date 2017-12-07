@@ -1,6 +1,8 @@
 import React from 'react';
 import {
   compose,
+  getContext,
+  withHandlers,
   withStateHandlers
 } from 'recompose';
 import { connect } from 'react-redux';
@@ -51,8 +53,8 @@ const RowPropertiesList = ({
 
 const RowReadView = ({
   vpromm, fieldRoads, adminRoadProperties,
-  vprommFieldInDB, language, editRoad, newRoadId, expandProperties,
-  toggleExpandProperties, showDeleteView, showEditView, updateNewRoadId
+  vprommFieldInDB, language, expandProperties,
+  toggleExpandProperties, showDeleteView, showEditView
 }) => {
   return (
     <tr>
@@ -71,17 +73,11 @@ const RowReadView = ({
         />
       </td>
       <td>
-        {
-          editRoad ?
-            <input
-              type="text"
-              value={newRoadId}
-            /> :
-          vprommFieldInDB ?
-            <Link to={`/${language}/explore`}>
-              <strong>{vpromm}</strong>
-            </Link> :
-            vpromm
+        {vprommFieldInDB ?
+          <Link to={`/${language}/explore`}>
+            <strong>{vpromm}</strong>
+          </Link> :
+          vpromm
         }
       </td>
       <td className={vprommFieldInDB ? 'added' : 'not-added'}>
@@ -112,11 +108,10 @@ const RowReadView = ({
   );
 };
 
-const RowEditView = ({ language, showReadView }) => (
+const RowEditView = ({ newRoadId, language, showReadView, updateNewRoadId, confirmEdit }) => (
   <tr>
     <td
       className="table-properties-cell-view-buttons"
-      colSpan="4"
     >
       <button
         type="button"
@@ -124,6 +119,27 @@ const RowEditView = ({ language, showReadView }) => (
         title={translate(language, 'Cancel')}
         onClick={showReadView}
       />
+    </td>
+    <td
+      colSpan="3"
+    >
+      <input
+        type="text"
+        value={newRoadId}
+        onChange={updateNewRoadId}
+      />
+      <button
+        className="button button--secondary-raised-dark"
+        onClick={confirmEdit}
+      >
+        <T>Submit</T>
+      </button>
+      <button
+        className="button button--base-raised-light"
+        onClick={showReadView}
+      >
+        <T>Cancel</T>
+      </button>
     </td>
   </tr>
 );
@@ -151,13 +167,13 @@ const RowDeleteView = ({ vpromm, language, showReadView, confirmDelete }) => (
           className="button button--secondary-raised-dark"
           onClick={confirmDelete}
         >
-          Delete
+          <T>Delete</T>
         </button>
         <button
           className="button button--base-raised-light"
           onClick={showReadView}
         >
-          Cancel
+          <T>Cancel</T>
         </button>
       </p>
     </td>
@@ -176,11 +192,12 @@ const TableRow = (props) => {
 
 
 export default compose(
+  getContext({ language: React.PropTypes.string }),
   connect(
     null,
     (dispatch, { vpromm }) => ({
       confirmDelete: () => console.log('DELETE', vpromm),
-      confirmEdit: () => () => console.log('EDIT', vpromm)
+      submitEdit: (newRoadId) => console.log('EDIT', vpromm, newRoadId)
     })
   ),
   withStateHandlers(
@@ -194,5 +211,11 @@ export default compose(
       toggleExpandProperties: ({ expandProperties }) => () => ({ expandProperties: !expandProperties }),
       updateNewRoadId: () => (e) => ({ newRoadId: e.target.value })
     }
-  )
+  ),
+  withHandlers({
+    confirmEdit: ({ newRoadId, submitEdit }) => (e) => {
+      e.preventDefault();
+      submitEdit(newRoadId);
+    }
+  })
 )(TableRow);

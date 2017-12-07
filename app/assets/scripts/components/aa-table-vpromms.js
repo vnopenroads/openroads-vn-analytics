@@ -3,7 +3,6 @@
 import React from 'react';
 import {
   compose,
-  getContext,
   withStateHandlers
 } from 'recompose';
 import { connect } from 'react-redux';
@@ -14,7 +13,7 @@ import T from './t';
 
 
 const AATable = ({
-  adminRoadProperties, data, fieldRoads, language,
+  adminRoadProperties, data, fieldRoads,
   sortField, sortOrder, sortColumnAction
 }) => (
   <div className='table'>
@@ -43,7 +42,6 @@ const AATable = ({
               fieldRoads={fieldRoads}
               adminRoadProperties={adminRoadProperties}
               vprommFieldInDB={fieldRoads.includes(vpromm)}
-              language={language}
             />
           )
         )}
@@ -62,7 +60,6 @@ AATable.propTypes = {
 
 
 export default compose(
-  getContext({ language: React.PropTypes.string }),
   connect(
     state => ({
       fieldIds: state.fieldVProMMsids.ids,
