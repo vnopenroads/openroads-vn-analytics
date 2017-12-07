@@ -4,144 +4,25 @@ import React from 'react';
 import {
   compose,
   getContext,
-  withHandlers,
   withStateHandlers
 } from 'recompose';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import classnames from 'classnames';
-import { api } from '../config';
-import { Link } from 'react-router';
-import T, {
-  translate
-} from './t';
-
-
-const TableColumnHeader = withHandlers({
-  sortColumnAction: ({ columnKey, sortColumnAction }) => () => sortColumnAction(columnKey)
-})
-  (({ columnKey, label, sortField, sortOrder, sortColumnAction }) => (
-    <th
-      onClick={sortColumnAction}
-    >
-      <i
-        className={classnames({
-          'collecticon-sort-none': sortField !== columnKey,
-          'collecticon-sort-asc': sortField === columnKey && sortOrder === 'asc',
-          'collecticon-sort-desc': sortField === columnKey && sortOrder === 'desc'
-        })}
-      />
-      <T>{label}</T>
-    </th>
-  ));
-
-
-const TableRow = withHandlers({
-  propertiesButtonClick: ({ vpromm, toggleProperties }) => () => toggleProperties(vpromm),
-  deleteRoadHandler: ({ vpromm, deleteRoad }) => () => deleteRoad(vpromm),
-  editRoadHandler: ({ vpromm, editRoad }) => () => editRoad(vpromm)
-})
-  (({
-    vpromm, fieldRoads, adminRoadProperties, adminRoadPropertiesFetched,
-    vprommFieldInDB, expandedId, language,
-    propertiesButtonClick, deleteRoadHandler, editRoadHandler
-  }) => {
-    // TODO - properly render props dropdown
-    const roadPropDropDown = [];
-
-    if (adminRoadPropertiesFetched) {
-      if (adminRoadProperties.length !== 0) {
-        const adminProp = adminRoadProperties.find((prop) => prop.id === vpromm);
-        if (adminProp) {
-          _.forEach(adminProp.properties, (prop, key, j) => {
-            roadPropDropDown.push(<dt key={`${vpromm}-${key}-${j}-key`}>{key}</dt>);
-            roadPropDropDown.push(<dd key={`${vpromm}-${key}-${j}-prop`}>{prop}</dd>);
-          });
-        } else {
-          roadPropDropDown.push(<dt key={`${vpromm}-key`}></dt>);
-          roadPropDropDown.push(<dd key={`${vpromm}-prop`}></dd>);
-        }
-      } else {
-        roadPropDropDown.push(<p><T>Loading</T></p>);
-      }
-    }
-
-    return (
-      <tr>
-        <td className="table-properties-cell-edit-delete">
-          <button
-            type="button"
-            className="collecticon-trash-bin"
-            title={translate(language, 'Delete Road')}
-            onClick={deleteRoadHandler}
-          />
-          <button
-            type="button"
-            className="collecticon-pencil"
-            title={translate(language, 'Edit Road')}
-            onClick={editRoadHandler}
-          />
-        </td>
-        <td>
-          {vprommFieldInDB ?
-            <Link to={`/${language}/explore`}>
-              <strong>{vpromm}</strong>
-            </Link> :
-            vpromm
-          }
-        </td>
-        <td className={vprommFieldInDB ? 'added' : 'not-added'}>
-          { vprommFieldInDB &&
-            <div className='a-table-actions'>
-              <Link
-                className='a-table-action'
-                to={`/${language}/assets/road/${vpromm}/`}
-              >
-                <T>Explore</T>
-              </Link>
-              <a
-                className='a-table-action'
-                href={`${api}/field/geometries/${vpromm}?grouped=false&download=true`}
-              >
-                <T>Download</T>
-              </a>
-            </div>
-          }
-        </td>
-        {
-          adminRoadProperties.length !== 0 ?
-            <td className='table-properties-cell'>
-              <button
-                type='button'
-                className={`button-table-expand ${expandedId === vpromm ? 'button-table-expand--show' : 'button-table-expand--hide'}`}
-                onClick={propertiesButtonClick}
-              >
-                <span>{expandedId === vpromm ? <T>Hide</T> : <T>Show</T>}</span>
-              </button>
-              <div
-                className={`table-properties ${expandedId !== vpromm ? 'table-properties--hidden' : ''}`}
-              >
-                <dl className='table-properties-list'>{roadPropDropDown}</dl>
-              </div>
-            </td> :
-            <td/>
-        }
-      </tr>
-    );
-  });
+import AATableColumnHeader from './aa-table-vpromms-column-header';
+import AATableRow from './aa-table-vpromms-row';
+import T from './t';
 
 
 const AATable = ({
   adminRoadProperties, data, fieldRoads, adminRoadPropertiesFetched, language,
-  expandedId, sortField, sortOrder,
-  sortColumnAction, toggleShowProperties, editRoad, deleteRoad
+  sortField, sortOrder, sortColumnAction
 }) => (
   <div className='table'>
     <table>
       <thead>
         <tr>
           <th className="table-properties-head button-column" />
-          <TableColumnHeader
+          <AATableColumnHeader
             columnKey="id"
             label="VPRoMMS ID"
             sortField={sortField}
@@ -156,18 +37,14 @@ const AATable = ({
         {_.map(
           _.orderBy(data, _.identity, [sortOrder]),
           (vpromm) => (
-            <TableRow
+            <AATableRow
               key={vpromm}
               vpromm={vpromm}
               fieldRoads={fieldRoads}
               adminRoadProperties={adminRoadProperties}
               adminRoadPropertiesFetched={adminRoadPropertiesFetched}
               vprommFieldInDB={fieldRoads.includes(vpromm)}
-              expandedId={expandedId}
               language={language}
-              toggleProperties={toggleShowProperties}
-              editRoad={editRoad}
-              deleteRoad={deleteRoad}
             />
           )
         )}
@@ -196,17 +73,13 @@ export default compose(
     })
   ),
   withStateHandlers(
-    { sortField: 'id', sortOrder: 'asc', expandedId: null },
+    { sortField: 'id', sortOrder: 'asc' },
     {
       sortColumnAction: ({ sortField, sortOrder }) => (field) => (
         sortField === field ?
           { sortOrder: sortOrder === 'asc' ? 'desc' : 'asc' } :
           { sortField: field, sortOrder: 'asc' }
-      ),
-      toggleShowProperties: ({ expandedId }) => (vpromm) =>
-        ({ expandedId: expandedId === vpromm ? null : vpromm }),
-      editRoad: () => (vpromm) => console.log('edit', vpromm),
-      deleteRoad: () => (vpromm) => console.log('delete', vpromm)
+      )
     }
   )
 )(AATable);
