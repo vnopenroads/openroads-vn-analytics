@@ -8,6 +8,9 @@ import {
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { Link } from 'react-router';
+import {
+  deleteRoadEpic
+} from '../redux/modules/editRoad';
 import { api } from '../config';
 import T, {
   translate
@@ -146,7 +149,7 @@ const RowEditView = ({ newRoadId, language, showReadView, updateNewRoadId, confi
   </tr>
 );
 
-const RowDeleteView = ({ vpromm, language, showReadView, confirmDelete }) => (
+const RowDeleteView = ({ vpromm, language, status, showReadView, confirmDelete }) => (
   <tr
     className="delete-row"
   >
@@ -163,21 +166,27 @@ const RowDeleteView = ({ vpromm, language, showReadView, confirmDelete }) => (
     <td
       colSpan="3"
     >
-      <p>
-        <T>Are you sure you want to delete VPRoMMS</T> <strong>{vpromm}</strong>?
-        <button
-          className="button button--secondary-raised-dark"
-          onClick={confirmDelete}
-        >
-          <T>Delete</T>
-        </button>
-        <button
-          className="button button--base-raised-light"
-          onClick={showReadView}
-        >
-          <T>Cancel</T>
-        </button>
-      </p>
+      {
+        status === 'pending' ?
+          <p><T>Loading</T></p> :
+        status === 'error' ?
+          <p><T>Error</T></p> :
+          <p>
+            <T>Are you sure you want to delete VPRoMMS</T> <strong>{vpromm}</strong>?
+            <button
+              className="button button--secondary-raised-dark"
+              onClick={confirmDelete}
+            >
+              <T>Delete</T>
+            </button>
+            <button
+              className="button button--base-raised-light"
+              onClick={showReadView}
+            >
+              <T>Cancel</T>
+            </button>
+          </p>
+      }
     </td>
   </tr>
 );
@@ -196,9 +205,11 @@ const TableRow = (props) => {
 export default compose(
   getContext({ language: React.PropTypes.string }),
   connect(
-    null,
+    (state, { vpromm }) => ({
+      status: state.editRoad[vpromm] ? state.editRoad[vpromm].status : 'complete'
+    }),
     (dispatch, { vpromm }) => ({
-      confirmDelete: () => console.log('DELETE', vpromm),
+      confirmDelete: () => dispatch(deleteRoadEpic(vpromm)),
       submitEdit: (newRoadId) => console.log('EDIT', vpromm, newRoadId)
     })
   ),

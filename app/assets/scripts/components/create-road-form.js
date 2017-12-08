@@ -85,7 +85,7 @@ export default compose(
     })
   ),
   withStateHandlers(
-    { shouldShowForm: true, newRoadId: '', formIsInvalid: false },
+    { shouldShowForm: false, newRoadId: '', formIsInvalid: false },
     {
       showForm: () => () => ({ shouldShowForm: true }),
       hideForm: () => (e) => {

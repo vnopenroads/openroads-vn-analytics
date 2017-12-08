@@ -1,4 +1,7 @@
 import config from '../../config';
+import {
+  DELETE_ROAD_SUCCESS
+} from './editRoad';
 
 
 /**
@@ -67,6 +70,10 @@ export default (
         status: 'complete',
         ids: []
       };
+    case DELETE_ROAD_SUCCESS:
+      return Object.assign({}, state, {
+        ids: state.ids.filter(id => id !== action.id)
+      });
   }
   return state;
 };

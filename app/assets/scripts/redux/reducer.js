@@ -6,6 +6,7 @@ import waytasks from './modules/tasks';
 import osmChange from './modules/osm';
 import adminRoads from './modules/adminRoads';
 import createRoad from './modules/createRoad';
+import editRoad from './modules/editRoad';
 import { ADMIN_MAP } from '../constants';
 
 
@@ -457,6 +458,7 @@ export default combineReducers({
   adminBbox,
   adminRoads,
   createRoad,
+  editRoad,
   fieldIdCount,
   waytasks,
   osmChange,
