@@ -52,7 +52,7 @@ const RowPropertiesList = ({
 };
 
 const RowReadView = ({
-  vpromm, fieldRoads, adminRoadProperties,
+  vpromm, adminRoadProperties,
   vprommFieldInDB, language, expandProperties,
   toggleExpandProperties, showDeleteView, showEditView
 }) => {

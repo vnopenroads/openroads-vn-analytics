@@ -39,7 +39,6 @@ const AATable = ({
             <AATableRow
               key={vpromm}
               vpromm={vpromm}
-              fieldRoads={fieldRoads}
               adminRoadProperties={adminRoadProperties}
               vprommFieldInDB={fieldRoads.includes(vpromm)}
             />
