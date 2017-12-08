@@ -13,6 +13,7 @@ import c from 'classnames';
 
 import Paginator from '../components/paginator';
 import AATable from '../components/aa-table-vpromms';
+import CreateRoadForm from '../components/create-road-form';
 
 import {
   fetchAdminInfo,
@@ -245,11 +246,14 @@ var AssetsAA = React.createClass({
 
           <div>
             {adminContent.total && this.props.adminRoadProperties ?
-              <AATable
-                data={this.props.adminRoads}
-                fieldRoads={this.props.fieldRoads}
-                propertiesData={this.props.adminRoadProperties}
-              /> :
+              <div>
+                <CreateRoadForm />
+                <AATable
+                  data={this.props.adminRoads}
+                  fieldRoads={this.props.fieldRoads}
+                  propertiesData={this.props.adminRoadProperties}
+                />
+              </div> :
               <div className='a-subnav'><h2>Loading Table</h2></div>
             }
             {this.props.pagination.pages > 1 && this.props.adminRoadsFetched &&
