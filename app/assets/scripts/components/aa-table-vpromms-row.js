@@ -4,6 +4,9 @@ import {
   getContext,
   withStateHandlers
 } from 'recompose';
+import {
+  withRouter
+} from 'react-router';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { Link } from 'react-router';
@@ -226,9 +229,12 @@ TableRow.propTypes = {
 
 export default compose(
   getContext({ language: React.PropTypes.string }),
+  withRouter,
   connect(
-    (state, { vpromm }) => ({
-      status: state.editRoad[vpromm] ? state.editRoad[vpromm].status : 'complete'
+    (state, { vpromm, router: { params: { aaId, aaIdSub } } }) => ({
+      status: state.editRoad[vpromm] ? state.editRoad[vpromm].status : 'complete',
+      province: state.crosswalk.province[aaId] && state.crosswalk.province[aaId].id,
+      district: state.crosswalk.district[aaIdSub] && state.crosswalk.district[aaIdSub]
     }),
     (dispatch, { vpromm }) => ({
       confirmDelete: () => dispatch(deleteRoadEpic(vpromm)),
@@ -245,10 +251,10 @@ export default compose(
       showDeleteView: () => () => ({ viewState: 'delete' }),
       toggleExpandProperties: ({ expandProperties }) => () => ({ expandProperties: !expandProperties }),
       updateNewRoadId: () => (e) => ({ newRoadId: e.target.value }),
-      confirmEdit: ({ newRoadId }, { submitEdit }) => (e) => {
+      confirmEdit: ({ newRoadId }, { submitEdit, province, district }) => (e) => {
         e.preventDefault();
         // TODO - expose validation error messages
-        if (!roadIdIsValid(newRoadId)) {
+        if (!roadIdIsValid(newRoadId, province, district)) {
           return { formIsInvalid: true };
         }
 
