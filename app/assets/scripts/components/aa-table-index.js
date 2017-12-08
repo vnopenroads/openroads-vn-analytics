@@ -4,25 +4,43 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { t, getLanguage } from '../utils/i18n';
 import _ from 'lodash';
+import T from './t';
 import classnames from 'classnames';
-
 import { setAdmin } from '../actions/action-creators';
+import {
+  compose,
+  withHandlers,
+  getContext
+} from 'recompose';
 
-const displayHeader = [
-  {key: 'name', value: 'Province'},
-  {key: 'field', value: 'Field'},
-  {key: 'total', value: 'Total'},
-  {key: 'progress', value: 'Progress'}
-];
+
+const TableColumnHeader = withHandlers({
+  sortLink: ({ columnKey, sortLinkHandler }) => () => sortLinkHandler(columnKey)
+})
+  (({ columnKey, label, sortField, sortOrder, sortLink }) => (
+    <th
+      onClick={sortLink}
+    >
+      <i
+        className={classnames({
+          'collecticon-sort-none': sortField !== columnKey,
+          'collecticon-sort-asc': sortField === columnKey && sortOrder === 'asc',
+          'collecticon-sort-desc': sortField === columnKey && sortOrder === 'desc'
+        })}
+      />
+      <T>{label}</T>
+    </th>
+  ));
+
 
 const AATable = React.createClass({
   displayName: 'AATable',
 
   propTypes: {
-    _setAdmin: React.PropTypes.func,
-    data: React.PropTypes.array
+    _setAdmin: React.PropTypes.func.isRequired,
+    data: React.PropTypes.array.isRequired,
+    language: React.PropTypes.string.isRequired
   },
 
   getInitialState: function () {
@@ -34,32 +52,10 @@ const AATable = React.createClass({
     };
   },
 
-  renderTableHead: function () {
-    return (
-      <thead>
-        <tr>
-          {_.map(displayHeader, (d) => {
-            let c = classnames({
-              'collecticon-sort-none': this.state.sortState.field !== d.key,
-              'collecticon-sort-asc': this.state.sortState.field === d.key && this.state.sortState.order === 'asc',
-              'collecticon-sort-desc': this.state.sortState.field === d.key && this.state.sortState.order === 'desc'
-            });
-            return (
-              <th key={d.key} onClick={this.sortLinkClickHandler.bind(null, d.key)}>
-                <i className={c}></i>
-                <span>{t(d.value)}</span>
-              </th>
-            );
-          })}
-        </tr>
-      </thead>
-    );
-  },
-
-  sortLinkClickHandler: function (field, e) {
-    e.preventDefault();
-    let {field: sortField, order: sortOrder} = this.state.sortState;
+  sortLinkClickHandler: function (field) {
+    const { field: sortField, order: sortOrder } = this.state.sortState;
     let order = 'asc';
+
     // Same field, switch order; different field, reset order.
     if (sortField === field) {
       order = sortOrder === 'asc' ? 'desc' : 'asc';
@@ -92,7 +88,7 @@ const AATable = React.createClass({
         {_.map(sorted, (province, i) => {
           return (
             <tr key={`province-${province.id}`} className={classnames({'alt': i % 2})}>
-              <th><Link onClick={(e) => { this.props._setAdmin({ id: province.id, name: province.name }); } } to={`${getLanguage()}/assets/${province.route}`}>{province.name}</Link></th>
+              <th><Link onClick={(e) => { this.props._setAdmin({ id: province.id, name: province.name }); } } to={`${this.props.language}/assets/${province.route}`}>{province.name}</Link></th>
               <td>{province.field}</td>
               <td>{province.total}</td>
               <td>
@@ -111,7 +107,23 @@ const AATable = React.createClass({
     return (
       <div className='table'>
         <table>
-          {this.renderTableHead()}
+          <thead>
+            <tr>
+              {
+                [['name', 'Province'], ['field', 'Field'], ['total', 'Total'], ['progress', 'Progress']]
+                  .map(([columnKey, columnLabel]) => (
+                    <TableColumnHeader
+                      key={columnLabel}
+                      columnKey={columnKey}
+                      label={columnLabel}
+                      sortField={this.state.sortState.field}
+                      sortOrder={this.state.sortState.order}
+                      sortLinkHandler={this.sortLinkClickHandler}
+                    />
+                  ))
+              }
+            </tr>
+          </thead>
           {this.renderTableBody()}
         </table>
       </div>
@@ -119,12 +131,11 @@ const AATable = React.createClass({
   }
 });
 
-function selector (state) { return {}; }
 
-function dispatcher (dispatch) {
-  return {
-    _setAdmin: (admin) => dispatch(setAdmin(admin))
-  };
-}
-
-export default connect(selector, dispatcher)(AATable);
+export default compose(
+  getContext({ language: React.PropTypes.string }),
+  connect(
+    null,
+    dispatch => ({ _setAdmin: (admin) => dispatch(setAdmin(admin)) })
+  )
+)(AATable);

@@ -1,31 +1,34 @@
 'use strict';
-import React from 'react';
-import { getLanguage, t } from '../utils/i18n';
+import React, {
+  PropTypes
+} from 'react';
+import {
+  getContext
+} from 'recompose';
 import { Link } from 'react-router';
-var Home = React.createClass({
-  displayName: 'Home',
+import T from '../components/t';
 
-  render: function () {
-    return (
-      <section>
-        <header className='page__header--landing'>
-          <div className='page__headline--landing'>
-            <h1 className='page__title--landing'><img src='assets/graphics/layout/openroads-vn-logo-hor-neg.svg' width='736' height='96' alt='OpenRoads Vietnam logo' /><span>OpenRoads</span> <strong>Vietnam</strong></h1>
-            <p className='page__description--landing'>{t('Tracking and visualizing road assets in Vietnam for inclusive growth.')}</p>
-          </div>
-        </header>
 
-        <div className='page__body--landing'>
-          <div className='inner'>
-            <h2>{t('Access and improve Road Networks')}</h2>
-            <p className='description'>{t('Work with the OpenRoads project to close this critical information gap and create a comprehensive road network of Vietnam')}</p>
-            <Link to={`/${getLanguage()}/assets`} className='button-explore'>{t('View assets')}</Link>
-            <Link to={`/${getLanguage()}/explore`} className='button-explore'>{t('Explore on map')}</Link>
-          </div>
-        </div>
-      </section>
-    );
-  }
-});
+const Home = ({ language }) => (
+  <section>
+    <header className='page__header--landing'>
+      <div className='page__headline--landing'>
+        <h1 className='page__title--landing'><img src='assets/graphics/layout/openroads-vn-logo-hor-neg.svg' width='736' height='96' alt='OpenRoads Vietnam logo' /><span>OpenRoads</span> <strong>Vietnam</strong></h1>
+        <p className='page__description--landing'>
+          <T>Tracking and visualizing road assets in Vietnam for inclusive growth.</T>
+        </p>
+      </div>
+    </header>
 
-module.exports = Home;
+    <div className='page__body--landing'>
+      <div className='inner'>
+        <h2><T>Access and improve Road Networks</T></h2>
+        <p className='description'><T>Work with the OpenRoads project to close this critical information gap and create a comprehensive road network of Vietnam</T></p>
+        <Link to={`/${language}/assets`} className='button-explore'><T>View assets</T></Link>
+        <Link to={`/${language}/explore`} className='button-explore'><T>Explore on map</T></Link>
+      </div>
+    </div>
+  </section>
+);
+
+export default getContext({ language: PropTypes.string })(Home);

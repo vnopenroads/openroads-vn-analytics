@@ -485,16 +485,6 @@ const admin = function (state = defaultAdmin, action) {
   return state;
 };
 
-const searchDisplay = function (state = {show: false}, action) {
-  switch (action.type) {
-    case actions.DISPLAY_SEARCH:
-      state = _.cloneDeep(state);
-      state.show = action.bool;
-      break;
-  }
-  return state;
-};
-
 const searchResultsDisplay = function (state = {show: false}, action) {
   switch (action.type) {
     case actions.DISPLAY_SEARCH_RESULTS:
@@ -722,16 +712,6 @@ const pagination = function (state = defaultPagination, action) {
   return state;
 };
 
-const language = function (state = {current: 'en'}, action) {
-  switch (action.type) {
-    case actions.SET_LANGUAGE:
-      state = _.cloneDeep(state);
-      state.current = action.text;
-      break;
-  }
-  return state;
-};
-
 const previousLocation = function (state = {path: '/'}, action) {
   switch (action.type) {
     case actions.SET_PREVIOUS_LOCATION:
@@ -775,7 +755,6 @@ export default combineReducers({
   provinces,
   roadNetworkStatus,
   roadIdCount,
-  searchDisplay,
   searchResultsDisplay,
   setSearchType,
   setFilteredVProMMs,
@@ -785,7 +764,6 @@ export default combineReducers({
   VProMMsidProperties,
   VProMMsAdminProperties,
   VProMMSidSourceGeoJSON,
-  language,
   fieldRoads,
   fieldVProMMsids,
   pagination,

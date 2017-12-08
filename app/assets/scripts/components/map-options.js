@@ -1,61 +1,50 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { t, setLanguage } from '../utils/i18n';
+import {
+  getContext
+} from 'recompose';
+import T, {
+  translate
+} from './t';
 
-const MapOptions = React.createClass({
-  displayName: 'MapOptions',
 
-  propTypes: {
-    layer: React.PropTypes.string,
-    handleLayerChange: React.PropTypes.func,
-    handleShowNoVpromms: React.PropTypes.func,
-    language: React.PropTypes.string
-  },
-
-  componentWillReceiveProps: function (nextProps) {
-    if (this.props.language !== nextProps.language) {
-      setLanguage(nextProps.language);
-    }
-  },
-
-  componentWillMount: function () {
-    setLanguage(this.props.language);
-  },
-
-  render: function () {
-    return (
-      <div className='panel options-panel'>
-        <div className='panel__body'>
-          <form className='form'>
-            <div className='form__group'>
-              <label className='form__label'>{t('Visualized variable')}</label>
-              <select className='form__control' onChange={ e => this.props.handleLayerChange(e) }>
-                <option value='iri'>{t('IRI')}</option>
-                <option value='or_width'>{t('Width')}</option>
-                <option value='or_condition'>{t('Condition')}</option>
-                <option value='or_surface'>{t('Surface')}</option>
-              </select>
-            </div>
-
-            <div className='form__group'>
-              <label className='form__label'>{t('Options')}</label>
-              <label className='form__option form__option--switch option fos-io' htmlFor='show-no-vpromms' data-title={`${t('These will have no properties')}.`}>
-                <input type='checkbox' name='show-no-vpromms' id='show-no-vpromms' value='show-no-vpromms' onChange={ e => this.props.handleShowNoVpromms(e) } />
-                <span className='form__option__ui'></span>
-                <span className='form__option__text'>{t('Road without VPRoMMS ID')}</span>
-              </label>
-            </div>
-          </form>
+const MapOptions = ({ language, handleLayerChange, handleShowNoVpromms }) => (
+  <div className='panel options-panel'>
+    <div className='panel__body'>
+      <form className='form'>
+        <div className='form__group'>
+          <label className='form__label'><T>Visualized variable</T></label>
+          <select className='form__control' onChange={ e => handleLayerChange(e) }>
+            <option value='iri'>{translate(language, 'IRI')}</option>
+            <option value='or_width'>{translate(language, 'Width')}</option>
+            <option value='or_condition'>{translate(language, 'Condition')}</option>
+            <option value='or_surface'>{translate(language, 'Surface')}</option>
+          </select>
         </div>
-      </div>
-    );
-  }
-});
 
-function selector (state) {
-  return {
-    language: state.language.current
-  };
-}
+        <div className='form__group'>
+          <label className='form__label'>{translate(language, 'Options')}</label>
+          <label
+            className='form__option form__option--switch option fos-io'
+            htmlFor='show-no-vpromms'
+            data-title={translate(language, 'These will have no properties')}
+          >
+            <input type='checkbox' name='show-no-vpromms' id='show-no-vpromms' value='show-no-vpromms' onChange={ e => handleShowNoVpromms(e) } />
+            <span className='form__option__ui'></span>
+            <span className='form__option__text'><T>Road without VPRoMMS ID</T></span>
+          </label>
+        </div>
+      </form>
+    </div>
+  </div>
+);
 
-module.exports = connect(selector)(MapOptions);
+
+MapOptions.propTypes = {
+  layer: React.PropTypes.string,
+  handleLayerChange: React.PropTypes.func,
+  handleShowNoVpromms: React.PropTypes.func,
+  language: React.PropTypes.string
+};
+
+
+export default getContext({ language: React.PropTypes.string })(MapOptions);
