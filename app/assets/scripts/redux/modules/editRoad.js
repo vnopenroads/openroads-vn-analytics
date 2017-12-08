@@ -4,8 +4,10 @@ import config from '../../config';
 /**
  * Utils
  */
-export const roadIdIsInValid = (id) => {
-  return !/^\d{3}([A-ZĐ]{2}|00)\d{5}$/.test(id);
+export const roadIdIsValid = (id, province, district) => {
+  return /^\d{3}([A-ZĐ]{2}|00)\d{5}$/.test(id) &&
+    (!province || id.substring(0, 2) === province) &&
+    (!district || id.substring(3, 5) === district);
 };
 
 

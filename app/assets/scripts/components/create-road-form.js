@@ -3,6 +3,9 @@ import {
   connect
 } from 'react-redux';
 import {
+  withRouter
+} from 'react-router';
+import {
   compose,
   lifecycle,
   withStateHandlers
@@ -11,7 +14,7 @@ import {
   createRoadEpic
 } from '../redux/modules/createRoad';
 import {
-  roadIdIsInValid
+  roadIdIsValid
 } from '../redux/modules/editRoad';
 import T, {
   translate
@@ -76,9 +79,12 @@ const CreateRoadForm = ({
 
 
 export default compose(
+  withRouter,
   connect(
-    state => ({
-      status: state.createRoad.status
+    (state, { router: { params: { aaId, aaIdSub } } }) => ({
+      status: state.createRoad.status,
+      province: state.crosswalk.province[aaId] && state.crosswalk.province[aaId].id,
+      district: state.crosswalk.district[aaIdSub] && state.crosswalk.district[aaIdSub]
     }),
     dispatch => ({
       createRoad: (id) => dispatch(createRoadEpic(id))
@@ -93,11 +99,11 @@ export default compose(
         return { shouldShowForm: false, newRoadId: '', formIsInvalid: false };
       },
       updateNewRoadId: () => (e) => ({ newRoadId: e.target.value }),
-      submitForm: ({ newRoadId }, { createRoad }) => (e) => {
+      submitForm: ({ newRoadId }, { province, district, createRoad }) => (e) => {
         e.preventDefault();
 
         // TODO - expose validation error messages
-        if (roadIdIsInValid(newRoadId)) {
+        if (!roadIdIsValid(newRoadId, province, district)) {
           return { formIsInvalid: true };
         }
 
