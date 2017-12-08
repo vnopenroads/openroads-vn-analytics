@@ -4,6 +4,7 @@ import {
 } from 'react-redux';
 import {
   compose,
+  lifecycle,
   withStateHandlers
 } from 'recompose';
 import {
@@ -88,7 +89,7 @@ export default compose(
     {
       showForm: () => () => ({ shouldShowForm: true }),
       hideForm: () => (e) => {
-        e.preventDefault();
+        e && e.preventDefault();
         return { shouldShowForm: false, newRoadId: '', formIsInvalid: false };
       },
       updateNewRoadId: () => (e) => ({ newRoadId: e.target.value }),
@@ -104,5 +105,12 @@ export default compose(
         return { formIsInvalid: false, newRoadId: '' };
       }
     }
-  )
+  ),
+  lifecycle({
+    componentWillReceiveProps: function ({ status: nextStatus }) {
+      if (this.props.status === 'pending' && nextStatus === 'complete') {
+        this.props.hideForm();
+      }
+    }
+  })
 )(CreateRoadForm);
