@@ -9,6 +9,7 @@ import classnames from 'classnames';
 import {
   compose,
   withHandlers,
+  withStateHandlers,
   getContext
 } from 'recompose';
 
@@ -55,87 +56,57 @@ const TableRow = ({
 );
 
 
-const AATable = React.createClass({
-  displayName: 'AATable',
-
-  propTypes: {
-    data: React.PropTypes.array.isRequired,
-    language: React.PropTypes.string.isRequired
-  },
-
-  getInitialState: function () {
-    return {
-      sortField: 'name',
-      sortOrder: 'asc'
-    };
-  },
-
-  sortLinkClickHandler: function (field) {
-    let { sortField, sortOrder } = this.state;
-
-    if (sortField === field) {
-      this.setState({
-        sortOrder: sortOrder === 'asc' ? 'desc' : 'asc'
-      });
-    } else {
-      this.setState({
-        sortField: field,
-        sortOrder: 'desc'
-      });
-    }
-  },
-
-  handleSort: function () {
-    let sortField = this.state.sortState.field;
-    if (sortField === 'progress') {
-      sortField = 'percentageComplete';
-    }
-    return _.orderBy(this.props.data, [sortField], [this.state.sortOrder]);
-  },
-
-  render: function () {
-    const { data, language } = this.props;
-
-    return (
-      <div className='table'>
-        <table>
-          <thead>
-            <tr>
-              {
-                [['name', 'Province'], ['field', 'Field'], ['total', 'Total'], ['progress', 'Progress']]
-                  .map(([columnKey, columnLabel]) => (
-                    <TableColumnHeader
-                      key={columnLabel}
-                      columnKey={columnKey}
-                      label={columnLabel}
-                      sortField={this.state.sortField}
-                      sortOrder={this.state.sortOrder}
-                      sortLinkHandler={this.sortLinkClickHandler}
-                    />
-                  ))
-              }
-            </tr>
-          </thead>
-          <tbody>
-            {_.map(this.handleSort(data), ({ id, name, route, field, total }) => (
-              <TableRow
-                key={id}
-                id={id}
-                name={name}
-                route={route}
-                field={field}
-                total={total}
-                language={language}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
-    );
-  }
-});
+const AATable = ({ data, language, sortField, sortOrder, sortHandler }) => (
+  <div className='table'>
+    <table>
+      <thead>
+        <tr>
+          {
+            [['name', 'Province'], ['field', 'Field'], ['total', 'Total'], ['percentageComplete', 'Progress']]
+              .map(([columnKey, columnLabel]) => (
+                <TableColumnHeader
+                  key={columnLabel}
+                  columnKey={columnKey}
+                  label={columnLabel}
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  sortLinkHandler={sortHandler}
+                />
+              ))
+          }
+        </tr>
+      </thead>
+      <tbody>
+        {_.map(
+          _.orderBy(data, [sortField], [sortOrder]),
+          ({ id, name, route, field, total }) => (
+            <TableRow
+              key={id}
+              id={id}
+              name={name}
+              route={route}
+              field={field}
+              total={total}
+              language={language}
+            />
+          )
+        )}
+      </tbody>
+    </table>
+  </div>
+);
 
 
 export default compose(
-  getContext({ language: React.PropTypes.string })
+  getContext({ language: React.PropTypes.string }),
+  withStateHandlers(
+    { sortField: 'name', sortOrder: 'asc' },
+    {
+      sortHandler: ({ sortField, sortOrder }) => (field) => (
+        sortField === field ?
+          { sortOrder: sortOrder === 'asc' ? 'desc' : 'asc' } :
+          { sortField: field, sortOrder: 'asc' }
+      )
+    }
+  )
 )(AATable);
