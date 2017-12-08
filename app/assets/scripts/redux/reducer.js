@@ -4,6 +4,7 @@ import _ from 'lodash';
 import * as actions from '../actions/action-types';
 import waytasks from './modules/tasks';
 import osmChange from './modules/osm';
+import adminRoads from './modules/adminRoads';
 import { ADMIN_MAP } from '../constants';
 
 
@@ -380,30 +381,6 @@ const adminInfo = function (state = defaultAdminInfo, action) {
     case actions.REMOVE_ADMIN_INFO:
       state = defaultAdminInfo;
       break;
-  }
-  return state;
-};
-
-const defaultAdminRoads = {
-  fetching: false,
-  fetched: false,
-  ids: []
-};
-
-const adminRoads = function (state = defaultAdminRoads, action) {
-  switch (action.type) {
-    case actions.REQUEST_ADMIN_ROADS:
-      state = _.cloneDeep(state);
-      state.fetching = true;
-      break;
-    case actions.RECEIVE_ADMIN_ROADS:
-      state = _.cloneDeep(state);
-      state.fetched = true;
-      state.fetching = false;
-      state.ids = action.json;
-      break;
-    case actions.REMOVE_ADMIN_ROADS:
-      return defaultAdminRoads;
   }
   return state;
 };

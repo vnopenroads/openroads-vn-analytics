@@ -1,5 +1,4 @@
 import fetch from 'isomorphic-fetch';
-import _ from 'lodash';
 import * as actions from './action-types';
 import config from '../config';
 
@@ -390,49 +389,6 @@ export function fetchFieldRoads (json, level) {
 export function removeFieldRoads () {
   return {
     type: actions.REMOVE_FIELD_ROADS
-  };
-}
-
-function requestAdminRoads () {
-  return {
-    type: actions.REQUEST_ADMIN_ROADS
-  };
-}
-
-function receiveAdminRoads (json) {
-  return {
-    type: actions.RECEIVE_ADMIN_ROADS,
-    json: json
-  };
-}
-
-export function fetchAdminRoads (json, level, limit, offset) {
-  return function (dispatch) {
-    dispatch(requestAdminRoads());
-    let url = `${config.api}/admin/roads?province=${json[0]}`;
-    if (level === 'district') {
-      url = `${url}&district=${json[1]}`;
-    }
-    if (offset) {
-      url = `${url}&offset=${offset}`;
-    }
-    if (limit) {
-      url = `${url}&limit=${limit}`;
-    }
-    return fetch(url)
-    .then(response => response.json())
-    .then(json => {
-      if (json.statusCode >= 400) {
-        throw new Error('Bad Response');
-      }
-      dispatch(receiveAdminRoads(json));
-    });
-  };
-}
-
-export function removeAdminRoads () {
-  return {
-    type: actions.REMOVE_ADMIN_ROADS
   };
 }
 

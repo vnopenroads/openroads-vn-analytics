@@ -10,14 +10,11 @@ import { makePaginationConfig } from '../utils/pagination';
 import { makeIdTest, getAdminId, getAdminName } from '../utils/admin-level';
 import { Link } from 'react-router';
 import c from 'classnames';
-
 import Paginator from '../components/paginator';
 import AATable from '../components/aa-table-vpromms';
 import CreateRoadForm from '../components/create-road-form';
-
 import {
   fetchAdminInfo,
-  fetchAdminRoads,
   fetchFieldRoads,
   fetchVProMMsIdsCount,
   fetchAdminVProMMsProps,
@@ -25,7 +22,6 @@ import {
   removeFieldVProMMsIdsCount,
   removeVProMMsIdsCount,
   removeFieldRoads,
-  removeAdminRoads,
   removeAdminInfo,
   removeCrosswalk,
   setCrossWalk,
@@ -33,8 +29,12 @@ import {
   setPreviousLocation,
   setSubAdminName
 } from '../actions/action-creators';
-
+import {
+  fetchAdminRoads,
+  removeAdminRoads
+} from '../redux/modules/adminRoads';
 import config from '../config';
+
 
 var AssetsAA = React.createClass({
   displayName: 'AssetsAA',
@@ -65,7 +65,6 @@ var AssetsAA = React.createClass({
     adminInfo: React.PropTypes.object,
     adminInfoFetched: React.PropTypes.bool,
     adminRoads: React.PropTypes.array,
-    adminRoadsFetched: React.PropTypes.bool,
     adminRoadProperties: React.PropTypes.array,
     location: React.PropTypes.object,
     VProMMsCount: React.PropTypes.array,
@@ -256,7 +255,7 @@ var AssetsAA = React.createClass({
               </div> :
               <div className='a-subnav'><h2>Loading Table</h2></div>
             }
-            {this.props.pagination.pages > 1 && this.props.adminRoadsFetched &&
+            {this.props.pagination.pages > 1 &&
               <Paginator
                 pagination={this.props.pagination}
                 crosswalk={this.props.crosswalk}
@@ -289,7 +288,6 @@ export default compose(
       adminInfo: state.adminInfo.data,
       adminInfoFetched: state.adminInfo.fetched,
       adminRoads: state.adminRoads.ids,
-      adminRoadsFetched: state.adminRoads.fetched,
       adminRoadProperties: state.VProMMsAdminProperties.data,
       crosswalk: state.crosswalk,
       crosswalkSet: state.crosswalk.set,
