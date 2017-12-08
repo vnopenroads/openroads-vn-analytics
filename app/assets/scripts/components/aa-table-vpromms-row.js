@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import { Link } from 'react-router';
 import {
-  roadIdIsInValid,
+  roadIdIsValid,
   editRoadEpic,
   deleteRoadEpic
 } from '../redux/modules/editRoad';
@@ -219,6 +219,11 @@ const TableRow = (props) => {
 };
 
 
+TableRow.propTypes = {
+  viewState: React.PropTypes.string.isRequired
+};
+
+
 export default compose(
   getContext({ language: React.PropTypes.string }),
   connect(
@@ -243,7 +248,7 @@ export default compose(
       confirmEdit: ({ newRoadId }, { submitEdit }) => (e) => {
         e.preventDefault();
         // TODO - expose validation error messages
-        if (roadIdIsInValid(newRoadId)) {
+        if (!roadIdIsValid(newRoadId)) {
           return { formIsInvalid: true };
         }
 
