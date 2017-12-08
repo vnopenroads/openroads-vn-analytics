@@ -6,6 +6,9 @@ import {
   compose,
   withStateHandlers
 } from 'recompose';
+import {
+  createRoadEpic
+} from '../redux/modules/createRoad';
 import T, {
   translate
 } from './t';
@@ -16,7 +19,7 @@ const roadIdIsInValid = (id) => {
 };
 
 const CreateRoadForm = ({
-  language, shouldShowForm, newRoadId, formIsInvalid,
+  language, shouldShowForm, newRoadId, formIsInvalid, status,
   showForm, hideForm, updateNewRoadId, submitForm
 }) => (
   <div className='a-main__create-row'>
@@ -36,7 +39,7 @@ const CreateRoadForm = ({
           <button
             className="button button--secondary-raised-dark"
             onClick={submitForm}
-            disabled={newRoadId === ''}
+            disabled={newRoadId === '' || status === 'pending'}
           >
             <T>Submit</T>
           </button>
@@ -46,10 +49,17 @@ const CreateRoadForm = ({
           >
             <T>Cancel</T>
           </button>
+          {
+            status === 'pending' && <em><T>Loading</T></em>
+          }
         </form>
         {
           formIsInvalid &&
             <p className="invalid"><strong><T>Invalid Road Id</T></strong></p>
+        }
+        {
+          status === 'error' &&
+            <p className="invalid"><strong><T>Error</T></strong></p>
         }
       </div> :
       <button
@@ -57,9 +67,7 @@ const CreateRoadForm = ({
         className="button create-new-road"
         onClick={showForm}
       >
-        <i
-          className="collecticon-sm-plus"
-        />
+        <i className="collecticon-sm-plus"/>
         <T>Create New Road</T>
       </button>
     }
@@ -69,13 +77,15 @@ const CreateRoadForm = ({
 
 export default compose(
   connect(
-    state => ({}),
+    state => ({
+      status: state.createRoad.status
+    }),
     dispatch => ({
-      createRoad: (id) => console.log('create new road', id)
+      createRoad: (id) => dispatch(createRoadEpic(id))
     })
   ),
   withStateHandlers(
-    { shouldShowForm: false, newRoadId: '', formIsInvalid: false },
+    { shouldShowForm: true, newRoadId: '', formIsInvalid: false },
     {
       showForm: () => () => ({ shouldShowForm: true }),
       hideForm: () => (e) => {

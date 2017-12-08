@@ -212,8 +212,8 @@ var Tasks = React.createClass({
     const { task } = this.props;
     const properties = task.features.find(c => hoverId === c.properties._id).properties;
     const displayList = Object.keys(properties).map(key => key.charAt(0) === '_' ? null : [
-      <dt key={`${key}-key`}><strong><T>key</T></strong></dt>,
-      <dd key={`${key}-value`}>{properties[key] ? <T>properties[key]</T> : '--'}</dd>
+      <dt key={`${key}-key`}><strong>{key}</strong></dt>,
+      <dd key={`${key}-value`}>{properties[key] ? properties[key] : '--'}</dd>
     ]).filter(Boolean);
     return (
       <div className='map__controls map__controls--top-left'>
