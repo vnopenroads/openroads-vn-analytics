@@ -109,13 +109,15 @@ const RowReadView = ({
 };
 
 const RowEditView = ({ newRoadId, language, showReadView, updateNewRoadId, confirmEdit }) => (
-  <tr>
+  <tr
+    className="edit-row"
+  >
     <td
       className="table-properties-cell-view-buttons"
     >
       <button
         type="button"
-        className="collecticon-xmark"
+        className="button close collecticon-xmark"
         title={translate(language, 'Cancel')}
         onClick={showReadView}
       />
@@ -153,7 +155,7 @@ const RowDeleteView = ({ vpromm, language, showReadView, confirmDelete }) => (
     >
       <button
         type="button"
-        className="collecticon-xmark"
+        className="button close collecticon-xmark"
         title={translate(language, 'Cancel')}
         onClick={showReadView}
       />
