@@ -2,6 +2,14 @@ import config from '../../config';
 
 
 /**
+ * Utils
+ */
+export const roadIdIsInValid = (id) => {
+  return !/^\d{3}([A-ZĐ]{2}|00)\d{5}$/.test(id);
+};
+
+
+/**
  * constants
  */
 export const EDIT_ROAD = 'EDIT_ROAD';
@@ -15,9 +23,9 @@ export const DELETE_ROAD_ERROR = 'DELETE_ROAD_ERROR';
 /**
  * actions
  */
-export const editRoad = (id) => ({ type: EDIT_ROAD, id });
-export const editRoadSuccess = (id) => ({ type: EDIT_ROAD_SUCCESS, id });
-export const editRoadError = (id, error) => ({ type: EDIT_ROAD_ERROR, id, error });
+export const editRoad = (id, newId) => ({ type: EDIT_ROAD, id, newId });
+export const editRoadSuccess = (id, newId) => ({ type: EDIT_ROAD_SUCCESS, id, newId });
+export const editRoadError = (id, newId, error) => ({ type: EDIT_ROAD_ERROR, id, newId, error });
 export const deleteRoad = (id) => ({ type: DELETE_ROAD, id });
 export const deleteRoadSuccess = (id) => ({ type: DELETE_ROAD_SUCCESS, id });
 export const deleteRoadError = (id, error) => ({ type: DELETE_ROAD_ERROR, id, error });
@@ -36,8 +44,8 @@ export const editRoadEpic = (id, newId) => (dispatch) => {
 
       return response.json();
     })
-    .then((id) => dispatch(editRoadSuccess(id)))
-    .catch((err) => dispatch(editRoadError(id, err)));
+    .then(({ id: newId }) => dispatch(editRoadSuccess(id, newId)))
+    .catch((err) => dispatch(editRoadError(id, newId, err)));
 };
 
 export const deleteRoadEpic = (id) => (dispatch) => {

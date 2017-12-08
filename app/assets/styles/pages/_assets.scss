@@ -155,6 +155,11 @@
     button {
       margin: 0 8px;
       padding: 2px 12px;
+      &[disabled],
+      &:disabled {
+        background-color: lighten($secondary-color, 20);
+        cursor: not-allowed;
+      }
     }
   }
 }

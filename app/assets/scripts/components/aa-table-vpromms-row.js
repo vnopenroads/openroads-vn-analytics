@@ -2,13 +2,14 @@ import React from 'react';
 import {
   compose,
   getContext,
-  withHandlers,
   withStateHandlers
 } from 'recompose';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { Link } from 'react-router';
 import {
+  roadIdIsInValid,
+  editRoadEpic,
   deleteRoadEpic
 } from '../redux/modules/editRoad';
 import { api } from '../config';
@@ -111,7 +112,9 @@ const RowReadView = ({
   );
 };
 
-const RowEditView = ({ newRoadId, language, showReadView, updateNewRoadId, confirmEdit }) => (
+const RowEditView = ({
+  vpromm, newRoadId, formIsInvalid, language, status, showReadView, updateNewRoadId, confirmEdit
+}) => (
   <tr
     className="edit-row"
   >
@@ -128,23 +131,37 @@ const RowEditView = ({ newRoadId, language, showReadView, updateNewRoadId, confi
     <td
       colSpan="3"
     >
-      <input
-        type="text"
-        value={newRoadId}
-        onChange={updateNewRoadId}
-      />
-      <button
-        className="button button--secondary-raised-dark"
-        onClick={confirmEdit}
-      >
-        <T>Submit</T>
-      </button>
-      <button
-        className="button button--base-raised-light"
-        onClick={showReadView}
-      >
-        <T>Cancel</T>
-      </button>
+      {
+          <p>
+            <input
+              type="text"
+              value={newRoadId}
+              onChange={updateNewRoadId}
+            />
+            <button
+              className="button button--secondary-raised-dark"
+              onClick={confirmEdit}
+              disabled={newRoadId === '' || status === 'pending' || newRoadId === vpromm}
+            >
+              <T>Submit</T>
+            </button>
+            <button
+              className="button button--base-raised-light"
+              onClick={showReadView}
+            >
+              <T>Cancel</T>
+            </button>
+            {
+              status === 'pending' ?
+                <T>Loading</T> :
+              status === 'error' ?
+                <T>Error</T> :
+              formIsInvalid ?
+                <strong><T>Invalid Road Id</T></strong> :
+                <span/>
+            }
+          </p>
+      }
     </td>
   </tr>
 );
@@ -210,25 +227,29 @@ export default compose(
     }),
     (dispatch, { vpromm }) => ({
       confirmDelete: () => dispatch(deleteRoadEpic(vpromm)),
-      submitEdit: (newRoadId) => console.log('EDIT', vpromm, newRoadId)
+      submitEdit: (newRoadId) => dispatch(editRoadEpic(vpromm, newRoadId))
     })
   ),
   withStateHandlers(
     ({ vpromm }) => ({
-      viewState: 'read', newRoadId: vpromm, expandProperties: false
+      viewState: 'read', newRoadId: vpromm, expandProperties: false, formIsInvalid: false
     }),
     {
-      showReadView: () => () => ({ viewState: 'read' }),
+      showReadView: (_, { vpromm }) => () => ({ viewState: 'read', newRoadId: vpromm, formIsInvalid: false }),
       showEditView: () => () => ({ viewState: 'edit' }),
       showDeleteView: () => () => ({ viewState: 'delete' }),
       toggleExpandProperties: ({ expandProperties }) => () => ({ expandProperties: !expandProperties }),
-      updateNewRoadId: () => (e) => ({ newRoadId: e.target.value })
+      updateNewRoadId: () => (e) => ({ newRoadId: e.target.value }),
+      confirmEdit: ({ newRoadId }, { submitEdit }) => (e) => {
+        e.preventDefault();
+        // TODO - expose validation error messages
+        if (roadIdIsInValid(newRoadId)) {
+          return { formIsInvalid: true };
+        }
+
+        submitEdit(newRoadId);
+        return { formIsInvalid: false, newRoadId: '' };
+      }
     }
-  ),
-  withHandlers({
-    confirmEdit: ({ newRoadId, submitEdit }) => (e) => {
-      e.preventDefault();
-      submitEdit(newRoadId);
-    }
-  })
+  )
 )(TableRow);

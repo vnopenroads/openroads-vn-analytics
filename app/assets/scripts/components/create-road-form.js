@@ -9,14 +9,13 @@ import {
 import {
   createRoadEpic
 } from '../redux/modules/createRoad';
+import {
+  roadIdIsInValid
+} from '../redux/modules/editRoad';
 import T, {
   translate
 } from './t';
 
-
-const roadIdIsInValid = (id) => {
-  return !/^\d{3}([A-ZĐ]{2}|00)\d{5}$/.test(id);
-};
 
 const CreateRoadForm = ({
   language, shouldShowForm, newRoadId, formIsInvalid, status,
@@ -90,7 +89,7 @@ export default compose(
       showForm: () => () => ({ shouldShowForm: true }),
       hideForm: () => (e) => {
         e.preventDefault();
-        return { shouldShowForm: false, roadIdIsInValid: false };
+        return { shouldShowForm: false, newRoadId: '', formIsInvalid: false };
       },
       updateNewRoadId: () => (e) => ({ newRoadId: e.target.value }),
       submitForm: ({ newRoadId }, { createRoad }) => (e) => {
@@ -102,7 +101,7 @@ export default compose(
         }
 
         createRoad(newRoadId);
-        return { formIsInvalid: false };
+        return { formIsInvalid: false, newRoadId: '' };
       }
     }
   )

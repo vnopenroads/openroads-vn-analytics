@@ -1,5 +1,6 @@
 import config from '../../config';
 import {
+  EDIT_ROAD_SUCCESS,
   DELETE_ROAD_SUCCESS
 } from './editRoad';
 
@@ -70,6 +71,12 @@ export default (
         status: 'complete',
         ids: []
       };
+    case EDIT_ROAD_SUCCESS:
+      return Object.assign({}, state, {
+        ids: state.ids
+          .filter(id => id !== action.id)
+          .concat(action.newId)
+      });
     case DELETE_ROAD_SUCCESS:
       return Object.assign({}, state, {
         ids: state.ids.filter(id => id !== action.id)
