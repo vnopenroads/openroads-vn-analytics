@@ -4,10 +4,11 @@ import _ from 'lodash';
 import * as actions from '../actions/action-types';
 import waytasks from './modules/tasks';
 import osmChange from './modules/osm';
-import adminRoads, {
+import adminRoads from './modules/adminRoads';
+import {
   EDIT_ROAD_SUCCESS,
   DELETE_ROAD_SUCCESS
-} from './modules/adminRoads';
+} from './modules/editRoad';
 import createRoad from './modules/createRoad';
 import editRoad from './modules/editRoad';
 import { ADMIN_MAP } from '../constants';
@@ -190,6 +191,22 @@ const VProMMsAdminProperties = function (state = defaultVProMMsAdminProperties, 
     case actions.REMOVE_ADMIN_VPROMMS_PROPERTIES:
       state = defaultVProMMsAdminProperties;
       break;
+    case EDIT_ROAD_SUCCESS:
+      console.log('update road properties');
+
+      return Object.assign({}, state, {
+        data: state.data
+          .map(road => {
+            console.log('update road properties id', action.id, action.newId);
+            return road.id === action.id ?
+              { id: action.newId, properties: road.properties } :
+              road;
+          })
+      });
+    case DELETE_ROAD_SUCCESS:
+      return Object.assign({}, state, {
+        ids: state.data.filter(({ id }) => id !== action.id)
+      });
   }
   return state;
 };
