@@ -4,7 +4,10 @@ import _ from 'lodash';
 import * as actions from '../actions/action-types';
 import waytasks from './modules/tasks';
 import osmChange from './modules/osm';
-import adminRoads from './modules/adminRoads';
+import adminRoads, {
+  EDIT_ROAD_SUCCESS,
+  DELETE_ROAD_SUCCESS
+} from './modules/adminRoads';
 import createRoad from './modules/createRoad';
 import editRoad from './modules/editRoad';
 import { ADMIN_MAP } from '../constants';
@@ -407,6 +410,16 @@ const fieldRoads = function (state = defaultFieldRoads, action) {
       break;
     case actions.REMOVE_FIELD_ROADS:
       return defaultFieldRoads;
+    case EDIT_ROAD_SUCCESS:
+      return Object.assign({}, state, {
+        ids: state.ids
+          .filter(id => id !== action.id)
+          .concat(action.newId)
+      });
+    case DELETE_ROAD_SUCCESS:
+      return Object.assign({}, state, {
+        ids: state.ids.filter(id => id !== action.id)
+      });
   }
   return state;
 };
