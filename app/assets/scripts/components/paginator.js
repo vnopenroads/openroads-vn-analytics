@@ -6,12 +6,14 @@ import { connect } from 'react-redux';
 import {
   updateClickedPage,
   updatePagination,
-  fetchAdminRoads,
   fetchAdminVProMMsProps,
   removeAdminVProMMsProps
 } from '../actions/action-creators';
-
+import {
+  fetchAdminRoads
+} from '../redux/modules/adminRoads';
 import { makeIdTest } from '../utils/admin-level';
+
 
 var Paginator = React.createClass({
 

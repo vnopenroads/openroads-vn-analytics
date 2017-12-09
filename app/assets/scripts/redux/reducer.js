@@ -4,6 +4,13 @@ import _ from 'lodash';
 import * as actions from '../actions/action-types';
 import waytasks from './modules/tasks';
 import osmChange from './modules/osm';
+import adminRoads from './modules/adminRoads';
+import {
+  EDIT_ROAD_SUCCESS,
+  DELETE_ROAD_SUCCESS
+} from './modules/editRoad';
+import createRoad from './modules/createRoad';
+import editRoad from './modules/editRoad';
 import { ADMIN_MAP } from '../constants';
 
 
@@ -81,163 +88,6 @@ const search = function (state = {results: [], fetching: false, fetched: false, 
   return state;
 };
 
-const stats = function (state = {fetching: false, fetched: false, data: null}, action) {
-  switch (action.type) {
-    case actions.REQUEST_ADMIN_STATS:
-      console.log('REQUEST_ADMIN_STATS');
-      state = _.cloneDeep(state);
-      state.error = null;
-      state.fetching = true;
-      break;
-    case actions.RECEIVE_ADMIN_STATS:
-      console.log('RECEIVE_ADMIN_STATS');
-      state = _.cloneDeep(state);
-      if (action.error) {
-        state.error = action.error;
-      } else {
-        state = action.json;
-      }
-      state.fetching = false;
-      state.fetched = true;
-      break;
-  }
-  return state;
-};
-
-
-const projecttasksDefaultState = {
-  fetching: false,
-  fetched: false,
-  data: {
-    projecttasks: {
-      meta: {
-        page: null,
-        limit: null,
-        total: null
-      },
-      results: []
-    }
-  }
-};
-const projecttasks = function (state = projecttasksDefaultState, action) {
-  switch (action.type) {
-    case actions.REQUEST_PROJECT_TASKS:
-      console.log('REQUEST_PROJECT_TASKS');
-      state = _.cloneDeep(state);
-      state.error = null;
-      state.fetching = true;
-      break;
-    case actions.RECEIVE_PROJECT_TASKS:
-      console.log('RECEIVE_PROJECT_TASKS');
-      state = _.cloneDeep(state);
-      if (action.error) {
-        state.error = action.error;
-      } else {
-        state.data = action.json;
-      }
-      state.fetching = false;
-      state.fetched = true;
-      break;
-  }
-  return state;
-};
-
-const projectsDefaultState = {
-  fetching: false,
-  fetched: false,
-  data: {
-    projects: {
-      meta: {
-        page: null,
-        limit: null,
-        total: null
-      },
-      results: []
-    }
-  }
-};
-const projects = function (state = projectsDefaultState, action) {
-  switch (action.type) {
-    case actions.REQUEST_PROJECTS:
-      console.log('REQUEST_PROJECTS');
-      state = _.cloneDeep(state);
-      state.error = null;
-      state.fetching = true;
-      break;
-    case actions.RECEIVE_PROJECTS:
-      console.log('RECEIVE_PROJECTS');
-      state = _.cloneDeep(state);
-      if (action.error) {
-        state.error = action.error;
-      } else {
-        state.data = action.json;
-      }
-      state.fetching = false;
-      state.fetched = true;
-      break;
-  }
-  return state;
-};
-
-const projectsMetaDefaultState = {
-  fetching: false,
-  fetched: false,
-  data: {
-    type: []
-  }
-};
-const projectsMeta = function (state = projectsMetaDefaultState, action) {
-  switch (action.type) {
-    case actions.REQUEST_PROJECTS_META:
-      console.log('REQUEST_PROJECTS_META');
-      state = _.cloneDeep(state);
-      state.error = null;
-      state.fetching = true;
-      break;
-    case actions.RECEIVE_PROJECTS_META:
-      console.log('RECEIVE_PROJECTS_META');
-      state = _.cloneDeep(state);
-      if (action.error) {
-        state.error = action.error;
-      } else {
-        state.data = action.json;
-      }
-      state.fetching = false;
-      state.fetched = true;
-      break;
-  }
-  return state;
-};
-
-const roadNetworkStatusDefaultState = {
-  fetching: false,
-  fetched: false,
-  data: {
-    dataAvailable: null
-  }
-};
-const roadNetworkStatus = function (state = roadNetworkStatusDefaultState, action) {
-  switch (action.type) {
-    case actions.REQUEST_ROAD_NETWORK_STATUS:
-      console.log('REQUEST_ROAD_NETWORK_STATUS');
-      state = _.cloneDeep(state);
-      state.error = null;
-      state.fetching = true;
-      break;
-    case actions.RECEIVE_ROAD_NETWORK_STATUS:
-      console.log('RECEIVE_ROAD_NETWORK_STATUS');
-      state = _.cloneDeep(state);
-      if (action.error) {
-        state.error = action.error;
-      } else {
-        state.data = action.json;
-      }
-      state.fetching = false;
-      state.fetched = true;
-      break;
-  }
-  return state;
-};
 
 const VProMMSidsDefaultState = {
   fetching: false,
@@ -266,51 +116,6 @@ const VProMMSids = function (state = VProMMSidsDefaultState, action) {
   return state;
 };
 
-const VProMMSidsAssetsDefaultState = {
-  fetching: false,
-  fetched: false
-};
-
-const VProMMSidsAssets = function (state = VProMMSidsAssetsDefaultState, action) {
-  switch (action.type) {
-    case actions.REQUEST_VPROMMS_IDS:
-      state = _.cloneDeep(state);
-      state.error = null;
-      state.fetching = true;
-      break;
-    case actions.RECEIVE_VPROMMS_IDS:
-      state = _.cloneDeep(state);
-      if (action.error) {
-        state.error = action.error;
-      } else {
-        _.forEach(state.data, (province) => {
-          const keys = Object.keys(action.json);
-          province.vpromms = province.vpromms.map((v) => {
-            if (keys.includes(v.id)) {
-              return {
-                id: v.id,
-                inTheDatabase: keys.includes(v.id),
-                RoadLabPro: Boolean(action.json[v.id]['iri_mean']),
-                RouteShootUrl: action.json[v.id]['rs_url'] ? action.json[v.id]['rs_url'] : '',
-                RouteShoot: Boolean(action.json[v.id]['rs_url'])
-              };
-            }
-            return {
-              id: v.id,
-              inTheDatabase: keys.includes(v.id),
-              RoadLabPro: false,
-              RouteShootUrl: '',
-              RouteShoot: false
-            };
-          });
-        });
-      }
-      state.fetching = false;
-      state.fetched = true;
-      break;
-  }
-  return state;
-};
 
 const defaultVProMMSidSourceGeoJSON = {
   fetching: false,
@@ -365,31 +170,6 @@ const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
   return state;
 };
 
-const defaultVProMMsProperties = {
-  fetching: false,
-  fetched: false,
-  properties: {}
-};
-
-const VProMMsidProperties = function (state = defaultVProMMsProperties, action) {
-  switch (action.type) {
-    case actions.REQUEST_VPROMMS_PROPERTIES:
-      state = _.cloneDeep(state);
-      state.fetching = true;
-      break;
-    case actions.RECEIVE_VPROMMS_PROPERTIES:
-      state = _.cloneDeep(state);
-      state.fetching = false;
-      state.fetched = true;
-      state.properties = action.json;
-      break;
-    case actions.REMOVE_VPROMMS_PROPERTIES:
-      state = defaultVProMMsProperties;
-      break;
-  }
-  return state;
-};
-
 const defaultVProMMsAdminProperties = {
   fetching: false,
   fetched: false,
@@ -411,6 +191,22 @@ const VProMMsAdminProperties = function (state = defaultVProMMsAdminProperties, 
     case actions.REMOVE_ADMIN_VPROMMS_PROPERTIES:
       state = defaultVProMMsAdminProperties;
       break;
+    case EDIT_ROAD_SUCCESS:
+      console.log('update road properties');
+
+      return Object.assign({}, state, {
+        data: state.data
+          .map(road => {
+            console.log('update road properties id', action.id, action.newId);
+            return road.id === action.id ?
+              { id: action.newId, properties: road.properties } :
+              road;
+          })
+      });
+    case DELETE_ROAD_SUCCESS:
+      return Object.assign({}, state, {
+        ids: state.data.filter(({ id }) => id !== action.id)
+      });
   }
   return state;
 };
@@ -467,29 +263,6 @@ const globZoom = function (state = globZoomDefault, action) {
     case actions.SET_GLOBAL_ZOOM:
       state = _.cloneDeep(state);
       state = action.json;
-      break;
-  }
-  return state;
-};
-
-const defaultAdmin = { id: '', name: '' };
-
-const admin = function (state = defaultAdmin, action) {
-  switch (action.type) {
-    case actions.SET_ADMIN:
-      state = _.cloneDeep(state);
-      state.id = action.id;
-      state.name = action.name;
-      break;
-  }
-  return state;
-};
-
-const searchResultsDisplay = function (state = {show: false}, action) {
-  switch (action.type) {
-    case actions.DISPLAY_SEARCH_RESULTS:
-      state = _.cloneDeep(state);
-      state.show = action.bool;
       break;
   }
   return state;
@@ -634,41 +407,6 @@ const adminInfo = function (state = defaultAdminInfo, action) {
   return state;
 };
 
-const defaultAdminLevel = { level: '' };
-
-const adminLevel = function (state = defaultAdminLevel, action) {
-  switch (action.type) {
-    case actions.SET_ADMIN_LEVEL:
-      state = _.cloneDeep(state);
-      state.level = action.text;
-  }
-  return state;
-};
-
-const defaultAdminRoads = {
-  fetching: false,
-  fetched: false,
-  ids: []
-};
-
-const adminRoads = function (state = defaultAdminRoads, action) {
-  switch (action.type) {
-    case actions.REQUEST_ADMIN_ROADS:
-      state = _.cloneDeep(state);
-      state.fetching = true;
-      break;
-    case actions.RECEIVE_ADMIN_ROADS:
-      state = _.cloneDeep(state);
-      state.fetched = true;
-      state.fetching = false;
-      state.ids = action.json;
-      break;
-    case actions.REMOVE_ADMIN_ROADS:
-      return defaultAdminRoads;
-  }
-  return state;
-};
-
 const defaultFieldRoads = {
   fetching: false,
   fetched: false,
@@ -689,6 +427,16 @@ const fieldRoads = function (state = defaultFieldRoads, action) {
       break;
     case actions.REMOVE_FIELD_ROADS:
       return defaultFieldRoads;
+    case EDIT_ROAD_SUCCESS:
+      return Object.assign({}, state, {
+        ids: state.ids
+          .filter(id => id !== action.id)
+          .concat(action.newId)
+      });
+    case DELETE_ROAD_SUCCESS:
+      return Object.assign({}, state, {
+        ids: state.ids.filter(id => id !== action.id)
+      });
   }
   return state;
 };
@@ -735,33 +483,25 @@ const subadminName = function (state = {name: ''}, action) {
 
 export default combineReducers({
   routing: routeReducer,
-  admin,
   admins,
   adminInfo,
   adminBbox,
   adminRoads,
+  createRoad,
+  editRoad,
   fieldIdCount,
   waytasks,
   osmChange,
   crosswalk,
   search,
-  stats,
-  adminLevel,
   exploreMap,
   globZoom,
-  projecttasks,
-  projects,
-  projectsMeta,
   provinces,
-  roadNetworkStatus,
   roadIdCount,
-  searchResultsDisplay,
   setSearchType,
   setFilteredVProMMs,
   VProMMSids,
-  VProMMSidsAssets,
   VProMMsWayBbox,
-  VProMMsidProperties,
   VProMMsAdminProperties,
   VProMMSidSourceGeoJSON,
   fieldRoads,

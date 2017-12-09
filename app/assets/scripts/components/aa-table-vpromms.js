@@ -3,221 +3,76 @@
 import React from 'react';
 import {
   compose,
-  getContext
+  withStateHandlers
 } from 'recompose';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import classnames from 'classnames';
-import { api } from '../config';
-import { Link } from 'react-router';
+import AATableColumnHeader from './aa-table-vpromms-column-header';
+import AATableRow from './aa-table-vpromms-row';
 import T from './t';
-import { fetchVProMMsBbox, removeAdminInfo } from '../actions/action-creators';
 
 
-const AATable = React.createClass({
-  displayName: 'AATable',
-
-  propTypes: {
-    aaId: React.PropTypes.string,
-    data: React.PropTypes.array,
-    province: React.PropTypes.string,
-    provinceName: React.PropTypes.string,
-    routeParams: React.PropTypes.func,
-    sources: React.PropTypes.array,
-    _fetchVProMMSidsSources: React.PropTypes.func,
-    _fetchVProMMsBbox: React.PropTypes.func,
-    _removeAdminInfo: React.PropTypes.func,
-    fetched: React.PropTypes.bool,
-    properties: React.PropTypes.object,
-    propertiesData: React.PropTypes.array,
-    propertiesFetched: React.PropTypes.bool,
-    fieldRoads: React.PropTypes.array,
-    language: React.PropTypes.string,
-    adminRoadProperties: React.PropTypes.array,
-    adminRoadPropertiesFetched: React.PropTypes.bool
-  },
-
-  getInitialState: function () {
-    return {
-      sortState: {
-        field: 'inTheDatabase',
-        order: 'desc',
-        expandedId: null
-      }
-    };
-  },
-
-  renderTableHead: function () {
-    return (
+const AATable = ({
+  adminRoadProperties, data, fieldRoads,
+  sortField, sortOrder, sortColumnAction
+}) => (
+  <div className='table'>
+    <table>
       <thead>
         <tr>
-          <th
-            onClick={this.sortLinkClickHandler.bind(null, 'id')}
-          >
-            <i
-              className={classnames({
-                'collecticon-sort-none': this.state.sortState.field !== 'id',
-                'collecticon-sort-asc': this.state.sortState.field === 'id' && this.state.sortState.order === 'asc',
-                'collecticon-sort-desc': this.state.sortState.field === 'id' && this.state.sortState.order === 'desc'
-              })}
-            />
-            <span><T>VPRoMMS ID</T></span>
-          </th>
-          <th
-            onClick={this.sortLinkClickHandler.bind(null, 'FieldData')}
-          >
-            <i
-              className={classnames({
-                'collecticon-sort-none': this.state.sortState.field !== 'FieldData',
-                'collecticon-sort-asc': this.state.sortState.field === 'FieldData' && this.state.sortState.order === 'asc',
-                'collecticon-sort-desc': this.state.sortState.field === 'FieldData' && this.state.sortState.order === 'desc'
-              })}
-            />
-            <span><T>Field Data</T></span>
-          </th>
+          <th className="table-properties-head button-column" />
+          <AATableColumnHeader
+            columnKey="id"
+            label="VPRoMMS ID"
+            sortField={sortField}
+            sortOrder={sortOrder}
+            sortColumnAction={sortColumnAction}
+          />
+          <th className='table-properties-head'><T>Field Data</T></th>
           <th className='table-properties-head'><T>Properties</T></th>
         </tr>
       </thead>
-    );
-  },
-
-  sortLinkClickHandler: function (field, e) {
-    e.preventDefault();
-    let {field: sortField, order: sortOrder} = this.state.sortState;
-    let order = 'asc';
-    // Same field, switch order; different field, reset order.
-    if (sortField === field) {
-      order = sortOrder === 'asc' ? 'desc' : 'asc';
-    }
-
-    this.setState({
-      sortState: {
-        field,
-        order
-      }
-    });
-  },
-
-  handleSort: function () {
-    let sorted = _(this.props.data).sortBy(this.state.sortState.field);
-    if (this.state.sortState.order === 'asc') {
-      sorted = sorted.reverse();
-    }
-    return sorted.value();
-  },
-
-  onPropertiesClick: function (vprommId) {
-    let curId = this.state.expandedId;
-    let newId = curId === vprommId ? null : vprommId;
-    this.setState({expandedId: newId});
-  },
-
-  renderTableBody: function () {
-    const propsLength = this.props.adminRoadProperties.length;
-    let sorted = this.props.data.slice(0, propsLength - 1);
-    sorted = this.handleSort(sorted);
-
-    return (
       <tbody>
-      {_.map(sorted, (vpromm, i) => {
-        const vprommFieldInDB = (this.props.fieldRoads.includes(vpromm));
-        let propBtnClass = classnames('button-table-expand', {
-          'button-table-expand--show': this.state.expandedId !== vpromm,
-          'button-table-expand--hide': this.state.expandedId === vpromm
-        });
-        let propContainerClass = classnames('table-properties', {
-          'table-properties--hidden': this.state.expandedId !== vpromm
-        });
-        const roadPropDropDown = [];
-
-        if (this.props.adminRoadPropertiesFetched) {
-          if (this.props.adminRoadProperties.length !== 0) {
-            const adminProp = this.props.adminRoadProperties.find((prop) => prop.id === vpromm);
-            if (adminProp) {
-              _.forEach(adminProp.properties, (prop, key, j) => {
-                roadPropDropDown.push(<dt key={`${vpromm}-${key}-${j}-key`}>{key}</dt>);
-                roadPropDropDown.push(<dd key={`${vpromm}-${key}-${j}-prop`}>{prop}</dd>);
-              });
-            } else {
-              roadPropDropDown.push(<dt key={`${vpromm}-key`}></dt>);
-              roadPropDropDown.push(<dd key={`${vpromm}-prop`}></dd>);
-            }
-          } else {
-            roadPropDropDown.push(<p><T>Loading</T></p>);
-          }
-        }
-
-        return (
-          <tr key={vpromm} className={classnames({'alt': i % 2})}>
-            <th>
-              {vprommFieldInDB ?
-                <Link
-                  to={`/${this.props.language}/explore`}
-                  onClick={(e) => {
-                    this.props._removeAdminInfo();
-                    this.props._fetchVProMMsBbox(vpromm);
-                  }}
-                >
-                  <strong>{vpromm}</strong>
-                </Link> :
-                vpromm
-              }
-            </th>
-            <td
-              className={classnames({'added': vprommFieldInDB, 'not-added': !vprommFieldInDB})}
-            >
-              { vprommFieldInDB &&
-                <div className='a-table-actions'>
-                  <Link className='a-table-action' to={`/${this.props.language}/assets/road/${vpromm}/`}><T>Explore</T></Link>
-                  <a className='a-table-action' href={`${api}/field/geometries/${vpromm}?grouped=false&download=true`}><T>Download</T></a>
-                </div>
-              }
-            </td>
-            {
-              this.props.adminRoadProperties.length !== 0 ?
-                <td className='table-properties-cell'>
-                  <button type='button' className={propBtnClass} onClick={this.onPropertiesClick.bind(null, vpromm)}>
-                    <span>{this.state.expandedId === vpromm ? <T>Hide</T> : <T>Show</T>}</span>
-                  </button>
-                  <div className={propContainerClass}>
-                    <dl className='table-properties-list'>{roadPropDropDown}</dl>
-                  </div>
-                </td> :
-                <td/>
-            }
-          </tr>
-        );
-      })}
+        {_.map(
+          _.orderBy(data, _.identity, [sortOrder]),
+          (vpromm) => (
+            <AATableRow
+              key={vpromm}
+              vpromm={vpromm}
+              adminRoadProperties={adminRoadProperties}
+              vprommFieldInDB={fieldRoads.includes(vpromm)}
+            />
+          )
+        )}
       </tbody>
-    );
-  },
+    </table>
+  </div>
+);
 
-  render: function () {
-    return (
-      <div className='table'>
-        <table>
-          {this.renderTableHead()}
-          {this.renderTableBody()}
-        </table>
-      </div>
-    );
-  }
-});
+
+AATable.propTypes = {
+  data: React.PropTypes.array,
+  fieldRoads: React.PropTypes.array,
+  language: React.PropTypes.string,
+  adminRoadProperties: React.PropTypes.array
+};
 
 
 export default compose(
-  getContext({ language: React.PropTypes.string }),
   connect(
     state => ({
-      properties: state.VProMMsidProperties.properties,
       fieldIds: state.fieldVProMMsids.ids,
-      adminRoadProperties: state.VProMMsAdminProperties.data,
-      adminRoadPropertiesFetched: state.VProMMsAdminProperties.fetched
-    }),
-    dispatch => ({
-      _fetchVProMMsBbox: (id, source) => dispatch(fetchVProMMsBbox(id, source)),
-      _removeAdminInfo: () => dispatch(removeAdminInfo())
+      adminRoadProperties: state.VProMMsAdminProperties.data
     })
+  ),
+  withStateHandlers(
+    { sortField: 'id', sortOrder: 'asc' },
+    {
+      sortColumnAction: ({ sortField, sortOrder }) => (field) => (
+        sortField === field ?
+          { sortOrder: sortOrder === 'asc' ? 'desc' : 'asc' } :
+          { sortField: field, sortOrder: 'asc' }
+      )
+    }
   )
 )(AATable);
-
