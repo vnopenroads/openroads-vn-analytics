@@ -116,21 +116,12 @@ const RowReadView = ({
 };
 
 const RowEditView = ({
-  vpromm, newRoadId, formIsInvalid, language, status, showReadView, updateNewRoadId, confirmEdit
+  vpromm, newRoadId, formIsInvalid, status, showReadView, updateNewRoadId, confirmEdit
 }) => (
   <tr
     className="edit-row"
   >
-    <td
-      className="table-properties-cell-view-buttons"
-    >
-      <button
-        type="button"
-        className="button close collecticon-xmark"
-        title={translate(language, 'Cancel')}
-        onClick={showReadView}
-      />
-    </td>
+    <td />
     <td
       colSpan="3"
     >
@@ -169,20 +160,11 @@ const RowEditView = ({
   </tr>
 );
 
-const RowDeleteView = ({ vpromm, language, status, showReadView, confirmDelete }) => (
+const RowDeleteView = ({ vpromm, status, showReadView, confirmDelete }) => (
   <tr
     className="delete-row"
   >
-    <td
-      className="table-properties-cell-view-buttons"
-    >
-      <button
-        type="button"
-        className="button close collecticon-xmark"
-        title={translate(language, 'Cancel')}
-        onClick={showReadView}
-      />
-    </td>
+    <td/>
     <td
       colSpan="3"
     >
