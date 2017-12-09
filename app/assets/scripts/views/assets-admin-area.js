@@ -10,13 +10,11 @@ import { makePaginationConfig } from '../utils/pagination';
 import { makeIdTest, getAdminId, getAdminName } from '../utils/admin-level';
 import { Link } from 'react-router';
 import c from 'classnames';
-
 import Paginator from '../components/paginator';
 import AATable from '../components/aa-table-vpromms';
-
+import CreateRoadForm from '../components/create-road-form';
 import {
   fetchAdminInfo,
-  fetchAdminRoads,
   fetchFieldRoads,
   fetchVProMMsIdsCount,
   fetchAdminVProMMsProps,
@@ -24,25 +22,25 @@ import {
   removeFieldVProMMsIdsCount,
   removeVProMMsIdsCount,
   removeFieldRoads,
-  removeAdminRoads,
   removeAdminInfo,
   removeCrosswalk,
   setCrossWalk,
   setPagination,
   setPreviousLocation,
-  setSubAdminName,
-  updatePagination
+  setSubAdminName
 } from '../actions/action-creators';
-
+import {
+  fetchAdminRoads,
+  removeAdminRoads
+} from '../redux/modules/adminRoads';
 import config from '../config';
+
 
 var AssetsAA = React.createClass({
   displayName: 'AssetsAA',
 
   propTypes: {
-    _fetchVProMMsids: React.PropTypes.func,
     _fetchVProMMsIdsCount: React.PropTypes.func,
-    _fetchFieldVProMMsids: React.PropTypes.func,
     _fetchAdminVProMMsProps: React.PropTypes.func,
     _fetchFieldRoads: React.PropTypes.func,
     _fetchAdminInfo: React.PropTypes.func,
@@ -55,11 +53,9 @@ var AssetsAA = React.createClass({
     _removeFieldRoads: React.PropTypes.func,
     _removeCrosswalk: React.PropTypes.func,
     _setCrossWalk: React.PropTypes.func,
-    _setOffset: React.PropTypes.func,
     _setPagination: React.PropTypes.func,
     _setPreviousLocation: React.PropTypes.func,
     _setSubAdminName: React.PropTypes.func,
-    _updatePagination: React.PropTypes.func,
     crosswalk: React.PropTypes.object,
     crosswalkSet: React.PropTypes.bool,
     params: React.PropTypes.object,
@@ -69,16 +65,13 @@ var AssetsAA = React.createClass({
     adminInfo: React.PropTypes.object,
     adminInfoFetched: React.PropTypes.bool,
     adminRoads: React.PropTypes.array,
-    adminRoadsFetched: React.PropTypes.bool,
     adminRoadProperties: React.PropTypes.array,
-    adminRoadPropertiesFetched: React.PropTypes.bool,
     location: React.PropTypes.object,
     VProMMsCount: React.PropTypes.array,
     VProMMsCountFetched: React.PropTypes.bool,
     pagination: React.PropTypes.object,
     history: React.PropTypes.object,
-    previousLocation: React.PropTypes.string,
-    subadminName: React.PropTypes.string
+    previousLocation: React.PropTypes.string
   },
 
   // before mount, get the admin info needed to make the list of child elements
@@ -210,28 +203,6 @@ var AssetsAA = React.createClass({
     }
   },
 
-  renderDataDumpLinks: function (adminId) {
-    return (
-      <a className='button button--secondary-raised-dark' href={`${config.provinceDumpBaseUrl}${adminId}.csv`}><T>Download Roads</T></a>
-    );
-  },
-
-  renderTable: function (adminContent) {
-    if (adminContent.total && this.props.adminRoadProperties) {
-      return (
-        <AATable
-          data={this.props.adminRoads}
-          fieldRoads={this.props.fieldRoads}
-          propertiesData={this.props.adminRoadProperties}
-        />
-      );
-    } else if (this.props.VProMMsCount[0]) {
-      return <div className='a-subnav'><h2>Loading Table</h2></div>;
-    } else {
-      return <div/>;
-    }
-  },
-
   renderAssetsAdmin: function () {
     const adminContent = this.makeAdminAssetsContent();
 
@@ -246,12 +217,19 @@ var AssetsAA = React.createClass({
       <section>
         <header className='a-header'>
           <div className='a-headline'>
-            <h1>{this.props.adminInfoFetched ? this.makeAdminName() : ''}</h1>
+            <h1>{this.props.adminInfoFetched && this.makeAdminName()}</h1>
           </div>
           {/* completion suggests data exists, in whcih case there is data available for download */}
           <div className='a-head-actions'>
             {/* TODO, remove aaIdSub when sub admin dumps are made. */}
-            { adminContent.completion && !this.props.params.aaIdSub ? this.renderDataDumpLinks(id) : '' }
+            { adminContent.completion && !this.props.params.aaIdSub &&
+              <a
+                className='button button--secondary-raised-dark'
+                href={`${config.provinceDumpBaseUrl}${id}.csv`}
+              >
+                <T>Download Roads</T>
+              </a>
+            }
           </div>
         </header>
         <div>
@@ -266,8 +244,25 @@ var AssetsAA = React.createClass({
           </div>
 
           <div>
-            { this.renderTable(adminContent) }
-            {((this.props.pagination.pages > 1) && this.props.adminRoadsFetched) ? <Paginator pagination={this.props.pagination} crosswalk={this.props.crosswalk} adminInfo={this.props.adminInfo} params={this.props.params} /> : <div/>}
+            {adminContent.total && this.props.adminRoadProperties ?
+              <div>
+                <CreateRoadForm />
+                <AATable
+                  data={this.props.adminRoads}
+                  fieldRoads={this.props.fieldRoads}
+                  propertiesData={this.props.adminRoadProperties}
+                />
+              </div> :
+              <div className='a-subnav'><h2>Loading Table</h2></div>
+            }
+            {this.props.pagination.pages > 1 &&
+              <Paginator
+                pagination={this.props.pagination}
+                crosswalk={this.props.crosswalk}
+                adminInfo={this.props.adminInfo}
+                params={this.props.params}
+              />
+            }
           </div>
         </div>
       </section>
@@ -275,7 +270,8 @@ var AssetsAA = React.createClass({
   },
 
   render: function () {
-    const roadsFetched = (this.props.fieldFetched && this.props.VProMMsCountFetched);
+    const roadsFetched = this.props.fieldFetched && this.props.VProMMsCountFetched;
+
     return (
       <div ref='a-admin-area' className='a-admin-area-show'>
         {roadsFetched ? this.renderAssetsAdmin() : (<div/>)}
@@ -292,9 +288,7 @@ export default compose(
       adminInfo: state.adminInfo.data,
       adminInfoFetched: state.adminInfo.fetched,
       adminRoads: state.adminRoads.ids,
-      adminRoadsFetched: state.adminRoads.fetched,
       adminRoadProperties: state.VProMMsAdminProperties.data,
-      adminRoadPropertiesFetched: state.VProMMsAdminProperties.fetched,
       crosswalk: state.crosswalk,
       crosswalkSet: state.crosswalk.set,
       fieldRoads: state.fieldRoads.ids,
@@ -302,8 +296,7 @@ export default compose(
       VProMMsCount: state.roadIdCount.counts,
       VProMMsCountFetched: state.roadIdCount.fetched,
       pagination: state.pagination,
-      previousLocation: state.previousLocation.path,
-      subadminName: state.subadminName.name
+      previousLocation: state.previousLocation.path
     }),
     dispatch => ({
       _fetchAdminVProMMsProps: (ids, level, limit, offset) => dispatch(fetchAdminVProMMsProps(ids, level, limit, offset)),
@@ -321,9 +314,7 @@ export default compose(
       _setCrossWalk: () => dispatch(setCrossWalk()),
       _setPreviousLocation: (location) => dispatch(setPreviousLocation(location)),
       _setPagination: (paginationConfig) => dispatch(setPagination(paginationConfig)),
-      _setSubAdminName: (name) => dispatch(setSubAdminName(name)),
-      _updatePagination: (paginationUpdates) => dispatch(updatePagination(paginationUpdates))
+      _setSubAdminName: (name) => dispatch(setSubAdminName(name))
     })
   )
 )(AssetsAA);
-

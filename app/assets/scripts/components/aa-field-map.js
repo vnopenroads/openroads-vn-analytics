@@ -114,15 +114,13 @@ var AAFieldMap = React.createClass({
     );
   },
 
-  renderHeader: function (adminName) {
-    return (<h1>{adminName} Province - Road # {this.props.params.vpromm}</h1>);
-  },
-
   render: function () {
     return (
       <div>
         <div className="a-headline a-header">
-          { this.props.fetched ? this.renderHeader(this.props.adminName) : ''}
+          { this.props.fetched &&
+            <h1>{this.props.adminName} Province - Road # {this.props.params.vpromm}</h1>
+          }
         </div>
         <div className="a-main__status">
           <div className='aa-map-wrapper'>
@@ -138,7 +136,7 @@ function selector (state) {
   return {
     geoJSON: state.VProMMSidSourceGeoJSON.geoJSON,
     fetched: state.VProMMSidSourceGeoJSON.fetched,
-    adminName: state.admin.name
+    adminName: '' // TODO - request province name from /admin/:unit_id/info.  Or, name likely already availble in store in state.provinces
   };
 }
 function dispatcher (dispatch) {

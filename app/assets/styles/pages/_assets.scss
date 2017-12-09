@@ -39,6 +39,7 @@
     }
   }
 
+  
   .a-main__status {
     min-height: 4.5rem;
     padding: 0.5rem 1rem;
@@ -63,6 +64,43 @@
     .field-data {
       * { 
         margin-right: .5rem; 
+      }
+    }
+  }
+
+  .a-main__create-row {
+    button.create-new-road {
+      color: #444;
+      margin-bottom: 4px;
+      &:hover {
+        color: $secondary-color;
+      }
+      i {
+        margin-right: 6px;
+      }
+    }
+    .a-main__create-row-form {
+      min-height: 4.5rem;
+      padding: 0.5rem 1rem;
+      margin: 1rem 0 2rem 0;
+      border: 1px solid rgb(220, 220, 220);
+      border-radius: $base-border-radius;
+      background-color: #FFF;
+
+      button {
+        margin: 0 8px;
+        padding: 2px 12px;
+        &[disabled],
+        &:disabled {
+          background-color: lighten($secondary-color, 20);
+          cursor: not-allowed;
+        }
+      }
+      input {
+        margin-bottom: 1rem;
+      }
+      p.invalid {
+        color: $secondary-color;
       }
     }
   }
@@ -104,7 +142,27 @@
 
 // Tables
 
-.table { margin-bottom: 2rem; }
+.table {
+  margin-bottom: 2rem;
+  
+  .edit-row,
+  .delete-row {
+    height: 4rem;
+
+    p {
+      margin-bottom: 0;
+    }
+    button {
+      margin: 0 8px;
+      padding: 2px 12px;
+      &[disabled],
+      &:disabled {
+        background-color: lighten($secondary-color, 20);
+        cursor: not-allowed;
+      }
+    }
+  }
+}
 
 .a-table-action {
   @extend .button, .button--small, .button--base-raised-light;
@@ -114,6 +172,22 @@
 
 .table-properties-head {
   width: 20rem;
+}
+
+.table-properties-head.button-column {
+  width: 70px;
+}
+
+td.table-properties-cell-view-buttons {
+  button {
+    cursor: pointer;
+    border: none;
+    padding: 5px;
+    background-color: transparent;
+    &::before {
+      color: #666;
+    }
+  }
 }
 
 .table-properties-head,
