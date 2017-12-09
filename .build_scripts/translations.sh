@@ -2,12 +2,12 @@
 
 echo ""
 echo "---Setup Virtual Environment for Transifex Client"
-apt-get update
-apt-get install -y python-setuptools python-dev build-essential
-easy_install pip
-pip install virtualenv
-virtualenv ~/env
-source ~/env/bin/activate
+apt-get update && \
+	apt-get install -y \
+		python-setuptools \
+		python-dev \
+		python-pip \
+		build-essential
 
 # download transifex client
 echo ""
