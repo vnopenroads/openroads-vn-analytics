@@ -14,6 +14,9 @@ export const roadIdIsValid = (id, province, district) => {
 /**
  * constants
  */
+export const FETCH_ROADS = 'FETCH_ROADS';
+export const FETCH_ROADS_SUCCESS = 'FETCH_ROADS_SUCCESS';
+export const FETCH_ROADS_ERROR = 'FETCH_ROADS_ERROR';
 export const CREATE_ROAD = 'CREATE_ROAD';
 export const CREATE_ROAD_SUCCESS = 'CREATE_ROAD_SUCCESS';
 export const CREATE_ROAD_ERROR = 'CREATE_ROAD_ERROR';
@@ -28,6 +31,9 @@ export const DELETE_ROAD_ERROR = 'DELETE_ROAD_ERROR';
 /**
  * actions
  */
+export const fetchRoads = (page) => ({ type: FETCH_ROADS, page });
+export const fetchRoadsSuccess = (roads) => ({ type: FETCH_ROADS, roads });
+export const fetchRoadsError = (error) => ({ type: FETCH_ROADS, error });
 export const editRoad = (id, newId) => ({ type: EDIT_ROAD, id, newId });
 export const editRoadSuccess = (id, newId) => ({ type: EDIT_ROAD_SUCCESS, id, newId });
 export const editRoadError = (id, newId, error) => ({ type: EDIT_ROAD_ERROR, id, newId, error });
@@ -39,6 +45,22 @@ export const createRoadSuccess = () => ({ type: CREATE_ROAD_SUCCESS });
 export const createRoadError = (error) => ({ type: CREATE_ROAD_ERROR, error });
 
 
+export const fetchRoadsEpic = (page) => (dispatch) => {
+  dispatch(fetchRoads(page));
+
+  return fetch(`${config.api}/properties/roads`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+
+      return response.json();
+    })
+    .then((roads) => dispatch(fetchRoadsSuccess(roads)))
+    .catch((err) => dispatch(fetchRoadsError(err)));
+};
+
+
 export const createRoadEpic = (id) => (dispatch) => {
   dispatch(createRoad());
 
@@ -46,7 +68,7 @@ export const createRoadEpic = (id) => (dispatch) => {
     method: 'PUT'
   })
     .then(response => {
-      if (response.status >= 400) {
+      if (!response.ok) {
         throw new Error(response.status);
       }
 
@@ -65,7 +87,7 @@ export const editRoadEpic = (id, newId) => (dispatch) => {
     body: new Blob([JSON.stringify({ id: newId })], { type: 'application/json' })
   })
     .then(response => {
-      if (response.status >= 400) {
+      if (!response.ok) {
         throw new Error(response.status);
       }
 
@@ -83,7 +105,7 @@ export const deleteRoadEpic = (id) => (dispatch) => {
     method: 'DELETE'
   })
     .then((response) => {
-      if (response.status >= 400) {
+      if (!response.ok) {
         throw new Error(response.status);
       }
 
@@ -97,8 +119,16 @@ export const deleteRoadEpic = (id) => (dispatch) => {
  * reducer
  */
 export default (
-  state = {},
+  state = {
+    roads: []
+  },
   action
 ) => {
+  if (action.type === FETCH_ROADS_SUCCESS) {
+    return Object.assign({}, state, {
+      roads: action.roads
+    });
+  }
+
   return state;
 };
