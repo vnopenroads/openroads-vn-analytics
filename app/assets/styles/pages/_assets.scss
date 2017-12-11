@@ -147,10 +147,15 @@
   
   .edit-row,
   .delete-row {
-    height: 4rem;
-
+    td {
+      padding: 1rem 0.5rem;
+    }
     p {
       margin-bottom: 0;
+    }
+    p.invalid {
+      color: $secondary-color;
+      margin-top: 12px;
     }
     button {
       margin: 0 8px;
@@ -203,11 +208,6 @@ td.table-properties-cell-view-buttons {
   margin: ($global-spacing / 2) 0 0 0;
   opacity: 1;
   // transition: opacity 0.24s ease-in-out, max-height 0.24s ease-in-out;
-}
-
-.table-properties--hidden {
-  max-height: 0;
-  opacity: 0;
 }
 
 .button-table-expand {

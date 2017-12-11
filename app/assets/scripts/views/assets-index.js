@@ -17,8 +17,8 @@ import {
   setCrossWalk,
   setPreviousLocation
 } from '../actions/action-creators';
+import ProvinceTable from '../containers/province-table-container';
 
-import AATable from '../components/aa-table-index';
 
 var AssetsIndex = React.createClass({
   displayName: 'AssetsIndex',
@@ -119,7 +119,7 @@ var AssetsIndex = React.createClass({
           </div>
         </div>
         <div>
-          {this.props.provincesFetched ? <AATable data={this.makeProvinceData()} crosswalk={this.props.crosswalk} /> : (<div className='a-subnav'><h2>Loading Tables</h2></div>)}
+          {this.props.provincesFetched ? <ProvinceTable data={this.makeProvinceData()} crosswalk={this.props.crosswalk} /> : (<div className='a-subnav'><h2>Loading Tables</h2></div>)}
         </div>
       </div>
     );
