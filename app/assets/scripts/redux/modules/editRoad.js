@@ -75,6 +75,7 @@ export const editRoadEpic = (id, newId) => (dispatch) => {
     .catch((err) => dispatch(editRoadError(id, newId, err.message)));
 };
 
+
 export const deleteRoadEpic = (id) => (dispatch) => {
   dispatch(deleteRoad(id));
 
@@ -99,38 +100,5 @@ export default (
   state = {},
   action
 ) => {
-  switch (action.type) {
-    case EDIT_ROAD:
-      return Object.assign({}, state, {
-        [action.id]: { status: 'pending' }
-      });
-    case EDIT_ROAD_SUCCESS:
-      return Object.assign({}, state, {
-        [action.id]: { status: 'complete' }
-      });
-    case EDIT_ROAD_ERROR:
-      return Object.assign({}, state, {
-        [action.id]: {
-          status: 'error',
-          error: action.error
-        }
-      });
-    case DELETE_ROAD:
-      return Object.assign({}, state, {
-        [action.id]: { status: 'pending' }
-      });
-    case DELETE_ROAD_SUCCESS:
-      return Object.assign({}, state, {
-        [action.id]: { status: 'complete' }
-      });
-    case DELETE_ROAD_ERROR:
-      return Object.assign({}, state, {
-        [action.id]: {
-          status: 'error',
-          error: action.error
-        }
-      });
-  }
-
   return state;
 };

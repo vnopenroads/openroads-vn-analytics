@@ -2,15 +2,23 @@ import React from 'react';
 import {
   compose,
   getContext,
-  withStateHandlers
+  withHandlers
 } from 'recompose';
 import {
   withRouter
 } from 'react-router';
 import { connect } from 'react-redux';
+import { local } from 'redux-fractal';
+import { createStore } from 'redux';
 import _ from 'lodash';
 import { Link } from 'react-router';
 import {
+  EDIT_ROAD,
+  EDIT_ROAD_SUCCESS,
+  EDIT_ROAD_ERROR,
+  DELETE_ROAD,
+  DELETE_ROAD_SUCCESS,
+  DELETE_ROAD_ERROR,
   roadIdIsValid,
   editRoadEpic,
   deleteRoadEpic
@@ -22,7 +30,7 @@ import T, {
 
 
 const RowPropertiesList = ({
-  vpromm, adminRoadProperties, expandProperties, toggleExpandProperties
+  vpromm, adminRoadProperties, shouldShowProperties, toggleProperties
 }) => {
   // TODO - properly render props dropdown
   const roadPropDropDown = [];
@@ -44,13 +52,13 @@ const RowPropertiesList = ({
     <td className='table-properties-cell'>
       <button
         type='button'
-        className={`button-table-expand ${expandProperties ? 'button-table-expand--show' : 'button-table-expand--hide'}`}
-        onClick={toggleExpandProperties}
+        className={`button-table-expand ${shouldShowProperties ? 'button-table-expand--show' : 'button-table-expand--hide'}`}
+        onClick={toggleProperties}
       >
-        <span>{expandProperties ? <T>Hide</T> : <T>Show</T>}</span>
+        <span>{shouldShowProperties ? <T>Hide</T> : <T>Show</T>}</span>
       </button>
       <div
-        className={`table-properties ${!expandProperties ? 'table-properties--hidden' : ''}`}
+        className={`table-properties ${!shouldShowProperties ? 'table-properties--hidden' : ''}`}
       >
         <dl className='table-properties-list'>{roadPropDropDown}</dl>
       </div>
@@ -60,8 +68,8 @@ const RowPropertiesList = ({
 
 const RowReadView = ({
   vpromm, adminRoadProperties,
-  vprommFieldInDB, language, expandProperties,
-  toggleExpandProperties, showDeleteView, showEditView
+  vprommFieldInDB, language, shouldShowProperties,
+  toggleProperties, showDeleteView, showEditView
 }) => {
   return (
     <tr>
@@ -108,8 +116,8 @@ const RowReadView = ({
       <RowPropertiesList
         vpromm={vpromm}
         adminRoadProperties={adminRoadProperties}
-        expandProperties={expandProperties}
-        toggleExpandProperties={toggleExpandProperties}
+        shouldShowProperties={shouldShowProperties}
+        toggleProperties={toggleProperties}
       />
     </tr>
   );
@@ -209,40 +217,119 @@ TableRow.propTypes = {
 };
 
 
+const reducer = (
+  state = {
+    viewState: 'read',
+    newRoadId: '',
+    shouldShowProperties: false,
+    formIsInvalid: false,
+    status: 'complete',
+    error: false
+  },
+  action
+) => {
+  if (action.type === 'SHOW_READ_VIEW') {
+    return Object.assign({}, state, {
+      viewState: 'read',
+      newRoadId: '',
+      formIsInvalid: ''
+    });
+  } else if (action.type === 'SHOW_EDIT_VIEW') {
+    return Object.assign({}, state, {
+      viewState: 'edit'
+    });
+  } else if (action.type === 'SHOW_DELETE_VIEW') {
+    return Object.assign({}, state, {
+      viewState: 'delete'
+    });
+  } else if (action.type === 'SHOW_PROPERTIES') {
+    return Object.assign({}, state, {
+      shouldShowProperties: true
+    });
+  } else if (action.type === 'HIDE_PROPERTIES') {
+    return Object.assign({}, state, {
+      shouldShowProperties: false
+    });
+  } else if (action.type === 'UPDATE_NEW_ROAD_ID') {
+    return Object.assign({}, state, {
+      newRoadId: action.id
+    });
+  } else if (action.type === 'FORM_IS_INVALID') {
+    return Object.assign({}, state, {
+      formIsInvalid: true
+    });
+  } else if (action.type === EDIT_ROAD) {
+    return Object.assign({}, state, {
+      status: 'pending',
+      formIsInvalid: false
+    });
+  } else if (action.type === EDIT_ROAD_SUCCESS) {
+    return Object.assign({}, state, {
+      status: 'complete',
+      newRoadId: ''
+    });
+  } else if (action.type === EDIT_ROAD_ERROR) {
+    return Object.assign({}, state, {
+      status: 'error',
+      error: action.error
+    });
+  } else if (action.type === DELETE_ROAD) {
+    return Object.assign({}, state, {
+      status: 'pending',
+      formIsInvalid: false
+    });
+  } else if (action.type === DELETE_ROAD_SUCCESS) {
+    return Object.assign({}, state, {
+      status: 'complete'
+    });
+  } else if (action.type === DELETE_ROAD_ERROR) {
+    return Object.assign({}, state, {
+      status: 'error',
+      error: action.error
+    });
+  }
+
+  return state;
+};
+
+
 export default compose(
   getContext({ language: React.PropTypes.string }),
   withRouter,
   connect(
     (state, { vpromm, router: { params: { aaId, aaIdSub } } }) => ({
-      status: state.editRoad[vpromm] ? state.editRoad[vpromm].status : 'complete',
       province: state.crosswalk.province[aaId] && state.crosswalk.province[aaId].id,
       district: state.crosswalk.district[aaIdSub] && state.crosswalk.district[aaIdSub]
-    }),
-    (dispatch, { vpromm }) => ({
-      confirmDelete: () => dispatch(deleteRoadEpic(vpromm)),
-      submitEdit: (newRoadId) => dispatch(editRoadEpic(vpromm, newRoadId))
     })
   ),
-  withStateHandlers(
-    ({ vpromm }) => ({
-      viewState: 'read', newRoadId: vpromm, expandProperties: false, formIsInvalid: false
+  local({
+    key: ({ vpromm }) => `${vpromm}-table-row`,
+    createStore: () => createStore(reducer),
+    mapDispatchToProps: (dispatch, { vpromm }) => ({
+      showProperties: () => dispatch({ type: 'SHOW_PROPERTIES' }),
+      hideProperties: () => dispatch({ type: 'HIDE_PROPERTIES' }),
+      showReadView: () => dispatch({ type: 'SHOW_READ_VIEW' }),
+      showEditView: () => dispatch({ type: 'SHOW_EDIT_VIEW' }),
+      showDeleteView: () => dispatch({ type: 'SHOW_DELETE_VIEW' }),
+      updateNewRoadId: ({ target: { value: id } }) => dispatch({ type: 'UPDATE_NEW_ROAD_ID', id }),
+      invalidateForm: () => dispatch({ type: 'FORM_IS_INVALID' }),
+      confirmDelete: () => dispatch(deleteRoadEpic(vpromm)),
+      submitEdit: (newRoadId) => dispatch(editRoadEpic(vpromm, newRoadId))
     }),
-    {
-      showReadView: (_, { vpromm }) => () => ({ viewState: 'read', newRoadId: vpromm, formIsInvalid: false }),
-      showEditView: () => () => ({ viewState: 'edit' }),
-      showDeleteView: () => () => ({ viewState: 'delete' }),
-      toggleExpandProperties: ({ expandProperties }) => () => ({ expandProperties: !expandProperties }),
-      updateNewRoadId: () => (e) => ({ newRoadId: e.target.value }),
-      confirmEdit: ({ newRoadId }, { submitEdit, province, district }) => (e) => {
-        e.preventDefault();
-        // TODO - expose validation error messages
-        if (!roadIdIsValid(newRoadId, province, district)) {
-          return { formIsInvalid: true };
-        }
-
-        submitEdit(newRoadId);
-        return { formIsInvalid: false, newRoadId: '' };
+    filterGlobalActions: ({ type }) =>
+      [EDIT_ROAD, EDIT_ROAD_SUCCESS, EDIT_ROAD_ERROR, DELETE_ROAD, DELETE_ROAD_SUCCESS, DELETE_ROAD_ERROR].indexOf(type) > -1
+  }),
+  withHandlers({
+    toggleProperties: ({ shouldShowProperties, showProperties, hideProperties }) => () =>
+      shouldShowProperties ? hideProperties() : showProperties(),
+    confirmEdit: ({ newRoadId, province, district, submitEdit, invalidateForm }) => (e) => {
+      e.preventDefault();
+      // TODO - expose validation error messages
+      if (!roadIdIsValid(newRoadId, province, district)) {
+        return invalidateForm();
       }
+
+      submitEdit(newRoadId);
     }
-  )
+  })
 )(TableRow);
