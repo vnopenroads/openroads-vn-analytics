@@ -1,11 +1,6 @@
 // TODO generalize sort tables to accept arbitrary columns and attributes
 // (combine aa-table-index.js and aa-table-vromms.js into single component)
 import React from 'react';
-import {
-  compose,
-  withStateHandlers
-} from 'recompose';
-import { connect } from 'react-redux';
 import _ from 'lodash';
 import ColumnHeader from './road-table-column-header';
 import Row from '../containers/road-table-row-container';
@@ -58,21 +53,4 @@ RoadTable.propTypes = {
 };
 
 
-export default compose(
-  connect(
-    state => ({
-      fieldIds: state.fieldVProMMsids.ids,
-      adminRoadProperties: state.VProMMsAdminProperties.data
-    })
-  ),
-  withStateHandlers(
-    { sortField: 'id', sortOrder: 'asc' },
-    {
-      sortColumnAction: ({ sortField, sortOrder }) => (field) => (
-        sortField === field ?
-          { sortOrder: sortOrder === 'asc' ? 'desc' : 'asc' } :
-          { sortField: field, sortOrder: 'asc' }
-      )
-    }
-  )
-)(RoadTable);
+export default RoadTable;

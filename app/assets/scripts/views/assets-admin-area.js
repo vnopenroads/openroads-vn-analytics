@@ -11,8 +11,8 @@ import { makeIdTest, getAdminId, getAdminName } from '../utils/admin-level';
 import { Link } from 'react-router';
 import c from 'classnames';
 import Paginator from '../components/paginator';
-import RoadTable from '../components/road-table';
-import CreateRoadForm from '../components/create-road-form';
+import RoadTable from '../containers/road-table-container';
+import CreateRoadForm from '../containers/create-road-form-container';
 import {
   fetchAdminInfo,
   fetchFieldRoads,
