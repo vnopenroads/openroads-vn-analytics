@@ -124,7 +124,8 @@ const RowReadView = ({
 };
 
 const RowEditView = ({
-  vpromm, newRoadId, formIsInvalid, status, showReadView, updateNewRoadId, confirmEdit
+  vpromm, newRoadId, formIsInvalid, status, error,
+  showReadView, updateNewRoadId, confirmEdit
 }) => (
   <tr
     className="edit-row"
@@ -134,6 +135,9 @@ const RowEditView = ({
       colSpan="3"
     >
       {
+        <form
+          onSubmit={confirmEdit}
+        >
           <p>
             <input
               type="text"
@@ -154,15 +158,21 @@ const RowEditView = ({
               <T>Cancel</T>
             </button>
             {
-              status === 'pending' ?
-                <T>Loading</T> :
-              status === 'error' ?
-                <T>Error</T> :
-              formIsInvalid ?
-                <strong><T>Invalid Road Id</T></strong> :
-                <span/>
+              status === 'pending' && <T>Loading</T>
             }
           </p>
+          {
+            formIsInvalid && <strong><T>Invalid Road Id</T></strong>
+          }
+          {
+            status === 'error' && error === '409' ?
+              <p className="invalid"><strong><T>Error</T></strong>: <T>Road</T> {newRoadId} <T>Already Exists</T></p> :
+            status === 'error' && error === 'Failed to fetch' ?
+              <p className="invalid"><strong><T>Error</T></strong>: <T>Connection Error</T></p> :
+            status === 'error' &&
+              <p className="invalid"><strong><T>Error</T></strong></p>
+          }
+        </form>
       }
     </td>
   </tr>
@@ -232,7 +242,9 @@ const reducer = (
     return Object.assign({}, state, {
       viewState: 'read',
       newRoadId: '',
-      formIsInvalid: ''
+      formIsInvalid: false,
+      status: 'complete',
+      error: false
     });
   } else if (action.type === 'SHOW_EDIT_VIEW') {
     return Object.assign({}, state, {
@@ -308,9 +320,18 @@ export default compose(
     mapDispatchToProps: (dispatch, { vpromm }) => ({
       showProperties: () => dispatch({ type: 'SHOW_PROPERTIES' }),
       hideProperties: () => dispatch({ type: 'HIDE_PROPERTIES' }),
-      showReadView: () => dispatch({ type: 'SHOW_READ_VIEW' }),
-      showEditView: () => dispatch({ type: 'SHOW_EDIT_VIEW' }),
-      showDeleteView: () => dispatch({ type: 'SHOW_DELETE_VIEW' }),
+      showReadView: (e) => {
+        e.preventDefault();
+        dispatch({ type: 'SHOW_READ_VIEW' });
+      },
+      showEditView: (e) => {
+        e.preventDefault();
+        dispatch({ type: 'SHOW_EDIT_VIEW' });
+      },
+      showDeleteView: (e) => {
+        e.preventDefault();
+        dispatch({ type: 'SHOW_DELETE_VIEW' });
+      },
       updateNewRoadId: ({ target: { value: id } }) => dispatch({ type: 'UPDATE_NEW_ROAD_ID', id }),
       invalidateForm: () => dispatch({ type: 'FORM_IS_INVALID' }),
       confirmDelete: () => dispatch(deleteRoadEpic(vpromm)),
