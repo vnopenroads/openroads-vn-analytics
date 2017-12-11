@@ -1,6 +1,7 @@
 import {
   compose,
-  withStateHandlers
+  withStateHandlers,
+  lifecycle
 } from 'recompose';
 import { connect } from 'react-redux';
 import RoadTable from '../components/road-table';
@@ -22,7 +23,12 @@ const RoadTableContainer = compose(
           { sortField: field, sortOrder: 'asc' }
       )
     }
-  )
+  ),
+  lifecycle({
+    componentWillMount: () => {
+      
+    }
+  })
 )(RoadTable);
 
 

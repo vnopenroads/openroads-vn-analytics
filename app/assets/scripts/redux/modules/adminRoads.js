@@ -2,7 +2,7 @@ import config from '../../config';
 import {
   EDIT_ROAD_SUCCESS,
   DELETE_ROAD_SUCCESS
-} from './editRoad';
+} from './roads';
 
 
 /**

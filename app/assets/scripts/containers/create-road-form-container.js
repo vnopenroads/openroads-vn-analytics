@@ -18,7 +18,7 @@ import {
   CREATE_ROAD_ERROR,
   createRoadEpic,
   roadIdIsValid
-} from '../redux/modules/editRoad';
+} from '../redux/modules/roads';
 import CreateRoadForm from '../components/create-road-form';
 
 

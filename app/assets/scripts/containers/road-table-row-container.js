@@ -21,7 +21,7 @@ import {
   roadIdIsValid,
   editRoadEpic,
   deleteRoadEpic
-} from '../redux/modules/editRoad';
+} from '../redux/modules/roads';
 
 
 const reducer = (
