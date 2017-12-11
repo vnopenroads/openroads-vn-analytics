@@ -1,5 +1,3 @@
-// TODO generalize sort tables to accept arbitrary columns and attributes
-// (combine aa-table-index.js and aa-table-vromms.js into single component)
 import React from 'react';
 import _ from 'lodash';
 import ColumnHeader from './road-table-column-header';
