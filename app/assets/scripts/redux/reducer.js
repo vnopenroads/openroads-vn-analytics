@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import { routeReducer } from 'react-router-redux';
+import { localReducer } from 'redux-fractal';
 import _ from 'lodash';
 import * as actions from '../actions/action-types';
 import waytasks from './modules/tasks';
@@ -9,7 +10,6 @@ import {
   EDIT_ROAD_SUCCESS,
   DELETE_ROAD_SUCCESS
 } from './modules/editRoad';
-import createRoad from './modules/createRoad';
 import editRoad from './modules/editRoad';
 import { ADMIN_MAP } from '../constants';
 
@@ -483,11 +483,11 @@ const subadminName = function (state = {name: ''}, action) {
 
 export default combineReducers({
   routing: routeReducer,
+  local: localReducer,
   admins,
   adminInfo,
   adminBbox,
   adminRoads,
-  createRoad,
   editRoad,
   fieldIdCount,
   waytasks,
