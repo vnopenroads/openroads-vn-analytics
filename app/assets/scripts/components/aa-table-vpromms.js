@@ -8,7 +8,7 @@ import {
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import AATableColumnHeader from './aa-table-vpromms-column-header';
-import AATableRow from './aa-table-vpromms-row';
+import AATableRow from '../containers/aa-table-vpromms-container';
 import T from './t';
 
 
