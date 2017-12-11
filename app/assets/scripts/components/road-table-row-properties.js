@@ -5,7 +5,7 @@ import {
 import T from './t';
 
 
-const RowPropertiesList = ({
+const RowProperties = ({
   vpromm, adminRoadProperties, shouldShowProperties, toggleProperties
 }) => {
   // TODO - properly render props dropdown
@@ -41,4 +41,4 @@ const RowPropertiesList = ({
 };
 
 
-export default RowPropertiesList;
+export default RowProperties;

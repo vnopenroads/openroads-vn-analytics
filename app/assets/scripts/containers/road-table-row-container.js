@@ -10,7 +10,7 @@ import {
 import { connect } from 'react-redux';
 import { local } from 'redux-fractal';
 import { createStore } from 'redux';
-import TableRow from '../components/aa-table-vpromms-row';
+import TableRow from '../components/road-table-row';
 import {
   EDIT_ROAD,
   EDIT_ROAD_SUCCESS,

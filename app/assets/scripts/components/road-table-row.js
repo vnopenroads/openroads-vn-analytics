@@ -4,7 +4,7 @@ import { api } from '../config';
 import T, {
   translate
 } from './t';
-import RowPropertiesList from './aa-table-vpromms-row-properties';
+import RowProperties from './road-table-row-properties';
 
 
 const RowReadView = ({
@@ -54,7 +54,7 @@ const RowReadView = ({
           </div>
         }
       </td>
-      <RowPropertiesList
+      <RowProperties
         vpromm={vpromm}
         adminRoadProperties={adminRoadProperties}
         shouldShowProperties={shouldShowProperties}

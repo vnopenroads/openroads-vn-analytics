@@ -7,12 +7,12 @@ import {
 } from 'recompose';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import AATableColumnHeader from './aa-table-vpromms-column-header';
-import AATableRow from '../containers/aa-table-vpromms-container';
+import ColumnHeader from './road-table-column-header';
+import Row from '../containers/road-table-row-container';
 import T from './t';
 
 
-const AATable = ({
+const RoadTable = ({
   adminRoadProperties, data, fieldRoads,
   sortField, sortOrder, sortColumnAction
 }) => (
@@ -21,7 +21,7 @@ const AATable = ({
       <thead>
         <tr>
           <th className="table-properties-head button-column" />
-          <AATableColumnHeader
+          <ColumnHeader
             columnKey="id"
             label="VPRoMMS ID"
             sortField={sortField}
@@ -36,7 +36,7 @@ const AATable = ({
         {_.map(
           _.orderBy(data, _.identity, [sortOrder]),
           (vpromm) => (
-            <AATableRow
+            <Row
               key={vpromm}
               vpromm={vpromm}
               adminRoadProperties={adminRoadProperties}
@@ -50,7 +50,7 @@ const AATable = ({
 );
 
 
-AATable.propTypes = {
+RoadTable.propTypes = {
   data: React.PropTypes.array,
   fieldRoads: React.PropTypes.array,
   language: React.PropTypes.string,
@@ -75,4 +75,4 @@ export default compose(
       )
     }
   )
-)(AATable);
+)(RoadTable);
