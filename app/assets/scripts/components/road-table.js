@@ -6,7 +6,7 @@ import T from './t';
 
 
 const RoadTable = ({
-  adminRoadProperties, data, fieldRoads,
+  adminRoadProperties, adminRoads, fieldRoads,
   sortField, sortOrder, sortColumnAction
 }) => (
   <div className='table'>
@@ -27,7 +27,7 @@ const RoadTable = ({
       </thead>
       <tbody>
         {_.map(
-          _.orderBy(data, _.identity, [sortOrder]),
+          _.orderBy(adminRoads, _.identity, [sortOrder]),
           (vpromm) => (
             <Row
               key={vpromm}
@@ -44,7 +44,7 @@ const RoadTable = ({
 
 
 RoadTable.propTypes = {
-  data: React.PropTypes.array,
+  adminRoads: React.PropTypes.array,
   fieldRoads: React.PropTypes.array,
   language: React.PropTypes.string,
   adminRoadProperties: React.PropTypes.array

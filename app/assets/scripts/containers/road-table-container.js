@@ -9,7 +9,7 @@ import RoadTable from '../components/road-table';
 const RoadTableContainer = compose(
   connect(
     state => ({
-      fieldIds: state.fieldVProMMsids.ids,
+      adminRoads: state.adminRoads.ids,
       adminRoadProperties: state.VProMMsAdminProperties.data
     })
   ),

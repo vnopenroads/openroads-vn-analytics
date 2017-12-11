@@ -64,8 +64,6 @@ var AssetsAA = React.createClass({
     language: React.PropTypes.string,
     adminInfo: React.PropTypes.object,
     adminInfoFetched: React.PropTypes.bool,
-    adminRoads: React.PropTypes.array,
-    adminRoadProperties: React.PropTypes.array,
     location: React.PropTypes.object,
     VProMMsCount: React.PropTypes.array,
     VProMMsCountFetched: React.PropTypes.bool,
@@ -244,13 +242,11 @@ var AssetsAA = React.createClass({
           </div>
 
           <div>
-            {adminContent.total && this.props.adminRoadProperties ?
+            {adminContent.total ?
               <div>
                 <CreateRoadForm />
                 <RoadTable
-                  data={this.props.adminRoads}
                   fieldRoads={this.props.fieldRoads}
-                  propertiesData={this.props.adminRoadProperties}
                 />
               </div> :
               <div className='a-subnav'><h2>Loading Table</h2></div>
@@ -287,8 +283,6 @@ export default compose(
     state => ({
       adminInfo: state.adminInfo.data,
       adminInfoFetched: state.adminInfo.fetched,
-      adminRoads: state.adminRoads.ids,
-      adminRoadProperties: state.VProMMsAdminProperties.data,
       crosswalk: state.crosswalk,
       crosswalkSet: state.crosswalk.set,
       fieldRoads: state.fieldRoads.ids,
