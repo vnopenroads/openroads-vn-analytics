@@ -134,51 +134,49 @@ const RowEditView = ({
     <td
       colSpan="3"
     >
-      {
-        <form
-          onSubmit={confirmEdit}
-        >
-          <p>
-            <input
-              type="text"
-              value={newRoadId}
-              onChange={updateNewRoadId}
-            />
-            <button
-              className="button button--secondary-raised-dark"
-              onClick={confirmEdit}
-              disabled={newRoadId === '' || status === 'pending' || newRoadId === vpromm}
-            >
-              <T>Submit</T>
-            </button>
-            <button
-              className="button button--base-raised-light"
-              onClick={showReadView}
-            >
-              <T>Cancel</T>
-            </button>
-            {
-              status === 'pending' && <T>Loading</T>
-            }
-          </p>
+      <form
+        onSubmit={confirmEdit}
+      >
+        <p>
+          <input
+            type="text"
+            value={newRoadId}
+            onChange={updateNewRoadId}
+          />
+          <button
+            className="button button--secondary-raised-dark"
+            onClick={confirmEdit}
+            disabled={newRoadId === '' || status === 'pending' || newRoadId === vpromm}
+          >
+            <T>Submit</T>
+          </button>
+          <button
+            className="button button--base-raised-light"
+            onClick={showReadView}
+          >
+            <T>Cancel</T>
+          </button>
           {
-            formIsInvalid && <strong><T>Invalid Road Id</T></strong>
+            status === 'pending' && <T>Loading</T>
           }
-          {
-            status === 'error' && error === '409' ?
-              <p className="invalid"><strong><T>Error</T></strong>: <T>Road</T> {newRoadId} <T>Already Exists</T></p> :
-            status === 'error' && error === 'Failed to fetch' ?
-              <p className="invalid"><strong><T>Error</T></strong>: <T>Connection Error</T></p> :
-            status === 'error' &&
-              <p className="invalid"><strong><T>Error</T></strong></p>
-          }
-        </form>
-      }
+        </p>
+        {
+          formIsInvalid && <strong><T>Invalid Road Id</T></strong>
+        }
+        {
+          status === 'error' && error === '409' ?
+            <p className="invalid"><strong><T>Error</T></strong>: <T>Road</T> {newRoadId} <T>Already Exists</T></p> :
+          status === 'error' && error === 'Failed to fetch' ?
+            <p className="invalid"><strong><T>Error</T></strong>: <T>Connection Error</T></p> :
+          status === 'error' &&
+            <p className="invalid"><strong><T>Error</T></strong></p>
+        }
+      </form>
     </td>
   </tr>
 );
 
-const RowDeleteView = ({ vpromm, status, showReadView, confirmDelete }) => (
+const RowDeleteView = ({ vpromm, status, error, showReadView, confirmDelete }) => (
   <tr
     className="delete-row"
   >
@@ -186,26 +184,29 @@ const RowDeleteView = ({ vpromm, status, showReadView, confirmDelete }) => (
     <td
       colSpan="3"
     >
+      <p>
+        <T>Are you sure you want to delete VPRoMMS</T> <strong>{vpromm}</strong>?
+        <button
+          className="button button--secondary-raised-dark"
+          onClick={confirmDelete}
+        >
+          <T>Delete</T>
+        </button>
+        <button
+          className="button button--base-raised-light"
+          onClick={showReadView}
+        >
+          <T>Cancel</T>
+        </button>
+        {
+          status === 'pending' && <T>Loading</T>
+        }
+      </p>
       {
-        status === 'pending' ?
-          <p><T>Loading</T></p> :
-        status === 'error' ?
-          <p><T>Error</T></p> :
-          <p>
-            <T>Are you sure you want to delete VPRoMMS</T> <strong>{vpromm}</strong>?
-            <button
-              className="button button--secondary-raised-dark"
-              onClick={confirmDelete}
-            >
-              <T>Delete</T>
-            </button>
-            <button
-              className="button button--base-raised-light"
-              onClick={showReadView}
-            >
-              <T>Cancel</T>
-            </button>
-          </p>
+        status === 'error' && error === 'Failed to fetch' ?
+          <p className="invalid"><strong><T>Error</T></strong>: <T>Connection Error</T></p> :
+        status === 'error' &&
+          <p className="invalid"><strong><T>Error</T></strong></p>
       }
     </td>
   </tr>
