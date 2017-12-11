@@ -10,7 +10,6 @@ import {
 import { connect } from 'react-redux';
 import { local } from 'redux-fractal';
 import { createStore } from 'redux';
-import _ from 'lodash';
 import { Link } from 'react-router';
 import {
   EDIT_ROAD,
@@ -27,44 +26,8 @@ import { api } from '../config';
 import T, {
   translate
 } from './t';
+import RowPropertiesList from './aa-table-vpromms-row-properties';
 
-
-const RowPropertiesList = ({
-  vpromm, adminRoadProperties, shouldShowProperties, toggleProperties
-}) => {
-  // TODO - properly render props dropdown
-  const roadPropDropDown = [];
-
-  if (adminRoadProperties.length !== 0) {
-    const adminProp = adminRoadProperties.find((prop) => prop.id === vpromm);
-    if (adminProp) {
-      _.forEach(adminProp.properties, (prop, key, j) => {
-        roadPropDropDown.push(<dt key={`${vpromm}-${key}-${j}-key`}>{key}</dt>);
-        roadPropDropDown.push(<dd key={`${vpromm}-${key}-${j}-prop`}>{prop}</dd>);
-      });
-    } else {
-      roadPropDropDown.push(<dt key={`${vpromm}-key`}></dt>);
-      roadPropDropDown.push(<dd key={`${vpromm}-prop`}></dd>);
-    }
-  }
-
-  return adminRoadProperties.length !== 0 ?
-    <td className='table-properties-cell'>
-      <button
-        type='button'
-        className={`button-table-expand ${shouldShowProperties ? 'button-table-expand--show' : 'button-table-expand--hide'}`}
-        onClick={toggleProperties}
-      >
-        <span>{shouldShowProperties ? <T>Hide</T> : <T>Show</T>}</span>
-      </button>
-      <div
-        className={`table-properties ${!shouldShowProperties ? 'table-properties--hidden' : ''}`}
-      >
-        <dl className='table-properties-list'>{roadPropDropDown}</dl>
-      </div>
-    </td> :
-    <td/>;
-};
 
 const RowReadView = ({
   vpromm, adminRoadProperties,

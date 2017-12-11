@@ -210,11 +210,6 @@ td.table-properties-cell-view-buttons {
   // transition: opacity 0.24s ease-in-out, max-height 0.24s ease-in-out;
 }
 
-.table-properties--hidden {
-  max-height: 0;
-  opacity: 0;
-}
-
 .button-table-expand {
   @extend .button, .button--small, .button--base-raised-light;
   min-width: 4.5rem;
