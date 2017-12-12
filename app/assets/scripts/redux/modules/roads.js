@@ -20,6 +20,8 @@ export const roadIdIsValid = (id, province, district) => {
 };
 export const getRoadPageKey = (province = '', district = '', page, sortOrder) =>
   `${province}-${district}-${page}-${sortOrder}`;
+export const getRoadCountKey = (province, district) =>
+  `${province}-${district}`;
 
 
 /**
@@ -28,6 +30,9 @@ export const getRoadPageKey = (province = '', district = '', page, sortOrder) =>
 export const FETCH_ROADS = 'FETCH_ROADS';
 export const FETCH_ROADS_SUCCESS = 'FETCH_ROADS_SUCCESS';
 export const FETCH_ROADS_ERROR = 'FETCH_ROADS_ERROR';
+export const FETCH_ROAD_COUNT = 'FETCH_ROAD_COUNT';
+export const FETCH_ROAD_COUNT_SUCCESS = 'FETCH_ROAD_COUNT_SUCCESS';
+export const FETCH_ROAD_COUNT_ERROR = 'FETCH_ROAD_COUNT_ERROR';
 export const CREATE_ROAD = 'CREATE_ROAD';
 export const CREATE_ROAD_SUCCESS = 'CREATE_ROAD_SUCCESS';
 export const CREATE_ROAD_ERROR = 'CREATE_ROAD_ERROR';
@@ -42,11 +47,16 @@ export const DELETE_ROAD_ERROR = 'DELETE_ROAD_ERROR';
 /**
  * actions
  */
-export const fetchRoads = (province, district, page, sortOrder) => ({ type: FETCH_ROADS, page });
+export const fetchRoads = (province, district, page, sortOrder) => ({ type: FETCH_ROADS, province, district, page, sortOrder });
 export const fetchRoadsSuccess = (roadsById, roadsByPage, province, district, page, sortOrder) =>
   ({ type: FETCH_ROADS_SUCCESS, roadsById, roadsByPage, province, district, page, sortOrder });
 export const fetchRoadsError = (error, province, district, page, sortOrder) =>
   ({ type: FETCH_ROADS_ERROR, error, province, district, page, sortOrder });
+export const fetchRoadCount = (province, district) => ({ type: FETCH_ROAD_COUNT, province, district });
+export const fetchRoadCountSuccess = (count, pageCount, province, district) =>
+  ({ type: FETCH_ROAD_COUNT_SUCCESS, count, pageCount, province, district });
+export const fetchRoadCountError = (error, province, district) =>
+  ({ type: FETCH_ROAD_COUNT_ERROR, error, province, district });
 export const editRoad = (id, newId) => ({ type: EDIT_ROAD, id, newId });
 export const editRoadSuccess = (id, newId) => ({ type: EDIT_ROAD_SUCCESS, id, newId });
 export const editRoadError = (id, newId, error) => ({ type: EDIT_ROAD_ERROR, id, newId, error });
@@ -82,6 +92,25 @@ export const fetchRoadsEpic = (province, district, page, sortOrder) => (dispatch
       dispatch(fetchRoadsSuccess(roadsById, roadsByPage, province, district, page, sortOrder));
     })
     .catch((err) => dispatch(fetchRoadsError(err, province, district, page, sortOrder)));
+};
+
+export const fetchRoadCountEpic = (province, district) => (dispatch) => {
+  dispatch(fetchRoadCount(province, district));
+
+  return fetch(
+    format({ pathname: `${config.api}/properties/roads/count`, query: { province, district } })
+  )
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+
+      return response.json();
+    })
+    .then(({ count, pageCount }) => {
+      dispatch(fetchRoadCountSuccess(count, pageCount, province, district));
+    })
+    .catch((err) => dispatch(fetchRoadCountError(err, province, district)));
 };
 
 
@@ -145,7 +174,8 @@ export const deleteRoadEpic = (id) => (dispatch) => {
 export default (
   state = {
     roadsById: {},
-    roadsByPage: {}
+    roadsByPage: {},
+    roadCount: {}
   },
   action
 ) => {
@@ -180,9 +210,49 @@ export default (
 
     return Object.assign({}, state, {
       roadsByPage: Object.assign({}, state.roadsByPage, {
-        [pageKey]: Object.assign({}, state.roadsByPage[pageKey], {
-          status: 'error'
-        })
+        [pageKey]: {
+          status: 'error',
+          roads: []
+        }
+      })
+    });
+  } else if (action.type === FETCH_ROAD_COUNT) {
+    const { province, district } = action;
+    const roadCountKey = getRoadCountKey(province, district);
+
+    return Object.assign({}, state, {
+      roadCount: Object.assign({}, state, {
+        [roadCountKey]: {
+          status: 'pending',
+          count: state.roadCount[roadCountKey] && state.roadCount[roadCountKey].count,
+          pageCount: state.roadCount[roadCountKey] && state.roadCount[roadCountKey].pageCount
+        }
+      })
+    });
+  } else if (action.type === FETCH_ROAD_COUNT_SUCCESS) {
+    const { province, district, count, pageCount } = action;
+    const roadCountKey = getRoadCountKey(province, district);
+
+    return Object.assign({}, state, {
+      roadCount: Object.assign({}, state, {
+        [roadCountKey]: {
+          status: 'pending',
+          count: count,
+          pageCount: pageCount
+        }
+      })
+    });
+  } else if (action.type === FETCH_ROAD_COUNT_ERROR) {
+    const { province, district } = action;
+    const roadCountKey = getRoadCountKey(province, district);
+
+    return Object.assign({}, state, {
+      roadCount: Object.assign({}, state, {
+        [roadCountKey]: {
+          status: 'error',
+          count: undefined,
+          pageCount: undefined
+        }
       })
     });
   }
