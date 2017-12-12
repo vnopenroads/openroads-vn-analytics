@@ -7,7 +7,7 @@ import T from './t';
 
 const RoadTable = ({
   adminRoadProperties, adminRoads, fieldRoads,
-  sortField, sortOrder, sortColumnAction
+  sortOrder, sortColumnAction
 }) => (
   <div className='table'>
     <table>
@@ -17,7 +17,7 @@ const RoadTable = ({
           <ColumnHeader
             columnKey="id"
             label="VPRoMMS ID"
-            sortField={sortField}
+            sortField="id"
             sortOrder={sortOrder}
             sortColumnAction={sortColumnAction}
           />
