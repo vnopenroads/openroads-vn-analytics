@@ -52,7 +52,7 @@ const RoadTableContainer = compose(
   getContext({ language: React.PropTypes.string }),
   withRouter,
   local({
-    key: 'road-table',
+    key: ({ router: { params: { aaId = '', aaIdSub = '' } } }) => `road-table-${aaId}-${aaIdSub}`,
     createStore: () => createStore(reducer),
     mapDispatchToProps: (dispatch, { sortOrder }) => ({
       sortColumn: (sortOrder) => dispatch({ type: 'SORT_COLUMN', sortOrder }),
