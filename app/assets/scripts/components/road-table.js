@@ -4,15 +4,24 @@ import ColumnHeader from './road-table-column-header';
 import Row from '../containers/road-table-row-container';
 import CreateRoadForm from '../containers/create-road-form-container';
 import RoadPagination from './road-pagination';
+import RoadProgressBar from './road-progress-bar';
 import T from './t';
 
 
 const RoadTable = ({
-  adminRoadProperties, fieldRoads, roadsPage, roadPageCount, roadCountStatus, roadsPageStatus,
+  adminRoadProperties, fieldRoads, roadsPage, roadsPageStatus,
+  roadCount, roadPageCount, roadCountStatus,
   page, sortOrder,
   sortColumnAction, setPage
 }) => (
   <div>
+    {
+      roadCountStatus === 'complete' && roadCount > 0 &&
+        <RoadProgressBar
+          fieldCount={fieldRoads.length}
+          roadCount={roadCount}
+        />
+    }
     <CreateRoadForm />
 
     {roadsPageStatus === 'pending' ?
@@ -46,11 +55,14 @@ const RoadTable = ({
             </tbody>
           </table>
         </div>
-        <RoadPagination
-          page={page}
-          roadPageCount={roadPageCount}
-          setPage={setPage}
-        />
+        {
+          roadCountStatus === 'complete' &&
+            <RoadPagination
+              page={page}
+              roadPageCount={roadPageCount}
+              setPage={setPage}
+            />
+        }
       </div>
     }
   </div>
