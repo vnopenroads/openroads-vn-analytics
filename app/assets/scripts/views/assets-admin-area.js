@@ -9,7 +9,6 @@ import T from '../components/t';
 import { makeIdTest, getAdminId, getAdminName } from '../utils/admin-level';
 import { Link } from 'react-router';
 import c from 'classnames';
-import Paginator from '../components/paginator';
 import RoadTable from '../containers/road-table-container';
 import {
   fetchAdminInfo,
@@ -18,7 +17,6 @@ import {
   fetchAdminVProMMsProps,
   removeAdminVProMMsProps,
   removeFieldVProMMsIdsCount,
-  removeVProMMsIdsCount,
   removeFieldRoads,
   removeAdminInfo,
   removeCrosswalk,
@@ -26,10 +24,6 @@ import {
   setPreviousLocation,
   setSubAdminName
 } from '../actions/action-creators';
-import {
-  fetchAdminRoads,
-  removeAdminRoads
-} from '../redux/modules/adminRoads';
 import config from '../config';
 
 
@@ -41,8 +35,6 @@ var AssetsAA = React.createClass({
     _fetchAdminVProMMsProps: React.PropTypes.func,
     _fetchFieldRoads: React.PropTypes.func,
     _fetchAdminInfo: React.PropTypes.func,
-    _fetchAdminRoads: React.PropTypes.func,
-    _removeAdminRoads: React.PropTypes.func,
     _removeAdminInfo: React.PropTypes.func,
     _removeAdminVProMMsProps: React.PropTypes.func,
     _removeFieldVProMMsIdsCount: React.PropTypes.func,
@@ -103,7 +95,6 @@ var AssetsAA = React.createClass({
   clearAdminData: function () {
     this.props._removeAdminVProMMsProps();
     this.props._removeFieldRoads();
-    this.props._removeAdminRoads();
     this.props._removeFieldVProMMsIdsCount();
   },
 
@@ -115,7 +106,6 @@ var AssetsAA = React.createClass({
     const index = 0;
     this.props._fetchVProMMsIdsCount(level, idTest);
     this.props._fetchFieldRoads(idTest, level);
-    this.props._fetchAdminRoads(idTest, level, 20, index);
     this.props._fetchAdminVProMMsProps(idTest, level, 20, index);
     this.props._fetchAdminInfo(props.params.aaId);
     this.props._removeAdminInfo();
@@ -221,13 +211,11 @@ export default compose(
     }),
     dispatch => ({
       _fetchAdminVProMMsProps: (ids, level, limit, offset) => dispatch(fetchAdminVProMMsProps(ids, level, limit, offset)),
-      _fetchAdminRoads: (ids, level, limit, offset) => dispatch(fetchAdminRoads(ids, level, limit, offset)),
       _fetchFieldRoads: (idTest, level) => dispatch(fetchFieldRoads(idTest, level)),
       _fetchVProMMsIdsCount: (idTest, level) => dispatch(fetchVProMMsIdsCount(idTest, level)),
       _fetchAdminInfo: (id, level) => dispatch(fetchAdminInfo(id, level)),
       _removeAdminInfo: () => dispatch(removeAdminInfo()),
       _removeFieldRoads: () => dispatch(removeFieldRoads()),
-      _removeAdminRoads: () => dispatch(removeAdminRoads()),
       _removeCrosswalk: () => dispatch(removeCrosswalk()),
       _removeFieldVProMMsIdsCount: () => dispatch(removeFieldVProMMsIdsCount()),
       _removeAdminVProMMsProps: () => dispatch(removeAdminVProMMsProps()),
