@@ -61,7 +61,10 @@ const reducer = (
     });
   } else if (action.type === 'UPDATE_NEW_ROAD_ID') {
     return Object.assign({}, state, {
-      newRoadId: action.id
+      newRoadId: action.id,
+      formIsInvalid: false,
+      status: 'complete',
+      error: false
     });
   } else if (action.type === 'FORM_IS_INVALID') {
     return Object.assign({}, state, {

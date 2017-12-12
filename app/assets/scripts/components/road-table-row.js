@@ -78,40 +78,42 @@ const RowEditView = ({
       <form
         onSubmit={confirmEdit}
       >
-        <p>
-          <input
-            type="text"
-            value={newRoadId}
-            onChange={updateNewRoadId}
-          />
-          <button
-            className="button button--secondary-raised-dark"
-            onClick={confirmEdit}
-            disabled={newRoadId === '' || status === 'pending' || newRoadId === vpromm}
-          >
-            <T>Submit</T>
-          </button>
-          <button
-            className="button button--base-raised-light"
-            onClick={showReadView}
-          >
-            <T>Cancel</T>
-          </button>
+        <fieldset disabled={status === 'pending'}>
+          <p>
+            <input
+              type="text"
+              value={newRoadId}
+              onChange={updateNewRoadId}
+            />
+            <button
+              className="button button--secondary-raised-dark"
+              onClick={confirmEdit}
+              disabled={newRoadId === '' || status === 'pending' || newRoadId === vpromm}
+            >
+              <T>Submit</T>
+            </button>
+            <button
+              className="button button--base-raised-light"
+              onClick={showReadView}
+            >
+              <T>Cancel</T>
+            </button>
+            {
+              status === 'pending' && <T>Loading</T>
+            }
+          </p>
           {
-            status === 'pending' && <T>Loading</T>
+            formIsInvalid && <strong><T>Invalid Road Id</T></strong>
           }
-        </p>
-        {
-          formIsInvalid && <strong><T>Invalid Road Id</T></strong>
-        }
-        {
-          status === 'error' && error === '409' ?
-            <p className="invalid"><strong><T>Error</T></strong>: <T>Road</T> {newRoadId} <T>Already Exists</T></p> :
-          status === 'error' && error === 'Failed to fetch' ?
-            <p className="invalid"><strong><T>Error</T></strong>: <T>Connection Error</T></p> :
-          status === 'error' &&
-            <p className="invalid"><strong><T>Error</T></strong></p>
-        }
+          {
+            status === 'error' && error === '409' ?
+              <p className="invalid"><strong><T>Error</T></strong>: <T>Road</T> {newRoadId} <T>Already Exists</T></p> :
+            status === 'error' && error === 'Failed to fetch' ?
+              <p className="invalid"><strong><T>Error</T></strong>: <T>Connection Error</T></p> :
+            status === 'error' &&
+              <p className="invalid"><strong><T>Error</T></strong></p>
+          }
+        </fieldset>
       </form>
     </td>
   </tr>
@@ -130,12 +132,14 @@ const RowDeleteView = ({ vpromm, status, error, showReadView, confirmDelete }) =
         <button
           className="button button--secondary-raised-dark"
           onClick={confirmDelete}
+          disabled={status === 'pending'}
         >
           <T>Delete</T>
         </button>
         <button
           className="button button--base-raised-light"
           onClick={showReadView}
+          disabled={status === 'pending'}
         >
           <T>Cancel</T>
         </button>

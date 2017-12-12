@@ -16,28 +16,30 @@ const CreateRoadForm = ({
           id="create-new-road"
           onSubmit={submitForm}
         >
-          <input
-            type="text"
-            value={newRoadId}
-            placeholder={translate(language, 'New Road Id')}
-            onChange={updateNewRoadId}
-          />
-          <button
-            className="button button--secondary-raised-dark"
-            onClick={submitForm}
-            disabled={newRoadId === '' || status === 'pending'}
-          >
-            <T>Submit</T>
-          </button>
-          <button
-            className="button button--base-raised-light"
-            onClick={hideForm}
-          >
-            <T>Cancel</T>
-          </button>
-          {
-            status === 'pending' && <em><T>Loading</T></em>
-          }
+          <fieldset disabled={status === 'pending'}>
+            <input
+              type="text"
+              value={newRoadId}
+              placeholder={translate(language, 'New Road Id')}
+              onChange={updateNewRoadId}
+            />
+            <button
+              className="button button--secondary-raised-dark"
+              onClick={submitForm}
+              disabled={newRoadId === '' || status === 'pending'}
+            >
+              <T>Submit</T>
+            </button>
+            <button
+              className="button button--base-raised-light"
+              onClick={hideForm}
+            >
+              <T>Cancel</T>
+            </button>
+            {
+              status === 'pending' && <em><T>Loading</T></em>
+            }
+          </fieldset>
         </form>
         {
           formIsInvalid &&

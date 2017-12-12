@@ -69,6 +69,11 @@
   }
 
   .a-main__create-row {
+    fieldset {
+      border: none;
+      margin: 0;
+      padding: 0;
+    }
     button.create-new-road {
       color: #444;
       margin-bottom: 4px;
@@ -147,6 +152,11 @@
   
   .edit-row,
   .delete-row {
+    fieldset {
+      border: none;
+      margin: 0;
+      padding: 0;
+    }
     td {
       padding: 1rem 0.5rem;
     }
