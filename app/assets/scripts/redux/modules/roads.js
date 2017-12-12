@@ -20,7 +20,7 @@ export const roadIdIsValid = (id, province, district) => {
 };
 export const getRoadPageKey = (province = '', district = '', page, sortOrder) =>
   `${province}-${district}-${page}-${sortOrder}`;
-export const getRoadCountKey = (province, district) =>
+export const getRoadCountKey = (province = '', district = '') =>
   `${province}-${district}`;
 
 
@@ -221,12 +221,10 @@ export default (
     const roadCountKey = getRoadCountKey(province, district);
 
     return Object.assign({}, state, {
-      roadCount: Object.assign({}, state, {
-        [roadCountKey]: {
-          status: 'pending',
-          count: state.roadCount[roadCountKey] && state.roadCount[roadCountKey].count,
-          pageCount: state.roadCount[roadCountKey] && state.roadCount[roadCountKey].pageCount
-        }
+      roadCount: Object.assign({}, state.roadCount, {
+        [roadCountKey]: Object.assign({}, state.roadCount[roadCountKey] || {}, {
+          status: 'pending'
+        })
       })
     });
   } else if (action.type === FETCH_ROAD_COUNT_SUCCESS) {
@@ -234,9 +232,9 @@ export default (
     const roadCountKey = getRoadCountKey(province, district);
 
     return Object.assign({}, state, {
-      roadCount: Object.assign({}, state, {
+      roadCount: Object.assign({}, state.roadCount, {
         [roadCountKey]: {
-          status: 'pending',
+          status: 'complete',
           count: count,
           pageCount: pageCount
         }
@@ -247,7 +245,7 @@ export default (
     const roadCountKey = getRoadCountKey(province, district);
 
     return Object.assign({}, state, {
-      roadCount: Object.assign({}, state, {
+      roadCount: Object.assign({}, state.roadCount, {
         [roadCountKey]: {
           status: 'error',
           count: undefined,
