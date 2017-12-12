@@ -1,3 +1,6 @@
+import {
+  format
+} from 'url';
 import config from '../../config';
 
 
@@ -31,9 +34,11 @@ export const DELETE_ROAD_ERROR = 'DELETE_ROAD_ERROR';
 /**
  * actions
  */
-export const fetchRoads = (page) => ({ type: FETCH_ROADS, page });
-export const fetchRoadsSuccess = (roads) => ({ type: FETCH_ROADS, roads });
-export const fetchRoadsError = (error) => ({ type: FETCH_ROADS, error });
+export const fetchRoads = (province, district, page, sortOrder) => ({ type: FETCH_ROADS, page });
+export const fetchRoadsSuccess = (roads, province, district, page, sortOrder) =>
+  ({ type: FETCH_ROADS_SUCCESS, roads, province, district, page, sortOrder });
+export const fetchRoadsError = (error, province, district, page, sortOrder) =>
+  ({ type: FETCH_ROADS_ERROR, error, province, district, page, sortOrder });
 export const editRoad = (id, newId) => ({ type: EDIT_ROAD, id, newId });
 export const editRoadSuccess = (id, newId) => ({ type: EDIT_ROAD_SUCCESS, id, newId });
 export const editRoadError = (id, newId, error) => ({ type: EDIT_ROAD_ERROR, id, newId, error });
@@ -45,10 +50,12 @@ export const createRoadSuccess = () => ({ type: CREATE_ROAD_SUCCESS });
 export const createRoadError = (error) => ({ type: CREATE_ROAD_ERROR, error });
 
 
-export const fetchRoadsEpic = (page) => (dispatch) => {
-  dispatch(fetchRoads(page));
+export const fetchRoadsEpic = (province, district, page, sortOrder) => (dispatch) => {
+  dispatch(fetchRoads(province, district, page, sortOrder));
 
-  return fetch(`${config.api}/properties/roads`)
+  return fetch(
+    format({ pathname: `${config.api}/properties/roads`, query: { province, district, page, sortOrder } })
+  )
     .then(response => {
       if (!response.ok) {
         throw new Error(response.status);
@@ -56,8 +63,8 @@ export const fetchRoadsEpic = (page) => (dispatch) => {
 
       return response.json();
     })
-    .then((roads) => dispatch(fetchRoadsSuccess(roads)))
-    .catch((err) => dispatch(fetchRoadsError(err)));
+    .then((roads) => dispatch(fetchRoadsSuccess(roads, province, district, page, sortOrder)))
+    .catch((err) => dispatch(fetchRoadsError(err, province, district, page, sortOrder)));
 };
 
 
@@ -120,7 +127,7 @@ export const deleteRoadEpic = (id) => (dispatch) => {
  */
 export default (
   state = {
-    roads: []
+    roads: {}
   },
   action
 ) => {
