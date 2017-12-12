@@ -363,10 +363,15 @@ td.table-properties-cell-view-buttons {
   li {
     display: inline-block;
     margin-right: 0.5rem;
-  }
-}
 
-.a-paginator-nav {
-  margin: 0 auto;
-  margin-top: 1rem;
+    strong,
+    button {
+      padding: 4px 12px;
+      vertical-align: middle;
+    }
+
+    strong {
+      color: $secondary-color
+    }
+  }
 }

@@ -8,7 +8,8 @@ import T from './t';
 
 
 const RoadTable = ({
-  adminRoadProperties, fieldRoads, roadsPage, roadPageCount, roadCountStatus, roadsPageStatus, sortOrder,
+  adminRoadProperties, fieldRoads, roadsPage, roadPageCount, roadCountStatus, roadsPageStatus,
+  page, sortOrder,
   sortColumnAction, setPage
 }) => (
   <div>
@@ -46,6 +47,7 @@ const RoadTable = ({
           </table>
         </div>
         <RoadPagination
+          page={page}
           roadPageCount={roadPageCount}
           setPage={setPage}
         />
