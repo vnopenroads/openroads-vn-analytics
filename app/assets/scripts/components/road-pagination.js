@@ -34,7 +34,7 @@ const RoadPagination = ({
   <div className="a-paginator">
     <ul>
       {
-        range(start, end).map((page) => (
+        range(start, end + 1).map((page) => (
           <PageNumber
             key={page}
             page={page}
@@ -47,14 +47,14 @@ const RoadPagination = ({
     <button
       className="button button-base-light"
       onClick={previousPage}
-      disabled={currentPage === roadPageCount}
+      disabled={currentPage === 1}
     >
       <T>Previous</T>
     </button>
     <button
       className="button button-base-light"
       onClick={nextPage}
-      disabled={currentPage === 1}
+      disabled={currentPage === roadPageCount}
     >
       <T>Next</T>
     </button>
