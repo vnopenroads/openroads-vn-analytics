@@ -108,12 +108,6 @@ const reducer = (
 const TableRowContainer = compose(
   getContext({ language: React.PropTypes.string }),
   withRouter,
-  connect(
-    (state, { vpromm, router: { params: { aaId, aaIdSub } } }) => ({
-      province: state.crosswalk.province[aaId] && state.crosswalk.province[aaId].id,
-      district: state.crosswalk.district[aaIdSub] && state.crosswalk.district[aaIdSub]
-    })
-  ),
   local({
     key: ({ vpromm }) => `${vpromm}-table-row`,
     createStore: () => createStore(reducer),
@@ -140,6 +134,12 @@ const TableRowContainer = compose(
     filterGlobalActions: ({ type }) =>
       [EDIT_ROAD, EDIT_ROAD_SUCCESS, EDIT_ROAD_ERROR, DELETE_ROAD, DELETE_ROAD_SUCCESS, DELETE_ROAD_ERROR].indexOf(type) > -1
   }),
+  connect(
+    (state, { vpromm, router: { params: { aaId, aaIdSub } } }) => ({
+      province: state.crosswalk.province[aaId] && state.crosswalk.province[aaId].id,
+      district: state.crosswalk.district[aaIdSub] && state.crosswalk.district[aaIdSub]
+    })
+  ),
   withHandlers({
     toggleProperties: ({ shouldShowProperties, showProperties, hideProperties }) => () =>
       shouldShowProperties ? hideProperties() : showProperties(),

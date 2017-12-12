@@ -19,6 +19,7 @@ import {
 } from 'react-redux';
 import RoadTable from '../components/road-table';
 import {
+  getRoadPageKey,
   fetchRoadsEpic
 } from '../redux/modules/roads';
 
@@ -44,32 +45,52 @@ const reducer = (
 const RoadTableContainer = compose(
   getContext({ language: React.PropTypes.string }),
   withRouter,
-  connect(
-    (state, { vpromm, router: { params: { aaId, aaIdSub } } }) => ({
-      adminRoads: state.adminRoads.ids,
-      adminRoadProperties: state.VProMMsAdminProperties.data,
-      province: state.crosswalk.province[aaId] && state.crosswalk.province[aaId].id,
-      district: state.crosswalk.district[aaIdSub] && state.crosswalk.district[aaIdSub]
-    }),
-    (dispatch) => ({
-      fetchRoads: (province, district, page, sortOrder) => dispatch(fetchRoadsEpic(province, district, page, sortOrder))
-    })
-  ),
   local({
-    key: ({ vpromm }) => 'road-table',
+    key: 'road-table',
     createStore: () => createStore(reducer),
     mapDispatchToProps: (dispatch, { sortOrder }) => ({
       sortColumn: (sortOrder) => dispatch({ type: 'SORT_COLUMN', sortOrder })
     }),
     filterGlobalActions: ({ type }) => false
   }),
+  connect(
+    (state, { sortOrder, page, router: { params: { aaId, aaIdSub } } }) => {
+      const province = state.crosswalk.province[aaId] && state.crosswalk.province[aaId].id;
+      const district = state.crosswalk.district[aaIdSub] && state.crosswalk.district[aaIdSub];
+      const pageKey = getRoadPageKey(province, district, page, sortOrder);
+      const roadsPage = state.roads.roadsByPage[pageKey] && state.roads.roadsByPage[pageKey].roads;
+      const roadsPageStatus = state.roads.roadsByPage[pageKey] && state.roads.roadsByPage[pageKey].status;
+
+      return {
+        adminRoads: state.adminRoads.ids,
+        adminRoadProperties: state.VProMMsAdminProperties.data,
+        province,
+        district,
+        roadsPage,
+        roadsPageStatus
+      };
+    },
+    (dispatch) => ({
+      fetchRoads: (province, district, page, sortOrder) => dispatch(fetchRoadsEpic(province, district, page, sortOrder))
+    })
+  ),
   withHandlers({
     sortColumnAction: ({ sortOrder, sortColumn }) => (fieldId) => sortColumn(sortOrder === 'asc' ? 'desc' : 'asc')
   }),
   lifecycle({
     componentWillMount: function () {
-      const { province, district, sortOrder, fetchRoads } = this.props;
-      fetchRoads(province, district, 1, sortOrder);
+      const { roadsPage, roadsPageStatus, province, district, page, sortOrder, fetchRoads } = this.props;
+
+      if (!roadsPage && roadsPageStatus !== 'pending') {
+        fetchRoads(province, district, page, sortOrder);
+      }
+    },
+    componentWillReceiveProps: function (nextProps) {
+      const { roadsPage, roadsPageStatus, province, district, page, sortOrder, fetchRoads } = nextProps;
+
+      if (!roadsPage && roadsPageStatus !== 'pending') {
+        fetchRoads(province, district, page, sortOrder);
+      }
     }
   })
 )(RoadTable);

@@ -18,6 +18,8 @@ export const roadIdIsValid = (id, province, district) => {
     (!province || id.substring(0, 2) === province) &&
     (!district || id.substring(3, 5) === district);
 };
+export const getRoadPageKey = (province = '', district = '', page, sortOrder) =>
+  `${province}-${district}-${page}-${sortOrder}`;
 
 
 /**
@@ -147,12 +149,40 @@ export default (
   },
   action
 ) => {
-  if (action.type === FETCH_ROADS_SUCCESS) {
+  if (action.type === FETCH_ROADS) {
+    const { province, district, page, sortOrder } = action;
+    const pageKey = getRoadPageKey(province, district, page, sortOrder);
+
+    return Object.assign({}, state, {
+      roadsByPage: Object.assign({}, state.roadsByPage, {
+        [pageKey]: {
+          status: 'pending',
+          roads: state.roadsByPage[pageKey] ? state.roadsByPage[pageKey].roads : []
+        }
+      })
+    });
+  } else if (action.type === FETCH_ROADS_SUCCESS) {
     const { roadsById, roadsByPage, province, district, page, sortOrder } = action;
+    const pageKey = getRoadPageKey(province, district, page, sortOrder);
+
     return Object.assign({}, state, {
       roadsById: Object.assign({}, state.roadsById, roadsById),
       roadsByPage: Object.assign({}, state.roadsByPage, {
-        [`${province}-${district}-${page}-${sortOrder}`]: roadsByPage
+        [pageKey]: {
+          status: 'complete',
+          roads: roadsByPage
+        }
+      })
+    });
+  } else if (action.type === FETCH_ROADS_ERROR) {
+    const { province, district, page, sortOrder } = action;
+    const pageKey = getRoadPageKey(province, district, page, sortOrder);
+
+    return Object.assign({}, state, {
+      roadsByPage: Object.assign({}, state.roadsByPage, {
+        [pageKey]: Object.assign({}, state.roadsByPage[pageKey], {
+          status: 'error'
+        })
       })
     });
   }
