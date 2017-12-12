@@ -5,7 +5,6 @@ import _ from 'lodash';
 import * as actions from '../actions/action-types';
 import waytasks from './modules/tasks';
 import osmChange from './modules/osm';
-import adminRoads from './modules/adminRoads';
 import roads, {
   EDIT_ROAD_SUCCESS,
   DELETE_ROAD_SUCCESS
@@ -440,25 +439,6 @@ const fieldRoads = function (state = defaultFieldRoads, action) {
   return state;
 };
 
-const defaultPagination = {currentPage: 0, currentIndex: 0, limit: 0, pages: 0, clickedPage: 0};
-
-const pagination = function (state = defaultPagination, action) {
-  switch (action.type) {
-    case actions.SET_PAGINATION:
-      return action.json;
-    case actions.UPDATE_PAGINATION:
-      state = _.cloneDeep(state);
-      state.currentIndex = action.newIndex;
-      state.currentPage = action.newPage;
-      break;
-    case actions.UPDATE_PAGINATION_CLICKED_PAGE:
-      state = _.cloneDeep(state);
-      state.clickedPage = action.page;
-      break;
-  }
-  return state;
-};
-
 const previousLocation = function (state = {path: '/'}, action) {
   switch (action.type) {
     case actions.SET_PREVIOUS_LOCATION:
@@ -486,7 +466,6 @@ export default combineReducers({
   admins,
   adminInfo,
   adminBbox,
-  adminRoads,
   roads,
   fieldIdCount,
   waytasks,
@@ -505,7 +484,6 @@ export default combineReducers({
   VProMMSidSourceGeoJSON,
   fieldRoads,
   fieldVProMMsids,
-  pagination,
   previousLocation,
   subadminName
 });

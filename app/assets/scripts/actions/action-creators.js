@@ -534,32 +534,6 @@ export function removeCrosswalk () {
 }
 
 // ////////////////////////////////////////////////////////////////
-//                        PAGINATION                             //
-// ////////////////////////////////////////////////////////////////
-
-export function setPagination (paginationObject) {
-  return {
-    type: actions.SET_PAGINATION,
-    json: paginationObject
-  };
-}
-
-export function updatePagination (newIndex, newPage) {
-  return {
-    type: actions.UPDATE_PAGINATION,
-    newIndex: newIndex,
-    newPage: newPage
-  };
-}
-
-export function updateClickedPage (page) {
-  return {
-    type: actions.UPDATE_PAGINATION_CLICKED_PAGE,
-    page: page
-  };
-}
-
-// ////////////////////////////////////////////////////////////////
 //                           Location                            //
 // ////////////////////////////////////////////////////////////////
 
