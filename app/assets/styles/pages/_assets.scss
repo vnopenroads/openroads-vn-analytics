@@ -149,6 +149,15 @@
 
 .table {
   margin-bottom: 2rem;
+
+  .loading {
+    height: 300px;
+
+    h2 {
+      text-align: center;
+      margin: 6rem;
+    }
+  }
   
   .edit-row,
   .delete-row {

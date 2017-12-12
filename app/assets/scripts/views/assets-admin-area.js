@@ -12,7 +12,6 @@ import { Link } from 'react-router';
 import c from 'classnames';
 import Paginator from '../components/paginator';
 import RoadTable from '../containers/road-table-container';
-import CreateRoadForm from '../containers/create-road-form-container';
 import {
   fetchAdminInfo,
   fetchFieldRoads,
@@ -242,15 +241,8 @@ var AssetsAA = React.createClass({
           </div>
 
           <div>
-            {adminContent.total ?
-              <div>
-                <CreateRoadForm />
-                <RoadTable
-                  fieldRoads={this.props.fieldRoads}
-                />
-              </div> :
-              <div className='a-subnav'><h2>Loading Table</h2></div>
-            }
+            <RoadTable fieldRoads={this.props.fieldRoads} />
+
             {this.props.pagination.pages > 1 &&
               <Paginator
                 pagination={this.props.pagination}
