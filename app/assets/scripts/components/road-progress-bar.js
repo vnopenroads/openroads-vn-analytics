@@ -5,7 +5,7 @@ import {
 import T from './t';
 
 
-const RoadProgressBar = (({ percent, fieldCount, roadCount }) => (
+const RoadProgressBar = ({ percent, fieldCount, roadCount }) => (
   <div className='a-main__status'>
     <h2>
       <strong>{percent}</strong>
@@ -15,9 +15,11 @@ const RoadProgressBar = (({ percent, fieldCount, roadCount }) => (
       <div className='meter__internal' style={{width: `${percent}%`}}></div>
     </div>
   </div>
-));
+);
 
 
 export default withProps(({ fieldCount, roadCount }) => ({
-  percent: (fieldCount / roadCount).toFixed(2)
+  percent: roadCount === 0 ?
+    0 :
+    ((fieldCount / roadCount) * 100).toFixed(2)
 }))(RoadProgressBar);

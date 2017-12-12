@@ -6,7 +6,6 @@ import {
   getContext
 } from 'recompose';
 import T from '../components/t';
-import { makePaginationConfig } from '../utils/pagination';
 import { makeIdTest, getAdminId, getAdminName } from '../utils/admin-level';
 import { Link } from 'react-router';
 import c from 'classnames';
@@ -24,7 +23,6 @@ import {
   removeAdminInfo,
   removeCrosswalk,
   setCrossWalk,
-  setPagination,
   setPreviousLocation,
   setSubAdminName
 } from '../actions/action-creators';
@@ -47,12 +45,10 @@ var AssetsAA = React.createClass({
     _removeAdminRoads: React.PropTypes.func,
     _removeAdminInfo: React.PropTypes.func,
     _removeAdminVProMMsProps: React.PropTypes.func,
-    _removeVProMMsIdsCount: React.PropTypes.func,
     _removeFieldVProMMsIdsCount: React.PropTypes.func,
     _removeFieldRoads: React.PropTypes.func,
     _removeCrosswalk: React.PropTypes.func,
     _setCrossWalk: React.PropTypes.func,
-    _setPagination: React.PropTypes.func,
     _setPreviousLocation: React.PropTypes.func,
     _setSubAdminName: React.PropTypes.func,
     crosswalk: React.PropTypes.object,
@@ -65,8 +61,6 @@ var AssetsAA = React.createClass({
     adminInfoFetched: React.PropTypes.bool,
     location: React.PropTypes.object,
     VProMMsCount: React.PropTypes.array,
-    VProMMsCountFetched: React.PropTypes.bool,
-    pagination: React.PropTypes.object,
     history: React.PropTypes.object,
     previousLocation: React.PropTypes.string
   },
@@ -88,13 +82,6 @@ var AssetsAA = React.createClass({
   // use the aaId to get the initial field data
   componentWillReceiveProps: function (nextProps) {
     if (!this.props.crosswalkSet && nextProps.crosswalkSet) { this.getAdminData(nextProps); }
-    if (!this.props.VProMMsCountFetched && nextProps.VProMMsCountFetched) {
-      if (/explore/.test(nextProps.previousLocation) || /road/.test(nextProps.previousLocation)) { return; }
-      // when returning
-      const totalRoads = nextProps.VProMMsCount[0] ? nextProps.VProMMsCount[0].total_roads : 0;
-      const paginationConfig = makePaginationConfig(totalRoads, 20);
-      this.props._setPagination(paginationConfig);
-    }
     if (this.props.location.pathname !== nextProps.location.pathname) {
       const sameLanguage = (this.props.params.lang === nextProps.params.lang);
       const level = !this.props.params.aaIdSub ? 'province' : 'district';
@@ -118,7 +105,6 @@ var AssetsAA = React.createClass({
     this.props._removeFieldRoads();
     this.props._removeAdminRoads();
     this.props._removeFieldVProMMsIdsCount();
-    this.props._removeVProMMsIdsCount();
   },
 
   getAdminData: function (props) {
@@ -126,7 +112,7 @@ var AssetsAA = React.createClass({
     const ids = {aaId: props.params.aaId};
     if (level === 'district') { ids['aaIdSub'] = props.params.aaIdSub; }
     const idTest = makeIdTest(props.crosswalk, ids, level);
-    const index = (/explore/.test(props.previousLocation) || /road/.test(props.previousLocation)) ? ((props.pagination.clickedPage - 1) * props.pagination.limit) : 0;
+    const index = 0;
     this.props._fetchVProMMsIdsCount(level, idTest);
     this.props._fetchFieldRoads(idTest, level);
     this.props._fetchAdminRoads(idTest, level, 20, index);
@@ -141,40 +127,13 @@ var AssetsAA = React.createClass({
     return getAdminName(this.props.crosswalk, idFinder, level, this.props.adminInfo);
   },
 
-  makeAdminAssetsContent: function () {
-    const level = !this.props.params.aaIdSub ? 'province' : 'district';
-    const idFinder = (level === 'province') ? { aaId: this.props.params.aaId } : { aaIdSub: this.props.params.aaIdSub };
-    const id = getAdminId(this.props.crosswalk, idFinder, level);
-    // TOFIX: HAVE DISTRICT NAMES IN CROSSWALK
-    const total = this.props.VProMMsCount.length > 0 ? this.props.VProMMsCount[0].total_roads : 0;
-    const field = this.props.fieldRoads.length;
-    const completion = (total !== 0) ? ((field / total) * 100) : 0;
-
-    let completionMainText;
-    let completionTailText = <T>Information on VPRoMMS roads is not available</T>;
-
-    if (total !== 0) {
-      completionMainText = completion.toFixed(2);
-      completionTailText = <span>% <T>of VPRoMMS Ids have field data</T> <em>({field} / {total})</em></span>;
-    }
-
-    return {
-      level: level,
-      total: total,
-      completion: completion,
-      completionMainText: completionMainText,
-      completionTailText: completionTailText,
-      id: id,
-      name: name
-    };
-  },
-
-  renderAdminChildren: function (children, adminContent, level) {
-    if (adminContent.level === 'district') {
+  renderAdminChildren: function (children) {
+    if (this.props.params.aaIdSub) {
       return (
         <div/>
       );
     }
+
     if (this.props.adminInfoFetched) {
       const aaId = this.props.params.aaId;
       // ignore any children not in the crosswalk.
@@ -201,8 +160,6 @@ var AssetsAA = React.createClass({
   },
 
   renderAssetsAdmin: function () {
-    const adminContent = this.makeAdminAssetsContent();
-
     // There's no reason for this to be repeated from above,
     // but the admin-crosswalking logic is convoluted  so it was expedient.
     // This should be refactored out.
@@ -218,47 +175,27 @@ var AssetsAA = React.createClass({
           </div>
           {/* completion suggests data exists, in whcih case there is data available for download */}
           <div className='a-head-actions'>
-            {/* TODO, remove aaIdSub when sub admin dumps are made. */}
-            { adminContent.completion && !this.props.params.aaIdSub &&
-              <a
-                className='button button--secondary-raised-dark'
-                href={`${config.provinceDumpBaseUrl}${id}.csv`}
-              >
-                <T>Download Roads</T>
-              </a>
-            }
+            <a
+              className='button button--secondary-raised-dark'
+              href={`${config.provinceDumpBaseUrl}${id}.csv`}
+            >
+              <T>Download Roads</T>
+            </a>
           </div>
         </header>
         <div>
-          {/* commune (district child) lists are not rendered */}
-          { this.renderAdminChildren(this.props.adminInfo.children, adminContent) }
-
-          <div className='a-main__status'>
-            <h2><strong>{adminContent.completionMainText}</strong>{adminContent.completionTailText}</h2>
-            <div className='meter'>
-              <div className='meter__internal' style={{width: `${adminContent.completion}%`}}></div>
-            </div>
-          </div>
-
-          <div>
-            <RoadTable fieldRoads={this.props.fieldRoads} />
-
-            {this.props.pagination.pages > 1 &&
-              <Paginator
-                pagination={this.props.pagination}
-                crosswalk={this.props.crosswalk}
-                adminInfo={this.props.adminInfo}
-                params={this.props.params}
-              />
-            }
-          </div>
+          {
+            this.renderAdminChildren(this.props.adminInfo.children)
+          }
+          
+          <RoadTable fieldRoads={this.props.fieldRoads} />
         </div>
       </section>
     );
   },
 
   render: function () {
-    const roadsFetched = this.props.fieldFetched && this.props.VProMMsCountFetched;
+    const roadsFetched = this.props.fieldFetched;
 
     return (
       <div ref='a-admin-area' className='a-admin-area-show'>
@@ -280,8 +217,6 @@ export default compose(
       fieldRoads: state.fieldRoads.ids,
       fieldFetched: state.fieldRoads.fetched,
       VProMMsCount: state.roadIdCount.counts,
-      VProMMsCountFetched: state.roadIdCount.fetched,
-      pagination: state.pagination,
       previousLocation: state.previousLocation.path
     }),
     dispatch => ({
@@ -296,10 +231,8 @@ export default compose(
       _removeCrosswalk: () => dispatch(removeCrosswalk()),
       _removeFieldVProMMsIdsCount: () => dispatch(removeFieldVProMMsIdsCount()),
       _removeAdminVProMMsProps: () => dispatch(removeAdminVProMMsProps()),
-      _removeVProMMsIdsCount: () => dispatch(removeVProMMsIdsCount()),
       _setCrossWalk: () => dispatch(setCrossWalk()),
       _setPreviousLocation: (location) => dispatch(setPreviousLocation(location)),
-      _setPagination: (paginationConfig) => dispatch(setPagination(paginationConfig)),
       _setSubAdminName: (name) => dispatch(setSubAdminName(name))
     })
   )
