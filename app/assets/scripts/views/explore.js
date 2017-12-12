@@ -65,7 +65,7 @@ var Explore = React.createClass({
         'conflated',
         'line-color',
         lineColors['iri']
-      ).setFilter('conflated', ['has', 'or_vpromms']);
+      );
     });
   },
 

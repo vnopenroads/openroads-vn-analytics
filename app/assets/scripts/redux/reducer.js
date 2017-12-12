@@ -237,7 +237,7 @@ const fieldVProMMsids = function (state = defaultFieldVProMMsids, action) {
 
 const exploreMapDefaultState = {
   layer: 'iri',
-  showNoVpromms: false
+  showNoVpromms: true
 };
 const exploreMap = function (state = exploreMapDefaultState, action) {
   const newState = _.cloneDeep(state);
