@@ -1,6 +1,12 @@
 import {
   format
 } from 'url';
+import {
+  reduce,
+  map,
+  property,
+  omit
+} from 'lodash';
 import config from '../../config';
 
 
@@ -35,8 +41,8 @@ export const DELETE_ROAD_ERROR = 'DELETE_ROAD_ERROR';
  * actions
  */
 export const fetchRoads = (province, district, page, sortOrder) => ({ type: FETCH_ROADS, page });
-export const fetchRoadsSuccess = (roads, province, district, page, sortOrder) =>
-  ({ type: FETCH_ROADS_SUCCESS, roads, province, district, page, sortOrder });
+export const fetchRoadsSuccess = (roadsById, roadsByPage, province, district, page, sortOrder) =>
+  ({ type: FETCH_ROADS_SUCCESS, roadsById, roadsByPage, province, district, page, sortOrder });
 export const fetchRoadsError = (error, province, district, page, sortOrder) =>
   ({ type: FETCH_ROADS_ERROR, error, province, district, page, sortOrder });
 export const editRoad = (id, newId) => ({ type: EDIT_ROAD, id, newId });
@@ -63,7 +69,16 @@ export const fetchRoadsEpic = (province, district, page, sortOrder) => (dispatch
 
       return response.json();
     })
-    .then((roads) => dispatch(fetchRoadsSuccess(roads, province, district, page, sortOrder)))
+    .then((roads) => {
+      // normalize response
+      const roadsById = reduce(roads, (roadMap, road) => {
+        roadMap[road.id] = omit(road, ['id']);
+        return roadMap;
+      }, {});
+      const roadsByPage = map(roads, property('id'));
+
+      dispatch(fetchRoadsSuccess(roadsById, roadsByPage, province, district, page, sortOrder));
+    })
     .catch((err) => dispatch(fetchRoadsError(err, province, district, page, sortOrder)));
 };
 
@@ -127,13 +142,18 @@ export const deleteRoadEpic = (id) => (dispatch) => {
  */
 export default (
   state = {
-    roads: {}
+    roadsById: {},
+    roadsByPage: {}
   },
   action
 ) => {
   if (action.type === FETCH_ROADS_SUCCESS) {
+    const { roadsById, roadsByPage, province, district, page, sortOrder } = action;
     return Object.assign({}, state, {
-      roads: action.roads
+      roadsById: Object.assign({}, state.roadsById, roadsById),
+      roadsByPage: Object.assign({}, state.roadsByPage, {
+        [`${province}-${district}-${page}-${sortOrder}`]: roadsByPage
+      })
     });
   }
 
