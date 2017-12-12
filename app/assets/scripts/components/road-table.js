@@ -49,7 +49,6 @@ const RoadTable = ({
                 key={vpromm}
                 vpromm={vpromm}
                 adminRoadProperties={adminRoadProperties}
-                vprommFieldInDB={fieldRoads.includes(vpromm)}
               />
             ))}
           </tbody>
@@ -69,6 +68,7 @@ const RoadTable = ({
 
 
 RoadTable.propTypes = {
+  fieldRoads: React.PropTypes.array,
   roadsPage: React.PropTypes.array,
   roadPageCount: React.PropTypes.number
 };

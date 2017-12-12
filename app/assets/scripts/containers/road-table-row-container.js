@@ -137,7 +137,8 @@ const TableRowContainer = compose(
   connect(
     (state, { vpromm, router: { params: { aaId, aaIdSub } } }) => ({
       province: state.crosswalk.province[aaId] && state.crosswalk.province[aaId].id,
-      district: state.crosswalk.district[aaIdSub] && state.crosswalk.district[aaIdSub]
+      district: state.crosswalk.district[aaIdSub] && state.crosswalk.district[aaIdSub],
+      hasOSMData: state.roads.roadsById[vpromm] && state.roads.roadsById[vpromm].hasOSMData
     })
   ),
   withHandlers({

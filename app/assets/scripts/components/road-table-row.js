@@ -9,7 +9,7 @@ import RowProperties from './road-table-row-properties';
 
 const RowReadView = ({
   vpromm, adminRoadProperties,
-  vprommFieldInDB, language, shouldShowProperties,
+  hasOSMData, language, shouldShowProperties,
   toggleProperties, showDeleteView, showEditView
 }) => {
   return (
@@ -29,15 +29,15 @@ const RowReadView = ({
         />
       </td>
       <td>
-        {vprommFieldInDB ?
+        {hasOSMData ?
           <Link to={`/${language}/explore`}>
             <strong>{vpromm}</strong>
           </Link> :
           vpromm
         }
       </td>
-      <td className={vprommFieldInDB ? 'added' : 'not-added'}>
-        { vprommFieldInDB &&
+      <td className={hasOSMData ? 'added' : 'not-added'}>
+        {hasOSMData &&
           <div className='a-table-actions'>
             <Link
               className='a-table-action'
