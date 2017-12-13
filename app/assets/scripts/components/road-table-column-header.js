@@ -3,13 +3,13 @@ import {
   withHandlers
 } from 'recompose';
 import classnames from 'classnames';
-import T from './t';
 
 
 const TableColumnHeader = ({
-  columnKey, label, sortField, sortOrder, sortColumnAction
+  columnKey, sortField, sortOrder, children, sortColumnAction
 }) => (
   <th
+    className='table-properties-head sortable'
     onClick={sortColumnAction}
   >
     <i
@@ -19,13 +19,12 @@ const TableColumnHeader = ({
         'collecticon-sort-desc': sortField === columnKey && sortOrder === 'desc'
       })}
     />
-    <T>{label}</T>
+    {children}
   </th>
 );
 
 TableColumnHeader.propTypes = {
   columnKey: React.PropTypes.string.isRequired,
-  label: React.PropTypes.string.isRequired,
   sortField: React.PropTypes.string.isRequired,
   sortOrder: React.PropTypes.string.isRequired,
   sortColumnAction: React.PropTypes.func.isRequired

@@ -271,7 +271,7 @@ export default compose(
       admins: state.admins.units,
       vpromms: state.fieldVProMMsids.ids,
       filteredVProMMs: state.setFilteredVProMMs,
-      fetching: state.VProMMSids.fetching || state.admins.fetching
+      fetching: state.admins.fetching
     }),
     dispatch => ({
       _fetchFieldVProMMsIds: (...args) => dispatch(fetchFieldVProMMsIds(...args)),

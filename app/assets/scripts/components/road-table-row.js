@@ -8,8 +8,7 @@ import RowProperties from './road-table-row-properties';
 
 
 const RowReadView = ({
-  vpromm, adminRoadProperties,
-  vprommFieldInDB, language, shouldShowProperties,
+  vpromm, properties, hasOSMData, language, shouldShowProperties,
   toggleProperties, showDeleteView, showEditView
 }) => {
   return (
@@ -28,16 +27,18 @@ const RowReadView = ({
           onClick={showEditView}
         />
       </td>
+
       <td>
-        {vprommFieldInDB ?
+        {hasOSMData ?
           <Link to={`/${language}/explore`}>
             <strong>{vpromm}</strong>
           </Link> :
           vpromm
         }
       </td>
-      <td className={vprommFieldInDB ? 'added' : 'not-added'}>
-        { vprommFieldInDB &&
+
+      <td className={hasOSMData ? 'added' : 'not-added'}>
+        {hasOSMData &&
           <div className='a-table-actions'>
             <Link
               className='a-table-action'
@@ -54,12 +55,27 @@ const RowReadView = ({
           </div>
         }
       </td>
-      <RowProperties
-        vpromm={vpromm}
-        adminRoadProperties={adminRoadProperties}
-        shouldShowProperties={shouldShowProperties}
-        toggleProperties={toggleProperties}
-      />
+
+      <td className='table-properties-cell'>
+        {
+          properties.length !== 0 &&
+            <div>
+              <button
+                type='button'
+                className={`button-table-expand ${shouldShowProperties ? 'button-table-expand--show' : 'button-table-expand--hide'}`}
+                onClick={toggleProperties}
+              >
+                <span>{shouldShowProperties ? <T>Hide</T> : <T>Show</T>}</span>
+              </button>
+              {
+                shouldShowProperties &&
+                  <RowProperties
+                    properties={properties}
+                  />
+              }
+            </div>
+          }
+      </td>
     </tr>
   );
 };
@@ -171,5 +187,20 @@ const TableRow = (props) => {
 TableRow.propTypes = {
   viewState: React.PropTypes.string.isRequired
 };
+
+
+export const TableErrorRow = () => (
+  <tr
+    className="error-row"
+  >
+    <td/>
+    <td
+      colSpan="3"
+    >
+      <p className="invalid"><strong><T>Error</T></strong></p>
+    </td>
+  </tr>
+);
+
 
 export default TableRow;
