@@ -13,8 +13,6 @@ import RoadTable from '../containers/road-table-container';
 import {
   fetchAdminInfo,
   fetchFieldRoads,
-  fetchAdminVProMMsProps,
-  removeAdminVProMMsProps,
   removeFieldRoads,
   removeAdminInfo,
   removeCrosswalk,
@@ -29,11 +27,9 @@ var AssetsAA = React.createClass({
   displayName: 'AssetsAA',
 
   propTypes: {
-    _fetchAdminVProMMsProps: React.PropTypes.func,
     _fetchFieldRoads: React.PropTypes.func,
     _fetchAdminInfo: React.PropTypes.func,
     _removeAdminInfo: React.PropTypes.func,
-    _removeAdminVProMMsProps: React.PropTypes.func,
     _removeFieldRoads: React.PropTypes.func,
     _removeCrosswalk: React.PropTypes.func,
     _setCrossWalk: React.PropTypes.func,
@@ -88,7 +84,6 @@ var AssetsAA = React.createClass({
   },
 
   clearAdminData: function () {
-    this.props._removeAdminVProMMsProps();
     this.props._removeFieldRoads();
   },
 
@@ -97,9 +92,7 @@ var AssetsAA = React.createClass({
     const ids = {aaId: props.params.aaId};
     if (level === 'district') { ids['aaIdSub'] = props.params.aaIdSub; }
     const idTest = makeIdTest(props.crosswalk, ids, level);
-    const index = 0;
     this.props._fetchFieldRoads(idTest, level);
-    this.props._fetchAdminVProMMsProps(idTest, level, 20, index);
     this.props._fetchAdminInfo(props.params.aaId);
     this.props._removeAdminInfo();
   },
@@ -170,7 +163,7 @@ var AssetsAA = React.createClass({
           {
             this.renderAdminChildren(this.props.adminInfo.children)
           }
-          
+
           <RoadTable fieldRoads={this.props.fieldRoads} />
         </div>
       </section>
@@ -202,13 +195,11 @@ export default compose(
       previousLocation: state.previousLocation.path
     }),
     dispatch => ({
-      _fetchAdminVProMMsProps: (ids, level, limit, offset) => dispatch(fetchAdminVProMMsProps(ids, level, limit, offset)),
       _fetchFieldRoads: (idTest, level) => dispatch(fetchFieldRoads(idTest, level)),
       _fetchAdminInfo: (id, level) => dispatch(fetchAdminInfo(id, level)),
       _removeAdminInfo: () => dispatch(removeAdminInfo()),
       _removeFieldRoads: () => dispatch(removeFieldRoads()),
       _removeCrosswalk: () => dispatch(removeCrosswalk()),
-      _removeAdminVProMMsProps: () => dispatch(removeAdminVProMMsProps()),
       _setCrossWalk: () => dispatch(setCrossWalk()),
       _setPreviousLocation: (location) => dispatch(setPreviousLocation(location)),
       _setSubAdminName: (name) => dispatch(setSubAdminName(name))

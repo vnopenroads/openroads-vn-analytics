@@ -75,7 +75,6 @@ const RoadTableContainer = compose(
       const roadCountStatus = state.roads.roadCount[roadCountKey] && state.roads.roadCount[roadCountKey].status;
 
       return {
-        adminRoadProperties: state.VProMMsAdminProperties.data,
         province,
         district,
         roadsPage,

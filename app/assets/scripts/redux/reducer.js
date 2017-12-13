@@ -168,47 +168,6 @@ const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
   return state;
 };
 
-const defaultVProMMsAdminProperties = {
-  fetching: false,
-  fetched: false,
-  data: []
-};
-
-const VProMMsAdminProperties = function (state = defaultVProMMsAdminProperties, action) {
-  switch (action.type) {
-    case actions.REQUEST_ADMIN_VPROMMS_PROPERTIES:
-      state = _.cloneDeep(state);
-      state.fetching = true;
-      break;
-    case actions.RECEIVE_ADMIN_VPROMMS_PROPERTIES:
-      state = _.cloneDeep(state);
-      state.fetching = false;
-      state.fetched = true;
-      state.data = action.json;
-      break;
-    case actions.REMOVE_ADMIN_VPROMMS_PROPERTIES:
-      state = defaultVProMMsAdminProperties;
-      break;
-    case EDIT_ROAD_SUCCESS:
-      console.log('update road properties');
-
-      return Object.assign({}, state, {
-        data: state.data
-          .map(road => {
-            console.log('update road properties id', action.id, action.newId);
-            return road.id === action.id ?
-              { id: action.newId, properties: road.properties } :
-              road;
-          })
-      });
-    case DELETE_ROAD_SUCCESS:
-      return Object.assign({}, state, {
-        ids: state.data.filter(({ id }) => id !== action.id)
-      });
-  }
-  return state;
-};
-
 const defaultFieldVProMMsids = {
   fetching: false,
   fetched: false,
@@ -480,7 +439,6 @@ export default combineReducers({
   setFilteredVProMMs,
   VProMMSids,
   VProMMsWayBbox,
-  VProMMsAdminProperties,
   VProMMSidSourceGeoJSON,
   fieldRoads,
   fieldVProMMsids,

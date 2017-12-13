@@ -392,48 +392,6 @@ export function removeFieldRoads () {
   };
 }
 
-function requestAdminVProMMsProps () {
-  return {
-    type: actions.REQUEST_ADMIN_VPROMMS_PROPERTIES
-  };
-}
-
-function receiveAdminVProMMsProps (json) {
-  return {
-    type: actions.RECEIVE_ADMIN_VPROMMS_PROPERTIES,
-    json: json
-  };
-}
-
-export function fetchAdminVProMMsProps (json, level, limit, offset) {
-  return function (dispatch) {
-    dispatch(requestAdminVProMMsProps());
-    let url = `${config.api}/admin/roads/properties?province=${json[0]}`;
-    if (level === 'district') {
-      url = `${url}&district=${json[1]}`;
-    }
-    if (offset) {
-      url = `${url}&offset=${offset}`;
-    }
-    if (limit) {
-      url = `${url}&limit=${limit}`;
-    }
-    return fetch(url)
-    .then(response => response.json())
-    .then(json => {
-      if (json.statusCode >= 400) {
-        throw new Error('Bad Request');
-      }
-      dispatch(receiveAdminVProMMsProps(json));
-    });
-  };
-}
-
-export function removeAdminVProMMsProps () {
-  return {
-    type: actions.REMOVE_ADMIN_VPROMMS_PROPERTIES
-  };
-}
 
 // ////////////////////////////////////////////////////////////////
 //                             Search                            //

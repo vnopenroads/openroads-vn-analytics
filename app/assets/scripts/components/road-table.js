@@ -9,7 +9,7 @@ import T from './t';
 
 
 const RoadTable = ({
-  adminRoadProperties, fieldRoads, roadsPage, roadsPageStatus,
+  fieldRoads, roadsPage, roadsPageStatus,
   roadCount, roadPageCount, roadCountStatus,
   page, sortOrder,
   sortColumnAction, setPage
@@ -48,7 +48,6 @@ const RoadTable = ({
               <Row
                 key={vpromm}
                 vpromm={vpromm}
-                adminRoadProperties={adminRoadProperties}
               />
             ))}
           </tbody>
