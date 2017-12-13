@@ -9,8 +9,8 @@ import T from './t';
 
 
 const RoadTable = ({
-  fieldRoads, roadsPage, roadsPageStatus,
-  roadCount, roadPageCount, roadCountStatus,
+  roadsPage, roadsPageStatus,
+  roadCount, roadPageCount, roadOsmCount, roadCountStatus,
   page, sortOrder,
   sortColumnAction, setPage
 }) => (
@@ -18,7 +18,7 @@ const RoadTable = ({
     {
       roadCountStatus === 'complete' && roadCount > 0 &&
         <RoadProgressBar
-          fieldCount={fieldRoads.length}
+          roadOsmCount={roadOsmCount}
           roadCount={roadCount}
         />
     }
@@ -67,7 +67,6 @@ const RoadTable = ({
 
 
 RoadTable.propTypes = {
-  fieldRoads: React.PropTypes.array,
   roadsPage: React.PropTypes.array,
   roadPageCount: React.PropTypes.number
 };

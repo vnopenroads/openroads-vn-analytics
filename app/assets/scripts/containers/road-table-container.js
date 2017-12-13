@@ -72,6 +72,7 @@ const RoadTableContainer = compose(
       const roadCountKey = getRoadCountKey(province, district);
       const roadCount = state.roads.roadCount[roadCountKey] && state.roads.roadCount[roadCountKey].count;
       const roadPageCount = state.roads.roadCount[roadCountKey] && state.roads.roadCount[roadCountKey].pageCount;
+      const roadOsmCount = state.roads.roadCount[roadCountKey] && state.roads.roadCount[roadCountKey].osmCount;
       const roadCountStatus = state.roads.roadCount[roadCountKey] && state.roads.roadCount[roadCountKey].status;
 
       return {
@@ -81,6 +82,7 @@ const RoadTableContainer = compose(
         roadsPageStatus,
         roadCount,
         roadPageCount,
+        roadOsmCount,
         roadCountStatus
       };
     },

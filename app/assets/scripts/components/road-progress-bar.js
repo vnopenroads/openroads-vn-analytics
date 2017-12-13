@@ -5,11 +5,11 @@ import {
 import T from './t';
 
 
-const RoadProgressBar = ({ percent, fieldCount, roadCount }) => (
+const RoadProgressBar = ({ percent, roadOsmCount, roadCount }) => (
   <div className='a-main__status'>
     <h2>
       <strong>{percent}</strong>
-      <span>% <T>of VPRoMMS Ids have field data</T> <em>({fieldCount} / {roadCount})</em></span>
+      <span>% <T>of VPRoMMS Ids have field data</T> <em>({roadOsmCount} / {roadCount})</em></span>
     </h2>
     <div className='meter'>
       <div className='meter__internal' style={{width: `${percent}%`}}></div>
@@ -18,8 +18,8 @@ const RoadProgressBar = ({ percent, fieldCount, roadCount }) => (
 );
 
 
-export default withProps(({ fieldCount, roadCount }) => ({
+export default withProps(({ roadOsmCount = 0, roadCount }) => ({
   percent: roadCount === 0 ?
     0 :
-    ((fieldCount / roadCount) * 100).toFixed(2)
+    ((roadOsmCount / roadCount) * 100).toFixed(2)
 }))(RoadProgressBar);
