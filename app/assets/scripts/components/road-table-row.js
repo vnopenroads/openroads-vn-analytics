@@ -172,4 +172,19 @@ TableRow.propTypes = {
   viewState: React.PropTypes.string.isRequired
 };
 
+
+export const TableErrorRow = () => (
+  <tr
+    className="error-row"
+  >
+    <td/>
+    <td
+      colSpan="3"
+    >
+      <p className="invalid"><strong><T>Error</T></strong></p>
+    </td>
+  </tr>
+);
+
+
 export default TableRow;

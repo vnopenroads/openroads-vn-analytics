@@ -2,6 +2,9 @@ import React from 'react';
 import {
   compose,
   getContext,
+  branch,
+  renderComponent,
+  withProps,
   withHandlers
 } from 'recompose';
 import {
@@ -10,7 +13,9 @@ import {
 import { connect } from 'react-redux';
 import { local } from 'redux-fractal';
 import { createStore } from 'redux';
-import TableRow from '../components/road-table-row';
+import TableRow, {
+  TableErrorRow
+} from '../components/road-table-row';
 import {
   EDIT_ROAD,
   EDIT_ROAD_SUCCESS,
@@ -136,11 +141,24 @@ const TableRowContainer = compose(
   }),
   connect(
     (state, { vpromm, router: { params: { aaId, aaIdSub } } }) => ({
-      province: state.crosswalk.province[aaId] && state.crosswalk.province[aaId].id,
-      district: state.crosswalk.district[aaIdSub] && state.crosswalk.district[aaIdSub],
-      hasOSMData: state.roads.roadsById[vpromm] && state.roads.roadsById[vpromm].hasOSMData
+      province: state.crosswalk.province[aaId].id,
+      district: state.crosswalk.district[aaIdSub],
+      road: state.roads.roadsById[vpromm]
     })
   ),
+  /**
+   * If road does not exist in the redux store, something went wrong in the fetching/deserialization
+   * of the roads redux subtree.
+   * see redux/modules/roads.js#fetchRoadsEpic
+   */
+  branch(
+    ({ road }) => !road,
+    renderComponent(TableErrorRow)
+  ),
+  withProps(({ road }) => ({
+    properties: road.properties,
+    hasOSMData: road.hasOSMData
+  })),
   withHandlers({
     toggleProperties: ({ shouldShowProperties, showProperties, hideProperties }) => () =>
       shouldShowProperties ? hideProperties() : showProperties(),
