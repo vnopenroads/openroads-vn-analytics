@@ -64,7 +64,7 @@ const RoadPagination = ({
 
 export default compose(
   withProps(({ page, roadPageCount }) => {
-    const start = Math.max(page - 2, 1);
+    const start = Math.max(page - 10, 1);
     const end = Math.min(start + 10, roadPageCount);
     return { start, end };
   }),

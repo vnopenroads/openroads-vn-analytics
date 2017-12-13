@@ -14,7 +14,7 @@ const RoadTable = ({
   page, sortOrder,
   sortColumnAction, setPage
 }) => (
-  <div>
+  <div className="table-container">
     {
       roadCountStatus === 'complete' && roadCount > 0 &&
         <RoadProgressBar

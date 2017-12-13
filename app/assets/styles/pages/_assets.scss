@@ -147,42 +147,46 @@
 
 // Tables
 
-.table {
-  margin-bottom: 2rem;
-
+.table-container {
   .loading {
-    height: 300px;
+    height: 1077px;
+    border: 1px solid rgb(220, 220, 220);;
+    border-radius: $base-border-radius;
+    margin-bottom: 10rem;
 
     h2 {
       text-align: center;
       margin: 6rem;
     }
   }
-  
-  .edit-row,
-  .delete-row {
-    fieldset {
-      border: none;
-      margin: 0;
-      padding: 0;
-    }
-    td {
-      padding: 1rem 0.5rem;
-    }
-    p {
-      margin-bottom: 0;
-    }
-    p.invalid {
-      color: $secondary-color;
-      margin-top: 12px;
-    }
-    button {
-      margin: 0 8px;
-      padding: 2px 12px;
-      &[disabled],
-      &:disabled {
-        background-color: lighten($secondary-color, 20);
-        cursor: not-allowed;
+  .table {
+    margin-bottom: 2rem;
+    
+    .edit-row,
+    .delete-row {
+      fieldset {
+        border: none;
+        margin: 0;
+        padding: 0;
+      }
+      td {
+        padding: 1rem 0.5rem;
+      }
+      p {
+        margin-bottom: 0;
+      }
+      p.invalid {
+        color: $secondary-color;
+        margin-top: 12px;
+      }
+      button {
+        margin: 0 8px;
+        padding: 2px 12px;
+        &[disabled],
+        &:disabled {
+          background-color: lighten($secondary-color, 20);
+          cursor: not-allowed;
+        }
       }
     }
   }
