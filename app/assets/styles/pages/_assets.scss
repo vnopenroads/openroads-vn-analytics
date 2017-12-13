@@ -69,6 +69,11 @@
   }
 
   .a-main__create-row {
+    fieldset {
+      border: none;
+      margin: 0;
+      padding: 0;
+    }
     button.create-new-road {
       color: #444;
       margin-bottom: 4px;
@@ -147,10 +152,20 @@
   
   .edit-row,
   .delete-row {
-    height: 4rem;
-
+    fieldset {
+      border: none;
+      margin: 0;
+      padding: 0;
+    }
+    td {
+      padding: 1rem 0.5rem;
+    }
     p {
       margin-bottom: 0;
+    }
+    p.invalid {
+      color: $secondary-color;
+      margin-top: 12px;
     }
     button {
       margin: 0 8px;
@@ -203,11 +218,6 @@ td.table-properties-cell-view-buttons {
   margin: ($global-spacing / 2) 0 0 0;
   opacity: 1;
   // transition: opacity 0.24s ease-in-out, max-height 0.24s ease-in-out;
-}
-
-.table-properties--hidden {
-  max-height: 0;
-  opacity: 0;
 }
 
 .button-table-expand {

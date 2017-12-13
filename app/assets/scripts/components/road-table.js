@@ -1,18 +1,11 @@
-// TODO generalize sort tables to accept arbitrary columns and attributes
-// (combine aa-table-index.js and aa-table-vromms.js into single component)
 import React from 'react';
-import {
-  compose,
-  withStateHandlers
-} from 'recompose';
-import { connect } from 'react-redux';
 import _ from 'lodash';
-import AATableColumnHeader from './aa-table-vpromms-column-header';
-import AATableRow from './aa-table-vpromms-row';
+import ColumnHeader from './road-table-column-header';
+import Row from '../containers/road-table-row-container';
 import T from './t';
 
 
-const AATable = ({
+const RoadTable = ({
   adminRoadProperties, data, fieldRoads,
   sortField, sortOrder, sortColumnAction
 }) => (
@@ -21,7 +14,7 @@ const AATable = ({
       <thead>
         <tr>
           <th className="table-properties-head button-column" />
-          <AATableColumnHeader
+          <ColumnHeader
             columnKey="id"
             label="VPRoMMS ID"
             sortField={sortField}
@@ -36,7 +29,7 @@ const AATable = ({
         {_.map(
           _.orderBy(data, _.identity, [sortOrder]),
           (vpromm) => (
-            <AATableRow
+            <Row
               key={vpromm}
               vpromm={vpromm}
               adminRoadProperties={adminRoadProperties}
@@ -50,7 +43,7 @@ const AATable = ({
 );
 
 
-AATable.propTypes = {
+RoadTable.propTypes = {
   data: React.PropTypes.array,
   fieldRoads: React.PropTypes.array,
   language: React.PropTypes.string,
@@ -58,21 +51,4 @@ AATable.propTypes = {
 };
 
 
-export default compose(
-  connect(
-    state => ({
-      fieldIds: state.fieldVProMMsids.ids,
-      adminRoadProperties: state.VProMMsAdminProperties.data
-    })
-  ),
-  withStateHandlers(
-    { sortField: 'id', sortOrder: 'asc' },
-    {
-      sortColumnAction: ({ sortField, sortOrder }) => (field) => (
-        sortField === field ?
-          { sortOrder: sortOrder === 'asc' ? 'desc' : 'asc' } :
-          { sortField: field, sortOrder: 'asc' }
-      )
-    }
-  )
-)(AATable);
+export default RoadTable;

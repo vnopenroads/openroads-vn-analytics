@@ -11,8 +11,8 @@ import { makeIdTest, getAdminId, getAdminName } from '../utils/admin-level';
 import { Link } from 'react-router';
 import c from 'classnames';
 import Paginator from '../components/paginator';
-import AATable from '../components/aa-table-vpromms';
-import CreateRoadForm from '../components/create-road-form';
+import RoadTable from '../containers/road-table-container';
+import CreateRoadForm from '../containers/create-road-form-container';
 import {
   fetchAdminInfo,
   fetchFieldRoads,
@@ -247,7 +247,7 @@ var AssetsAA = React.createClass({
             {adminContent.total && this.props.adminRoadProperties ?
               <div>
                 <CreateRoadForm />
-                <AATable
+                <RoadTable
                   data={this.props.adminRoads}
                   fieldRoads={this.props.fieldRoads}
                   propertiesData={this.props.adminRoadProperties}
