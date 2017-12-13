@@ -5,10 +5,7 @@ import _ from 'lodash';
 import * as actions from '../actions/action-types';
 import waytasks from './modules/tasks';
 import osmChange from './modules/osm';
-import roads, {
-  EDIT_ROAD_SUCCESS,
-  DELETE_ROAD_SUCCESS
-} from './modules/roads';
+import roads from './modules/roads';
 import { ADMIN_MAP } from '../constants';
 
 

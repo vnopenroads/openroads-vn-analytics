@@ -1,8 +1,5 @@
 import React from 'react';
 import {
-  connect
-} from 'react-redux';
-import {
   withRouter
 } from 'react-router';
 import { local } from 'redux-fractal';
@@ -10,6 +7,7 @@ import { createStore } from 'redux';
 import {
   compose,
   getContext,
+  withProps,
   withHandlers
 } from 'recompose';
 import {
@@ -20,6 +18,9 @@ import {
   roadIdIsValid
 } from '../redux/modules/roads';
 import CreateRoadForm from '../components/create-road-form';
+import {
+  ADMIN_MAP
+} from '../constants';
 
 
 const reducer = (
@@ -80,12 +81,6 @@ const reducer = (
 const CreateRoadFormContainer = compose(
   getContext({ language: React.PropTypes.string }),
   withRouter,
-  connect(
-    (state, { router: { params: { aaId, aaIdSub } } }) => ({
-      province: state.crosswalk.province[aaId] && state.crosswalk.province[aaId].id,
-      district: state.crosswalk.district[aaIdSub] && state.crosswalk.district[aaIdSub]
-    })
-  ),
   local({
     key: 'create-road-form',
     createStore: () => createStore(reducer),
@@ -101,6 +96,10 @@ const CreateRoadFormContainer = compose(
     }),
     filterGlobalActions: ({ type }) => [CREATE_ROAD, CREATE_ROAD_SUCCESS, CREATE_ROAD_ERROR].indexOf(type) > -1
   }),
+  withProps(({ router: { params: { aaId, aaIdSub } } }) => ({
+    province: ADMIN_MAP.province[aaId] && ADMIN_MAP.province[aaId].id,
+    district: ADMIN_MAP.district[aaIdSub]
+  })),
   withHandlers({
     submitForm: ({ newRoadId, province, district, invalidateForm, createRoad }) => (e) => {
       e.preventDefault();

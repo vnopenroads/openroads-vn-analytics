@@ -27,6 +27,9 @@ import {
   editRoadEpic,
   deleteRoadEpic
 } from '../redux/modules/roads';
+import {
+  ADMIN_MAP
+} from '../constants';
 
 
 const reducer = (
@@ -139,10 +142,12 @@ const TableRowContainer = compose(
     filterGlobalActions: ({ type }) =>
       [EDIT_ROAD, EDIT_ROAD_SUCCESS, EDIT_ROAD_ERROR, DELETE_ROAD, DELETE_ROAD_SUCCESS, DELETE_ROAD_ERROR].indexOf(type) > -1
   }),
+  withProps(({ router: { params: { aaId, aaIdSub } } }) => ({
+    province: ADMIN_MAP.province[aaId] && ADMIN_MAP.province[aaId].id,
+    district: ADMIN_MAP.district[aaIdSub]
+  })),
   connect(
-    (state, { vpromm, router: { params: { aaId, aaIdSub } } }) => ({
-      province: state.crosswalk.province[aaId].id,
-      district: state.crosswalk.district[aaIdSub],
+    (state, { vpromm }) => ({
       road: state.roads.roadsById[vpromm]
     })
   ),

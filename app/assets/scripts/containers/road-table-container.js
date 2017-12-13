@@ -5,6 +5,7 @@ import {
 import {
   compose,
   getContext,
+  withProps,
   withHandlers,
   lifecycle
 } from 'recompose';
@@ -24,6 +25,9 @@ import {
   fetchRoadsEpic,
   fetchRoadCountEpic
 } from '../redux/modules/roads';
+import {
+  ADMIN_MAP
+} from '../constants';
 
 
 
@@ -60,15 +64,16 @@ const RoadTableContainer = compose(
     }),
     filterGlobalActions: ({ type }) => false
   }),
+  withProps(({ router: { params: { aaId, aaIdSub } } }) => ({
+    province: ADMIN_MAP.province[aaId] && ADMIN_MAP.province[aaId].id,
+    district: ADMIN_MAP.district[aaIdSub]
+  })),
   connect(
-    (state, { sortOrder, page, router: { params: { aaId, aaIdSub } } }) => {
-      const province = state.crosswalk.province[aaId] && state.crosswalk.province[aaId].id;
-      const district = state.crosswalk.district[aaIdSub] && state.crosswalk.district[aaIdSub];
-      
+    (state, { sortOrder, page, province, district }) => {
       const roadPageKey = getRoadPageKey(province, district, page, sortOrder);
       const roadsPage = state.roads.roadsByPage[roadPageKey] && state.roads.roadsByPage[roadPageKey].roads;
       const roadsPageStatus = state.roads.roadsByPage[roadPageKey] && state.roads.roadsByPage[roadPageKey].status;
-      
+
       const roadCountKey = getRoadCountKey(province, district);
       const roadCount = state.roads.roadCount[roadCountKey] && state.roads.roadCount[roadCountKey].count;
       const roadPageCount = state.roads.roadCount[roadCountKey] && state.roads.roadCount[roadCountKey].pageCount;
@@ -76,8 +81,6 @@ const RoadTableContainer = compose(
       const roadCountStatus = state.roads.roadCount[roadCountKey] && state.roads.roadCount[roadCountKey].status;
 
       return {
-        province,
-        district,
         roadsPage,
         roadsPageStatus,
         roadCount,
