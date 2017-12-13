@@ -6,7 +6,6 @@ import {
   getContext
 } from 'recompose';
 import T from '../components/t';
-import { getAdminId, getAdminName } from '../utils/admin-level';
 import { Link } from 'react-router';
 import c from 'classnames';
 import RoadTable from '../containers/road-table-container';
@@ -19,6 +18,22 @@ import {
   setSubAdminName
 } from '../actions/action-creators';
 import config from '../config';
+import {
+  ADMIN_MAP
+} from '../constants';
+
+
+const renderAdminName = (children, aaId, aaIdSub) => {
+  const adminName = aaIdSub ?
+  children.find(child => child.id === Number(aaIdSub)).name_en :
+  ADMIN_MAP.province[aaId].name;
+
+  return (
+    <div className='a-headline'>
+      <h1>{adminName}</h1>
+    </div>
+  );
+};
 
 
 var AssetsAA = React.createClass({
@@ -85,12 +100,6 @@ var AssetsAA = React.createClass({
     this.props._removeAdminInfo();
   },
 
-  makeAdminName: function () {
-    const level = !this.props.params.aaIdSub ? 'province' : 'district';
-    const idFinder = (level === 'province') ? { aaId: this.props.params.aaId } : { aaIdSub: this.props.params.aaIdSub };
-    return getAdminName(this.props.crosswalk, idFinder, level, this.props.adminInfo);
-  },
-
   renderAdminChildren: function (children) {
     if (this.props.params.aaIdSub) {
       return (
@@ -124,25 +133,27 @@ var AssetsAA = React.createClass({
   },
 
   render: function () {
-    // const level = !this.props.params.aaIdSub ? 'province' : 'district';
-    // const idFinder = (level === 'province') ? { aaId: this.props.params.aaId } : { aaIdSub: this.props.params.aaIdSub };
-    // const id = getAdminId(this.props.crosswalk, idFinder, level);
+    const { adminInfo: { children }, params: { aaId, aaIdSub } } = this.props;
 
     return (
       <div ref='a-admin-area' className='a-admin-area-show'>
         <section>
           <header className='a-header'>
-            {/* <div className='a-headline'>
-              <h1>{this.props.adminInfoFetched && this.makeAdminName()}</h1>
-            </div>
-            <div className='a-head-actions'>
-              <a
-                className='button button--secondary-raised-dark'
-                href={`${config.provinceDumpBaseUrl}${id}.csv`}
-              >
-                <T>Download Roads</T>
-              </a>
-            </div> */}
+            {
+              children && renderAdminName(children, aaId, aaIdSub)
+            }
+            {
+              !aaIdSub && ADMIN_MAP.province[aaId] &&
+                <div className='a-head-actions'>
+                  <a
+                    className='button button--secondary-raised-dark'
+                    href={`${config.provinceDumpBaseUrl}${ADMIN_MAP.province[aaId].id}.csv`}
+                    target="_blank"
+                  >
+                    <T>Download Roads</T>
+                  </a>
+                </div>
+            }
           </header>
           <div>
             {
