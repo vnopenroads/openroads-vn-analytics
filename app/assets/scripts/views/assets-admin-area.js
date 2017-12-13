@@ -117,13 +117,19 @@ var AssetsAA = React.createClass({
         <nav className='a-subnav'>
         <h2><T>Districts</T></h2>
         <ul className='a-children'>
-          {children.map((child, i) => {
-            var childKey = `${child}-${i}`;
-            return (
-              <li key={childKey} ><Link className={childClasses[i]} onClick={(e) => { this.clearAdminData(); this.props._setCrossWalk(); this.props._setSubAdminName(child.name_en); }}to={`/${this.props.language}/assets/${aaId}/${child.id}`}>{child.name_en}</Link>
+          {children.map((child, i) => (
+            <li
+              key={`${child}-${i}`}
+            >
+              <Link
+                className={childClasses[i]}
+                onClick={(e) => { this.clearAdminData(); this.props._setCrossWalk(); this.props._setSubAdminName(child.name_en); }}
+                to={`/${this.props.language}/assets/${aaId}/${child.id}`}
+              >
+                {child.name_en}
+              </Link>
             </li>
-            );
-          })}
+          ))}
         </ul>
         </nav>
       );
@@ -155,6 +161,14 @@ var AssetsAA = React.createClass({
                 </div>
             }
           </header>
+          <div className="back-button">
+            <i className="collecticon-chevron-left" />
+            <Link
+              to={`/${this.props.language}/assets`}
+            >
+              <T>Provinces</T>
+            </Link>
+          </div>
           <div>
             {
               this.renderAdminChildren(this.props.adminInfo.children)
