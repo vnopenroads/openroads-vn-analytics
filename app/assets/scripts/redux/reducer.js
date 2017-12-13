@@ -87,34 +87,6 @@ const search = function (state = {results: [], fetching: false, fetched: false, 
 };
 
 
-const VProMMSidsDefaultState = {
-  fetching: false,
-  fetched: false,
-  data: []
-};
-
-const VProMMSids = function (state = VProMMSidsDefaultState, action) {
-  switch (action.type) {
-    case actions.REQUEST_VPROMMS_IDS:
-      state = _.cloneDeep(state);
-      state.error = null;
-      state.fetching = true;
-      break;
-    case actions.RECEIVE_VPROMMS_IDS:
-      state = _.cloneDeep(state);
-      if (action.error) {
-        state.error = action.error;
-      } else {
-        state.data = action.json;
-      }
-      state.fetching = false;
-      state.fetched = true;
-      break;
-  }
-  return state;
-};
-
-
 const defaultVProMMSidSourceGeoJSON = {
   fetching: false,
   fetched: false,
@@ -437,7 +409,6 @@ export default combineReducers({
   roadIdCount,
   setSearchType,
   setFilteredVProMMs,
-  VProMMSids,
   VProMMsWayBbox,
   VProMMSidSourceGeoJSON,
   fieldRoads,
