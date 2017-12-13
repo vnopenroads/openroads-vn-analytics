@@ -151,10 +151,10 @@ const TableRowContainer = compose(
    * of the roads redux subtree.
    * see redux/modules/roads.js#fetchRoadsEpic
    */
-  // branch(
-  //   ({ road }) => !road,
-  //   renderComponent(TableErrorRow)
-  // ),
+  branch(
+    ({ road }) => !road,
+    renderComponent(TableErrorRow)
+  ),
   withProps(({ road }) => ({
     properties: road.properties,
     hasOSMData: road.hasOSMData

@@ -398,7 +398,7 @@ export default combineReducers({
   adminInfo,
   adminBbox,
   roads,
-  fieldIdCount,
+  fieldIdCount, // TODO - delete
   waytasks,
   osmChange,
   crosswalk,
@@ -406,13 +406,13 @@ export default combineReducers({
   exploreMap,
   globZoom,
   provinces,
-  roadIdCount,
+  roadIdCount, // TODO - delete
   setSearchType,
   setFilteredVProMMs,
   VProMMsWayBbox,
   VProMMSidSourceGeoJSON,
-  fieldRoads,
-  fieldVProMMsids,
+  fieldRoads, // TODO - delete
+  fieldVProMMsids, // TODO - delete
   previousLocation,
   subadminName
 });
