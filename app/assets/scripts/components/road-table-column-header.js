@@ -9,6 +9,7 @@ const TableColumnHeader = ({
   columnKey, sortField, sortOrder, children, sortColumnAction
 }) => (
   <th
+    className='table-properties-head sortable'
     onClick={sortColumnAction}
   >
     <i
