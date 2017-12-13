@@ -104,11 +104,11 @@ const RoadTableContainer = compose(
         province, district, page, sortOrder, fetchRoads, fetchRoadCount
       } = this.props;
 
-      if (!roadsPage && roadsPageStatus !== 'complete') {
+      if (!roadsPage && roadsPageStatus !== 'pending' && roadsPageStatus !== 'error') {
         fetchRoads(province, district, page, sortOrder);
       }
 
-      if (!roadPageCount && roadCountStatus !== 'complete') {
+      if (!roadPageCount && roadCountStatus !== 'pending' && roadCountStatus !== 'error') {
         fetchRoadCount(province, district);
       }
     },
@@ -118,11 +118,11 @@ const RoadTableContainer = compose(
         province, district, page, sortOrder, fetchRoads, fetchRoadCount
       } = nextProps;
 
-      if (!roadsPage && roadsPageStatus !== 'complete') {
+      if (!roadsPage && roadsPageStatus !== 'pending' && roadsPageStatus !== 'error') {
         fetchRoads(province, district, page, sortOrder);
       }
 
-      if (!roadPageCount && roadCountStatus !== 'complete') {
+      if (!roadPageCount && roadCountStatus !== 'pending' && roadCountStatus !== 'error') {
         fetchRoadCount(province, district);
       }
     }
