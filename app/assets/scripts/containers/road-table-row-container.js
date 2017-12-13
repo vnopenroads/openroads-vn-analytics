@@ -32,14 +32,15 @@ import {
 } from '../constants';
 
 
-const reducer = (
+const reducerFactory = ({ vpromm }) => (
   state = {
     viewState: 'read',
     newRoadId: '',
     shouldShowProperties: false,
     formIsInvalid: false,
     status: 'complete',
-    error: false
+    error: false,
+    vpromm
   },
   action
 ) => {
@@ -78,31 +79,31 @@ const reducer = (
     return Object.assign({}, state, {
       formIsInvalid: true
     });
-  } else if (action.type === EDIT_ROAD) {
+  } else if (action.type === EDIT_ROAD && action.id === state.vpromm) {
     return Object.assign({}, state, {
       status: 'pending',
       formIsInvalid: false
     });
-  } else if (action.type === EDIT_ROAD_SUCCESS) {
+  } else if (action.type === EDIT_ROAD_SUCCESS && action.id === state.vpromm) {
     return Object.assign({}, state, {
       status: 'complete',
       newRoadId: ''
     });
-  } else if (action.type === EDIT_ROAD_ERROR) {
+  } else if (action.type === EDIT_ROAD_ERROR && action.id === state.vpromm) {
     return Object.assign({}, state, {
       status: 'error',
       error: action.error
     });
-  } else if (action.type === DELETE_ROAD) {
+  } else if (action.type === DELETE_ROAD && action.id === state.vpromm) {
     return Object.assign({}, state, {
       status: 'pending',
       formIsInvalid: false
     });
-  } else if (action.type === DELETE_ROAD_SUCCESS) {
+  } else if (action.type === DELETE_ROAD_SUCCESS && action.id === state.vpromm) {
     return Object.assign({}, state, {
       status: 'complete'
     });
-  } else if (action.type === DELETE_ROAD_ERROR) {
+  } else if (action.type === DELETE_ROAD_ERROR && action.id === state.vpromm) {
     return Object.assign({}, state, {
       status: 'error',
       error: action.error
@@ -118,7 +119,7 @@ const TableRowContainer = compose(
   withRouter,
   local({
     key: ({ vpromm }) => `${vpromm}-table-row`,
-    createStore: () => createStore(reducer),
+    createStore: (props) => createStore(reducerFactory(props)),
     mapDispatchToProps: (dispatch, { vpromm }) => ({
       showProperties: () => dispatch({ type: 'SHOW_PROPERTIES' }),
       hideProperties: () => dispatch({ type: 'HIDE_PROPERTIES' }),

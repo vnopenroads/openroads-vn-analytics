@@ -30,6 +30,7 @@ export const getRoadCountKey = (province = '', district = '') =>
 export const FETCH_ROADS = 'FETCH_ROADS';
 export const FETCH_ROADS_SUCCESS = 'FETCH_ROADS_SUCCESS';
 export const FETCH_ROADS_ERROR = 'FETCH_ROADS_ERROR';
+export const CLEAR_ROADS_PAGES = 'CLEAR_ROADS_PAGES';
 export const FETCH_ROAD_COUNT = 'FETCH_ROAD_COUNT';
 export const FETCH_ROAD_COUNT_SUCCESS = 'FETCH_ROAD_COUNT_SUCCESS';
 export const FETCH_ROAD_COUNT_ERROR = 'FETCH_ROAD_COUNT_ERROR';
@@ -52,6 +53,7 @@ export const fetchRoadsSuccess = (roadsById, roadsByPage, province, district, pa
   ({ type: FETCH_ROADS_SUCCESS, roadsById, roadsByPage, province, district, page, sortOrder });
 export const fetchRoadsError = (error, province, district, page, sortOrder) =>
   ({ type: FETCH_ROADS_ERROR, error, province, district, page, sortOrder });
+export const clearRoadsPages = () => ({ type: CLEAR_ROADS_PAGES });
 export const fetchRoadCount = (province, district) => ({ type: FETCH_ROAD_COUNT, province, district });
 export const fetchRoadCountSuccess = (count, pageCount, osmCount, province, district) =>
   ({ type: FETCH_ROAD_COUNT_SUCCESS, count, pageCount, osmCount, province, district });
@@ -127,7 +129,10 @@ export const createRoadEpic = (id) => (dispatch) => {
 
       return response.json();
     })
-    .then((id) => dispatch(createRoadSuccess(id)))
+    .then((id) => {
+      dispatch(createRoadSuccess(id));
+      dispatch(clearRoadsPages());
+    })
     .catch((err) => dispatch(createRoadError(err.message)));
 };
 
@@ -146,7 +151,10 @@ export const editRoadEpic = (id, newId) => (dispatch) => {
 
       return response.json();
     })
-    .then(({ id: newId }) => dispatch(editRoadSuccess(id, newId)))
+    .then(({ id: newId }) => {
+      dispatch(editRoadSuccess(id, newId));
+      dispatch(clearRoadsPages());
+    })
     .catch((err) => dispatch(editRoadError(id, newId, err.message)));
 };
 
@@ -163,6 +171,7 @@ export const deleteRoadEpic = (id) => (dispatch) => {
       }
 
       dispatch(deleteRoadSuccess(id));
+      dispatch(clearRoadsPages());
     })
     .catch(err => dispatch(deleteRoadError(id, err.message)));
 };
@@ -215,6 +224,10 @@ export default (
           roads: []
         }
       })
+    });
+  } else if (action.type === CLEAR_ROADS_PAGES) {
+    return Object.assign({}, state, {
+      roadsByPage: {}
     });
   } else if (action.type === FETCH_ROAD_COUNT) {
     const { province, district } = action;
