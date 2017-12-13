@@ -34,6 +34,7 @@ export const CLEAR_ROADS_PAGES = 'CLEAR_ROADS_PAGES';
 export const FETCH_ROAD_COUNT = 'FETCH_ROAD_COUNT';
 export const FETCH_ROAD_COUNT_SUCCESS = 'FETCH_ROAD_COUNT_SUCCESS';
 export const FETCH_ROAD_COUNT_ERROR = 'FETCH_ROAD_COUNT_ERROR';
+export const CLEAR_ROAD_COUNT = 'CLEAR_ROAD_COUNT';
 export const CREATE_ROAD = 'CREATE_ROAD';
 export const CREATE_ROAD_SUCCESS = 'CREATE_ROAD_SUCCESS';
 export const CREATE_ROAD_ERROR = 'CREATE_ROAD_ERROR';
@@ -59,6 +60,7 @@ export const fetchRoadCountSuccess = (count, pageCount, osmCount, province, dist
   ({ type: FETCH_ROAD_COUNT_SUCCESS, count, pageCount, osmCount, province, district });
 export const fetchRoadCountError = (error, province, district) =>
   ({ type: FETCH_ROAD_COUNT_ERROR, error, province, district });
+export const clearRoadCount = () => ({ type: CLEAR_ROAD_COUNT });
 export const editRoad = (id, newId) => ({ type: EDIT_ROAD, id, newId });
 export const editRoadSuccess = (id, newId) => ({ type: EDIT_ROAD_SUCCESS, id, newId });
 export const editRoadError = (id, newId, error) => ({ type: EDIT_ROAD_ERROR, id, newId, error });
@@ -132,6 +134,7 @@ export const createRoadEpic = (id) => (dispatch) => {
     .then((id) => {
       dispatch(createRoadSuccess(id));
       dispatch(clearRoadsPages());
+      dispatch(clearRoadCount());
     })
     .catch((err) => dispatch(createRoadError(err.message)));
 };
@@ -154,6 +157,7 @@ export const editRoadEpic = (id, newId) => (dispatch) => {
     .then(({ id: newId }) => {
       dispatch(editRoadSuccess(id, newId));
       dispatch(clearRoadsPages());
+      dispatch(clearRoadCount());
     })
     .catch((err) => dispatch(editRoadError(id, newId, err.message)));
 };
@@ -172,6 +176,7 @@ export const deleteRoadEpic = (id) => (dispatch) => {
 
       dispatch(deleteRoadSuccess(id));
       dispatch(clearRoadsPages());
+      dispatch(clearRoadCount());
     })
     .catch(err => dispatch(deleteRoadError(id, err.message)));
 };
@@ -266,6 +271,10 @@ export default (
           pageCount: undefined
         }
       })
+    });
+  } else if (action.type === CLEAR_ROAD_COUNT) {
+    return Object.assign({}, state, {
+      roadCount: {}
     });
   }
 
