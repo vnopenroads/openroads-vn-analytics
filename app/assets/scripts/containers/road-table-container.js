@@ -34,13 +34,15 @@ import {
 const reducer = (
   state = {
     sortOrder: 'asc',
+    sortField: 'id',
     page: 1
   },
   action
 ) => {
   if (action.type === 'SORT_COLUMN') {
     return Object.assign({}, state, {
-      sortOrder: action.sortOrder
+      sortOrder: action.sortOrder,
+      sortField: action.sortField
     });
   } else if (action.type === 'SET_PAGE') {
     return Object.assign({}, state, {
@@ -59,7 +61,7 @@ const RoadTableContainer = compose(
     key: ({ router: { params: { aaId = '', aaIdSub = '' } } }) => `road-table-${aaId}-${aaIdSub}`,
     createStore: () => createStore(reducer),
     mapDispatchToProps: (dispatch, { sortOrder }) => ({
-      sortColumn: (sortOrder) => dispatch({ type: 'SORT_COLUMN', sortOrder }),
+      sortColumn: (sortField, sortOrder) => dispatch({ type: 'SORT_COLUMN', sortField, sortOrder }),
       setPage: (page) => dispatch({ type: 'SET_PAGE', page })
     }),
     filterGlobalActions: ({ type }) => false
@@ -69,8 +71,8 @@ const RoadTableContainer = compose(
     district: ADMIN_MAP.district[aaIdSub]
   })),
   connect(
-    (state, { sortOrder, page, province, district }) => {
-      const roadPageKey = getRoadPageKey(province, district, page, sortOrder);
+    (state, { province, district, page, sortField, sortOrder }) => {
+      const roadPageKey = getRoadPageKey(province, district, page, sortField, sortOrder);
       const roadsPage = state.roads.roadsByPage[roadPageKey] && state.roads.roadsByPage[roadPageKey].roads;
       const roadsPageStatus = state.roads.roadsByPage[roadPageKey] && state.roads.roadsByPage[roadPageKey].status;
 
@@ -90,22 +92,28 @@ const RoadTableContainer = compose(
       };
     },
     (dispatch) => ({
-      fetchRoads: (province, district, page, sortOrder) => dispatch(fetchRoadsEpic(province, district, page, sortOrder)),
+      fetchRoads: (province, district, page, sortField, sortOrder) => dispatch(fetchRoadsEpic(province, district, page, sortField, sortOrder)),
       fetchRoadCount: (province, district) => dispatch(fetchRoadCountEpic(province, district))
     })
   ),
   withHandlers({
-    sortColumnAction: ({ sortOrder, sortColumn }) => (fieldId) => sortColumn(sortOrder === 'asc' ? 'desc' : 'asc')
+    sortColumnAction: ({ sortField, sortOrder, sortColumn }) => (fieldId) => {
+      if (sortField === fieldId) {
+        sortColumn(fieldId, sortOrder === 'asc' ? 'desc' : 'asc');
+      } else {
+        sortColumn(fieldId, 'asc');
+      }
+    }
   }),
   lifecycle({
     componentWillMount: function () {
       const {
         roadsPage, roadsPageStatus, roadPageCount, roadCountStatus,
-        province, district, page, sortOrder, fetchRoads, fetchRoadCount
+        province, district, page, sortField, sortOrder, fetchRoads, fetchRoadCount
       } = this.props;
 
       if (!roadsPage && roadsPageStatus !== 'pending' && roadsPageStatus !== 'error') {
-        fetchRoads(province, district, page, sortOrder);
+        fetchRoads(province, district, page, sortField, sortOrder);
       }
 
       if (!roadPageCount && roadCountStatus !== 'pending' && roadCountStatus !== 'error') {
@@ -115,11 +123,11 @@ const RoadTableContainer = compose(
     componentWillReceiveProps: function (nextProps) {
       const {
         roadsPage, roadsPageStatus, roadPageCount, roadCountStatus,
-        province, district, page, sortOrder, fetchRoads, fetchRoadCount
+        province, district, page, sortField, sortOrder, fetchRoads, fetchRoadCount
       } = nextProps;
 
       if (!roadsPage && roadsPageStatus !== 'pending' && roadsPageStatus !== 'error') {
-        fetchRoads(province, district, page, sortOrder);
+        fetchRoads(province, district, page, sortField, sortOrder);
       }
 
       if (!roadPageCount && roadCountStatus !== 'pending' && roadCountStatus !== 'error') {

@@ -11,7 +11,7 @@ import T from './t';
 const RoadTable = ({
   roadsPage, roadsPageStatus,
   roadCount, roadPageCount, roadOsmCount, roadCountStatus,
-  page, sortOrder,
+  page, sortField, sortOrder,
   sortColumnAction, setPage
 }) => (
   <div className="table-container">
@@ -37,12 +37,20 @@ const RoadTable = ({
                 <th className="table-properties-head button-column" />
                 <ColumnHeader
                   columnKey="id"
-                  label="VPRoMMS ID"
-                  sortField="id"
+                  sortField={sortField}
                   sortOrder={sortOrder}
                   sortColumnAction={sortColumnAction}
-                />
-                <th className='table-properties-head'><T>Field Data</T></th>
+                >
+                  <T>VPRoMMS ID</T>
+                </ColumnHeader>
+                <ColumnHeader
+                  columnKey="hasOSMData"
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  sortColumnAction={sortColumnAction}
+                >
+                  <T>Field Data</T>
+                </ColumnHeader>
                 <th className='table-properties-head'><T>Properties</T></th>
               </tr>
             </thead>
