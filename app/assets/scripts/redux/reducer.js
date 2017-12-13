@@ -336,40 +336,6 @@ const adminInfo = function (state = defaultAdminInfo, action) {
   return state;
 };
 
-const defaultFieldRoads = {
-  fetching: false,
-  fetched: false,
-  ids: []
-};
-
-const fieldRoads = function (state = defaultFieldRoads, action) {
-  switch (action.type) {
-    case actions.REQUEST_FIELD_ROADS:
-      state = _.cloneDeep(state);
-      state.fetching = true;
-      break;
-    case actions.RECEIVE_FIELD_ROADS:
-      state = _.cloneDeep(state);
-      state.fetching = false;
-      state.fetched = true;
-      state.ids = action.json;
-      break;
-    case actions.REMOVE_FIELD_ROADS:
-      return defaultFieldRoads;
-    case EDIT_ROAD_SUCCESS:
-      return Object.assign({}, state, {
-        ids: state.ids
-          .filter(id => id !== action.id)
-          .concat(action.newId)
-      });
-    case DELETE_ROAD_SUCCESS:
-      return Object.assign({}, state, {
-        ids: state.ids.filter(id => id !== action.id)
-      });
-  }
-  return state;
-};
-
 const previousLocation = function (state = {path: '/'}, action) {
   switch (action.type) {
     case actions.SET_PREVIOUS_LOCATION:
@@ -411,7 +377,6 @@ export default combineReducers({
   setFilteredVProMMs,
   VProMMsWayBbox,
   VProMMSidSourceGeoJSON,
-  fieldRoads, // TODO - delete
   fieldVProMMsids, // TODO - delete
   previousLocation,
   subadminName

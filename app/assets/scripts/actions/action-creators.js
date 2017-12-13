@@ -355,43 +355,6 @@ export function fetchFieldVProMsIdsCount (level) {
   };
 }
 
-function requestFieldRoads () {
-  return {
-    type: actions.REQUEST_FIELD_ROADS
-  };
-}
-
-function receiveFieldRoads (json) {
-  return {
-    type: actions.RECEIVE_FIELD_ROADS,
-    json: json
-  };
-}
-
-export function fetchFieldRoads (json, level) {
-  return function (dispatch) {
-    dispatch(requestFieldRoads());
-    let url = `${config.api}/field/roads?province=${json[0]}`;
-    if (level === 'district') {
-      url = `${url}&district=${json[1]}`;
-    }
-    return fetch(url)
-    .then(response => response.json())
-    .then(json => {
-      if (json.statusCode >= 400) {
-        throw new Error('Bad Response');
-      }
-      dispatch(receiveFieldRoads(json));
-    });
-  };
-}
-
-export function removeFieldRoads () {
-  return {
-    type: actions.REMOVE_FIELD_ROADS
-  };
-}
-
 
 // ////////////////////////////////////////////////////////////////
 //                             Search                            //
