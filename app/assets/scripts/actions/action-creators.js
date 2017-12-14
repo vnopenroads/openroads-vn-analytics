@@ -453,21 +453,3 @@ export function removeCrosswalk () {
     type: actions.REMOVE_CROSSWALK
   };
 }
-
-// ////////////////////////////////////////////////////////////////
-//                           Location                            //
-// ////////////////////////////////////////////////////////////////
-
-export function setPreviousLocation (location) {
-  return {
-    type: actions.SET_PREVIOUS_LOCATION,
-    location: location
-  };
-}
-
-export function setSubAdminName (name) {
-  return {
-    type: actions.SET_SUBADMIN_NAME,
-    name: name
-  };
-}
