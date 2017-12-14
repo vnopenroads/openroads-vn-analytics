@@ -6,8 +6,6 @@ import * as actions from '../actions/action-types';
 import waytasks from './modules/tasks';
 import osmChange from './modules/osm';
 import roads from './modules/roads';
-import { ADMIN_MAP } from '../constants';
-
 
 
 const admins = function (state = {units: [], fetching: false, fetched: false}, action) {
@@ -242,25 +240,6 @@ const provinces = function (state = defaultProvinces, action) {
   return state;
 };
 
-const defaultCrossWalk = {
-  province: {},
-  district: {},
-  set: false
-};
-
-const crosswalk = function (state = defaultCrossWalk, action) {
-  switch (action.type) {
-    case actions.SET_CROSSWALK:
-      state = _.cloneDeep(state);
-      state.province = _.pickBy(ADMIN_MAP.province, (province) => { return !/^\s*$/.test(province); });
-      state.district = ADMIN_MAP.district;
-      state.set = true;
-      break;
-    case actions.REMOVE_CROSSWALK:
-      return defaultCrossWalk;
-  }
-  return state;
-};
 
 const defaultVProMMsIdCount = {
   fetching: false,
@@ -344,7 +323,6 @@ export default combineReducers({
   fieldIdCount, // TODO - delete
   waytasks,
   osmChange,
-  crosswalk,
   search,
   exploreMap,
   globZoom,
