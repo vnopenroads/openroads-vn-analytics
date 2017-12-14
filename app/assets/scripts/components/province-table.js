@@ -67,7 +67,7 @@ export default withProps(
         .map(province => province.total_roads)[0] || 0;
       const total = VProMMsCount
         .filter(province => province.admin === id)
-        .map(province => province.total_roads)[0] || 0;
+        .map(province => parseInt(province.total_roads, 10))[0] || 0;
 
       return {
         name: ADMIN_MAP.province[province.id].name,
