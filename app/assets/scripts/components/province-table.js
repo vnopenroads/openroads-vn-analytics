@@ -39,7 +39,7 @@ const ProvinceTable = ({
       <tbody>
         {map(
           orderBy(provinces, [sortField], [sortOrder]),
-          ({ id, name, routeId, field, total }) => (
+          ({ id, name, routeId, field, total, percentageComplete }) => (
             <ProvinceTableRow
               key={id}
               id={id}
@@ -47,6 +47,7 @@ const ProvinceTable = ({
               routeId={routeId}
               field={field}
               total={total}
+              percentageComplete={percentageComplete}
               language={language}
             />
           )
@@ -74,7 +75,8 @@ export default withProps(
         id,
         routeId: province.id,
         field,
-        total
+        total,
+        percentageComplete: total > 0 ? field / total * 100 : 0
       };
     })
   })
