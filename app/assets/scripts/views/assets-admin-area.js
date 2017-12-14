@@ -75,14 +75,25 @@ var AssetsAA = React.createClass({
                 </div>
             }
           </header>
-          <div className="back-button">
-            <i className="collecticon-chevron-left" />
-            <Link
-              to={`/${this.props.language}/assets`}
-            >
-              <T>Provinces</T>
-            </Link>
-          </div>
+          {
+            aaIdSub ?
+              <div className="back-button">
+                <i className="collecticon-chevron-left" />
+                <Link
+                  to={`/${this.props.language}/assets/${aaId}`}
+                >
+                  {ADMIN_MAP.province[aaId].name}
+                </Link>
+              </div> :
+              <div className="back-button">
+                <i className="collecticon-chevron-left" />
+                <Link
+                  to={`/${this.props.language}/assets`}
+                >
+                  <T>Provinces</T>
+                </Link>
+              </div>
+          }
           <div>
             {
               !aaIdSub && adminInfoFetched &&
