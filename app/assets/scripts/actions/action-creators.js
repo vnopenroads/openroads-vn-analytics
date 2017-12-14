@@ -355,85 +355,6 @@ export function fetchFieldVProMsIdsCount (level) {
   };
 }
 
-function requestFieldRoads () {
-  return {
-    type: actions.REQUEST_FIELD_ROADS
-  };
-}
-
-function receiveFieldRoads (json) {
-  return {
-    type: actions.RECEIVE_FIELD_ROADS,
-    json: json
-  };
-}
-
-export function fetchFieldRoads (json, level) {
-  return function (dispatch) {
-    dispatch(requestFieldRoads());
-    let url = `${config.api}/field/roads?province=${json[0]}`;
-    if (level === 'district') {
-      url = `${url}&district=${json[1]}`;
-    }
-    return fetch(url)
-    .then(response => response.json())
-    .then(json => {
-      if (json.statusCode >= 400) {
-        throw new Error('Bad Response');
-      }
-      dispatch(receiveFieldRoads(json));
-    });
-  };
-}
-
-export function removeFieldRoads () {
-  return {
-    type: actions.REMOVE_FIELD_ROADS
-  };
-}
-
-function requestAdminVProMMsProps () {
-  return {
-    type: actions.REQUEST_ADMIN_VPROMMS_PROPERTIES
-  };
-}
-
-function receiveAdminVProMMsProps (json) {
-  return {
-    type: actions.RECEIVE_ADMIN_VPROMMS_PROPERTIES,
-    json: json
-  };
-}
-
-export function fetchAdminVProMMsProps (json, level, limit, offset) {
-  return function (dispatch) {
-    dispatch(requestAdminVProMMsProps());
-    let url = `${config.api}/admin/roads/properties?province=${json[0]}`;
-    if (level === 'district') {
-      url = `${url}&district=${json[1]}`;
-    }
-    if (offset) {
-      url = `${url}&offset=${offset}`;
-    }
-    if (limit) {
-      url = `${url}&limit=${limit}`;
-    }
-    return fetch(url)
-    .then(response => response.json())
-    .then(json => {
-      if (json.statusCode >= 400) {
-        throw new Error('Bad Request');
-      }
-      dispatch(receiveAdminVProMMsProps(json));
-    });
-  };
-}
-
-export function removeAdminVProMMsProps () {
-  return {
-    type: actions.REMOVE_ADMIN_VPROMMS_PROPERTIES
-  };
-}
 
 // ////////////////////////////////////////////////////////////////
 //                             Search                            //
@@ -530,32 +451,6 @@ export function setCrossWalk () {
 export function removeCrosswalk () {
   return {
     type: actions.REMOVE_CROSSWALK
-  };
-}
-
-// ////////////////////////////////////////////////////////////////
-//                        PAGINATION                             //
-// ////////////////////////////////////////////////////////////////
-
-export function setPagination (paginationObject) {
-  return {
-    type: actions.SET_PAGINATION,
-    json: paginationObject
-  };
-}
-
-export function updatePagination (newIndex, newPage) {
-  return {
-    type: actions.UPDATE_PAGINATION,
-    newIndex: newIndex,
-    newPage: newPage
-  };
-}
-
-export function updateClickedPage (page) {
-  return {
-    type: actions.UPDATE_PAGINATION_CLICKED_PAGE,
-    page: page
   };
 }
 

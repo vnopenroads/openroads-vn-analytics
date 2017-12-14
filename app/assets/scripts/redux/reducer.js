@@ -5,12 +5,7 @@ import _ from 'lodash';
 import * as actions from '../actions/action-types';
 import waytasks from './modules/tasks';
 import osmChange from './modules/osm';
-import adminRoads from './modules/adminRoads';
-import {
-  EDIT_ROAD_SUCCESS,
-  DELETE_ROAD_SUCCESS
-} from './modules/editRoad';
-import editRoad from './modules/editRoad';
+import roads from './modules/roads';
 import { ADMIN_MAP } from '../constants';
 
 
@@ -89,34 +84,6 @@ const search = function (state = {results: [], fetching: false, fetched: false, 
 };
 
 
-const VProMMSidsDefaultState = {
-  fetching: false,
-  fetched: false,
-  data: []
-};
-
-const VProMMSids = function (state = VProMMSidsDefaultState, action) {
-  switch (action.type) {
-    case actions.REQUEST_VPROMMS_IDS:
-      state = _.cloneDeep(state);
-      state.error = null;
-      state.fetching = true;
-      break;
-    case actions.RECEIVE_VPROMMS_IDS:
-      state = _.cloneDeep(state);
-      if (action.error) {
-        state.error = action.error;
-      } else {
-        state.data = action.json;
-      }
-      state.fetching = false;
-      state.fetched = true;
-      break;
-  }
-  return state;
-};
-
-
 const defaultVProMMSidSourceGeoJSON = {
   fetching: false,
   fetched: false,
@@ -166,47 +133,6 @@ const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
       state.fetching = false;
       state.fetched = true;
       state.bbox = action.json;
-  }
-  return state;
-};
-
-const defaultVProMMsAdminProperties = {
-  fetching: false,
-  fetched: false,
-  data: []
-};
-
-const VProMMsAdminProperties = function (state = defaultVProMMsAdminProperties, action) {
-  switch (action.type) {
-    case actions.REQUEST_ADMIN_VPROMMS_PROPERTIES:
-      state = _.cloneDeep(state);
-      state.fetching = true;
-      break;
-    case actions.RECEIVE_ADMIN_VPROMMS_PROPERTIES:
-      state = _.cloneDeep(state);
-      state.fetching = false;
-      state.fetched = true;
-      state.data = action.json;
-      break;
-    case actions.REMOVE_ADMIN_VPROMMS_PROPERTIES:
-      state = defaultVProMMsAdminProperties;
-      break;
-    case EDIT_ROAD_SUCCESS:
-      console.log('update road properties');
-
-      return Object.assign({}, state, {
-        data: state.data
-          .map(road => {
-            console.log('update road properties id', action.id, action.newId);
-            return road.id === action.id ?
-              { id: action.newId, properties: road.properties } :
-              road;
-          })
-      });
-    case DELETE_ROAD_SUCCESS:
-      return Object.assign({}, state, {
-        ids: state.data.filter(({ id }) => id !== action.id)
-      });
   }
   return state;
 };
@@ -407,59 +333,6 @@ const adminInfo = function (state = defaultAdminInfo, action) {
   return state;
 };
 
-const defaultFieldRoads = {
-  fetching: false,
-  fetched: false,
-  ids: []
-};
-
-const fieldRoads = function (state = defaultFieldRoads, action) {
-  switch (action.type) {
-    case actions.REQUEST_FIELD_ROADS:
-      state = _.cloneDeep(state);
-      state.fetching = true;
-      break;
-    case actions.RECEIVE_FIELD_ROADS:
-      state = _.cloneDeep(state);
-      state.fetching = false;
-      state.fetched = true;
-      state.ids = action.json;
-      break;
-    case actions.REMOVE_FIELD_ROADS:
-      return defaultFieldRoads;
-    case EDIT_ROAD_SUCCESS:
-      return Object.assign({}, state, {
-        ids: state.ids
-          .filter(id => id !== action.id)
-          .concat(action.newId)
-      });
-    case DELETE_ROAD_SUCCESS:
-      return Object.assign({}, state, {
-        ids: state.ids.filter(id => id !== action.id)
-      });
-  }
-  return state;
-};
-
-const defaultPagination = {currentPage: 0, currentIndex: 0, limit: 0, pages: 0, clickedPage: 0};
-
-const pagination = function (state = defaultPagination, action) {
-  switch (action.type) {
-    case actions.SET_PAGINATION:
-      return action.json;
-    case actions.UPDATE_PAGINATION:
-      state = _.cloneDeep(state);
-      state.currentIndex = action.newIndex;
-      state.currentPage = action.newPage;
-      break;
-    case actions.UPDATE_PAGINATION_CLICKED_PAGE:
-      state = _.cloneDeep(state);
-      state.clickedPage = action.page;
-      break;
-  }
-  return state;
-};
-
 const previousLocation = function (state = {path: '/'}, action) {
   switch (action.type) {
     case actions.SET_PREVIOUS_LOCATION:
@@ -487,9 +360,8 @@ export default combineReducers({
   admins,
   adminInfo,
   adminBbox,
-  adminRoads,
-  editRoad,
-  fieldIdCount,
+  roads,
+  fieldIdCount, // TODO - delete
   waytasks,
   osmChange,
   crosswalk,
@@ -497,16 +369,12 @@ export default combineReducers({
   exploreMap,
   globZoom,
   provinces,
-  roadIdCount,
+  roadIdCount, // TODO - delete
   setSearchType,
   setFilteredVProMMs,
-  VProMMSids,
   VProMMsWayBbox,
-  VProMMsAdminProperties,
   VProMMSidSourceGeoJSON,
-  fieldRoads,
-  fieldVProMMsids,
-  pagination,
+  fieldVProMMsids, // TODO - delete
   previousLocation,
   subadminName
 });
