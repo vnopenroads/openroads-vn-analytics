@@ -10,8 +10,7 @@ import { Link } from 'react-router';
 import RoadTable from '../containers/road-table-container';
 import DistrictList from '../components/district-list';
 import {
-  fetchAdminInfo,
-  setSubAdminName
+  fetchAdminInfo
 } from '../actions/action-creators';
 import config from '../config';
 import {
@@ -37,7 +36,6 @@ var AssetsAA = React.createClass({
 
   propTypes: {
     _fetchAdminInfo: React.PropTypes.func,
-    _setSubAdminName: React.PropTypes.func,
     params: React.PropTypes.object,
     language: React.PropTypes.string,
     adminInfo: React.PropTypes.object,
@@ -92,7 +90,6 @@ var AssetsAA = React.createClass({
                   districts={children}
                   aaId={aaId}
                   language={language}
-                  setSubAdminName={this.props._setSubAdminName}
                 />
             }
 
@@ -113,8 +110,7 @@ export default compose(
       adminInfoFetched: state.adminInfo.fetched
     }),
     dispatch => ({
-      _fetchAdminInfo: (id, level) => dispatch(fetchAdminInfo(id, level)),
-      _setSubAdminName: (name) => dispatch(setSubAdminName(name))
+      _fetchAdminInfo: (id, level) => dispatch(fetchAdminInfo(id, level))
     })
   )
 )(AssetsAA);

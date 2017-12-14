@@ -464,10 +464,3 @@ export function setPreviousLocation (location) {
     location: location
   };
 }
-
-export function setSubAdminName (name) {
-  return {
-    type: actions.SET_SUBADMIN_NAME,
-    name: name
-  };
-}

@@ -6,7 +6,7 @@ import {
 } from '../constants';
 
 
-const DistrictList = ({ districts, aaId, language, setSubAdminName }) => (
+const DistrictList = ({ districts, aaId, language }) => (
   <nav className='a-subnav'>
     <h2><T>Districts</T></h2>
     <ul className='a-children'>
@@ -18,7 +18,6 @@ const DistrictList = ({ districts, aaId, language, setSubAdminName }) => (
           >
             <Link
               className={ADMIN_MAP.district[child.id] === '' ? 'disabled' : ''}
-              onClick={() => setSubAdminName(child.name_en)}
               to={`/${language}/assets/${aaId}/${child.id}`}
             >
               {child.name_en}

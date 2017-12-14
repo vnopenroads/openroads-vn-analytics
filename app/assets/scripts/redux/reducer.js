@@ -343,16 +343,6 @@ const previousLocation = function (state = {path: '/'}, action) {
   return state;
 };
 
-const subadminName = function (state = {name: ''}, action) {
-  switch (action.type) {
-    case actions.SET_SUBADMIN_NAME:
-      state = _.cloneDeep(state);
-      state.name = action.name;
-      break;
-  }
-  return state;
-};
-
 
 export default combineReducers({
   routing: routeReducer,
@@ -375,6 +365,5 @@ export default combineReducers({
   VProMMsWayBbox,
   VProMMSidSourceGeoJSON,
   fieldVProMMsids, // TODO - delete
-  previousLocation,
-  subadminName
+  previousLocation
 });
