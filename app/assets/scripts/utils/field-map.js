@@ -1,5 +1,3 @@
-
-import bbox from '@turf/bbox';
 import lineColors from './line-colors';
 
 /**
@@ -36,13 +34,4 @@ export function generateLayer (sourceId, fieldDataSource, vprommId) {
     },
     'filter': ['==', 'source', fieldDataSource]
   };
-}
-
-/**
- * given a feature collection, returns boudns used to set field data map zoom
- * @param {object} fc feature collection
- * @return {array} bounding box array
- */
-export function generateBbox (fc) {
-  return bbox(fc);
 }

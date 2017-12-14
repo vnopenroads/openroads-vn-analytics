@@ -1,13 +1,11 @@
-'use strict';
-
 import React from 'react';
 import mapboxgl from 'mapbox-gl';
 import { flatten, uniq } from 'lodash';
 import { connect } from 'react-redux';
+import bbox from '@turf/bbox';
 import { fetchVProMMsidSourceGeoJSON } from '../actions/action-creators';
 import config from '../config';
 import AAFieldMapLegend from './aa-field-map-legend';
-
 import {
   makeNWSE,
   makeNewZoom,
@@ -16,12 +14,34 @@ import {
   pixelDistances,
   transformGeoToPixel
 } from '../utils/zoom';
-
 import {
-  generateBbox,
   generateSourceFC,
   generateLayer
 } from '../utils/field-map';
+
+
+const generateLngLatZoom = (featureCollection) => {
+  // see test for this util for helpful description of
+  // what all is happening here.
+  var bounds = flatten(bbox(featureCollection));
+  var NWSE = makeNWSE(bounds);
+  var dummyZoom = 10;
+  var nw = transformGeoToPixel(NWSE.nw, dummyZoom);
+  var se = transformGeoToPixel(NWSE.se, dummyZoom);
+  var distances = pixelDistances(nw, se);
+  var adminAreaMapDiv = document.getElementById('aa-map');
+  var dimensions = { x: adminAreaMapDiv.offsetWidth, y: adminAreaMapDiv.offsetHeight };
+  var zoomScale = newZoomScale(distances, dimensions);
+  var newZoom = makeNewZoom(zoomScale, dummyZoom);
+  var cp = makeCenterpoint(bounds);
+
+  return {
+    lng: cp.x,
+    lat: cp.y,
+    zoom: newZoom - 2
+  };
+};
+
 
 var AAFieldMap = React.createClass({
   displayName: 'AAFieldMap',
@@ -38,30 +58,9 @@ var AAFieldMap = React.createClass({
     _removeVProMMsSourceGeoJSON: React.PropTypes.func
   },
 
-  generateLngLatZoom: function (featureCollection) {
-    // see test for this util for helpful description of
-    // what all is happening here.
-    var bounds = flatten(generateBbox(featureCollection));
-    var NWSE = makeNWSE(bounds);
-    var dummyZoom = 10;
-    var nw = transformGeoToPixel(NWSE.nw, dummyZoom);
-    var se = transformGeoToPixel(NWSE.se, dummyZoom);
-    var distances = pixelDistances(nw, se);
-    var adminAreaMapDiv = document.getElementById('aa-map');
-    var dimensions = { x: adminAreaMapDiv.offsetWidth, y: adminAreaMapDiv.offsetHeight };
-    var zoomScale = newZoomScale(distances, dimensions);
-    var newZoom = makeNewZoom(zoomScale, dummyZoom);
-    var cp = makeCenterpoint(bounds);
-    return {
-      lng: cp.x,
-      lat: cp.y,
-      zoom: newZoom - 2
-    };
-  },
-
   generateMap: function (geoJSON) {
     // generate the bounding box used to set initial zoom of gl map
-    var lngLatZoom = this.generateLngLatZoom(geoJSON[0]);
+    var lngLatZoom = generateLngLatZoom(geoJSON[0]);
     mapboxgl.accessToken = config.mbToken;
     var map = new mapboxgl.Map({
       container: 'aa-map',
@@ -97,8 +96,6 @@ var AAFieldMap = React.createClass({
     if (nextProps.fetched) { this.generateMap(nextProps.geoJSON); }
   },
 
-  // same rule that applied in componentWillReceiveProps goes for
-  // the header render and the map render.
   renderMap: function (geoJSON) {
     const sources = geoJSON[0].features.map(feature => feature.properties.source);
     return (
@@ -127,17 +124,14 @@ var AAFieldMap = React.createClass({
   }
 });
 
-function selector (state) {
-  return {
+
+module.exports = connect(
+  (state) => ({
     geoJSON: state.VProMMSidSourceGeoJSON.geoJSON,
     fetched: state.VProMMSidSourceGeoJSON.fetched,
     adminName: '' // TODO - request province name from /admin/:unit_id/info.  Or, name likely already availble in store in state.provinces
-  };
-}
-function dispatcher (dispatch) {
-  return {
+  }),
+  (dispatch) => ({
     _fetchVProMMsidSourceGeoJSON: (id) => dispatch(fetchVProMMsidSourceGeoJSON(id))
-  };
-}
-
-module.exports = connect(selector, dispatcher)(AAFieldMap);
+  })
+)(AAFieldMap);

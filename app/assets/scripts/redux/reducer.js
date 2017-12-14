@@ -82,37 +82,6 @@ const search = function (state = {results: [], fetching: false, fetched: false, 
 };
 
 
-const defaultVProMMSidSourceGeoJSON = {
-  fetching: false,
-  fetched: false,
-  geoJSON: [],
-  vprommId: '',
-  provinceName: ''
-};
-
-const VProMMSidSourceGeoJSON = function (state = defaultVProMMSidSourceGeoJSON, action) {
-  switch (action.type) {
-    case actions.REQUEST_VPROMMS_SOURCE_GEOJSON:
-      console.log('REQUEST_VPROMMS_SOURCE_GEOJSON');
-      state = _.cloneDeep(state);
-      state.fetching = true;
-      break;
-    case actions.RECIEVE_VPROMMS_SOURCE_GEOJSON:
-      console.log('RECIEVE_VPROMMS_SOURCE_GEOJSON');
-      state = _.cloneDeep(state);
-      state.geoJSON = action.json;
-      state.vprommId = action.vprommId;
-      state.provinceName = action.provinceName;
-      state.fetching = false;
-      state.fetched = true;
-      break;
-    case actions.REMOVE_VPROMMS_SOURCE_GEOJSON:
-      console.log('REMOVE_SOURCE_GEOJSON');
-      return defaultVProMMSidSourceGeoJSON;
-  }
-  return state;
-};
-
 const VProMMsWayBboxDefaultState = {
   fetching: false,
   fetched: false,
@@ -234,8 +203,6 @@ const provinces = function (state = defaultProvinces, action) {
       state.fetched = true;
       state.data = action.json;
       break;
-    case actions.REMOVE_PROVINCES:
-      return defaultProvinces;
   }
   return state;
 };
@@ -331,6 +298,5 @@ export default combineReducers({
   setSearchType,
   setFilteredVProMMs,
   VProMMsWayBbox,
-  VProMMSidSourceGeoJSON,
   fieldVProMMsids // TODO - delete
 });

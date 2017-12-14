@@ -35,6 +35,9 @@ export const FETCH_ROAD_COUNT = 'FETCH_ROAD_COUNT';
 export const FETCH_ROAD_COUNT_SUCCESS = 'FETCH_ROAD_COUNT_SUCCESS';
 export const FETCH_ROAD_COUNT_ERROR = 'FETCH_ROAD_COUNT_ERROR';
 export const CLEAR_ROAD_COUNT = 'CLEAR_ROAD_COUNT';
+export const FETCH_ROAD_GEOMETRY = 'FETCH_ROAD_GEOMETRY';
+export const FETCH_ROAD_GEOMETRY_SUCCESS = 'FETCH_ROAD_GEOMETRY_SUCCESS';
+export const FETCH_ROAD_GEOMETRY_ERROR = 'FETCH_ROAD_GEOMETRY_ERROR';
 export const CREATE_ROAD = 'CREATE_ROAD';
 export const CREATE_ROAD_SUCCESS = 'CREATE_ROAD_SUCCESS';
 export const CREATE_ROAD_ERROR = 'CREATE_ROAD_ERROR';
@@ -56,18 +59,26 @@ export const fetchRoadsSuccess = (roadsById, roadsByPage, province, district, pa
 export const fetchRoadsError = (error, province, district, page, sortField, sortOrder) =>
   ({ type: FETCH_ROADS_ERROR, error, province, district, page, sortField, sortOrder });
 export const clearRoadsPages = () => ({ type: CLEAR_ROADS_PAGES });
+
 export const fetchRoadCount = (province, district) => ({ type: FETCH_ROAD_COUNT, province, district });
 export const fetchRoadCountSuccess = (count, pageCount, osmCount, province, district) =>
   ({ type: FETCH_ROAD_COUNT_SUCCESS, count, pageCount, osmCount, province, district });
 export const fetchRoadCountError = (error, province, district) =>
   ({ type: FETCH_ROAD_COUNT_ERROR, error, province, district });
 export const clearRoadCount = () => ({ type: CLEAR_ROAD_COUNT });
+
+export const fetchRoadGeometry = (id) => ({ type: FETCH_ROAD_GEOMETRY, id });
+export const fetchRoadGeometrySuccess = (id, geoJSON) => ({ type: FETCH_ROAD_GEOMETRY, id, geoJSON });
+export const fetchRoadGeometryError = (id, error) => ({ type: FETCH_ROAD_GEOMETRY, id, error });
+
 export const editRoad = (id, newId) => ({ type: EDIT_ROAD, id, newId });
 export const editRoadSuccess = (id, newId) => ({ type: EDIT_ROAD_SUCCESS, id, newId });
 export const editRoadError = (id, newId, error) => ({ type: EDIT_ROAD_ERROR, id, newId, error });
+
 export const deleteRoad = (id) => ({ type: DELETE_ROAD, id });
 export const deleteRoadSuccess = (id) => ({ type: DELETE_ROAD_SUCCESS, id });
 export const deleteRoadError = (id, error) => ({ type: DELETE_ROAD_ERROR, id, error });
+
 export const createRoad = (id) => ({ type: CREATE_ROAD, id });
 export const createRoadSuccess = () => ({ type: CREATE_ROAD_SUCCESS });
 export const createRoadError = (error) => ({ type: CREATE_ROAD_ERROR, error });
@@ -99,6 +110,7 @@ export const fetchRoadsEpic = (province, district, page, sortField, sortOrder) =
     .catch((err) => dispatch(fetchRoadsError(err, province, district, page, sortField, sortOrder)));
 };
 
+
 export const fetchRoadCountEpic = (province, district) => (dispatch) => {
   dispatch(fetchRoadCount(province, district));
 
@@ -116,6 +128,22 @@ export const fetchRoadCountEpic = (province, district) => (dispatch) => {
       dispatch(fetchRoadCountSuccess(count, pageCount, osmCount, province, district));
     })
     .catch((err) => dispatch(fetchRoadCountError(err, province, district)));
+};
+
+
+export const fetchRoadGeometryEpic = (id) => (dispatch) => {
+  dispatch(fetchRoadGeometry(id));
+
+  return fetch(`${config.api}/field/geometries/${id}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+
+      return response.json();
+    })
+    .then(geoJSON => dispatch(fetchRoadGeometrySuccess(id, geoJSON)))
+    .catch(err => dispatch(fetchRoadGeometryError(id, err)));
 };
 
 
