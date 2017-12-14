@@ -14,8 +14,7 @@ import {
   removeVProMMsIdsCount,
   removeProvinces,
   removeCrosswalk,
-  setCrossWalk,
-  setPreviousLocation
+  setCrossWalk
 } from '../actions/action-creators';
 import ProvinceTable from '../containers/province-table-container';
 
@@ -31,7 +30,6 @@ var AssetsIndex = React.createClass({
     _removeCrosswalk: React.PropTypes.func,
     _removeProvinces: React.PropTypes.func,
     _setCrossWalk: React.PropTypes.func,
-    _setPreviousLocation: React.PropTypes.func,
     provincesFetched: React.PropTypes.bool,
     provinces: React.PropTypes.array,
     crosswalk: React.PropTypes.object,
@@ -55,7 +53,6 @@ var AssetsIndex = React.createClass({
     this.props._removeVProMMsIdsCount();
     this.props._removeCrosswalk();
     this.props._removeProvinces();
-    this.props._setPreviousLocation(this.props.location.pathname);
   },
 
   componentWillReceiveProps: function (nextProps) {
@@ -151,8 +148,7 @@ export default compose(
       _removeVProMMsIdsCount: () => dispatch(removeVProMMsIdsCount()),
       _removeCrosswalk: () => dispatch(removeCrosswalk()),
       _removeProvinces: () => dispatch(removeProvinces()),
-      _setCrossWalk: () => dispatch(setCrossWalk()),
-      _setPreviousLocation: () => dispatch(setPreviousLocation())
+      _setCrossWalk: () => dispatch(setCrossWalk())
     })
   )
 )(AssetsIndex);
