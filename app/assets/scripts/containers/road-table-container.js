@@ -21,10 +21,12 @@ import {
 import RoadTable from '../components/road-table';
 import {
   getRoadPageKey,
-  getRoadCountKey,
-  fetchRoadsEpic,
-  fetchRoadCountEpic
+  fetchRoadsEpic
 } from '../redux/modules/roads';
+import {
+  getRoadCountKey,
+  fetchRoadCountEpic
+} from '../redux/modules/roadCount';
 import {
   ADMIN_MAP
 } from '../constants';
@@ -77,10 +79,10 @@ const RoadTableContainer = compose(
       const roadsPageStatus = state.roads.roadsByPage[roadPageKey] && state.roads.roadsByPage[roadPageKey].status;
 
       const roadCountKey = getRoadCountKey(province, district);
-      const roadCount = state.roads.roadCount[roadCountKey] && state.roads.roadCount[roadCountKey].count;
-      const roadPageCount = state.roads.roadCount[roadCountKey] && state.roads.roadCount[roadCountKey].pageCount;
-      const roadOsmCount = state.roads.roadCount[roadCountKey] && state.roads.roadCount[roadCountKey].osmCount;
-      const roadCountStatus = state.roads.roadCount[roadCountKey] && state.roads.roadCount[roadCountKey].status;
+      const roadCount = state.roadCount[roadCountKey] && state.roadCount[roadCountKey].count;
+      const roadPageCount = state.roadCount[roadCountKey] && state.roadCount[roadCountKey].pageCount;
+      const roadOsmCount = state.roadCount[roadCountKey] && state.roadCount[roadCountKey].osmCount;
+      const roadCountStatus = state.roadCount[roadCountKey] && state.roadCount[roadCountKey].status;
 
       return {
         roadsPage,
