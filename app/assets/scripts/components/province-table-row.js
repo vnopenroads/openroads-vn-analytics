@@ -3,11 +3,11 @@ import { Link } from 'react-router';
 
 
 const ProvinceTableRow = ({
-  id, name, route, field, total, language
+  id, name, routeId, field, total, language
 }) => (
   <tr>
     <td>
-      <Link to={`${language}/assets/${route}`}>
+      <Link to={`${language}/assets/${routeId}`}>
         <strong>{name}</strong>
       </Link>
     </td>
