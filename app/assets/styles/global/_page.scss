@@ -339,68 +339,66 @@
 }
 
 
-.aa {
-  .aa-main,
-  .aa-details {
-    @extend .clearfix;
+.aa-main,
+.aa-details {
+  @extend .clearfix;
+}
+
+.col--main {
+  @include media(medium-up) {
+    @include column(8/12);
+  }
+}
+
+.col--sec {
+  @include media(medium-up) {
+    @include column(4/12);
+  }
+}
+
+.aa-main {
+  > .inner {
+    margin-bottom: 2rem;
   }
 
-  .col--main {
-    @include media(medium-up) {
-      @include column(8/12);
-    }
-  }
+  .aa-map-wrapper {
+    margin: 0.5rem 0;
+    position: relative;
+    overflow: hidden;
+    height: 30rem;
 
-  .col--sec {
-    @include media(medium-up) {
-      @include column(4/12);
-    }
-  }
-
-  .aa-main {
-    > .inner {
-      margin-bottom: 2rem;
-    }
-
-    .aa-map-wrapper {
-      margin: 0.5rem 0;
-      position: relative;
-      overflow: hidden;
-      height: 30rem;
-
-      .aa-map {
+    .aa-map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      &-legend {
         position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 100%;
-        &-legend {
-          position: absolute;
-          z-index: 10;
-          border: .1rem solid $base-alpha-color;
-          border-radius: $base-border-radius;
-          width: 16rem;
-          padding: $global-spacing;
-          background: #fff;
-          margin: 1rem;
-        }
-        &-legend-title {
-          font-weight: bold;
-          margin-bottom: .5rem;
-        }
-        &-legend-label {
-          margin-top: -.5rem;
-          font-size: 0.80rem;
-        }
+        z-index: 10;
+        border: .1rem solid $base-alpha-color;
+        border-radius: $base-border-radius;
+        width: 16rem;
+        padding: $global-spacing;
+        background: #fff;
+        margin: 1rem;
+      }
+      &-legend-title {
+        font-weight: bold;
+        margin-bottom: .5rem;
+      }
+      &-legend-label {
+        margin-top: -.5rem;
+        font-size: 0.80rem;
       }
     }
+  }
 
-    .completeness {
-      margin: 0;
+  .completeness {
+    margin: 0;
 
-      .legend {
-        font-size: 0.75rem;
-        font-weight: $base-font-bold;
-      }
+    .legend {
+      font-size: 0.75rem;
+      font-weight: $base-font-bold;
     }
   }
 }

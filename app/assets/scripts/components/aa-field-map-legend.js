@@ -32,7 +32,7 @@ const AAFieldMapLegend = React.createClass({
       <div className='aa-map-legend'>
         <h3 className='aa-map-legend-title'><T>Field Data Sources</T></h3>
         <ul>
-          {this.renderLegendElements()}
+          {/* {this.renderLegendElements()} */}
         </ul>
       </div>
     );
