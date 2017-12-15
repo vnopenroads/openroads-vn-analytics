@@ -5,7 +5,8 @@ import {
   reduce,
   map,
   property,
-  omit
+  omit,
+  merge
 } from 'lodash';
 import {
   clearRoadCount
@@ -100,45 +101,20 @@ export const fetchRoadsEpic = (province, district, page, sortField, sortOrder) =
     .catch((err) => dispatch(fetchRoadsError(err, province, district, page, sortField, sortOrder)));
 };
 
-const featureCollection = {
-  type: 'FeatureCollection',
-  features: [
-    {
-      type: 'Feature',
-      properties: {},
-      geometry: {
-        type: 'LineString',
-        coordinates: [
-          [ 105.11272430419922, 21.43964748332894 ],
-          [ 105.12027740478516, 21.439967048864617 ],
-          [ 105.1336669921875, 21.445399555874246 ],
-          [ 105.14122009277344, 21.451151401594224 ],
-          [ 105.14911651611328, 21.452110020491638 ],
-          [ 105.15975952148438, 21.450831860561273 ],
-          [ 105.16765594482422, 21.449553689427365 ],
-          [ 105.17555236816406, 21.449553689427365 ]
-        ]
-      }
-    }
-  ]
-};
 
 export const fetchRoadGeometryEpic = (id) => (dispatch) => {
   dispatch(fetchRoadGeometry(id));
 
-  setTimeout(() => {
-    dispatch(fetchRoadGeometrySuccess(id, featureCollection));
-  }, 1000);
-  // return fetch(`${config.api}/field/geometries/${id}`)
-  //   .then(response => {
-  //     if (!response.ok) {
-  //       throw new Error(response.status);
-  //     }
+  return fetch(`${config.api}/properties/roads/${id}.geojson`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
 
-  //     return response.json();
-  //   })
-  //   .then(geoJSON => dispatch(fetchRoadGeometrySuccess(id, geoJSON)))
-  //   .catch(err => dispatch(fetchRoadGeometryError(id, err)));
+      return response.json();
+    })
+    .then(geoJSON => dispatch(fetchRoadGeometrySuccess(id, geoJSON)))
+    .catch(err => dispatch(fetchRoadGeometryError(id, err)));
 };
 
 
@@ -233,7 +209,7 @@ export default (
     const pageKey = getRoadPageKey(province, district, page, sortField, sortOrder);
 
     return Object.assign({}, state, {
-      roadsById: Object.assign({}, state.roadsById, roadsById),
+      roadsById: merge({}, state.roadsById, roadsById),
       roadsByPage: Object.assign({}, state.roadsByPage, {
         [pageKey]: {
           status: 'complete',
