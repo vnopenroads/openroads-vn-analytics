@@ -58,8 +58,8 @@ export const fetchRoadsError = (error, province, district, page, sortField, sort
 export const clearRoadsPages = () => ({ type: CLEAR_ROADS_PAGES });
 
 export const fetchRoadGeometry = (id) => ({ type: FETCH_ROAD_GEOMETRY, id });
-export const fetchRoadGeometrySuccess = (id, geoJSON) => ({ type: FETCH_ROAD_GEOMETRY, id, geoJSON });
-export const fetchRoadGeometryError = (id, error) => ({ type: FETCH_ROAD_GEOMETRY, id, error });
+export const fetchRoadGeometrySuccess = (id, geoJSON) => ({ type: FETCH_ROAD_GEOMETRY_SUCCESS, id, geoJSON });
+export const fetchRoadGeometryError = (id, error) => ({ type: FETCH_ROAD_GEOMETRY_ERROR, id, error });
 
 export const editRoad = (id, newId) => ({ type: EDIT_ROAD, id, newId });
 export const editRoadSuccess = (id, newId) => ({ type: EDIT_ROAD_SUCCESS, id, newId });
@@ -100,20 +100,45 @@ export const fetchRoadsEpic = (province, district, page, sortField, sortOrder) =
     .catch((err) => dispatch(fetchRoadsError(err, province, district, page, sortField, sortOrder)));
 };
 
+const featureCollection = {
+  type: 'FeatureCollection',
+  features: [
+    {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'LineString',
+        coordinates: [
+          [ 105.11272430419922, 21.43964748332894 ],
+          [ 105.12027740478516, 21.439967048864617 ],
+          [ 105.1336669921875, 21.445399555874246 ],
+          [ 105.14122009277344, 21.451151401594224 ],
+          [ 105.14911651611328, 21.452110020491638 ],
+          [ 105.15975952148438, 21.450831860561273 ],
+          [ 105.16765594482422, 21.449553689427365 ],
+          [ 105.17555236816406, 21.449553689427365 ]
+        ]
+      }
+    }
+  ]
+};
 
 export const fetchRoadGeometryEpic = (id) => (dispatch) => {
   dispatch(fetchRoadGeometry(id));
 
-  return fetch(`${config.api}/field/geometries/${id}`)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(response.status);
-      }
+  setTimeout(() => {
+    dispatch(fetchRoadGeometrySuccess(id, featureCollection));
+  }, 1000);
+  // return fetch(`${config.api}/field/geometries/${id}`)
+  //   .then(response => {
+  //     if (!response.ok) {
+  //       throw new Error(response.status);
+  //     }
 
-      return response.json();
-    })
-    .then(geoJSON => dispatch(fetchRoadGeometrySuccess(id, geoJSON)))
-    .catch(err => dispatch(fetchRoadGeometryError(id, err)));
+  //     return response.json();
+  //   })
+  //   .then(geoJSON => dispatch(fetchRoadGeometrySuccess(id, geoJSON)))
+  //   .catch(err => dispatch(fetchRoadGeometryError(id, err)));
 };
 
 
@@ -231,6 +256,14 @@ export default (
   } else if (action.type === CLEAR_ROADS_PAGES) {
     return Object.assign({}, state, {
       roadsByPage: {}
+    });
+  } else if (action.type === FETCH_ROAD_GEOMETRY_SUCCESS) {
+    return Object.assign({}, state, {
+      roadsById: Object.assign({}, state.roadsById, {
+        [action.id]: Object.assign({}, state.roadsById[action.id] || {}, {
+          geoJSON: action.geoJSON
+        })
+      })
     });
   }
 
