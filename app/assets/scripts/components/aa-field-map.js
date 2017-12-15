@@ -102,8 +102,10 @@ var AAFieldMap = React.createClass({
       var lngLatZoom = generateLngLatZoom(this.props.geoJSON);
 
       this.map.addSource(vpromm, { type: 'geojson', data: geoJSON });
-      this.map.setCenter([lngLatZoom.lng, lngLatZoom.lat]);
-      this.map.setZoom(lngLatZoom.zoom);
+      this.map.flyTo({
+        center: [lngLatZoom.lng, lngLatZoom.lat],
+        zoom: lngLatZoom.zoom
+      });
 
       this.map.addLayer({
         id: `${vpromm}-layer`,
@@ -119,17 +121,17 @@ var AAFieldMap = React.createClass({
 
 
   render: function () {
-    const { adminName, vpromm } = this.props;
+    const { vpromm } = this.props;
 
     return (
       <div>
         <div className="a-headline a-header">
-          <h1>{adminName} - {vpromm}</h1>
+          <h1>{vpromm}</h1>
         </div>
 
         <div className="a-main__status">
           <div className='aa-map-wrapper'>
-            <div id='aa-map' className='aa-map'></div>
+            <div id='aa-map' className='aa-map' />
             {/* <AAFieldMapLegend sources={uniq(sources)} /> */}
           </div>
         </div>
