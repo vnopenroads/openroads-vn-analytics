@@ -41,14 +41,14 @@ const LengthChart = ({platformLength, tabularLength}) => (
       <dd>
         <div style={{
           width: `${platformLength / (Math.max(platformLength, tabularLength)) * 100 * 0.5}%`
-        }}></div>
+        }} />
         <span>{`${round(platformLength, 1)} km`}</span>
       </dd>
       <dt>Length (Tabular)</dt>
       <dd>
         <div style={{
           width: `${tabularLength / (Math.max(platformLength, tabularLength)) * 100 * 0.5}%`
-        }}></div>
+        }} />
         <span>{`${round(tabularLength, 1)} km`}</span>
       </dd>
     </div>
