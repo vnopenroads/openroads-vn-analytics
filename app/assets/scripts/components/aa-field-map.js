@@ -54,13 +54,9 @@ const generateLngLatZoom = (featureCollection) => {
 var AAFieldMap = React.createClass({
   displayName: 'AAFieldMap',
   propTypes: {
-    adminName: React.PropTypes.string,
-    roadId: React.PropTypes.string,
+    status: React.PropTypes.string,
     geoJSON: React.PropTypes.object,
-    provinceName: React.PropTypes.string,
-    vpromm: React.PropTypes.string,
-    location: React.PropTypes.object,
-    _removeVProMMsSourceGeoJSON: React.PropTypes.func
+    vpromm: React.PropTypes.string
   },
 
   getInitialState: function () {
@@ -82,13 +78,17 @@ var AAFieldMap = React.createClass({
 
     this.map.addControl(new mapboxgl.ScaleControl({ unit: 'metric' }));
     this.map.addControl(new mapboxgl.NavigationControl());
+
+    if (this.props.geoJSON && !this.state.layerRendered) {
+      this.renderLayer();
+    }
   },
 
 
-  componentWillReceiveProps: function ({ status, geoJSON }) {
+  componentWillReceiveProps: function ({ geoJSON }) {
     // TODO - rendering map could be less of a kludge w/ proper react/mapbox-gl bindings
-    if (status === 'complete' && geoJSON && !this.state.layerRendered) {
-      this.renderLayer(geoJSON);
+    if (geoJSON && !this.state.layerRendered) {
+      this.renderLayer();
     }
   },
 
@@ -141,7 +141,9 @@ var AAFieldMap = React.createClass({
 
 
 const reducer = (
-  state = {},
+  state = {
+    status: 'complete'
+  },
   action
 ) => {
   if (action.type === FETCH_ROAD_GEOMETRY) {
@@ -178,7 +180,7 @@ module.exports = compose(
   lifecycle({
     componentWillMount: function () {
       const { vpromm, geoJSON, status, fetchRoadGeometry } = this.props;
-      if (!geoJSON && status !== 'pending' && status !== 'complete') {
+      if (!geoJSON && status !== 'pending' && status !== 'error') {
         fetchRoadGeometry(vpromm);
       }
     }
