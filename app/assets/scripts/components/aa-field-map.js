@@ -128,15 +128,13 @@ var AAFieldMap = React.createClass({
     const { vpromm, provinceName } = this.props;
 
     return (
-      <div>
+      <div className="aa-map-page">
         <div className="a-headline a-header">
           <h1>{vpromm} {provinceName}</h1>
         </div>
 
-        <div className="a-main__status">
-          <div className='aa-map-wrapper'>
-            <div id='aa-map' className='aa-map' />
-          </div>
+        <div className="aa-map-container">
+          <div id='aa-map' className='aa-map' />
         </div>
       </div>
     );
