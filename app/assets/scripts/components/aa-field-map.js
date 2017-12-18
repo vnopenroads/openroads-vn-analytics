@@ -10,10 +10,12 @@ import {
   compose,
   getContext,
   withProps,
+  withHandlers,
   lifecycle
 } from 'recompose';
 import { local } from 'redux-fractal';
 import { createStore } from 'redux';
+import { Link, withRouter } from 'react-router';
 import {
   FETCH_ROAD_GEOMETRY,
   FETCH_ROAD_GEOMETRY_SUCCESS,
@@ -63,7 +65,8 @@ var AAFieldMap = React.createClass({
     status: React.PropTypes.string,
     geoJSON: React.PropTypes.object,
     vpromm: React.PropTypes.string,
-    provinceName: React.PropTypes.string
+    provinceName: React.PropTypes.string,
+    navigateBack: React.PropTypes.func
   },
 
   getInitialState: function () {
@@ -125,12 +128,20 @@ var AAFieldMap = React.createClass({
 
 
   render: function () {
-    const { vpromm, provinceName } = this.props;
+    const { vpromm, provinceName, navigateBack } = this.props;
 
     return (
       <div className="aa-map-page">
+        <div className="back-button">
+          <i className="collecticon-chevron-left" />
+          <Link
+            onClick={navigateBack}
+          >
+            {provinceName}
+          </Link>
+        </div>
         <div className="a-headline a-header">
-          <h1>{vpromm} {provinceName}</h1>
+          <h1>{vpromm}</h1>
         </div>
 
         <div className="aa-map-container">
@@ -160,6 +171,7 @@ const reducer = (
 };
 
 module.exports = compose(
+  withRouter,
   getContext({ language: React.PropTypes.string }),
   withProps(({ params: { vpromm } }) => ({ vpromm })),
   local({
@@ -183,6 +195,9 @@ module.exports = compose(
       fetchRoadGeometry: (id) => dispatch(fetchRoadGeometryEpic(id))
     })
   ),
+  withHandlers({
+    navigateBack: ({ router }) => () => router.goBack()
+  }),
   lifecycle({
     componentWillMount: function () {
       const { vpromm, geoJSON, status, fetchRoadGeometry } = this.props;

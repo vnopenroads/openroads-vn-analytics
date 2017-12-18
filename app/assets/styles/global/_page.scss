@@ -368,9 +368,12 @@
     left: 0;
     right: 0;
     margin: 1rem;
+    .back-button {
+      padding: 0;
+    }
     .aa-map-container {  
       position: absolute;
-      top: 60px;
+      top: 92px;
       bottom: 0;
       width: 100%;
       padding: 0;
