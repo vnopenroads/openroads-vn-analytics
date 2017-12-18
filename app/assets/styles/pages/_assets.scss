@@ -298,6 +298,24 @@ td.table-properties-cell-view-buttons {
   }
 }
 
+.table-properties-chart {
+  div {
+    height: 11px;
+    background-color: $link-color;
+    float: left;
+    margin-top: 3px;
+  }
+
+  span {
+    padding-left: $global-spacing / 2;
+  }
+
+  dt,
+  dd {
+    margin-bottom: 0;
+  }
+}
+
 .a-subnav {
   margin: 0 0 ($global-spacing * 2) 0;
 

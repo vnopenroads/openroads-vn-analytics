@@ -58,7 +58,7 @@ const RowReadView = ({
 
       <td className='table-properties-cell'>
         {
-          properties.length !== 0 &&
+          Object.keys(properties).length !== 0 &&
             <div>
               <button
                 type='button'
@@ -74,7 +74,7 @@ const RowReadView = ({
                   />
               }
             </div>
-          }
+        }
       </td>
     </tr>
   );
