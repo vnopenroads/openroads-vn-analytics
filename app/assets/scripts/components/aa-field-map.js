@@ -1,6 +1,6 @@
 import React from 'react';
 import mapboxgl from 'mapbox-gl';
-import { flatten, uniq } from 'lodash';
+import { flatten } from 'lodash';
 import { connect } from 'react-redux';
 import bbox from '@turf/bbox';
 import {
@@ -18,7 +18,6 @@ import {
   fetchRoadGeometryEpic
 } from '../redux/modules/roads';
 import config from '../config';
-import AAFieldMapLegend from './aa-field-map-legend';
 import {
   makeNWSE,
   makeNewZoom,
