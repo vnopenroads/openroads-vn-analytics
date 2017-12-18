@@ -1,7 +1,6 @@
 import React from 'react';
 import mapboxgl from 'mapbox-gl';
 import {
-  flatten,
   find
 } from 'lodash';
 import { connect } from 'react-redux';
@@ -24,39 +23,8 @@ import {
 } from '../redux/modules/roads';
 import config from '../config';
 import {
-  makeNWSE,
-  makeNewZoom,
-  makeCenterpoint,
-  newZoomScale,
-  pixelDistances,
-  transformGeoToPixel
-} from '../utils/zoom';
-import {
   ADMIN_MAP
 } from '../constants';
-
-
-const generateLngLatZoom = (featureCollection) => {
-  // see test for this util for helpful description of
-  // what all is happening here.
-  var bounds = flatten(bbox(featureCollection));
-  var NWSE = makeNWSE(bounds);
-  var dummyZoom = 10;
-  var nw = transformGeoToPixel(NWSE.nw, dummyZoom);
-  var se = transformGeoToPixel(NWSE.se, dummyZoom);
-  var distances = pixelDistances(nw, se);
-  var adminAreaMapDiv = document.getElementById('aa-map');
-  var dimensions = { x: adminAreaMapDiv.offsetWidth, y: adminAreaMapDiv.offsetHeight };
-  var zoomScale = newZoomScale(distances, dimensions);
-  var newZoom = makeNewZoom(zoomScale, dummyZoom);
-  var cp = makeCenterpoint(bounds);
-
-  return {
-    lng: cp.x,
-    lat: cp.y,
-    zoom: newZoom - 2
-  };
-};
 
 
 var AAFieldMap = React.createClass({
@@ -106,13 +74,10 @@ var AAFieldMap = React.createClass({
     this.map.on('load', () => {
       const { vpromm, geoJSON } = this.props;
 
-      var lngLatZoom = generateLngLatZoom(this.props.geoJSON);
-
       this.map.addSource(vpromm, { type: 'geojson', data: geoJSON });
-      this.map.flyTo({
-        center: [lngLatZoom.lng, lngLatZoom.lat],
-        zoom: lngLatZoom.zoom
-      });
+      if (geoJSON.features.length > 0) {
+        this.map.fitBounds(bbox(geoJSON), { padding: 20 });
+      }
 
       this.map.addLayer({
         id: `${vpromm}-layer`,
