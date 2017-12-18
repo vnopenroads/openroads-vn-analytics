@@ -165,5 +165,7 @@
     "Pavement Condition Class": "Pavement Condition Class",
     "Delivery Vehicle (veh/day)": "Delivery Vehicle (veh/day)",
     "Articulated Truck (veh/day)": "Articulated Truck (veh/day)",
-    "Traffic Annual Growth Scenario": "Traffic Annual Growth Scenario"
+    "Traffic Annual Growth Scenario": "Traffic Annual Growth Scenario",
+    "Length (ORMA)": "Length (ORMA)",
+    "Length (Tabular)": "Length (Tabular)"
 }

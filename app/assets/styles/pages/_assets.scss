@@ -306,13 +306,13 @@ td.table-properties-cell-view-buttons {
     margin-top: 3px;
   }
 
-  span {
-    padding-left: $global-spacing / 2;
-  }
-
   dt,
   dd {
     margin-bottom: 0;
+  }
+
+  dd > span {
+    padding-left: $global-spacing / 2;
   }
 }
 
