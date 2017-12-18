@@ -1,6 +1,9 @@
 import React from 'react';
 import mapboxgl from 'mapbox-gl';
-import { flatten } from 'lodash';
+import {
+  flatten,
+  find
+} from 'lodash';
 import { connect } from 'react-redux';
 import bbox from '@turf/bbox';
 import {
@@ -26,6 +29,9 @@ import {
   pixelDistances,
   transformGeoToPixel
 } from '../utils/zoom';
+import {
+  ADMIN_MAP
+} from '../constants';
 
 
 const generateLngLatZoom = (featureCollection) => {
@@ -56,13 +62,12 @@ var AAFieldMap = React.createClass({
   propTypes: {
     status: React.PropTypes.string,
     geoJSON: React.PropTypes.object,
-    vpromm: React.PropTypes.string
+    vpromm: React.PropTypes.string,
+    provinceName: React.PropTypes.string
   },
 
   getInitialState: function () {
-    return {
-      layerRendered: false
-    };
+    return { layerRendered: false };
   },
 
   componentDidMount: function () {
@@ -120,18 +125,17 @@ var AAFieldMap = React.createClass({
 
 
   render: function () {
-    const { vpromm } = this.props;
+    const { vpromm, provinceName } = this.props;
 
     return (
       <div>
         <div className="a-headline a-header">
-          <h1>{vpromm}</h1>
+          <h1>{vpromm} {provinceName}</h1>
         </div>
 
         <div className="a-main__status">
           <div className='aa-map-wrapper'>
             <div id='aa-map' className='aa-map' />
-            {/* <AAFieldMapLegend sources={uniq(sources)} /> */}
           </div>
         </div>
       </div>
@@ -169,10 +173,14 @@ module.exports = compose(
       [FETCH_ROAD_GEOMETRY, FETCH_ROAD_GEOMETRY_SUCCESS, FETCH_ROAD_GEOMETRY_ERROR].indexOf(type) > -1
   }),
   connect(
-    (state, { vpromm }) => ({
-      geoJSON: state.roads.roadsById[vpromm] && state.roads.roadsById[vpromm].geoJSON,
-      adminName: '' // TODO - request province name from /admin/:unit_id/info.  Or, name likely already availble in store in state.provinces
-    }),
+    (state, { vpromm }) => {
+      const province = find(ADMIN_MAP.province, ({ id }) => id === vpromm.substring(0, 2));
+
+      return {
+        geoJSON: state.roads.roadsById[vpromm] && state.roads.roadsById[vpromm].geoJSON,
+        provinceName: province ? province.name : ''
+      };
+    },
     (dispatch) => ({
       fetchRoadGeometry: (id) => dispatch(fetchRoadGeometryEpic(id))
     })
