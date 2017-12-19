@@ -45,6 +45,9 @@ export const EDIT_ROAD_ERROR = 'EDIT_ROAD_ERROR';
 export const DELETE_ROAD = 'DELETE_ROAD';
 export const DELETE_ROAD_SUCCESS = 'DELETE_ROAD_SUCCESS';
 export const DELETE_ROAD_ERROR = 'DELETE_ROAD_ERROR';
+export const EDIT_ROAD_PROPERTY = 'EDIT_ROAD_PROPERTY';
+export const EDIT_ROAD_PROPERTY_SUCCESS = 'EDIT_ROAD_PROPERTY_SUCCESS';
+export const EDIT_ROAD_PROPERTY_ERROR = 'EDIT_ROAD_PROPERTY_ERROR';
 export const DELETE_ROAD_PROPERTY = 'DELETE_ROAD_PROPERTY';
 export const DELETE_ROAD_PROPERTY_SUCCESS = 'DELETE_ROAD_PROPERTY_SUCCESS';
 export const DELETE_ROAD_PROPERTY_ERROR = 'DELETE_ROAD_PROPERTY_ERROR';
@@ -76,6 +79,10 @@ export const deleteRoadError = (id, error) => ({ type: DELETE_ROAD_ERROR, id, er
 export const createRoad = (id) => ({ type: CREATE_ROAD, id });
 export const createRoadSuccess = () => ({ type: CREATE_ROAD_SUCCESS });
 export const createRoadError = (error) => ({ type: CREATE_ROAD_ERROR, error });
+
+export const editRoadProperty = (id, key, value) => ({ type: EDIT_ROAD_PROPERTY, id, key, value });
+export const editRoadPropertySuccess = (id, key, value) => ({ type: EDIT_ROAD_PROPERTY_SUCCESS, id, key, value });
+export const editRoadPropertyError = (id, key, value, error) => ({ type: EDIT_ROAD_PROPERTY_ERROR, id, key, value, error });
 
 export const deleteRoadProperty = (id, key) => ({ type: DELETE_ROAD_PROPERTY, id, key });
 export const deleteRoadPropertySuccess = (id, key) => ({ type: DELETE_ROAD_PROPERTY_SUCCESS, id, key });
@@ -189,6 +196,15 @@ export const deleteRoadEpic = (id) => (dispatch) => {
 };
 
 
+export const editRoadPropertyEpic = (id, key, value) => (dispatch) => {
+  dispatch(editRoadProperty(id, key, value));
+
+  setTimeout(() => {
+    dispatch(editRoadPropertySuccess(id, key, value));
+  }, 1000);
+};
+
+
 export const deleteRoadPropertyEpic = (id, key) => (dispatch) => {
   dispatch(deleteRoadProperty(id, key));
 
@@ -254,6 +270,16 @@ export default (
       roadsById: Object.assign({}, state.roadsById, {
         [action.id]: Object.assign({}, state.roadsById[action.id] || {}, {
           geoJSON: action.geoJSON
+        })
+      })
+    });
+  } else if (action.type === EDIT_ROAD_PROPERTY_SUCCESS) {
+    return Object.assign({}, state, {
+      roadsById: Object.assign({}, state.roadsById, {
+        [action.id]: Object.assign({}, state.roadsById[action.id], {
+          properties: Object.assign({}, state.roadsById[action.id].properties, {
+            [action.key]: action.value
+          })
         })
       })
     });

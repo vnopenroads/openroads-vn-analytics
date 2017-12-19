@@ -4,7 +4,10 @@ import T, {
 } from './t';
 
 
-const RowProperty = ({ propertyKey, propertyValue, status, language, deleteHandler }) => (
+const RowProperty = ({
+  propertyKey, propertyValue, editPropertyValue, status, shouldShowEdit, language,
+  showEditHandler, hideEditHandler, inputKeyDown, updateEditValue, submitEditHandler, deleteHandler
+}) => (
   <tr
     className={`table-properties-row ${status}`}
   >
@@ -22,10 +25,30 @@ const RowProperty = ({ propertyKey, propertyValue, status, language, deleteHandl
     </td>
     <td
       className="property-value"
+      onClick={showEditHandler}
     >
-      {status === 'error' ?
-        <strong className="error-message"><T>Error</T></strong> :
-        propertyValue
+      {
+        status === 'error' ?
+          <strong className="error-message"><T>Error</T></strong> :
+        shouldShowEdit ?
+          <form
+            className="property-value-input"
+            onSubmit={submitEditHandler}
+            onBlur={hideEditHandler}
+          >
+            <fieldset disabled={status === 'pending'}>
+              <input
+                type="text"
+                value={editPropertyValue}
+                onChange={updateEditValue}
+                onKeyDown={inputKeyDown}
+                ref={node => node && node.focus()}
+              />
+            </fieldset>
+          </form> :
+          <div>
+            {propertyValue}
+          </div>
       }
     </td>
   </tr>
