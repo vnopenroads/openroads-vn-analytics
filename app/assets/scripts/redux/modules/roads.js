@@ -159,7 +159,10 @@ export const editRoadEpic = (id, newId) => (dispatch) => {
 
   return fetch(`${config.api}/properties/roads/${id}/move`, {
     method: 'POST',
-    body: new Blob([JSON.stringify({ id: newId })], { type: 'application/json' })
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id: newId })
   })
     .then(response => {
       if (!response.ok) {
@@ -199,18 +202,42 @@ export const deleteRoadEpic = (id) => (dispatch) => {
 export const editRoadPropertyEpic = (id, key, value) => (dispatch) => {
   dispatch(editRoadProperty(id, key, value));
 
-  setTimeout(() => {
-    dispatch(editRoadPropertySuccess(id, key, value));
-  }, 1000);
+  return fetch(`${config.api}/properties/roads/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json-patch+json'
+    },
+    body: JSON.stringify([{ op: 'replace', path: `/${key}`, value }])
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+
+      dispatch(editRoadPropertySuccess(id, key, value));
+    })
+    .catch((err) => dispatch(editRoadPropertyError(id, key, value, err)));
 };
 
 
 export const deleteRoadPropertyEpic = (id, key) => (dispatch) => {
   dispatch(deleteRoadProperty(id, key));
 
-  setTimeout(() => {
-    dispatch(deleteRoadPropertyError(id, key));
-  }, 1000);
+  return fetch(`${config.api}/properties/roads/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json-patch+json'
+    },
+    body: JSON.stringify([{ op: 'remove', path: `/${key}` }])
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+
+      dispatch(deleteRoadPropertySuccess(id, key));
+    })
+    .catch((err) => dispatch(deleteRoadPropertyError(id, key, err)));
 };
 
 

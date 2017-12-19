@@ -83,8 +83,12 @@ const RoadRowPropertyContainer = compose(
       [EDIT_ROAD_PROPERTY, EDIT_ROAD_PROPERTY_SUCCESS, EDIT_ROAD_PROPERTY_ERROR, DELETE_ROAD_PROPERTY, DELETE_ROAD_PROPERTY_ERROR].indexOf(type) > -1
   }),
   withHandlers({
-    submitEditHandler: ({ editPropertyValue, submitEdit }) => (e) => {
+    submitEditHandler: ({ propertyValue, editPropertyValue, submitEdit, hideEditHandler }) => (e) => {
       e.preventDefault();
+      if (propertyValue === editPropertyValue) {
+        return hideEditHandler();
+      }
+
       submitEdit(editPropertyValue);
     },
     inputKeyDown: ({ hideEditHandler }) => ({ which }) => which === 27 && hideEditHandler()
