@@ -7,7 +7,7 @@ import T from './t';
 import RoadRowProperty from '../containers/road-row-property-container';
 
 
-const RowProperties = ({ properties }) => (
+const RowProperties = ({ roadId, properties }) => (
   <div
     className="table-properties"
   >
@@ -23,6 +23,7 @@ const RowProperties = ({ properties }) => (
             key !== 'Road Length (VProMMS)' && key !== 'length' &&
               <RoadRowProperty
                 key={key}
+                roadId={roadId}
                 propertyKey={key}
                 propertyValue={prop}
               />

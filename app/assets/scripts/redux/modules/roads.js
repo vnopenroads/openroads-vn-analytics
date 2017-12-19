@@ -45,6 +45,9 @@ export const EDIT_ROAD_ERROR = 'EDIT_ROAD_ERROR';
 export const DELETE_ROAD = 'DELETE_ROAD';
 export const DELETE_ROAD_SUCCESS = 'DELETE_ROAD_SUCCESS';
 export const DELETE_ROAD_ERROR = 'DELETE_ROAD_ERROR';
+export const DELETE_ROAD_PROPERTY = 'DELETE_ROAD_PROPERTY';
+export const DELETE_ROAD_PROPERTY_SUCCESS = 'DELETE_ROAD_PROPERTY_SUCCESS';
+export const DELETE_ROAD_PROPERTY_ERROR = 'DELETE_ROAD_PROPERTY_ERROR';
 
 
 /**
@@ -73,6 +76,10 @@ export const deleteRoadError = (id, error) => ({ type: DELETE_ROAD_ERROR, id, er
 export const createRoad = (id) => ({ type: CREATE_ROAD, id });
 export const createRoadSuccess = () => ({ type: CREATE_ROAD_SUCCESS });
 export const createRoadError = (error) => ({ type: CREATE_ROAD_ERROR, error });
+
+export const deleteRoadProperty = (id, key) => ({ type: DELETE_ROAD_PROPERTY, id, key });
+export const deleteRoadPropertySuccess = (id, key) => ({ type: DELETE_ROAD_PROPERTY_SUCCESS, id, key });
+export const deleteRoadPropertyError = (id, key, error) => ({ type: DELETE_ROAD_PROPERTY_ERROR, id, key, error });
 
 
 export const fetchRoadsEpic = (province, district, page, sortField, sortOrder) => (dispatch) => {
@@ -182,6 +189,15 @@ export const deleteRoadEpic = (id) => (dispatch) => {
 };
 
 
+export const deleteRoadPropertyEpic = (id, key) => (dispatch) => {
+  dispatch(deleteRoadProperty(id, key));
+
+  setTimeout(() => {
+    dispatch(deleteRoadPropertyError(id, key));
+  }, 1000);
+};
+
+
 /**
  * reducer
  */
@@ -238,6 +254,14 @@ export default (
       roadsById: Object.assign({}, state.roadsById, {
         [action.id]: Object.assign({}, state.roadsById[action.id] || {}, {
           geoJSON: action.geoJSON
+        })
+      })
+    });
+  } else if (action.type === DELETE_ROAD_PROPERTY_SUCCESS) {
+    return Object.assign({}, state, {
+      roadsById: Object.assign({}, state.roadsById, {
+        [action.id]: Object.assign({}, state.roadsById[action.id], {
+          properties: omit(state.roadsById[action.id].properties, [action.key])
         })
       })
     });
