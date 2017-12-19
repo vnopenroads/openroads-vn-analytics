@@ -30,23 +30,23 @@ const validateLanguage = ({ params: { lang } }, replace) => {
 render((
   <Provider store={store}>
     <Router history={hashHistory}>
-      <Redirect from='/' to='/en' />
-      <Route path='/:lang' component={App} onEnter={validateLanguage}>
-        <Route path='tasks' component={Tasks} pageClass='tasks' />
-        <Route path='upload' component={Upload} pageClass='upload' />
-        <Route path='editor' component={Editor} pageClass='editor' />
-        <Route path='editor/*' component={Editor} pageClass='editor' />
-        <Route path='explore' component={Explore} pageClass='explore' />
-        <Route path='faq' component={Faq} pageClass='faq' />
-        <Route path='assets' component={Assets}>
-          <IndexRoute component={AssetsIndex} pageClass='assets' />
-          <Route path='road/:vpromm' component={AAFieldMap} pageClass='assets-aa' />
-          <Route path=':aaId' component={AssetsAA} pageClass='assets-aa' />
-          <Route path=':aaId/:aaIdSub' component={AssetsAA} pageClass='assets-aa' />
+        <Redirect from='/' to='/en' />
+        <Route path='/:lang' component={App} onEnter={validateLanguage}>
+          <Route path='tasks' component={Tasks} pageClass='tasks' />
+          <Route path='upload' component={Upload} pageClass='upload' />
+          <Route path='editor' component={Editor} pageClass='editor' />
+          <Route path='editor/*' component={Editor} pageClass='editor' />
+          <Route path='explore' component={Explore} pageClass='explore' />
+          <Route path='faq' component={Faq} pageClass='faq' />
+          <Route path='assets' component={Assets}>
+            <IndexRoute component={AssetsIndex} pageClass='assets' />
+            <Route path='road/:vpromm' component={AAFieldMap} pageClass='assets-aa' />
+            <Route path=':aaId' component={AssetsAA} pageClass='assets-aa' />
+            <Route path=':aaId/:aaIdSub' component={AssetsAA} pageClass='assets-aa' />
+          </Route>
+          <IndexRoute component={Home} pageClass='page--landing' />
+          <Route path='*' component={UhOh}/>
         </Route>
-        <IndexRoute component={Home} pageClass='page--landing' />
-        <Route path='*' component={UhOh}/>
-      </Route>
     </Router>
   </Provider>
 ), document.querySelector('.site-canvas'));

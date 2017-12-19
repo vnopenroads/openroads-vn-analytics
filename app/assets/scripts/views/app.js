@@ -8,6 +8,8 @@ import {
 } from 'recompose';
 import { fetchSearchResults, cleanSearchResults } from '../actions/action-creators';
 import SiteHeader from '../components/site-header';
+import withLastLocation from '../containers/withLastLocation';
+
 
 var App = React.createClass({
   displayName: 'App',
@@ -37,6 +39,7 @@ var App = React.createClass({
 
 
 export default compose(
+  withLastLocation,
   connect(
     state => ({
       subregions: state.adminSubregions,

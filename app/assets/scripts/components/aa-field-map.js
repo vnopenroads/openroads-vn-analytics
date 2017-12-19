@@ -1,6 +1,7 @@
 import React from 'react';
 import mapboxgl from 'mapbox-gl';
 import {
+  toPairs,
   find
 } from 'lodash';
 import { connect } from 'react-redux';
@@ -137,8 +138,22 @@ const reducer = (
 
 module.exports = compose(
   withRouter,
-  getContext({ language: React.PropTypes.string }),
-  withProps(({ params: { vpromm } }) => ({ vpromm })),
+  getContext({
+    language: React.PropTypes.string,
+    lastLocation: React.PropTypes.string
+  }),
+  withProps(({ lastLocation, language, params: { vpromm } }) => {
+    const [aaId, { name }] = find(
+      toPairs(ADMIN_MAP.province),
+      ([aaId, { id }]) => id === vpromm.substring(0, 2)
+    );
+
+    return {
+      vpromm,
+      provinceName: name,
+      aaId
+    };
+  }),
   local({
     key: ({ vpromm }) => `${vpromm}-road-map`,
     createStore: () => createStore(reducer),
@@ -148,20 +163,19 @@ module.exports = compose(
       [FETCH_ROAD_GEOMETRY, FETCH_ROAD_GEOMETRY_SUCCESS, FETCH_ROAD_GEOMETRY_ERROR].indexOf(type) > -1
   }),
   connect(
-    (state, { vpromm }) => {
-      const province = find(ADMIN_MAP.province, ({ id }) => id === vpromm.substring(0, 2));
-
-      return {
-        geoJSON: state.roads.roadsById[vpromm] && state.roads.roadsById[vpromm].geoJSON,
-        provinceName: province ? province.name : ''
-      };
-    },
+    (state, { vpromm }) => ({
+      geoJSON: state.roads.roadsById[vpromm] && state.roads.roadsById[vpromm].geoJSON
+    }),
     (dispatch) => ({
       fetchRoadGeometry: (id) => dispatch(fetchRoadGeometryEpic(id))
     })
   ),
   withHandlers({
-    navigateBack: ({ router }) => () => router.goBack()
+    navigateBack: ({ router, lastLocation, language, aaId }) => () => {
+      lastLocation ?
+        router.push({ pathname: lastLocation }) :
+        router.push({ pathname: `/${language}/assets/${aaId}` });
+    }
   }),
   lifecycle({
     componentWillMount: function () {
