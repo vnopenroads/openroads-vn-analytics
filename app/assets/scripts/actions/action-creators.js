@@ -127,46 +127,6 @@ export function fetchSearchResults (searchQuery) {
 // ////////////////////////////////////////////////////////////////
 //                   VProMMS IDs Source Data                     //
 // ////////////////////////////////////////////////////////////////
-
-function requestVProMMSidSourceGeoJSON () {
-  return {
-    type: actions.REQUEST_VPROMMS_SOURCE_GEOJSON
-  };
-}
-
-function recieveVPRoMMSidSourceGeoJSON (json, vprommId, provinceName) {
-  return {
-    type: actions.RECIEVE_VPROMMS_SOURCE_GEOJSON,
-    json: json,
-    vprommId: vprommId,
-    provinceName: provinceName,
-    recievedAt: Date.now()
-  };
-}
-
-export function fetchVProMMsidSourceGeoJSON (vprommId, provinceName) {
-  return function (dispatch) {
-    dispatch(requestVProMMSidSourceGeoJSON());
-    // hit the grouped field geometries endpoint. do not download it.
-    let url = `${config.api}/field/geometries/${vprommId}?grouped=true`;
-    return fetch(url)
-    .then(response => response.json())
-    .then(json => {
-      if (json.statusCode >= 400) {
-        throw new Error('Bad Response');
-      }
-      dispatch(recieveVPRoMMSidSourceGeoJSON(json, vprommId, provinceName));
-    });
-  };
-}
-
-export function removeVProMMsSourceGeoJSON () {
-  return {
-    type: actions.REMOVE_VPROMMS_SOURCE_GEOJSON,
-    receivedAt: Date.now()
-  };
-}
-
 function requestVProMMsidsCount () {
   return {
     type: actions.REQUEST_VPROMMS_IDS_COUNT
@@ -333,12 +293,6 @@ function receiveFieldVProMMsIdsCount (json) {
   };
 }
 
-export function removeFieldVProMMsIdsCount () {
-  return {
-    type: actions.REMOVE_VPROMMS_FIELD_IDS_COUNT
-  };
-}
-
 export function fetchFieldVProMsIdsCount (level) {
   return function (dispatch) {
     dispatch(requestFieldVProMMsIdsCount());
@@ -433,23 +387,5 @@ export function fetchProvinces () {
       }
       dispatch(receiveProvinces(json));
     });
-  };
-}
-
-export function removeProvinces () {
-  return {
-    type: actions.REMOVE_PROVINCES
-  };
-}
-
-export function setCrossWalk () {
-  return {
-    type: actions.SET_CROSSWALK
-  };
-}
-
-export function removeCrosswalk () {
-  return {
-    type: actions.REMOVE_CROSSWALK
   };
 }

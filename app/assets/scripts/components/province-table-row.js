@@ -3,11 +3,11 @@ import { Link } from 'react-router';
 
 
 const ProvinceTableRow = ({
-  id, name, route, field, total, language
+  id, name, routeId, field, total, percentageComplete, language
 }) => (
   <tr>
     <td>
-      <Link to={`${language}/assets/${route}`}>
+      <Link to={`${language}/assets/${routeId}`}>
         <strong>{name}</strong>
       </Link>
     </td>
@@ -17,7 +17,7 @@ const ProvinceTableRow = ({
       <div className='meter'>
         <div
           className='meter__internal'
-          style={ total > 0 ? {width: `${field / total * 100}%`} : {width: 0}}
+          style={{width: `${percentageComplete}%`}}
         />
       </div>
     </td>

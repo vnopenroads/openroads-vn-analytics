@@ -39,10 +39,8 @@ render((
         <Route path='explore' component={Explore} pageClass='explore' />
         <Route path='faq' component={Faq} pageClass='faq' />
         <Route path='assets' component={Assets}>
-          <Route path='road' component={Assets} >
-            <Route path=':vpromm' component={AAFieldMap} pageClass='assets-aa'/>
-          </Route>
           <IndexRoute component={AssetsIndex} pageClass='assets' />
+          <Route path='road/:vpromm' component={AAFieldMap} pageClass='assets-aa' />
           <Route path=':aaId' component={AssetsAA} pageClass='assets-aa' />
           <Route path=':aaId/:aaIdSub' component={AssetsAA} pageClass='assets-aa' />
         </Route>

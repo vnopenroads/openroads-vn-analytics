@@ -48,7 +48,8 @@ const RowReadView = ({
             </Link>
             <a
               className='a-table-action'
-              href={`${api}/field/geometries/${vpromm}?grouped=false&download=true`}
+              href={`${api}/properties/roads/${vpromm}.geojson`}
+              download
             >
               <T>Download</T>
             </a>
