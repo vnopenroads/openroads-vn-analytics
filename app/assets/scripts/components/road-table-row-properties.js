@@ -4,6 +4,7 @@ import {
   round
 } from 'lodash';
 import T from './t';
+import CreateRoadPropertyForm from '../containers/create-road-property-form-container';
 import RoadRowProperty from '../containers/road-row-property-container';
 
 
@@ -11,6 +12,10 @@ const RowProperties = ({ roadId, properties }) => (
   <div
     className="table-properties"
   >
+    <CreateRoadPropertyForm
+      roadId={roadId}
+    />
+
     <LengthChart
       platformLength={properties['length']}
       tabularLength={properties['Road Length (VProMMS)']}

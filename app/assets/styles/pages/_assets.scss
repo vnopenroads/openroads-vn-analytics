@@ -263,10 +263,8 @@ td.table-properties-cell-view-buttons {
 }
 
 .table-properties-list {
-  // @extend .clearfix;
   text-align: left;
   font-size: .875rem;
-  // line-height: 1rem;
   overflow-wrap: break-word;
 
   .table-properties-row {
@@ -330,14 +328,36 @@ td.table-properties-cell-view-buttons {
       }
     }
   }
+}
 
-  dd + dd {
-    margin-left: 48%;
+.create-road-property-form {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+
+  fieldset {
+    border: 0;
+    padding: 0;
   }
 
-  dt:last-of-type,
-  dd:last-of-type {
-    margin-bottom: 0;
+  h3 {
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 4px;
+    color: $secondary-color;
+  }
+
+  input {
+    display: inline-block;
+    width: 46%;
+    margin-right: 4px;
+    font-size: 14px;
+    padding: 2px 4px;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+
+    &.key-input {
+      font-weight: 600;
+    }
   }
 }
 
