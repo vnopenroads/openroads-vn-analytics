@@ -4,34 +4,35 @@ import {
   round
 } from 'lodash';
 import T from './t';
+import RoadRowProperty from '../containers/road-row-property-container';
+
 
 const RowProperties = ({ properties }) => (
   <div
     className="table-properties"
   >
-    <dl className='table-properties-list'>
-      <LengthChart
-        platformLength={properties['length']}
-        tabularLength={properties['Road Length (VProMMS)']}
-      />
-      {
-        map(properties, (prop, key) =>
-          // Since we have the above chart, no need to include length values
-          key.startsWith('Road Length') || key === 'length'
-            ? ''
-            : (
-              <div
+    <LengthChart
+      platformLength={properties['length']}
+      tabularLength={properties['Road Length (VProMMS)']}
+    />
+
+    <table className='table-properties-list'>
+      <tbody>
+        {
+          map(properties, (prop, key) => (
+            key !== 'Road Length (VProMMS)' && key !== 'length' &&
+              <RoadRowProperty
                 key={key}
-              >
-                <dt>{key}</dt>
-                <dd>{prop}</dd>
-              </div>
-            )
-        )
-      }
-    </dl>
+                propertyKey={key}
+                propertyValue={prop}
+              />
+          ))
+        }
+      </tbody>
+    </table>
   </div>
 );
+
 
 const LengthChart = ({platformLength, tabularLength}) => (
   (typeof platformLength === 'undefined' || typeof tabularLength === 'undefined')
