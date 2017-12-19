@@ -139,10 +139,9 @@ const reducer = (
 module.exports = compose(
   withRouter,
   getContext({
-    language: React.PropTypes.string,
-    lastLocation: React.PropTypes.string
+    language: React.PropTypes.string
   }),
-  withProps(({ lastLocation, language, params: { vpromm } }) => {
+  withProps(({ language, params: { vpromm } }) => {
     const [aaId, { name }] = find(
       toPairs(ADMIN_MAP.province),
       ([aaId, { id }]) => id === vpromm.substring(0, 2)
@@ -171,11 +170,9 @@ module.exports = compose(
     })
   ),
   withHandlers({
-    navigateBack: ({ router, lastLocation, language, aaId }) => () => {
-      lastLocation ?
-        router.push({ pathname: lastLocation }) :
-        router.push({ pathname: `/${language}/assets/${aaId}` });
-    }
+    navigateBack: ({ router, language, aaId }) => () => (
+      router.push({ pathname: `/${language}/assets/${aaId}` })
+    )
   }),
   lifecycle({
     componentWillMount: function () {
