@@ -1,6 +1,7 @@
 {
     "Analytics": "Phân tích",
     "Assets": "Tài sản",
+    "Provinces": "Các tỉnh",
     "Explore": "Hiển thị",
     "Editor": "Chỉnh sửa",
     "Tasks": "Nhiệm vụ",
@@ -133,6 +134,7 @@
     "Road Class Code": "Mã cấp đường",
     "Roughness (IRI)": "Độ gồ ghề (IRI)",
     "IRI": "IRI",
+    "No data": "No data",
     "Roughness Score": "Chỉ số độ gồ ghề",
     "Start Longitude": "Kinh độ điểm đầu",
     "Start Point Name": "Tên điểm đầu",
@@ -164,5 +166,7 @@
     "Pavement Condition Class": "Tình trạng mặt đường",
     "Delivery Vehicle (veh/day)": "Xe giao hàng (xe/ngày)",
     "Articulated Truck (veh/day)": "Xe rơ-móoc (xe/ngày)",
-    "Traffic Annual Growth Scenario": "Kịch bản gia tăng lưu lượng hàng năm"
+    "Traffic Annual Growth Scenario": "Kịch bản gia tăng lưu lượng hàng năm",
+    "Length (ORMA)": "Length (ORMA)",
+    "Length (Tabular)": "Length (Tabular)"
 }
