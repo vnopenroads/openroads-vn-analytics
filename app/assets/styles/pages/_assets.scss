@@ -280,6 +280,12 @@ td.table-properties-cell-view-buttons {
       margin: 0;      
     }
 
+    .property-edited {
+      color: $success-color;
+      float: right;
+      line-height: 2rem;
+    }
+
     .error-message {
       color: $secondary-color;
     }

@@ -5,7 +5,7 @@ import T, {
 
 
 const RowProperty = ({
-  propertyKey, propertyValue, editPropertyValue, status, viewState, language,
+  propertyKey, propertyValue, editPropertyValue, status, viewState, language, edited,
   showEditHandler, showReadHandler, showDeleteHandler, inputKeyDown, updateEditValue,
   submitEditHandler, confirmDeleteHandler
 }) => (
@@ -31,6 +31,9 @@ const RowProperty = ({
       >
         <div>
           {propertyValue}
+          {
+            edited && <i className="property-edited collecticon-sm-tick"/>
+          }
         </div>
       </td>
     </tr> :

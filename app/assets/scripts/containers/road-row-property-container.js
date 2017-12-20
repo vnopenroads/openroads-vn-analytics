@@ -24,7 +24,8 @@ const reducerFactory = (roadId, propertyKey, propertyValue) => (
     propertyKey,
     editPropertyValue: propertyValue,
     roadId,
-    viewState: 'read'
+    viewState: 'read',
+    edited: false
   },
   action
 ) => {
@@ -61,7 +62,8 @@ const reducerFactory = (roadId, propertyKey, propertyValue) => (
   } else if (action.type === EDIT_ROAD_PROPERTY_SUCCESS && state.propertyKey === action.key) {
     return Object.assign({}, state, {
       status: 'complete',
-      viewState: 'read'
+      viewState: 'read',
+      edited: true
     });
   }
 
