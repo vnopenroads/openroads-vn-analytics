@@ -1,9 +1,4 @@
-'use strict';
-
 import React from 'react';
-import {
-  debounce
-} from 'lodash';
 import {
   compose,
   lifecycle
@@ -17,12 +12,12 @@ import intersect from '@turf/line-intersect';
 import pointOnLine from '@turf/point-on-line';
 import point from 'turf-point';
 import {
-  setGlobalZoom
-} from '../actions/action-creators';
-import {
   queryOsmEpic,
   deleteEntireWaysEpic
 } from '../redux/modules/osm';
+import {
+  setMapPosition
+} from '../redux/modules/map';
 import {
   fetchNextWayTaskEpic,
   fetchWayTaskCountEpic,
@@ -79,7 +74,7 @@ var Tasks = React.createClass({
 
   propTypes: {
     fetchNextTask: React.PropTypes.func,
-    _setGlobalZoom: React.PropTypes.func,
+    setMapPosition: React.PropTypes.func,
     _queryOsm: React.PropTypes.func,
     _markTaskAsDone: React.PropTypes.func,
     _deleteWays: React.PropTypes.func,
@@ -103,16 +98,6 @@ var Tasks = React.createClass({
     }).addControl(new mapboxgl.NavigationControl(), 'bottom-left');
 
     this.onMapLoaded(() => {
-      map.on('zoom', () => {
-        const { lat, lng } = map.getCenter();
-        this.props._setGlobalZoom({ lat, lng, zoom: map.getZoom() });
-      });
-
-      map.on('moveend', () => {
-        const { lat, lng } = map.getCenter();
-        this.props._setGlobalZoom({ lat, lng, zoom: map.getZoom() });
-      });
-
       map.on('mousemove', (e) => {
         // toggle cursor and hover filters on mouseover
         let features = map.queryRenderedFeatures(e.point, { layers: layerIds });
@@ -178,6 +163,12 @@ var Tasks = React.createClass({
         mode: null
       });
     }
+  },
+
+  componentWillUnmount: function () {
+    const { lng, lat } = this.map.getCenter();
+    const zoom = this.map.getZoom();
+    this.props.setMapPosition(lng, lat, zoom);
   },
 
   onMapLoaded: function (fn) {
@@ -500,7 +491,7 @@ export default compose(
       _markTaskAsDone: (taskIds) => dispatch(markWayTaskPendingEpic(taskIds)),
       _queryOsm: (taskId, payload) => dispatch(queryOsmEpic(taskId, payload)),
       _deleteWays: (taskId, wayIds) => dispatch(deleteEntireWaysEpic(taskId, wayIds)),
-      _setGlobalZoom: debounce((mapPosition) => dispatch(setGlobalZoom(mapPosition)), 500, { leading: true, trailing: true })
+      setMapPosition: (lng, lat, zoom) => dispatch(setMapPosition(lng, lat, zoom))
     })
   ),
   lifecycle({

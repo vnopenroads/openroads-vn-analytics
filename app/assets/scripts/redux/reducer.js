@@ -147,21 +147,6 @@ const exploreMap = function (state = exploreMapDefaultState, action) {
   return newState;
 };
 
-const globZoomDefault = {
-  y: 20.029232336299856,
-  x: 105.73,
-  z: 6
-};
-
-const globZoom = function (state = globZoomDefault, action) {
-  switch (action.type) {
-    case actions.SET_GLOBAL_ZOOM:
-      state = _.cloneDeep(state);
-      state = action.json;
-      break;
-  }
-  return state;
-};
 
 const defaultSearchType = {
   searchType: 'Admin'
@@ -296,7 +281,6 @@ export default combineReducers({
   osmChange,
   search,
   exploreMap,
-  globZoom,
   provinces,
   roadIdCount, // TODO - delete
   setSearchType,
