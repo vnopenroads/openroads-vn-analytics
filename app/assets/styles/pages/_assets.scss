@@ -328,6 +328,15 @@ td.table-properties-cell-view-buttons {
         line-height: 24px;
       }
     }
+    .confirm-delete {
+      font-weight: 400;
+      margin-bottom: 4px;
+      button {
+        margin-left: 12px;
+        padding: 0px 12px;
+        font-size: 12px;
+      }
+    }
   }
 }
 
@@ -369,9 +378,9 @@ td.table-properties-cell-view-buttons {
 
   button.submit {
     margin: 1rem 0;
-    padding: 2px 12px;
+    padding: 0px 12px;
     margin-right: 20px;
-    font-size: 14px;
+    font-size: 12px;
 
     &[disabled],
     &:disabled {

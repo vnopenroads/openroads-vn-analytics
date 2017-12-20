@@ -24,17 +24,21 @@ const reducerFactory = (roadId, propertyKey, propertyValue) => (
     propertyKey,
     editPropertyValue: propertyValue,
     roadId,
-    shouldShowEdit: false
+    viewState: 'read'
   },
   action
 ) => {
   if (action.type === 'SHOW_EDIT') {
     return Object.assign({}, state, {
-      shouldShowEdit: true
+      viewState: 'edit'
     });
-  } else if (action.type === 'HIDE_EDIT') {
+  } else if (action.type === 'SHOW_READ') {
     return Object.assign({}, state, {
-      shouldShowEdit: false
+      viewState: 'read'
+    });
+  } else if (action.type === 'SHOW_DELETE') {
+    return Object.assign({}, state, {
+      viewState: 'delete'
     });
   } else if (action.type === 'UPDATE_EDIT_VALUE') {
     return Object.assign({}, state, {
@@ -57,7 +61,7 @@ const reducerFactory = (roadId, propertyKey, propertyValue) => (
   } else if (action.type === EDIT_ROAD_PROPERTY_SUCCESS && state.propertyKey === action.key) {
     return Object.assign({}, state, {
       status: 'complete',
-      shouldShowEdit: false
+      viewState: 'read'
     });
   }
 
@@ -71,27 +75,28 @@ const RoadRowPropertyContainer = compose(
     key: ({ roadId, propertyKey }) => `${roadId}-${propertyKey}`,
     createStore: ({ roadId, propertyKey, propertyValue }) => createStore(reducerFactory(roadId, propertyKey, propertyValue)),
     mapDispatchToProps: (dispatch, { roadId, propertyKey }) => ({
-      deleteHandler: () => dispatch(deleteRoadPropertyEpic(roadId, propertyKey)),
+      confirmDeleteHandler: () => dispatch(deleteRoadPropertyEpic(roadId, propertyKey)),
       submitEdit: (editPropertyValue) => {
         dispatch(editRoadPropertyEpic(roadId, propertyKey, editPropertyValue));
       },
       showEditHandler: () => dispatch({ type: 'SHOW_EDIT' }),
-      hideEditHandler: () => dispatch({ type: 'HIDE_EDIT' }),
+      showReadHandler: () => dispatch({ type: 'SHOW_READ' }),
+      showDeleteHandler: () => dispatch({ type: 'SHOW_DELETE' }),
       updateEditValue: ({ target: { value } }) => dispatch({ type: 'UPDATE_EDIT_VALUE', value })
     }),
     filterGlobalActions: ({ type }) =>
       [EDIT_ROAD_PROPERTY, EDIT_ROAD_PROPERTY_SUCCESS, EDIT_ROAD_PROPERTY_ERROR, DELETE_ROAD_PROPERTY, DELETE_ROAD_PROPERTY_ERROR].indexOf(type) > -1
   }),
   withHandlers({
-    submitEditHandler: ({ propertyValue, editPropertyValue, submitEdit, hideEditHandler }) => (e) => {
+    submitEditHandler: ({ propertyValue, editPropertyValue, submitEdit, showReadHandler }) => (e) => {
       e.preventDefault();
       if (propertyValue === editPropertyValue) {
-        return hideEditHandler();
+        return showReadHandler();
       }
 
       submitEdit(editPropertyValue);
     },
-    inputKeyDown: ({ hideEditHandler }) => ({ which }) => which === 27 && hideEditHandler()
+    inputKeyDown: ({ showReadHandler }) => ({ which }) => which === 27 && showReadHandler()
   })
 )(RoadRowProperty);
 
