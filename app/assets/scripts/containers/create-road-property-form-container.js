@@ -8,12 +8,14 @@ import { local } from 'redux-fractal';
 import { createStore } from 'redux';
 import CreateRoadPropertyForm from '../components/create-road-property-form';
 import {
-  createRoadPropertyEpic
+  createRoadPropertyEpic, CREATE_ROAD_PROPERTY, CREATE_ROAD_PROPERTY_SUCCESS, CREATE_ROAD_PROPERTY_ERROR
 } from '../redux/modules/roads';
 
 
-const reducer = (
+const reducerFactory = (roadId) => (
   state = {
+    roadId,
+    status: 'complete',
     shouldShowForm: false,
     newPropertyKey: '',
     newPropertyValue: ''
@@ -26,7 +28,10 @@ const reducer = (
     });
   } else if (action.type === 'HIDE_FORM') {
     return Object.assign({}, state, {
-      shouldShowForm: false
+      shouldShowForm: false,
+      status: 'complete',
+      newPropertyKey: '',
+      newPropertyValue: ''
     });
   } else if (action.type === 'UPDATE_KEY') {
     return Object.assign({}, state, {
@@ -35,6 +40,29 @@ const reducer = (
   } else if (action.type === 'UPDATE_VALUE') {
     return Object.assign({}, state, {
       newPropertyValue: action.value
+    });
+  } else if (
+    action.type === CREATE_ROAD_PROPERTY &&
+    state.roadId === action.id
+  ) {
+    return Object.assign({}, state, {
+      status: 'pending'
+    });
+  } else if (
+    action.type === CREATE_ROAD_PROPERTY_SUCCESS &&
+    state.roadId === action.id
+  ) {
+    return Object.assign({}, state, {
+      status: 'complete',
+      newPropertyKey: '',
+      newPropertyValue: ''
+    });
+  } else if (
+    action.type === CREATE_ROAD_PROPERTY_ERROR &&
+    state.roadId === action.id
+  ) {
+    return Object.assign({}, state, {
+      status: 'error'
     });
   }
 
@@ -45,7 +73,7 @@ const CreateRoadPropertyFormContainer = compose(
   getContext({ language: React.PropTypes.string }),
   local({
     key: ({ roadId }) => `create-road-property-form-${roadId}`,
-    createStore: () => createStore(reducer),
+    createStore: ({ roadId }) => createStore(reducerFactory(roadId)),
     mapDispatchToProps: (dispatch) => ({
       showForm: () => dispatch({ type: 'SHOW_FORM' }),
       hideForm: (e) => {
@@ -57,7 +85,8 @@ const CreateRoadPropertyFormContainer = compose(
       createRoadProperty: (roadId, newPropertyKey, newPropertyValue) =>
         dispatch(createRoadPropertyEpic(roadId, newPropertyKey, newPropertyValue))
     }),
-    filterGlobalActions: ({ type }) => false
+    filterGlobalActions: ({ type }) =>
+      [CREATE_ROAD_PROPERTY, CREATE_ROAD_PROPERTY_SUCCESS, CREATE_ROAD_PROPERTY_ERROR].indexOf(type) > -1
   }),
   withHandlers({
     submitForm: ({ roadId, newPropertyKey, newPropertyValue, createRoadProperty }) => (e) => {

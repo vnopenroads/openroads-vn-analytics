@@ -5,7 +5,7 @@ import T, {
 
 
 const RoadPropertyForm = ({
-  shouldShowForm, language, newPropertyKey, newPropertyValue,
+  status, shouldShowForm, language, newPropertyKey, newPropertyValue,
   updateNewPropertyKey, updateNewPropertyValue, submitForm, showForm, hideForm
 }) => (
   <div
@@ -59,13 +59,23 @@ const RoadPropertyForm = ({
               onChange={updateNewPropertyValue}
               placeholder={translate(language, 'Value')}
             />
-            <button
-              className="button button--secondary-raised-dark submit"
-              onClick={submitForm}
-              disabled={newPropertyKey === '' || newPropertyValue === '' || status === 'pending'}
-            >
-              <T>Submit</T>
-            </button>
+            <div>
+              <button
+                className="button button--secondary-raised-dark submit"
+                onClick={submitForm}
+                disabled={newPropertyKey === '' || newPropertyValue === '' || status === 'pending'}
+              >
+                <T>Submit</T>
+              </button>
+              {
+                status === 'pending' &&
+                  <em><T>Loading</T></em>
+              }
+              {
+                status === 'error' &&
+                  <strong className="error-message"><T>Error</T></strong>
+              }
+            </div>
           </fieldset>
         </form>
     }

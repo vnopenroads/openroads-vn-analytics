@@ -370,7 +370,7 @@ td.table-properties-cell-view-buttons {
   button.submit {
     margin: 1rem 0;
     padding: 2px 12px;
-    margin-right: 8px;
+    margin-right: 20px;
     font-size: 14px;
 
     &[disabled],
@@ -395,6 +395,10 @@ td.table-properties-cell-view-buttons {
       bottom: 1px;
       margin-right: 6px;
     }
+  }
+
+  .error-message {
+    color: $secondary-color
   }
 }
 

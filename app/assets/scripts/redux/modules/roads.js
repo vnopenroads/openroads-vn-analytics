@@ -328,6 +328,16 @@ export default (
         })
       })
     });
+  } else if (action.type === CREATE_ROAD_PROPERTY_SUCCESS) {
+    return Object.assign({}, state, {
+      roadsById: Object.assign({}, state.roadsById, {
+        [action.id]: Object.assign({}, state.roadsById[action.id], {
+          properties: Object.assign({}, state.roadsById[action.id].properties, {
+            [action.key]: action.value
+          })
+        })
+      })
+    });
   } else if (action.type === EDIT_ROAD_PROPERTY_SUCCESS) {
     return Object.assign({}, state, {
       roadsById: Object.assign({}, state.roadsById, {
