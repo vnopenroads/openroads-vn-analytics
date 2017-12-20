@@ -45,6 +45,15 @@ export const EDIT_ROAD_ERROR = 'EDIT_ROAD_ERROR';
 export const DELETE_ROAD = 'DELETE_ROAD';
 export const DELETE_ROAD_SUCCESS = 'DELETE_ROAD_SUCCESS';
 export const DELETE_ROAD_ERROR = 'DELETE_ROAD_ERROR';
+export const CREATE_ROAD_PROPERTY = 'CREATE_ROAD_PROPERTY';
+export const CREATE_ROAD_PROPERTY_SUCCESS = 'CREATE_ROAD_PROPERTY_SUCCESS';
+export const CREATE_ROAD_PROPERTY_ERROR = 'CREATE_ROAD_PROPERTY_ERROR';
+export const EDIT_ROAD_PROPERTY = 'EDIT_ROAD_PROPERTY';
+export const EDIT_ROAD_PROPERTY_SUCCESS = 'EDIT_ROAD_PROPERTY_SUCCESS';
+export const EDIT_ROAD_PROPERTY_ERROR = 'EDIT_ROAD_PROPERTY_ERROR';
+export const DELETE_ROAD_PROPERTY = 'DELETE_ROAD_PROPERTY';
+export const DELETE_ROAD_PROPERTY_SUCCESS = 'DELETE_ROAD_PROPERTY_SUCCESS';
+export const DELETE_ROAD_PROPERTY_ERROR = 'DELETE_ROAD_PROPERTY_ERROR';
 
 
 /**
@@ -73,6 +82,18 @@ export const deleteRoadError = (id, error) => ({ type: DELETE_ROAD_ERROR, id, er
 export const createRoad = (id) => ({ type: CREATE_ROAD, id });
 export const createRoadSuccess = () => ({ type: CREATE_ROAD_SUCCESS });
 export const createRoadError = (error) => ({ type: CREATE_ROAD_ERROR, error });
+
+export const createRoadProperty = (id, key, value) => ({ type: CREATE_ROAD_PROPERTY, id, key, value });
+export const createRoadPropertySuccess = (id, key, value) => ({ type: CREATE_ROAD_PROPERTY_SUCCESS, id, key, value });
+export const createRoadPropertyError = (id, key, value, error) => ({ type: CREATE_ROAD_PROPERTY_ERROR, id, key, value, error });
+
+export const editRoadProperty = (id, key, value) => ({ type: EDIT_ROAD_PROPERTY, id, key, value });
+export const editRoadPropertySuccess = (id, key, value) => ({ type: EDIT_ROAD_PROPERTY_SUCCESS, id, key, value });
+export const editRoadPropertyError = (id, key, value, error) => ({ type: EDIT_ROAD_PROPERTY_ERROR, id, key, value, error });
+
+export const deleteRoadProperty = (id, key) => ({ type: DELETE_ROAD_PROPERTY, id, key });
+export const deleteRoadPropertySuccess = (id, key) => ({ type: DELETE_ROAD_PROPERTY_SUCCESS, id, key });
+export const deleteRoadPropertyError = (id, key, error) => ({ type: DELETE_ROAD_PROPERTY_ERROR, id, key, error });
 
 
 export const fetchRoadsEpic = (province, district, page, sortField, sortOrder) => (dispatch) => {
@@ -145,7 +166,10 @@ export const editRoadEpic = (id, newId) => (dispatch) => {
 
   return fetch(`${config.api}/properties/roads/${id}/move`, {
     method: 'POST',
-    body: new Blob([JSON.stringify({ id: newId })], { type: 'application/json' })
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id: newId })
   })
     .then(response => {
       if (!response.ok) {
@@ -179,6 +203,69 @@ export const deleteRoadEpic = (id) => (dispatch) => {
       dispatch(clearRoadCount());
     })
     .catch(err => dispatch(deleteRoadError(id, err.message)));
+};
+
+
+export const createRoadPropertyEpic = (id, key, value) => (dispatch) => {
+  dispatch(createRoadProperty(id, key, value));
+
+  return fetch(`${config.api}/properties/roads/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json-patch+json'
+    },
+    body: JSON.stringify([{ op: 'add', path: `/${key}`, value }])
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+
+      dispatch(createRoadPropertySuccess(id, key, value));
+    })
+    .catch((err) => dispatch(createRoadPropertyError(id, key, value, err)));
+};
+
+
+export const editRoadPropertyEpic = (id, key, value) => (dispatch) => {
+  dispatch(editRoadProperty(id, key, value));
+
+  return fetch(`${config.api}/properties/roads/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json-patch+json'
+    },
+    body: JSON.stringify([{ op: 'replace', path: `/${key}`, value }])
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+
+      dispatch(editRoadPropertySuccess(id, key, value));
+    })
+    .catch((err) => dispatch(editRoadPropertyError(id, key, value, err)));
+};
+
+
+export const deleteRoadPropertyEpic = (id, key) => (dispatch) => {
+  dispatch(deleteRoadProperty(id, key));
+
+  return fetch(`${config.api}/properties/roads/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json-patch+json'
+    },
+    body: JSON.stringify([{ op: 'remove', path: `/${key}` }])
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+
+      dispatch(deleteRoadPropertySuccess(id, key));
+    })
+    .catch((err) => dispatch(deleteRoadPropertyError(id, key, err)));
 };
 
 
@@ -238,6 +325,34 @@ export default (
       roadsById: Object.assign({}, state.roadsById, {
         [action.id]: Object.assign({}, state.roadsById[action.id] || {}, {
           geoJSON: action.geoJSON
+        })
+      })
+    });
+  } else if (action.type === CREATE_ROAD_PROPERTY_SUCCESS) {
+    return Object.assign({}, state, {
+      roadsById: Object.assign({}, state.roadsById, {
+        [action.id]: Object.assign({}, state.roadsById[action.id], {
+          properties: Object.assign({}, state.roadsById[action.id].properties, {
+            [action.key]: action.value
+          })
+        })
+      })
+    });
+  } else if (action.type === EDIT_ROAD_PROPERTY_SUCCESS) {
+    return Object.assign({}, state, {
+      roadsById: Object.assign({}, state.roadsById, {
+        [action.id]: Object.assign({}, state.roadsById[action.id], {
+          properties: Object.assign({}, state.roadsById[action.id].properties, {
+            [action.key]: action.value
+          })
+        })
+      })
+    });
+  } else if (action.type === DELETE_ROAD_PROPERTY_SUCCESS) {
+    return Object.assign({}, state, {
+      roadsById: Object.assign({}, state.roadsById, {
+        [action.id]: Object.assign({}, state.roadsById[action.id], {
+          properties: omit(state.roadsById[action.id].properties, [action.key])
         })
       })
     });

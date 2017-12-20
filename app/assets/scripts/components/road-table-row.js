@@ -72,6 +72,7 @@ const RowReadView = ({
                 shouldShowProperties &&
                   <RowProperties
                     properties={properties}
+                    roadId={vpromm}
                   />
               }
             </div>

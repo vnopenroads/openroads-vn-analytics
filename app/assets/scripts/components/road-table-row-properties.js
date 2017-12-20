@@ -4,54 +4,75 @@ import {
   round
 } from 'lodash';
 import T from './t';
+import CreateRoadPropertyForm from '../containers/create-road-property-form-container';
+import RoadRowProperty from '../containers/road-row-property-container';
 
-const RowProperties = ({ properties }) => (
+
+const RowProperties = ({ roadId, properties }) => (
   <div
     className="table-properties"
   >
-    <dl className='table-properties-list'>
-      <LengthChart
-        platformLength={properties['length']}
-        tabularLength={properties['Road Length (VProMMS)']}
-      />
-      {
-        map(properties, (prop, key) =>
-          // Since we have the above chart, no need to include length values
-          key.startsWith('Road Length') || key === 'length'
-            ? ''
-            : (
-              <div
+    <LengthChart
+      platformLength={properties['length']}
+      tabularLength={properties['Road Length (VProMMS)']}
+    />
+
+    <table className='table-properties-list'>
+      <tbody>
+        {
+          map(properties, (prop, key) => (
+            key !== 'Road Length (VProMMS)' && key !== 'length' &&
+              <RoadRowProperty
                 key={key}
-              >
-                <dt>{key}</dt>
-                <dd>{prop}</dd>
-              </div>
-            )
-        )
-      }
-    </dl>
+                roadId={roadId}
+                propertyKey={key}
+                propertyValue={prop}
+              />
+          ))
+        }
+      </tbody>
+    </table>
+
+    <CreateRoadPropertyForm
+      roadId={roadId}
+    />
   </div>
 );
 
+
 const LengthChart = ({platformLength, tabularLength}) => (
-  (typeof platformLength === 'undefined' || typeof tabularLength === 'undefined')
-    ? <div />
-    : <div className='table-properties-chart'>
+  typeof platformLength !== 'undefined' && typeof tabularLength !== 'undefined' ?
+    <div className='table-properties-chart'>
       <dt><T>Length (ORMA)</T></dt>
       <dd>
-        <div style={{
-          width: `${platformLength / (Math.max(platformLength, tabularLength)) * 100 * 0.5}%`
-        }} />
-        <span>{`${round(platformLength, 1)} km`}</span>
+        <span
+          className="bar"
+          style={{
+            width: `${platformLength / (Math.max(platformLength, tabularLength)) * 100 * 0.5}%`
+          }}
+        />
+        <span
+          className="value"
+        >
+          {round(platformLength, 1)} <em>km</em>
+        </span>
       </dd>
       <dt><T>Length (Tabular)</T></dt>
       <dd>
-        <div style={{
-          width: `${tabularLength / (Math.max(platformLength, tabularLength)) * 100 * 0.5}%`
-        }} />
-        <span>{`${round(tabularLength, 1)} km`}</span>
+        <span
+          className="bar"
+          style={{
+            width: `${tabularLength / (Math.max(platformLength, tabularLength)) * 100 * 0.5}%`
+          }}
+        />
+        <span
+          className="value"
+        >
+          {round(tabularLength, 1)} <em>km</em>
+        </span>
       </dd>
-    </div>
+    </div> :
+    <div/>
 );
 
 export default RowProperties;
