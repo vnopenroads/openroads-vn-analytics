@@ -7,6 +7,7 @@ import waytasks from './modules/tasks';
 import osmChange from './modules/osm';
 import roads from './modules/roads';
 import roadCount from './modules/roadCount';
+import map from './modules/map';
 
 
 const admins = function (state = {units: [], fetching: false, fetched: false}, action) {
@@ -289,6 +290,7 @@ export default combineReducers({
   adminBbox,
   roads,
   roadCount,
+  map,
   fieldIdCount, // TODO - delete
   waytasks,
   osmChange,
