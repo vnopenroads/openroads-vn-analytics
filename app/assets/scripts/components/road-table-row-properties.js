@@ -12,10 +12,6 @@ const RowProperties = ({ roadId, properties }) => (
   <div
     className="table-properties"
   >
-    <CreateRoadPropertyForm
-      roadId={roadId}
-    />
-
     <LengthChart
       platformLength={properties['length']}
       tabularLength={properties['Road Length (VProMMS)']}
@@ -36,6 +32,10 @@ const RowProperties = ({ roadId, properties }) => (
         }
       </tbody>
     </table>
+
+    <CreateRoadPropertyForm
+      roadId={roadId}
+    />
   </div>
 );
 
