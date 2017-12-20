@@ -53,6 +53,7 @@ const reducerFactory = (roadId) => (
     state.roadId === action.id
   ) {
     return Object.assign({}, state, {
+      shouldShowForm: false,
       status: 'complete',
       newPropertyKey: '',
       newPropertyValue: ''

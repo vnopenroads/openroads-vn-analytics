@@ -67,6 +67,13 @@ const RoadPropertyForm = ({
               >
                 <T>Submit</T>
               </button>
+              <button
+                className="button button--base-raised-light cancel"
+                onClick={hideForm}
+                disabled={newPropertyKey === '' || newPropertyValue === '' || status === 'pending'}
+              >
+                <T>Cancel</T>
+              </button>
               {
                 status === 'pending' &&
                   <em><T>Loading</T></em>
