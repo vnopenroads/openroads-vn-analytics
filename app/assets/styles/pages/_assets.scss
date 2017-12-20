@@ -95,6 +95,7 @@
       button {
         margin: 0 8px;
         padding: 2px 12px;
+        font-size: 14px;
         &[disabled],
         &:disabled {
           background-color: lighten($secondary-color, 20);
@@ -331,18 +332,20 @@ td.table-properties-cell-view-buttons {
 }
 
 .create-road-property-form {
-  margin-top: 1rem;
-  margin-bottom: 2rem;
+  margin: 1rem 0;
 
   fieldset {
     border: 0;
     padding: 0;
+    margin: 0;
   }
 
   h3 {
     font-size: 16px;
     font-weight: 400;
     margin-bottom: 4px;
+    line-height: 28px;
+    padding: 0;
     color: $secondary-color;
   }
 
@@ -355,8 +358,42 @@ td.table-properties-cell-view-buttons {
     border: 0;
     border-bottom: 1px solid #ccc;
 
+    &:hover {
+      border-bottom: 1px solid #999;
+    }
+
     &.key-input {
       font-weight: 600;
+    }
+  }
+
+  button.submit {
+    margin: 1rem 0;
+    padding: 2px 12px;
+    margin-right: 8px;
+    font-size: 14px;
+
+    &[disabled],
+    &:disabled {
+      background-color: lighten($secondary-color, 20);
+      cursor: not-allowed;
+    }
+  }
+
+  .create-new-property {
+    color: #444;
+    margin-bottom: 4px;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 28px;
+    &:hover {
+      color: $secondary-color;
+    }
+    i {
+      position: relative;
+      bottom: 1px;
+      margin-right: 6px;
     }
   }
 }
