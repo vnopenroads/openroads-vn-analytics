@@ -41,24 +41,38 @@ const RowProperties = ({ roadId, properties }) => (
 
 
 const LengthChart = ({platformLength, tabularLength}) => (
-  (typeof platformLength === 'undefined' || typeof tabularLength === 'undefined')
-    ? <div />
-    : <div className='table-properties-chart'>
+  typeof platformLength !== 'undefined' && typeof tabularLength !== 'undefined' ?
+    <div className='table-properties-chart'>
       <dt><T>Length (ORMA)</T></dt>
       <dd>
-        <div style={{
-          width: `${platformLength / (Math.max(platformLength, tabularLength)) * 100 * 0.5}%`
-        }} />
-        <span>{`${round(platformLength, 1)} km`}</span>
+        <span
+          className="bar"
+          style={{
+            width: `${platformLength / (Math.max(platformLength, tabularLength)) * 100 * 0.5}%`
+          }}
+        />
+        <span
+          className="value"
+        >
+          {round(platformLength, 1)} <em>km</em>
+        </span>
       </dd>
       <dt><T>Length (Tabular)</T></dt>
       <dd>
-        <div style={{
-          width: `${tabularLength / (Math.max(platformLength, tabularLength)) * 100 * 0.5}%`
-        }} />
-        <span>{`${round(tabularLength, 1)} km`}</span>
+        <span
+          className="bar"
+          style={{
+            width: `${tabularLength / (Math.max(platformLength, tabularLength)) * 100 * 0.5}%`
+          }}
+        />
+        <span
+          className="value"
+        >
+          {round(tabularLength, 1)} <em>km</em>
+        </span>
       </dd>
-    </div>
+    </div> :
+    <div/>
 );
 
 export default RowProperties;

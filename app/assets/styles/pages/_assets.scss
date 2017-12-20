@@ -412,20 +412,22 @@ td.table-properties-cell-view-buttons {
 }
 
 .table-properties-chart {
-  div {
-    height: 11px;
-    background-color: $link-color;
-    float: left;
-    margin-top: 3px;
+  .bar {
+    display: inline-block;
+    height: 10px;
+    background-color: $secondary-color;
   }
 
-  dt,
-  dd {
+  dt {
     margin-bottom: 0;
   }
+  dd {
+    margin-bottom: 6px;
+  }
 
-  dd > span {
+  dd > .value {
     padding-left: $global-spacing / 2;
+    font-size: 14px;
   }
 }
 
