@@ -134,7 +134,7 @@ const Faq = ({ language }) => (
         <section>
           <p>
             <T>If you have any remaining questions</T>
-            <a href={`mailto:dphan2@worldbank.org?subject=${translate(language, 'Question regarding ORMA, not answered in the FAQ')}`}>
+            <a href={`mailto:dphan2@worldbank.org?cc=gost@worldbank.org&subject=${translate(language, 'Question regarding ORMA, not answered in the FAQ')}`}>
               <button className="button button--base-raised-light"><T>email us</T></button>
             </a>
           </p>

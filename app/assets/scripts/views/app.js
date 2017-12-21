@@ -9,6 +9,7 @@ import {
 import { fetchSearchResults, cleanSearchResults } from '../actions/action-creators';
 import SiteHeader from '../components/site-header';
 
+
 var App = React.createClass({
   displayName: 'App',
 

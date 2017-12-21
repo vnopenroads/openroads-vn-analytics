@@ -99,12 +99,17 @@
   margin-bottom: $global-spacing / 2;
 }
 
+.map-legend-scale-container {
+  width: 75%;
+  display: inline-block;
+}
+
 .map-legend-scale {
   height: 15px;
   background-image: linear-gradient(to right, #8CCA1B, #DA251D);
 }
 
-.map-legend-label {
+.map-legend-scale-label {
   float: left;
   font-size: 0.75rem;
   margin: 0;
@@ -112,6 +117,26 @@
   &:last-child {
     float: right;
   }
+}
+
+.map-legend-nodata-container {
+  vertical-align: top;
+  display: inline-block;
+  width: 25%;
+  padding-left: $global-spacing;
+}
+
+.map-legend-nodata {
+  height: 15px;
+  width: 15px;
+  margin: 0 auto;
+  background-color: black;
+}
+
+.map-legend-nodata-label {
+  font-size: 0.75rem;
+  display: block;
+  text-align: center;
 }
 
 .map__legend--split {

@@ -1,5 +1,15 @@
 # OpenRoads Vietnam Analytics
 
+This repo contains the static assets that constitute the OpenRoads Vietnam website. This repository is also where Development Seed stores all GitHub tickets and planning for the ORMA–VN project. The other repos in this project include:
+
+- [API](https://github.com/orma/openroads-vn-api/)
+- [various workers](https://github.com/orma/openroads-vn-tiler)
+- [iD editor](https://github.com/orma/openroads-vn-iD)
+- [admin boundary generation](https://github.com/orma/openroads-vn-boundaries)
+- [raster tile generation](https://github.com/orma/openroads-tilemap)
+
+ORMA–VN is a deployment of the ORMA platform, originally built by Development Seed and the World Bank for use in the Philippines; several more repos may be found in the `orma` GitHub organization, pertaining to that or other deployments.
+
 ## Running locally
 
 ### Environment setup

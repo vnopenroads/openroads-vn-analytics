@@ -11,6 +11,7 @@ const ProvinceTableColumnHeader = withHandlers({
 })
   (({ columnKey, label, sortField, sortOrder, sortLink }) => (
     <th
+      className="table-properties-head sortable"
       onClick={sortLink}
     >
       <i

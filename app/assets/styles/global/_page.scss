@@ -146,6 +146,15 @@
   }
 }
 
+.back-button {
+  padding-bottom: 14px;
+
+  i {
+    margin-right: 4px;
+    color: $secondary-color;
+  }
+}
+
 .site__menu {
   display: flex;
   flex-direction: column;
@@ -330,40 +339,53 @@
 }
 
 
-.aa {
-  .aa-main,
-  .aa-details {
-    @extend .clearfix;
+.aa-main,
+.aa-details {
+  @extend .clearfix;
+}
+
+.col--main {
+  @include media(medium-up) {
+    @include column(8/12);
+  }
+}
+
+.col--sec {
+  @include media(medium-up) {
+    @include column(4/12);
+  }
+}
+
+.aa-main {
+  > .inner {
+    margin-bottom: 2rem;
   }
 
-  .col--main {
-    @include media(medium-up) {
-      @include column(8/12);
+  .aa-map-page {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 1rem;
+    .back-button {
+      padding: 0;
     }
-  }
-
-  .col--sec {
-    @include media(medium-up) {
-      @include column(4/12);
-    }
-  }
-
-  .aa-main {
-    > .inner {
-      margin-bottom: 2rem;
-    }
-
-    .aa-map-wrapper {
-      margin: 0.5rem 0;
-      position: relative;
-      overflow: hidden;
-      height: 30rem;
-
+    .aa-map-container {  
+      position: absolute;
+      top: 92px;
+      bottom: 0;
+      width: 100%;
+      padding: 0;
+      border: 1px solid rgb(220, 220, 220);
+      border-radius: $base-border-radius;
+      background-color: #FFF;
       .aa-map {
         position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 100%;
+        top: 0.5rem;
+        bottom: 0.5rem;
+        left: 1rem;
+        right: 1rem;
         &-legend {
           position: absolute;
           z-index: 10;
@@ -384,14 +406,14 @@
         }
       }
     }
+  }
 
-    .completeness {
-      margin: 0;
+  .completeness {
+    margin: 0;
 
-      .legend {
-        font-size: 0.75rem;
-        font-weight: $base-font-bold;
-      }
+    .legend {
+      font-size: 0.75rem;
+      font-weight: $base-font-bold;
     }
   }
 }

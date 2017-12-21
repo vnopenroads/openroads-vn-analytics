@@ -1,10 +1,22 @@
 import React from 'react';
-import _ from 'lodash';
+import {
+  map,
+  orderBy
+} from 'lodash';
+import {
+  withProps
+} from 'recompose';
 import ProvinceTableRow from './province-table-row';
 import ProvinceTableColumnHeader from './province-table-column-header';
+import {
+  ADMIN_MAP
+} from '../constants';
 
 
-const ProvinceTable = ({ data, language, sortField, sortOrder, sortHandler }) => (
+const ProvinceTable = ({
+  provinces, fieldIdCount, VProMMsCount, language,
+  sortField, sortOrder, sortHandler
+}) => (
   <div className='table'>
     <table>
       <thead>
@@ -25,16 +37,17 @@ const ProvinceTable = ({ data, language, sortField, sortOrder, sortHandler }) =>
         </tr>
       </thead>
       <tbody>
-        {_.map(
-          _.orderBy(data, [sortField], [sortOrder]),
-          ({ id, name, route, field, total }) => (
+        {map(
+          orderBy(provinces, [sortField], [sortOrder]),
+          ({ id, name, routeId, field, total, percentageComplete }) => (
             <ProvinceTableRow
               key={id}
               id={id}
               name={name}
-              route={route}
+              routeId={routeId}
               field={field}
               total={total}
+              percentageComplete={percentageComplete}
               language={language}
             />
           )
@@ -45,4 +58,26 @@ const ProvinceTable = ({ data, language, sortField, sortOrder, sortHandler }) =>
 );
 
 
-export default ProvinceTable;
+export default withProps(
+  ({ provinces, fieldIdCount, VProMMsCount }) => ({
+    provinces: map(provinces, (province) => {
+      const id = ADMIN_MAP.province[province.id].id;
+
+      const field = fieldIdCount
+        .filter(province => province.admin === id)
+        .map(province => province.total_roads)[0] || 0;
+      const total = VProMMsCount
+        .filter(province => province.admin === id)
+        .map(province => parseInt(province.total_roads, 10))[0] || 0;
+
+      return {
+        name: ADMIN_MAP.province[province.id].name,
+        id,
+        routeId: province.id,
+        field,
+        total,
+        percentageComplete: total > 0 ? field / total * 100 : 0
+      };
+    })
+  })
+)(ProvinceTable);

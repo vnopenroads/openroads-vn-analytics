@@ -35,16 +35,17 @@ const MapLegend = ({ layer }) => {
     <figcaption className='panel legend-panel'>
       <div className='panel__body'>
         <h3 className='map-legend-title'>{renderTitle(layer)}</h3>
-        { continuous ?
-          <div>
-            <div className='map-legend-scale'></div>
-            <p className='map-legend-label'>{ bestColorLabel }</p>
-            <p className='map-legend-label'>{ worstColorLabel }</p>
-          </div> :
-          <div>
-            <p className='empty'><T>No available data</T></p>
+        <div>
+          <div className='map-legend-scale-container'>
+            <div className='map-legend-scale' />
+            <span className='map-legend-scale-label'>{ bestColorLabel }</span>
+            <span className='map-legend-scale-label'>{ worstColorLabel }</span>
           </div>
-        }
+          <div className='map-legend-nodata-container'>
+            <div className='map-legend-nodata' />
+            <span className='map-legend-nodata-label'><T>No data</T></span>
+          </div>
+        </div>
       </div>
     </figcaption>
   );

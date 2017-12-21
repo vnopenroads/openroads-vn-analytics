@@ -14,8 +14,7 @@ import {
   selectExploreMapLayer,
   exploreMapShowNoVpromms,
   setGlobalZoom,
-  removeVProMMsBBox,
-  setPreviousLocation
+  removeVProMMsBBox
 } from '../actions/action-creators';
 import MapSearch from '../components/map-search';
 import MapOptions from '../components/map-options';
@@ -28,7 +27,6 @@ var Explore = React.createClass({
   propTypes: {
     _removeVProMMsBBox: React.PropTypes.func,
     _setGlobalZoom: React.PropTypes.func,
-    _setPreviousLocation: React.PropTypes.func,
     layer: React.PropTypes.string,
     showNoVpromms: React.PropTypes.bool,
     dispatch: React.PropTypes.func,
@@ -100,7 +98,6 @@ var Explore = React.createClass({
 
   componentWillUnmount: function () {
     this.props._setGlobalZoom(this.makeXYZ());
-    this.props._setPreviousLocation(this.props.location.pathname);
   },
 
   componentWillReceiveProps: function (nextProps) {
@@ -166,8 +163,7 @@ export default compose(
     dispatch => ({
       dispatch,
       _removeVProMMsBBox: function () { dispatch(removeVProMMsBBox()); },
-      _setGlobalZoom: function (xyzObj) { dispatch(setGlobalZoom(xyzObj)); },
-      _setPreviousLocation: function (location) { dispatch(setPreviousLocation(location)); }
+      _setGlobalZoom: function (xyzObj) { dispatch(setGlobalZoom(xyzObj)); }
     })
   )
 )(Explore);

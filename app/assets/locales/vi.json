@@ -1,6 +1,7 @@
 {
     "Analytics": "Phân tích",
     "Assets": "Tài sản",
+    "Provinces": "Các tỉnh",
     "Explore": "Hiển thị",
     "Editor": "Chỉnh sửa",
     "Tasks": "Nhiệm vụ",
@@ -49,7 +50,6 @@
     "Select an action": "Chọn thao tác",
     "Information on VPRoMMS roads is not available": "Không có dữ liệu VPRoMMS",
     "of VPRoMMS Ids have field data": "VProMMS ID có dự liệu hiện trường",
-    "These will have no properties": "Không có thuộc tính đi kèm",
     "Download": "Tải về",
     "Download Roads": "Tải dữ liệu đường",
     "Download road network": "Tải xuống mạng lưới đường",
@@ -110,7 +110,8 @@
     "Tasks Remaining": "Nhiệm vụ còn lại",
     "No tasks remaining": "Không còn nhiệm vụ nào",
     "Error": "Lỗi",
-    "Connection error": "Lỗi kết nối",
+    "Connection Error": "Connection Error",
+    "Already Exists": "Already Exists",
     "Bad response": "Phản hồi kém",
     "Data not available": "Không có dữ liệu",
     "Could not update task status": "Không thể cập nhật trạng thái",
@@ -133,6 +134,7 @@
     "Road Class Code": "Mã cấp đường",
     "Roughness (IRI)": "Độ gồ ghề (IRI)",
     "IRI": "IRI",
+    "No data": "No data",
     "Roughness Score": "Chỉ số độ gồ ghề",
     "Start Longitude": "Kinh độ điểm đầu",
     "Start Point Name": "Tên điểm đầu",
@@ -164,5 +166,7 @@
     "Pavement Condition Class": "Tình trạng mặt đường",
     "Delivery Vehicle (veh/day)": "Xe giao hàng (xe/ngày)",
     "Articulated Truck (veh/day)": "Xe rơ-móoc (xe/ngày)",
-    "Traffic Annual Growth Scenario": "Kịch bản gia tăng lưu lượng hàng năm"
+    "Traffic Annual Growth Scenario": "Kịch bản gia tăng lưu lượng hàng năm",
+    "Length (ORMA)": "Length (ORMA)",
+    "Length (Tabular)": "Length (Tabular)"
 }

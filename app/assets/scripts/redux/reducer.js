@@ -6,8 +6,7 @@ import * as actions from '../actions/action-types';
 import waytasks from './modules/tasks';
 import osmChange from './modules/osm';
 import roads from './modules/roads';
-import { ADMIN_MAP } from '../constants';
-
+import roadCount from './modules/roadCount';
 
 
 const admins = function (state = {units: [], fetching: false, fetched: false}, action) {
@@ -83,37 +82,6 @@ const search = function (state = {results: [], fetching: false, fetched: false, 
   return state;
 };
 
-
-const defaultVProMMSidSourceGeoJSON = {
-  fetching: false,
-  fetched: false,
-  geoJSON: [],
-  vprommId: '',
-  provinceName: ''
-};
-
-const VProMMSidSourceGeoJSON = function (state = defaultVProMMSidSourceGeoJSON, action) {
-  switch (action.type) {
-    case actions.REQUEST_VPROMMS_SOURCE_GEOJSON:
-      console.log('REQUEST_VPROMMS_SOURCE_GEOJSON');
-      state = _.cloneDeep(state);
-      state.fetching = true;
-      break;
-    case actions.RECIEVE_VPROMMS_SOURCE_GEOJSON:
-      console.log('RECIEVE_VPROMMS_SOURCE_GEOJSON');
-      state = _.cloneDeep(state);
-      state.geoJSON = action.json;
-      state.vprommId = action.vprommId;
-      state.provinceName = action.provinceName;
-      state.fetching = false;
-      state.fetched = true;
-      break;
-    case actions.REMOVE_VPROMMS_SOURCE_GEOJSON:
-      console.log('REMOVE_SOURCE_GEOJSON');
-      return defaultVProMMSidSourceGeoJSON;
-  }
-  return state;
-};
 
 const VProMMsWayBboxDefaultState = {
   fetching: false,
@@ -236,31 +204,10 @@ const provinces = function (state = defaultProvinces, action) {
       state.fetched = true;
       state.data = action.json;
       break;
-    case actions.REMOVE_PROVINCES:
-      return defaultProvinces;
   }
   return state;
 };
 
-const defaultCrossWalk = {
-  province: {},
-  district: {},
-  set: false
-};
-
-const crosswalk = function (state = defaultCrossWalk, action) {
-  switch (action.type) {
-    case actions.SET_CROSSWALK:
-      state = _.cloneDeep(state);
-      state.province = _.pickBy(ADMIN_MAP.province, (province) => { return !/^\s*$/.test(province); });
-      state.district = ADMIN_MAP.district;
-      state.set = true;
-      break;
-    case actions.REMOVE_CROSSWALK:
-      return defaultCrossWalk;
-  }
-  return state;
-};
 
 const defaultVProMMsIdCount = {
   fetching: false,
@@ -333,26 +280,6 @@ const adminInfo = function (state = defaultAdminInfo, action) {
   return state;
 };
 
-const previousLocation = function (state = {path: '/'}, action) {
-  switch (action.type) {
-    case actions.SET_PREVIOUS_LOCATION:
-      state = _.cloneDeep(state);
-      state.path = action.location;
-      break;
-  }
-  return state;
-};
-
-const subadminName = function (state = {name: ''}, action) {
-  switch (action.type) {
-    case actions.SET_SUBADMIN_NAME:
-      state = _.cloneDeep(state);
-      state.name = action.name;
-      break;
-  }
-  return state;
-};
-
 
 export default combineReducers({
   routing: routeReducer,
@@ -361,10 +288,10 @@ export default combineReducers({
   adminInfo,
   adminBbox,
   roads,
+  roadCount,
   fieldIdCount, // TODO - delete
   waytasks,
   osmChange,
-  crosswalk,
   search,
   exploreMap,
   globZoom,
@@ -373,8 +300,5 @@ export default combineReducers({
   setSearchType,
   setFilteredVProMMs,
   VProMMsWayBbox,
-  VProMMSidSourceGeoJSON,
-  fieldVProMMsids, // TODO - delete
-  previousLocation,
-  subadminName
+  fieldVProMMsids // TODO - delete
 });

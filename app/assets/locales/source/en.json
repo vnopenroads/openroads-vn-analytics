@@ -1,6 +1,7 @@
 {
     "Analytics": "Analytics",
     "Assets": "Assets",
+    "Provinces": "Provinces",
     "Explore": "Explore",
     "Editor": "Editor",
     "Tasks": "Tasks",
@@ -66,6 +67,11 @@
     "Confirm": "Confirm",
     "Submit": "Submit",
     "Delete": "Delete",
+    "Create": "Create",
+    "Confirm Delete": "Confirm Delete",
+    "Key": "Key",
+    "Value": "Value",
+    "Create New Property": "Create New Property",
     "Remove Duplicates": "Remove Duplicates",
     "Remove Duplicate Roads": "Remove Duplicate Roads",
     "Click on a road to keep. The other roads here will be deleted.": "Click on a road to keep. The other roads here will be deleted.",
@@ -133,6 +139,7 @@
     "Road Class Code": "Road Class Code",
     "Roughness (IRI)": "Roughness (IRI)",
     "IRI": "IRI",
+    "No data": "No data",
     "Roughness Score": "Roughness Score",
     "Start Longitude": "Start Longitude",
     "Start Point Name": "Start Point Name",
@@ -164,5 +171,7 @@
     "Pavement Condition Class": "Pavement Condition Class",
     "Delivery Vehicle (veh/day)": "Delivery Vehicle (veh/day)",
     "Articulated Truck (veh/day)": "Articulated Truck (veh/day)",
-    "Traffic Annual Growth Scenario": "Traffic Annual Growth Scenario"
+    "Traffic Annual Growth Scenario": "Traffic Annual Growth Scenario",
+    "Length (ORMA)": "Length (ORMA)",
+    "Length (Tabular)": "Length (Tabular)"
 }

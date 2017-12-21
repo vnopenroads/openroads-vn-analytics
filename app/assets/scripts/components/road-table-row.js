@@ -48,7 +48,8 @@ const RowReadView = ({
             </Link>
             <a
               className='a-table-action'
-              href={`${api}/field/geometries/${vpromm}?grouped=false&download=true`}
+              href={`${api}/properties/roads/${vpromm}.geojson`}
+              download
             >
               <T>Download</T>
             </a>
@@ -58,7 +59,7 @@ const RowReadView = ({
 
       <td className='table-properties-cell'>
         {
-          properties.length !== 0 &&
+          Object.keys(properties).length !== 0 &&
             <div>
               <button
                 type='button'
@@ -71,10 +72,11 @@ const RowReadView = ({
                 shouldShowProperties &&
                   <RowProperties
                     properties={properties}
+                    roadId={vpromm}
                   />
               }
             </div>
-          }
+        }
       </td>
     </tr>
   );
