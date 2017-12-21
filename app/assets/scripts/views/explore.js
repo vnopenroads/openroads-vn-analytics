@@ -68,6 +68,18 @@ var Explore = React.createClass({
     });
   },
 
+  componentWillReceiveProps: function ({ lng, lat, zoom }) {
+    if (lng !== this.props.lng || lat !== this.props.lat || zoom !== this.props.zoom) {
+      this.map.flyTo({ center: [lng, lat], zoom });
+    }
+  },
+
+  componentWillUnmount: function () {
+    const { lng, lat } = this.map.getCenter();
+    const zoom = this.map.getZoom();
+    this.props.setMapPosition(lng, lat, zoom);
+  },
+
   handleLayerChange: function ({ target: { value } }) {
     this.props.selectExploreMapLayer(value);
     this.map.setPaintProperty(
@@ -85,12 +97,6 @@ var Explore = React.createClass({
     } else {
       this.map.setFilter('conflated', ['has', 'or_vpromms']);
     }
-  },
-
-  componentWillUnmount: function () {
-    const { lng, lat } = this.map.getCenter();
-    const zoom = this.map.getZoom();
-    this.props.setMapPosition(lng, lat, zoom);
   },
 
   render: function () {

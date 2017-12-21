@@ -69,6 +69,12 @@ var Editor = React.createClass({
     window.addEventListener('message', this.messageListener, false);
   },
 
+  componentWillReceiveProps: function ({ lng, lat, zoom }) {
+    if (lng !== this.props.lng || lat !== this.props.lat || zoom !== this.props.zoom) {
+      this.map.flyTo({ center: [lng, lat], zoom });
+    }
+  },
+
   componentWillUnmount: function () {
     window.removeEventListener('message', this.messageListener, false);
 
