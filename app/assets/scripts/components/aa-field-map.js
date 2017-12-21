@@ -38,7 +38,8 @@ var AAFieldMap = React.createClass({
     geoJSON: React.PropTypes.object,
     vpromm: React.PropTypes.string,
     provinceName: React.PropTypes.string,
-    navigateBack: React.PropTypes.func
+    navigateBack: React.PropTypes.func,
+    setMapPosition: React.PropTypes.func
   },
 
   getInitialState: function () {

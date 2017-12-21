@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   compose,
+  withProps,
   getContext
 } from 'recompose';
 import mapboxgl from 'mapbox-gl';
@@ -10,7 +11,8 @@ import config from '../config';
 import lineColors from '../utils/line-colors';
 import {
   selectExploreMapLayer,
-  exploreMapShowNoVpromms
+  exploreMapShowNoVpromms,
+  fetchVProMMsBbox
 } from '../actions/action-creators';
 import {
   setMapPosition
@@ -18,6 +20,7 @@ import {
 import MapSearch from '../components/map-search';
 import MapOptions from '../components/map-options';
 import MapLegend from '../components/map-legend';
+import { withRouter } from 'react-router';
 
 
 var Explore = React.createClass({
@@ -36,7 +39,11 @@ var Explore = React.createClass({
   componentDidMount: function () {
     mapboxgl.accessToken = config.mbToken;
 
-    const { lng, lat, zoom } = this.props;
+    const { lng, lat, zoom, activeRoad } = this.props;
+
+    if (activeRoad) {
+      this.props.fetchActiveRoad();
+    }
 
     this.map = new mapboxgl.Map({
       container: 'map',
@@ -68,9 +75,13 @@ var Explore = React.createClass({
     });
   },
 
-  componentWillReceiveProps: function ({ lng, lat, zoom }) {
+  componentWillReceiveProps: function ({ lng, lat, zoom, activeRoad }) {
     if (lng !== this.props.lng || lat !== this.props.lat || zoom !== this.props.zoom) {
       this.map.flyTo({ center: [lng, lat], zoom });
+    }
+
+    if (activeRoad !== this.props.activeRoad) {
+      this.props.fetchActiveRoad();
     }
   },
 
@@ -137,6 +148,10 @@ var Explore = React.createClass({
 
 
 export default compose(
+  withRouter,
+  withProps(({ location: { query: { activeRoad } } }) => ({
+    activeRoad
+  })),
   getContext({ language: React.PropTypes.string }),
   connect(
     state => ({
@@ -145,10 +160,11 @@ export default compose(
       lat: state.map.lat,
       zoom: state.map.zoom
     }),
-    dispatch => ({
+    (dispatch, { activeRoad }) => ({
       setMapPosition: (lng, lat, zoom) => dispatch(setMapPosition(lng, lat, zoom)),
-      selectExploreMapLayer: (value) => selectExploreMapLayer(value),
-      exploreMapShowNoVpromms: (checked) => exploreMapShowNoVpromms(checked)
+      selectExploreMapLayer: (value) => dispatch(selectExploreMapLayer(value)),
+      exploreMapShowNoVpromms: (checked) => dispatch(exploreMapShowNoVpromms(checked)),
+      fetchActiveRoad: () => dispatch(fetchVProMMsBbox(activeRoad))
     })
   )
 )(Explore);
