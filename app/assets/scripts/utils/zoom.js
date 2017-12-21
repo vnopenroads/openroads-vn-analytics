@@ -86,16 +86,16 @@ exports.makeNWSE = function (bounds) {
 exports.bboxToLngLatZoom = ([west, south, east, north], zoom) => {
   const lng = west + ((east - west) / 2);
   const lat = south + ((north - south) / 2);
+  const xDimension = 1000;
+  const yDimension = 500;
+  const padding = 5;
 
   const { x: xDistance, y: yDistance } = pixelDistances(
     transformGeoToPixel({ lng: west, lat: north }, zoom),
     transformGeoToPixel({ lng: east, lat: south }, zoom)
   );
 
-  /**
-   * find ratio of map dimensions (estimated as 1000 x 800) to map distance
-   */
-  const zoomScale = Math.min(1000 / xDistance, 800 / yDistance);
+  const zoomScale = Math.min(xDimension / (xDistance + (padding / 2)), yDimension / (yDistance + (padding / 2)));
   const newZoom = makeNewZoom(zoomScale, zoom);
 
   return { lng, lat, zoom: newZoom };
