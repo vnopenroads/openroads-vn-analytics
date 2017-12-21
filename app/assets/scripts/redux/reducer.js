@@ -32,29 +32,7 @@ const admins = function (state = {units: [], fetching: false, fetched: false}, a
   return state;
 };
 
-const adminBboxDefaultState = {
-  fetching: false,
-  fetched: false,
-  bbox: []
-};
-const adminBbox = function (state = adminBboxDefaultState, action) {
-  switch (action.type) {
-    case actions.REQUEST_ADMIN_BBOX:
-      console.log('REQUEST_ADMIN_BBOX');
-      state = _.cloneDeep(state);
-      state.fetching = true;
-      state.fetched = false;
-      break;
-    case actions.RECEIVE_ADMIN_BBOX:
-      console.log('RECEIVE_ADMIN_BBOX');
-      state = _.cloneDeep(state);
-      state.bbox = action.json.bbox;
-      state.fetching = false;
-      state.fetched = true;
-      break;
-  }
-  return state;
-};
+
 const search = function (state = {results: [], fetching: false, fetched: false, query: '', searching: false}, action) {
   switch (action.type) {
     case actions.REQUEST_SEARCH_RESULTS:
@@ -83,28 +61,6 @@ const search = function (state = {results: [], fetching: false, fetched: false, 
   return state;
 };
 
-
-const VProMMsWayBboxDefaultState = {
-  fetching: false,
-  fetched: false,
-  bbox: []
-};
-
-const VProMMsWayBbox = function (state = VProMMsWayBboxDefaultState, action) {
-  switch (action.type) {
-    case actions.REQUEST_VPROMMS_IDS:
-      state = _.cloneDeep(state);
-      state.error = null;
-      state.fetching = true;
-      break;
-    case actions.RECIEVE_VPROMMS_BBOX:
-      state = _.cloneDeep(state);
-      state.fetching = false;
-      state.fetched = true;
-      state.bbox = action.json;
-  }
-  return state;
-};
 
 const defaultFieldVProMMsids = {
   fetching: false,
@@ -272,7 +228,6 @@ export default combineReducers({
   local: localReducer,
   admins,
   adminInfo,
-  adminBbox,
   roads,
   roadCount,
   map,
@@ -285,6 +240,5 @@ export default combineReducers({
   roadIdCount, // TODO - delete
   setSearchType,
   setFilteredVProMMs,
-  VProMMsWayBbox,
   fieldVProMMsids // TODO - delete
 });
