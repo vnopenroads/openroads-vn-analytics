@@ -1,5 +1,3 @@
-'use strict';
-
 import React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -139,9 +137,7 @@ export default compose(
       layer: state.exploreMap.layer,
       lng: state.map.lng,
       lat: state.map.lat,
-      zoom: state.map.zoom,
-      vprommsBbox: state.VProMMsWayBbox.bbox,
-      adminBbox: state.adminBbox.bbox
+      zoom: state.map.zoom
     }),
     dispatch => ({
       setMapPosition: (lng, lat, zoom) => dispatch(setMapPosition(lng, lat, zoom)),

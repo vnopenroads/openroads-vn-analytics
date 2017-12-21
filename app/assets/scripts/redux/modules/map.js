@@ -1,3 +1,12 @@
+import {
+  RECEIVE_ADMIN_BBOX,
+  RECIEVE_VPROMMS_BBOX
+} from '../../actions/action-types';
+import {
+  bboxToLngLatZoom
+} from '../../utils/zoom';
+
+
 /**
  * constants
  */
@@ -27,6 +36,22 @@ export default (
       lat: action.lat,
       lng: action.lng,
       zoom: action.zoom
+    });
+  } else if (action.type === RECEIVE_ADMIN_BBOX) {
+    const { lng, lat, zoom } = bboxToLngLatZoom(action.json.bbox, state.zoom);
+
+    return Object.assign({}, state, {
+      lng,
+      lat,
+      zoom
+    });
+  } else if (action.type === RECIEVE_VPROMMS_BBOX) {
+    const { lng, lat, zoom } = bboxToLngLatZoom(action.json, state.zoom);
+
+    return Object.assign({}, state, {
+      lng,
+      lat,
+      zoom
     });
   }
 
