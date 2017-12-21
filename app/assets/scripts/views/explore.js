@@ -28,12 +28,14 @@ var Explore = React.createClass({
 
   propTypes: {
     layer: React.PropTypes.string,
+    activeRoad: React.PropTypes.string,
     lng: React.PropTypes.number,
     lat: React.PropTypes.number,
     zoom: React.PropTypes.number,
     selectExploreMapLayer: React.PropTypes.func,
     exploreMapShowNoVpromms: React.PropTypes.func,
-    setMapPosition: React.PropTypes.func
+    setMapPosition: React.PropTypes.func,
+    fetchActiveRoad: React.PropTypes.func
   },
 
   componentDidMount: function () {
