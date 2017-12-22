@@ -63,11 +63,11 @@ var AssetsAA = React.createClass({
               children && renderAdminName(children, aaId, aaIdSub)
             }
             {
-              !aaIdSub && ADMIN_MAP.province[aaId] &&
+              !aaIdSub && aaId &&
                 <div className='a-head-actions'>
                   <a
                     className='button button--secondary-raised-dark'
-                    href={`${config.provinceDumpBaseUrl}${ADMIN_MAP.province[aaId].id}.csv`}
+                    href={`${config.provinceDumpBaseUrl}${aaId}.csv`}
                     target="_blank"
                   >
                     <T>Download Roads</T>
