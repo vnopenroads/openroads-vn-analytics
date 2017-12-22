@@ -1,7 +1,7 @@
 var chai = require('chai');
 var expect = chai.expect;
 var zoom = require('../app/assets/scripts/utils/zoom');
-var bounds = [-77.1906280518, 38.9994422096, -76.8761444092, 38.7781755178];
+
 
 describe('transformGeoToPixel', function () {
   it('should return pixel coordinate equivalent of mercator projected geographic coordinate', function () {
@@ -29,18 +29,6 @@ describe('pixelDistances', function () {
   });
 });
 
-describe('newZoomScale', function () {
-  it('should return scale factor to translate between old and new zoom level', function () {
-    var newZoomScale = zoom.newZoomScale;
-    var distances = {
-      x: 57.2500671228845,
-      y: 51.750114947455586
-    };
-    var zoomTranslationFactor = newZoomScale(distances);
-    expect(zoomTranslationFactor).to.be.equal(15.458902860646377);
-  });
-});
-
 describe('makeNewZoom', function () {
   it('should return zoom to fit entire bounding box', function () {
     var makeNewZoom = zoom.makeNewZoom;
@@ -51,22 +39,3 @@ describe('makeNewZoom', function () {
   });
 });
 
-describe('makeCenterpoint', function () {
-  it('should return an object with the center point of a provided bounds array', function () {
-    var makeCenterpoint = zoom.makeCenterpoint;
-    var cp = makeCenterpoint(bounds);
-    expect(cp.x).to.be.equal(-77.0333862305);
-    expect(cp.y).to.be.equal(38.8888088637);
-  });
-});
-
-describe('makeNWSE', function () {
-  it('should return an object with nw and sw coordinates', function () {
-    var makeNWSE = zoom.makeNWSE;
-    var NWSE = makeNWSE(bounds);
-    expect(NWSE.nw.lng).to.be.equal(-77.1906280518);
-    expect(NWSE.nw.lat).to.be.equal(38.9994422096);
-    expect(NWSE.se.lng).to.be.equal(-76.8761444092);
-    expect(NWSE.se.lat).to.be.equal(38.7781755178);
-  });
-});
