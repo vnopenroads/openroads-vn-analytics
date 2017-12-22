@@ -1,37 +1,26 @@
-'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
-import { push, replace } from 'react-router-redux';
 import {
   compose,
   getContext
 } from 'recompose';
-import { setGlobalZoom } from '../actions/action-creators';
+import MapSearch from '../components/map-search';
 import T from '../components/t';
 import {
-  transformGeoToPixel,
-  pixelDistances,
-  newZoomScale,
-  makeNewZoom,
-  makeCenterpoint,
-  makeNWSE
-} from '../utils/zoom';
+  setMapPosition
+} from '../redux/modules/map';
 import config from '../config';
-import MapSearch from '../components/map-search';
+
 
 var Editor = React.createClass({
   displayName: 'Editor',
 
   propTypes: {
-    params: React.PropTypes.object,
-    dispatch: React.PropTypes.func,
-    _setGlobalZoom: React.PropTypes.func,
-    globX: React.PropTypes.number,
-    globY: React.PropTypes.number,
-    globZ: React.PropTypes.number,
-    language: React.PropTypes.string.isRequired,
-    vprommsBbox: React.PropTypes.array,
-    adminBbox: React.PropTypes.array
+    setMapPosition: React.PropTypes.func,
+    lng: React.PropTypes.number,
+    lat: React.PropTypes.number,
+    zoom: React.PropTypes.number,
+    language: React.PropTypes.string.isRequired
   },
 
   // /////////////////////////////////////////////////////////////////////////////
@@ -62,48 +51,17 @@ var Editor = React.createClass({
     if (e.data.type === 'urlchange') {
       switch (e.data.id) {
         case 'or-editor':
-          this.hash = this.cleanUrl(e.data.url, config.editorUrl);
-          this.props.dispatch(replace(`/${this.props.language}/editor/${this.hash}`));
+          this.hash = e.data.url.replace(new RegExp(`(http:|https:)?${config.editorUrl}/?#?`), '');
+          // this.props.dispatch(replace(`/${this.props.language}/editor/${this.hash}`));
           break;
       }
     } else if (e.data.type === 'navigate') {
       switch (e.data.id) {
         case 'or-editor':
-          this.props.dispatch(push(e.data.url));
+          // this.props.dispatch(push(e.data.url));
           break;
       }
     }
-  },
-
-  cleanUrl: function (url, base) {
-    return url.replace(new RegExp(`(http:|https:)?${base}/?#?`), '');
-  },
-
-  makeNewXYZ: function (bounds, zoom) {
-    // grab bbox bounds from its returned obj.
-    // make NWSE object
-    const NWSE = makeNWSE(bounds);
-    // make nw and se pixel location objects;
-    const nw = transformGeoToPixel(NWSE.nw, zoom);
-    const se = transformGeoToPixel(NWSE.se, zoom);
-    // pixel distance between nw and se x points & nw and se y points
-    const distances = pixelDistances(nw, se);
-    // scale factor used to generate new zoom
-    const zoomScale = newZoomScale(distances);
-    // new zoom, using zoomScale and zoom
-    const newZoom = makeNewZoom(zoomScale, zoom);
-    // centerpoint for new zoom object
-    const cp = makeCenterpoint(bounds);
-    // return a zoom object with new x,y, and z!
-    return {
-      x: cp.x,
-      y: cp.y,
-      z: newZoom
-    };
-  },
-
-  makeIdHash: function (newXYZ) {
-    return `//editor.openroads-vn.com/#map=${newXYZ.z}/${newXYZ.x}/${newXYZ.y}/`;
   },
 
   componentDidMount: function () {
@@ -111,45 +69,27 @@ var Editor = React.createClass({
     window.addEventListener('message', this.messageListener, false);
   },
 
-  componentWillUnmount: function () {
-    window.removeEventListener('message', this.messageListener, false);
-    if (this.hash.length) {
-      this.props._setGlobalZoom(this.hash);
+  componentWillReceiveProps: function ({ lng, lat, zoom }) {
+    if (lng !== this.props.lng || lat !== this.props.lat || zoom !== this.props.zoom) {
+      this.map.flyTo({ center: [lng, lat], zoom });
     }
   },
 
-  componentWillReceiveProps: function (nextProps) {
-    // the props this component recieves are only the bounds of either a new admin or vpromms bbox
-    // this bbox needs to be converted to a new centerpoint & zoom level.
+  componentWillUnmount: function () {
+    window.removeEventListener('message', this.messageListener, false);
 
-    // to do this, first grab the current zoom
-    const zoom = document.getElementById('main-frame')
-      .getAttribute('src')
-      .split('#map=')[1].split('/')[0];
-    let bounds;
-    // then grab a bounding box provided by a user search in the search component
-    if (nextProps.vprommsBbox !== this.props.vprommsBbox) {
-      bounds = nextProps.vprommsBbox;
+    const mapPositionHash = /[0-9\.]+\/[0-9\.]+\/[0-9\.]+$/.exec(this.hash);
+    if (mapPositionHash && mapPositionHash[0] && mapPositionHash[0].split('/').length === 3) {
+      const [zoom, lng, lat] = mapPositionHash[0]
+        .split('/')
+        .map(Number);
+      this.props.setMapPosition(lng, lat, zoom);
     }
-    if (nextProps.adminBbox !== this.props.adminBbox) {
-      bounds = nextProps.adminBbox;
-    }
-
-    if (!bounds) return;
-
-    // then generate a new centerpoint and zoom level with these bounds and zoom level
-    const newXYZ = this.makeNewXYZ(bounds, zoom);
-    // translate that xyz object into a url hash that when given to the iframe will
-    // change the zoom level of iD
-    const newiDSource = this.makeIdHash(newXYZ);
-    this.hash = this.cleanUrl(newiDSource, config.editorUrl);
-    // this.props.dispatch(replace(`/${getLanguage()}/editor/${this.hash}`));
-    document.getElementById('main-frame').setAttribute('src', newiDSource);
   },
 
   render: function () {
-    var globalZoomHash = `map=${this.props.globZ.toString()}/${this.props.globX.toString()}/${this.props.globY.toString()}`;
-    var path = config.editorUrl + `#${globalZoomHash}`;
+    const { lng, lat, zoom } = this.props;
+
     return (
       <section className='inpage inpage--alt'>
         <header className='inpage__header'>
@@ -165,7 +105,13 @@ var Editor = React.createClass({
         <div className='inpage__body'>
           <div className='inner'>
             <figure className='map'>
-              <iframe src={path} id='main-frame' name='main-frame' ref="iframe" className='map__media'></iframe>
+              <iframe
+                className='map__media'
+                src={`${config.editorUrl}#map=${zoom}/${lng}/${lat}`}
+                id='main-frame'
+                name='main-frame'
+                ref="iframe"
+              />
             </figure>
           </div>
         </div>
@@ -179,15 +125,12 @@ module.exports = compose(
   getContext({ language: React.PropTypes.string }),
   connect(
     state => ({
-      globX: state.globZoom.x,
-      globY: state.globZoom.y,
-      globZ: state.globZoom.z,
-      vprommsBbox: state.VProMMsWayBbox.bbox,
-      adminBbox: state.adminBbox.bbox
+      lng: state.map.lng,
+      lat: state.map.lat,
+      zoom: state.map.zoom
     }),
     dispatch => ({
-      dispatch,
-      _setGlobalZoom: function (url) { dispatch(setGlobalZoom(url)); }
+      setMapPosition: (lng, lat, zoom) => dispatch(setMapPosition(lng, lat, zoom))
     })
   )
 )(Editor);

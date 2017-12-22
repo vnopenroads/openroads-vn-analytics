@@ -1,9 +1,8 @@
-'use strict';
-
 import React from 'react';
 import { connect } from 'react-redux';
 import {
   compose,
+  withProps,
   getContext
 } from 'recompose';
 import mapboxgl from 'mapbox-gl';
@@ -13,40 +12,51 @@ import lineColors from '../utils/line-colors';
 import {
   selectExploreMapLayer,
   exploreMapShowNoVpromms,
-  setGlobalZoom,
-  removeVProMMsBBox
+  fetchVProMMsBbox
 } from '../actions/action-creators';
+import {
+  setMapPosition
+} from '../redux/modules/map';
 import MapSearch from '../components/map-search';
 import MapOptions from '../components/map-options';
 import MapLegend from '../components/map-legend';
+import { withRouter } from 'react-router';
 
 
 var Explore = React.createClass({
   displayName: 'Explore',
 
   propTypes: {
-    _removeVProMMsBBox: React.PropTypes.func,
-    _setGlobalZoom: React.PropTypes.func,
     layer: React.PropTypes.string,
-    showNoVpromms: React.PropTypes.bool,
-    dispatch: React.PropTypes.func,
-    globX: React.PropTypes.number,
-    globY: React.PropTypes.number,
-    globZ: React.PropTypes.number,
-    adminBbox: React.PropTypes.array,
-    vprommsBbox: React.PropTypes.array,
-    location: React.PropTypes.object
+    activeRoad: React.PropTypes.string,
+    lng: React.PropTypes.number,
+    lat: React.PropTypes.number,
+    zoom: React.PropTypes.number,
+    selectExploreMapLayer: React.PropTypes.func,
+    exploreMapShowNoVpromms: React.PropTypes.func,
+    setMapPosition: React.PropTypes.func,
+    fetchActiveRoad: React.PropTypes.func
   },
 
   componentDidMount: function () {
     mapboxgl.accessToken = config.mbToken;
+
+    const { lng, lat, zoom, activeRoad } = this.props;
+
+    if (activeRoad) {
+      this.props.fetchActiveRoad();
+    }
+
     this.map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/light-v9',
       failIfMajorPerformanceCaveat: false,
-      center: [this.props.globX, this.props.globY],
-      zoom: this.props.globZ
-    }).addControl(new mapboxgl.NavigationControl(), 'bottom-left');
+      center: [lng, lat],
+      zoom: zoom
+    });
+
+    this.map.addControl(new mapboxgl.NavigationControl(), 'bottom-left');
+
     this.map.on('load', () => {
       // Load all roads with VPRoMMS values, and color by IRI
       this.map.addLayer({
@@ -67,48 +77,38 @@ var Explore = React.createClass({
     });
   },
 
-  makeXYZ: function () {
-    const xyz = this.map.getCenter();
-    xyz.zoom = this.map.getZoom();
-    return xyz;
-  },
+  componentWillReceiveProps: function ({ lng, lat, zoom, activeRoad }) {
+    if (lng !== this.props.lng || lat !== this.props.lat || zoom !== this.props.zoom) {
+      this.map.flyTo({ center: [lng, lat], zoom });
+    }
 
-  handleLayerChange: function (e) {
-    const property = e.target.value;
-    // TODO - don't pass dispatch to component
-    this.props.dispatch(selectExploreMapLayer(property));
-    this.map.setPaintProperty(
-      'conflated',
-      'line-color',
-      lineColors[property]
-    );
-  },
-
-  handleShowNoVpromms: function (e) {
-    const show = e.target.checked;
-
-    // TODO - don't pass dispatch to component
-    this.props.dispatch(exploreMapShowNoVpromms(show));
-    if (show) {
-      this.map.setFilter('conflated', null);
-    } else {
-      this.map.setFilter('conflated', ['has', 'or_vpromms']);
+    if (activeRoad !== this.props.activeRoad) {
+      this.props.fetchActiveRoad();
     }
   },
 
   componentWillUnmount: function () {
-    this.props._setGlobalZoom(this.makeXYZ());
+    const { lng, lat } = this.map.getCenter();
+    const zoom = this.map.getZoom();
+    this.props.setMapPosition(lng, lat, zoom);
   },
 
-  componentWillReceiveProps: function (nextProps) {
-    let bounds;
-    if (nextProps.adminBbox !== this.props.adminBbox) {
-      bounds = nextProps.adminBbox;
-      if (!bounds.includes(null)) { return this.map.fitBounds(bounds); }
-    }
-    if (nextProps.vprommsBbox !== this.props.vprommsBbox) {
-      bounds = nextProps.vprommsBbox;
-      if (!bounds.includes(null)) { return this.map.fitBounds(bounds); }
+  handleLayerChange: function ({ target: { value } }) {
+    this.props.selectExploreMapLayer(value);
+    this.map.setPaintProperty(
+      'conflated',
+      'line-color',
+      lineColors[value]
+    );
+  },
+
+  handleShowNoVpromms: function ({ target: { checked } }) {
+    this.props.exploreMapShowNoVpromms(checked);
+
+    if (checked) {
+      this.map.setFilter('conflated', null);
+    } else {
+      this.map.setFilter('conflated', ['has', 'or_vpromms']);
     }
   },
 
@@ -131,8 +131,8 @@ var Explore = React.createClass({
               <div className='map__media' id='map'></div>
               <div className='map__controls map__controls--top-right'>
                 <MapOptions
-                  handleLayerChange={ this.handleLayerChange }
-                  handleShowNoVpromms={ this.handleShowNoVpromms }
+                  handleLayerChange={this.handleLayerChange}
+                  handleShowNoVpromms={this.handleShowNoVpromms}
                 />
               </div>
               <div className='map__controls map__controls--bottom-right'>
@@ -150,20 +150,23 @@ var Explore = React.createClass({
 
 
 export default compose(
+  withRouter,
+  withProps(({ location: { query: { activeRoad } } }) => ({
+    activeRoad
+  })),
   getContext({ language: React.PropTypes.string }),
   connect(
     state => ({
       layer: state.exploreMap.layer,
-      globX: state.globZoom.x,
-      globY: state.globZoom.y,
-      globZ: state.globZoom.z,
-      vprommsBbox: state.VProMMsWayBbox.bbox,
-      adminBbox: state.adminBbox.bbox
+      lng: state.map.lng,
+      lat: state.map.lat,
+      zoom: state.map.zoom
     }),
-    dispatch => ({
-      dispatch,
-      _removeVProMMsBBox: function () { dispatch(removeVProMMsBBox()); },
-      _setGlobalZoom: function (xyzObj) { dispatch(setGlobalZoom(xyzObj)); }
+    (dispatch, { activeRoad }) => ({
+      setMapPosition: (lng, lat, zoom) => dispatch(setMapPosition(lng, lat, zoom)),
+      selectExploreMapLayer: (value) => dispatch(selectExploreMapLayer(value)),
+      exploreMapShowNoVpromms: (checked) => dispatch(exploreMapShowNoVpromms(checked)),
+      fetchActiveRoad: () => dispatch(fetchVProMMsBbox(activeRoad))
     })
   )
 )(Explore);

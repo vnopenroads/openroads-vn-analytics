@@ -30,7 +30,12 @@ const RowReadView = ({
 
       <td>
         {hasOSMData ?
-          <Link to={`/${language}/explore`}>
+          <Link to={{
+            pathname: `/${language}/explore`,
+            query: {
+              activeRoad: vpromm
+            }
+          }}>
             <strong>{vpromm}</strong>
           </Link> :
           vpromm

@@ -22,6 +22,9 @@ import {
   FETCH_ROAD_GEOMETRY_ERROR,
   fetchRoadGeometryEpic
 } from '../redux/modules/roads';
+import {
+  setMapPosition
+} from '../redux/modules/map';
 import config from '../config';
 import {
   ADMIN_MAP
@@ -35,7 +38,8 @@ var AAFieldMap = React.createClass({
     geoJSON: React.PropTypes.object,
     vpromm: React.PropTypes.string,
     provinceName: React.PropTypes.string,
-    navigateBack: React.PropTypes.func
+    navigateBack: React.PropTypes.func,
+    setMapPosition: React.PropTypes.func
   },
 
   getInitialState: function () {
@@ -62,11 +66,17 @@ var AAFieldMap = React.createClass({
   },
 
 
-  componentWillReceiveProps: function ({ geoJSON }) {
+  componentWillReceiveProps: function ({ geoJSON, lng, lat, zoom }) {
     // TODO - rendering map could be less of a kludge w/ proper react/mapbox-gl bindings
     if (geoJSON && !this.state.layerRendered) {
       this.renderLayer();
     }
+  },
+
+  componentWillUnmount: function () {
+    const { lng, lat } = this.map.getCenter();
+    const zoom = this.map.getZoom();
+    this.props.setMapPosition(lng, lat, zoom);
   },
 
   renderLayer: function () {
@@ -166,7 +176,8 @@ module.exports = compose(
       geoJSON: state.roads.roadsById[vpromm] && state.roads.roadsById[vpromm].geoJSON
     }),
     (dispatch) => ({
-      fetchRoadGeometry: (id) => dispatch(fetchRoadGeometryEpic(id))
+      fetchRoadGeometry: (id) => dispatch(fetchRoadGeometryEpic(id)),
+      setMapPosition: (lng, lat, zoom) => dispatch(setMapPosition(lng, lat, zoom))
     })
   ),
   withHandlers({
