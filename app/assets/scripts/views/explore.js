@@ -71,8 +71,8 @@ var Explore = React.createClass({
           },
           'source-layer': 'conflated',
           paint: {
-            'line-width': 8,
-            'line-color': '#F1C40F' // '#da251d'
+            'line-width': 20,
+            'line-color': '#D3D3D3'
           },
           layout: { 'line-cap': 'round' },
           filter: ['==', 'or_vpromms', activeRoad]
