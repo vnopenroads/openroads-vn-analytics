@@ -14,8 +14,7 @@ import {
 
 
 const ProvinceTable = ({
-  provinces, fieldIdCount, VProMMsCount, language,
-  sortField, sortOrder, sortHandler
+  provinces, language, sortField, sortOrder, sortHandler
 }) => (
   <div className='table'>
     <table>

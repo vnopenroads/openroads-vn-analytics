@@ -190,36 +190,6 @@ export function exploreMapShowNoVpromms (bool) {
 // ///////////////////////////////////////////////////////////////
 //                             Roads                            //
 // ///////////////////////////////////////////////////////////////
-
-function requestVProMMsBbox () {
-  return {
-    type: actions.REQUEST_VPROMMS_BBOX
-  };
-}
-
-function recieveVProMMsBbox (json) {
-  return {
-    type: actions.RECIEVE_VPROMMS_BBOX,
-    json: json
-  };
-}
-export function fetchVProMMsBbox (vprommsId) {
-  return function (dispatch) {
-    dispatch(requestVProMMsBbox());
-    let url = `${config.api}/way/${vprommsId}/bbox`;
-    return fetch(url)
-    .then(response => {
-      return response.json();
-    })
-    .then(json => {
-      if (json.statusCode >= 400) {
-        return dispatch(recieveVProMMsBbox({}));
-      }
-      dispatch(recieveVProMMsBbox(json));
-    });
-  };
-}
-
 function requestFieldVProMMsids () {
   return {
     type: actions.REQUEST_VPROMMS_FIELD_IDS

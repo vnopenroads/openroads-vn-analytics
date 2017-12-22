@@ -54,6 +54,9 @@ export const EDIT_ROAD_PROPERTY_ERROR = 'EDIT_ROAD_PROPERTY_ERROR';
 export const DELETE_ROAD_PROPERTY = 'DELETE_ROAD_PROPERTY';
 export const DELETE_ROAD_PROPERTY_SUCCESS = 'DELETE_ROAD_PROPERTY_SUCCESS';
 export const DELETE_ROAD_PROPERTY_ERROR = 'DELETE_ROAD_PROPERTY_ERROR';
+export const FETCH_ROAD_BBOX = 'FETCH_ROAD_BBOX';
+export const FETCH_ROAD_BBOX_SUCCESS = 'FETCH_ROAD_BBOX_SUCCESS';
+export const FETCH_ROAD_BBOX_ERROR = 'FETCH_ROAD_BBOX_ERROR';
 
 
 /**
@@ -94,6 +97,10 @@ export const editRoadPropertyError = (id, key, value, error) => ({ type: EDIT_RO
 export const deleteRoadProperty = (id, key) => ({ type: DELETE_ROAD_PROPERTY, id, key });
 export const deleteRoadPropertySuccess = (id, key) => ({ type: DELETE_ROAD_PROPERTY_SUCCESS, id, key });
 export const deleteRoadPropertyError = (id, key, error) => ({ type: DELETE_ROAD_PROPERTY_ERROR, id, key, error });
+
+export const fetchRoadBbox = (roadId) => ({ type: FETCH_ROAD_BBOX, roadId });
+export const fetchRoadBboxSuccess = (roadId, bbox) => ({ type: FETCH_ROAD_BBOX_SUCCESS, roadId, bbox });
+export const fetchRoadBboxError = (roadId, error) => ({ type: FETCH_ROAD_BBOX_ERROR, roadId, error });
 
 
 export const fetchRoadsEpic = (province, district, page, sortField, sortOrder) => (dispatch) => {
@@ -266,6 +273,22 @@ export const deleteRoadPropertyEpic = (id, key) => (dispatch) => {
       dispatch(deleteRoadPropertySuccess(id, key));
     })
     .catch((err) => dispatch(deleteRoadPropertyError(id, key, err)));
+};
+
+
+export const fetchRoadBboxEpic = (roadId) => (dispatch) => {
+  dispatch(fetchRoadBbox());
+
+  return fetch(`${config.api}/way/${roadId}/bbox`)
+    .then(response => {
+      if (!response.ok) {
+        return new Error(response.status);
+      }
+
+      return response.json();
+    })
+    .then(bbox => dispatch(fetchRoadBboxSuccess(roadId, bbox)))
+    .catch(err => dispatch(fetchRoadBboxError(roadId, err)));
 };
 
 
