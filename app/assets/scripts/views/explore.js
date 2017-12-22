@@ -72,10 +72,10 @@ var Explore = React.createClass({
           'source-layer': 'conflated',
           paint: {
             'line-width': 8,
-            'line-color': '#ff8580' // '#da251d'
+            'line-color': '#F1C40F' // '#da251d'
           },
           layout: { 'line-cap': 'round' },
-          filter: ['==', 'or_vpromms', activeRoad || '']
+          filter: ['==', 'or_vpromms', activeRoad]
         })
         .addLayer({
           id: 'conflated',
@@ -171,7 +171,7 @@ var Explore = React.createClass({
 
 export default compose(
   withRouter,
-  withProps(({ location: { query: { activeRoad } } }) => ({
+  withProps(({ location: { query: { activeRoad = '' } } }) => ({
     activeRoad
   })),
   getContext({ language: React.PropTypes.string }),
