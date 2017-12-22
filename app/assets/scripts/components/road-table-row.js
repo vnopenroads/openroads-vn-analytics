@@ -28,29 +28,33 @@ const RowReadView = ({
         />
       </td>
 
-      <td>
-        {hasOSMData ?
-          <Link to={{
-            pathname: `/${language}/explore`,
-            query: {
-              activeRoad: vpromm
-            }
-          }}>
-            <strong>{vpromm}</strong>
-          </Link> :
-          vpromm
-        }
-      </td>
+      <td>{
+        hasOSMData ? <strong>{vpromm}</strong> : vpromm
+      }</td>
 
       <td className={hasOSMData ? 'added' : 'not-added'}>
         {hasOSMData &&
           <div className='a-table-actions'>
+
             <Link
               className='a-table-action'
               to={`/${language}/assets/road/${vpromm}/`}
             >
+              <T>View</T>
+            </Link>
+
+            <Link
+              className='a-table-action'
+              to={{
+                pathname: `/${language}/explore`,
+                query: {
+                  activeRoad: vpromm
+                }
+              }}
+            >
               <T>Explore</T>
             </Link>
+
             <a
               className='a-table-action'
               href={`${api}/properties/roads/${vpromm}.geojson`}
@@ -58,6 +62,7 @@ const RowReadView = ({
             >
               <T>Download</T>
             </a>
+
           </div>
         }
       </td>
