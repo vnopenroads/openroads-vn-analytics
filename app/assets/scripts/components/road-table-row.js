@@ -73,7 +73,7 @@ const RowReadView = ({
             <div>
               <button
                 type='button'
-                className={`button-table-expand ${shouldShowProperties ? 'button-table-expand--show' : 'button-table-expand--hide'}`}
+                className={`button-table-expand ${shouldShowProperties ? 'button-table-expand--hide' : 'button-table-expand--show'}`}
                 onClick={toggleProperties}
               >
                 <span>{shouldShowProperties ? <T>Hide</T> : <T>Show</T>}</span>
