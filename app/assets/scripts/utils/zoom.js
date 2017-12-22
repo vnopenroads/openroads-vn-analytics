@@ -88,7 +88,7 @@ exports.bboxToLngLatZoom = ([west, south, east, north], zoom) => {
   const lat = south + ((north - south) / 2);
   const xDimension = 1000;
   const yDimension = 500;
-  const padding = 5;
+  const padding = 10;
 
   const { x: xDistance, y: yDistance } = pixelDistances(
     transformGeoToPixel({ lng: west, lat: north }, zoom),

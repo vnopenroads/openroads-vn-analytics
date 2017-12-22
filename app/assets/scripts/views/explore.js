@@ -59,21 +59,38 @@ var Explore = React.createClass({
 
     this.map.on('load', () => {
       // Load all roads with VPRoMMS values, and color by IRI
-      this.map.addLayer({
-        id: 'conflated',
-        type: 'line',
-        source: {
-          type: 'vector',
-          url: 'mapbox://openroads.vietnam-conflated'
-        },
-        'source-layer': 'conflated',
-        paint: { 'line-width': 4 },
-        layout: { 'line-cap': 'round' }
-      }).setPaintProperty(
-        'conflated',
-        'line-color',
-        lineColors['iri']
-      );
+      this.map
+        .addLayer({
+          id: 'active_road',
+          type: 'line',
+          source: {
+            type: 'vector',
+            url: 'mapbox://openroads.vietnam-conflated'
+          },
+          'source-layer': 'conflated',
+          paint: {
+            'line-width': 8,
+            'line-color': '#ff8580' // '#da251d'
+          },
+          layout: { 'line-cap': 'round' },
+          filter: ['==', 'or_vpromms', activeRoad || '']
+        })
+        .addLayer({
+          id: 'conflated',
+          type: 'line',
+          source: {
+            type: 'vector',
+            url: 'mapbox://openroads.vietnam-conflated'
+          },
+          'source-layer': 'conflated',
+          paint: { 'line-width': 4 },
+          layout: { 'line-cap': 'round' }
+        })
+        .setPaintProperty(
+          'conflated',
+          'line-color',
+          lineColors['iri']
+        );
     });
   },
 
@@ -83,6 +100,7 @@ var Explore = React.createClass({
     }
 
     if (activeRoad !== this.props.activeRoad) {
+      this.map.setFilter('active_road', ['==', '_id', activeRoad]);
       this.props.fetchActiveRoad();
     }
   },
