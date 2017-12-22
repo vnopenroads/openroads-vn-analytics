@@ -100,7 +100,7 @@ var Explore = React.createClass({
     }
 
     if (activeRoad !== this.props.activeRoad) {
-      this.map.setFilter('active_road', ['==', '_id', activeRoad]);
+      this.map.setFilter('active_road', ['==', 'or_vpromms', activeRoad]);
       this.props.fetchActiveRoad(activeRoad);
     }
   },
