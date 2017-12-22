@@ -186,32 +186,6 @@ export function exploreMapShowNoVpromms (bool) {
   };
 }
 
-// ////////////////////////////////////////////////////////////////
-//                              Set Zoom                         //
-// ////////////////////////////////////////////////////////////////
-
-export function setGlobalZoom (zoomSource) {
-  let json;
-  if (typeof zoomSource === 'string') {
-    zoomSource = zoomSource.split(/map=/)[1].split(/&/)[0].split('/');
-    json = {
-      z: Number(zoomSource[0]),
-      x: Number(zoomSource[1]),
-      y: Number(zoomSource[2])
-    };
-  } else {
-    json = {
-      z: zoomSource.zoom,
-      x: zoomSource.lng,
-      y: zoomSource.lat
-    };
-  }
-  return {
-    type: actions.SET_GLOBAL_ZOOM,
-    json: json
-  };
-}
-
 
 // ///////////////////////////////////////////////////////////////
 //                             Roads                            //
@@ -243,12 +217,6 @@ export function fetchVProMMsBbox (vprommsId) {
       }
       dispatch(recieveVProMMsBbox(json));
     });
-  };
-}
-
-export function removeVProMMsBBox () {
-  return {
-    type: actions.REMOVE_VPROMMS_BBOX
   };
 }
 

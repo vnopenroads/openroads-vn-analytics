@@ -9,7 +9,7 @@ var globMerc = require('global-mercator');
  * @param {number} zoom current map zoom
  * @return {object} tranformed pixel coordinate
  */
-exports.transformGeoToPixel = function (geoCoordinate, zoom) {
+const transformGeoToPixel = exports.transformGeoToPixel = function (geoCoordinate, zoom) {
   var meterCrds = globMerc.lngLatToMeters([geoCoordinate.lng, geoCoordinate.lat]);
   var pixelCrd = globMerc.metersToPixels(meterCrds, zoom);
   return {
@@ -24,7 +24,7 @@ exports.transformGeoToPixel = function (geoCoordinate, zoom) {
  * @param {object} sePixel southeastbounds coordinate as pixel coordinate
  * @return {object} object with pixel distances
  */
-exports.pixelDistances = function (nwPixel, sePixel) {
+const pixelDistances = exports.pixelDistances = function (nwPixel, sePixel) {
   return {
     x: Math.abs(nwPixel.x - sePixel.x),
     y: Math.abs(nwPixel.y - sePixel.y)
@@ -47,7 +47,7 @@ exports.newZoomScale = function (distances, dimensions) {
  * @param {number} zoom the map's current zoom
  * @return {number} new zoom for bounds
  */
-exports.makeNewZoom = function (scale, zoom) {
+const makeNewZoom = exports.makeNewZoom = function (scale, zoom) {
   // the high level calculation for new zoom comes from:
   // https://github.com/Leaflet/Leaflet/blob/703ae02aa8cbd0b87be5b01e77754b83ad732267/src/geo/crs/CRS.js#L65
   // the high level calculation's components come from
@@ -80,4 +80,23 @@ exports.makeNWSE = function (bounds) {
     nw: {lng: bounds[0], lat: bounds[1]},
     se: {lng: bounds[2], lat: bounds[3]}
   };
+};
+
+
+exports.bboxToLngLatZoom = ([west, south, east, north], zoom) => {
+  const lng = west + ((east - west) / 2);
+  const lat = south + ((north - south) / 2);
+  const xDimension = 1000;
+  const yDimension = 500;
+  const padding = 5;
+
+  const { x: xDistance, y: yDistance } = pixelDistances(
+    transformGeoToPixel({ lng: west, lat: north }, zoom),
+    transformGeoToPixel({ lng: east, lat: south }, zoom)
+  );
+
+  const zoomScale = Math.min(xDimension / (xDistance + (padding / 2)), yDimension / (yDistance + (padding / 2)));
+  const newZoom = makeNewZoom(zoomScale, zoom);
+
+  return { lng, lat, zoom: newZoom };
 };
