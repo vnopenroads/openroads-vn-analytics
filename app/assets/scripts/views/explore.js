@@ -44,7 +44,7 @@ var Explore = React.createClass({
     const { lng, lat, zoom, activeRoad } = this.props;
 
     if (activeRoad) {
-      this.props.fetchActiveRoad();
+      this.props.fetchActiveRoad(activeRoad);
     }
 
     this.map = new mapboxgl.Map({
@@ -101,7 +101,7 @@ var Explore = React.createClass({
 
     if (activeRoad !== this.props.activeRoad) {
       this.map.setFilter('active_road', ['==', '_id', activeRoad]);
-      this.props.fetchActiveRoad();
+      this.props.fetchActiveRoad(activeRoad);
     }
   },
 
@@ -184,7 +184,7 @@ export default compose(
       setMapPosition: (lng, lat, zoom) => dispatch(setMapPosition(lng, lat, zoom)),
       selectExploreMapLayer: (value) => dispatch(selectExploreMapLayer(value)),
       exploreMapShowNoVpromms: (checked) => dispatch(exploreMapShowNoVpromms(checked)),
-      fetchActiveRoad: () => dispatch(fetchVProMMsBbox(activeRoad))
+      fetchActiveRoad: (activeRoad) => dispatch(fetchVProMMsBbox(activeRoad))
     })
   )
 )(Explore);
