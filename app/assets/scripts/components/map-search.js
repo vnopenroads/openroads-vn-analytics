@@ -6,18 +6,24 @@ import {
   getContext
 } from 'recompose';
 import { connect } from 'react-redux';
+import {
+  push
+} from 'react-router-redux';
 import T, {
   translate
 } from './t';
 import {
   setSearchType,
   fetchFieldVProMMsIds,
-  fetchVProMMsBbox,
   setFilteredVProMMs,
   fetchAdmins,
   clearAdmins,
   fetchAdminBbox
 } from '../actions/action-creators';
+import {
+  fetchRoadBboxEpic
+} from '../redux/modules/roads';
+import { withRouter } from 'react-router';
 
 
 var MapSearch = React.createClass({
@@ -34,7 +40,7 @@ var MapSearch = React.createClass({
     _fetchAdmins: React.PropTypes.func,
     _clearAdmins: React.PropTypes.func,
     _setFilteredVProMMs: React.PropTypes.func,
-    _fetchVProMMsBbox: React.PropTypes.func,
+    fetchRoadBbox: React.PropTypes.func,
     _fetchFieldVProMMsIds: React.PropTypes.func,
     _fetchAdminBbox: React.PropTypes.func
   },
@@ -125,7 +131,7 @@ var MapSearch = React.createClass({
       // Wait for the state to be set, otherwise the shouldComponentUpdate
       // of the parent will prevent the re-render.
       // This is an artifact.
-      this.props._fetchVProMMsBbox(VProMMsID);
+      this.props.fetchRoadBbox(VProMMsID);
     });
   },
 
@@ -265,6 +271,10 @@ var MapSearch = React.createClass({
 
 export default compose(
   getContext({ language: React.PropTypes.string }),
+  withRouter,
+  // withProps(({ location: { query: { activeRoad } } }) => ({
+  //   activeRoad
+  // })),
   connect(
     state => ({
       searchType: state.setSearchType.searchType,
@@ -273,14 +283,21 @@ export default compose(
       filteredVProMMs: state.setFilteredVProMMs,
       fetching: state.admins.fetching
     }),
-    dispatch => ({
+    (dispatch, { location }) => ({
       _fetchFieldVProMMsIds: (...args) => dispatch(fetchFieldVProMMsIds(...args)),
       _setSearchType: (...args) => dispatch(setSearchType(...args)),
       _setFilteredVProMMs: (filteredVProMMs) => dispatch(setFilteredVProMMs(filteredVProMMs)),
       _clearAdmins: () => dispatch(clearAdmins()),
       _fetchAdmins: (id) => dispatch(fetchAdmins(id)),
-      _fetchVProMMsBbox: (vprommsId) => dispatch(fetchVProMMsBbox(vprommsId)),
-      _fetchAdminBbox: (id) => dispatch(fetchAdminBbox(id))
+      _fetchAdminBbox: (id) => dispatch(fetchAdminBbox(id)),
+      fetchRoadBbox: (vprommsId) => {
+        dispatch(push(Object.assign({}, location, {
+          query: Object.assign({}, location.query, {
+            activeRoad: vprommsId
+          })
+        })));
+        dispatch(fetchRoadBboxEpic(vprommsId));
+      }
     })
   )
 )(MapSearch);

@@ -11,12 +11,14 @@ import config from '../config';
 import lineColors from '../utils/line-colors';
 import {
   selectExploreMapLayer,
-  exploreMapShowNoVpromms,
-  fetchVProMMsBbox
+  exploreMapShowNoVpromms
 } from '../actions/action-creators';
 import {
   setMapPosition
 } from '../redux/modules/map';
+import {
+  fetchRoadBboxEpic
+} from '../redux/modules/roads';
 import MapSearch from '../components/map-search';
 import MapOptions from '../components/map-options';
 import MapLegend from '../components/map-legend';
@@ -184,7 +186,7 @@ export default compose(
       setMapPosition: (lng, lat, zoom) => dispatch(setMapPosition(lng, lat, zoom)),
       selectExploreMapLayer: (value) => dispatch(selectExploreMapLayer(value)),
       exploreMapShowNoVpromms: (checked) => dispatch(exploreMapShowNoVpromms(checked)),
-      fetchActiveRoad: (activeRoad) => dispatch(fetchVProMMsBbox(activeRoad))
+      fetchActiveRoad: (activeRoad) => dispatch(fetchRoadBboxEpic(activeRoad))
     })
   )
 )(Explore);
