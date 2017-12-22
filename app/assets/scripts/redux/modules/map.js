@@ -38,7 +38,7 @@ export default (
       zoom: action.zoom
     });
   } else if (action.type === RECEIVE_ADMIN_BBOX) {
-    const { lng, lat, zoom } = bboxToLngLatZoom(action.json.bbox, state.zoom);
+    const { lng, lat, zoom } = bboxToLngLatZoom(action.json.bbox);
 
     return Object.assign({}, state, {
       lng,
@@ -46,7 +46,7 @@ export default (
       zoom
     });
   } else if (action.type === RECIEVE_VPROMMS_BBOX) {
-    const { lng, lat, zoom } = bboxToLngLatZoom(action.json, state.zoom);
+    const { lng, lat, zoom } = bboxToLngLatZoom(action.json);
 
     return Object.assign({}, state, {
       lng,

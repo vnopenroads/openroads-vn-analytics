@@ -1,7 +1,8 @@
-'use strict';
-
 // Leaflet inspired implementation of extracting a midpoint and zoom level from a set of bounds //
-var globMerc = require('global-mercator');
+var {
+  lngLatToMeters,
+  metersToPixels
+} = require('global-mercator');
 
 /**
  * calculates tranformed pixel point from coordinate point
@@ -10,8 +11,8 @@ var globMerc = require('global-mercator');
  * @return {object} tranformed pixel coordinate
  */
 const transformGeoToPixel = exports.transformGeoToPixel = function (geoCoordinate, zoom) {
-  var meterCrds = globMerc.lngLatToMeters([geoCoordinate.lng, geoCoordinate.lat]);
-  var pixelCrd = globMerc.metersToPixels(meterCrds, zoom);
+  var meterCrds = lngLatToMeters([geoCoordinate.lng, geoCoordinate.lat]);
+  var pixelCrd = metersToPixels(meterCrds, zoom);
   return {
     x: pixelCrd[0],
     y: pixelCrd[1]
@@ -31,15 +32,6 @@ const pixelDistances = exports.pixelDistances = function (nwPixel, sePixel) {
   };
 };
 
-/**
- * @param {object} distances object with bounds distances represented pixels
- * @return {number} factor used to generate new zoom
- */
-exports.newZoomScale = function (distances, dimensions) {
-  // if dimensions are provided, use them. if they are not, hard code them.
-  dimensions = !dimensions ? {x: 1000, y: 800} : dimensions;
-  return Math.min(dimensions.x / distances.x, dimensions.y / distances. y);
-};
 
 /**
  * returns max zoom for showing extent of the bounding box provided
@@ -59,37 +51,19 @@ const makeNewZoom = exports.makeNewZoom = function (scale, zoom) {
   return newZoom > 24 ? 24 : newZoom;
 };
 
-/**
- * returns lng/lat midpoint of bbox
- * @param {array} bounds array represntation of lat/lng bounding box
- * @return {object} object representation of bounds midpoint
- */
-exports.makeCenterpoint = function (bounds) {
-  return {
-    x: (bounds[0] + bounds[2]) / 2,
-    y: (bounds[1] + bounds[3]) / 2
-  };
-};
 
-/**
- * @param {array} bounds array representation of lat/lng bounding box
- * @return {object} object representation of bounds' nw and se points
- */
-exports.makeNWSE = function (bounds) {
-  return {
-    nw: {lng: bounds[0], lat: bounds[1]},
-    se: {lng: bounds[2], lat: bounds[3]}
-  };
-};
-
-
-exports.bboxToLngLatZoom = ([west, south, east, north], zoom) => {
+exports.bboxToLngLatZoom = ([west, south, east, north]) => {
   const lng = west + ((east - west) / 2);
   const lat = south + ((north - south) / 2);
   const xDimension = 1000;
   const yDimension = 500;
   const padding = 10;
+  const zoom = 6;
 
+
+  // TODO - this implementation shouldn't care about current zoom to calculate new zoom for bbox
+  // hardcoding at 6 produces fine enough results, but it shouldn't be necessary
+  // actually using current zoom produces bad/inconsistent results
   const { x: xDistance, y: yDistance } = pixelDistances(
     transformGeoToPixel({ lng: west, lat: north }, zoom),
     transformGeoToPixel({ lng: east, lat: south }, zoom)
