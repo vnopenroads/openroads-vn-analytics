@@ -10,6 +10,9 @@ import {
   lifecycle
 } from 'recompose';
 import {
+  at
+} from 'lodash';
+import {
   local
 } from 'redux-fractal';
 import {
@@ -25,7 +28,8 @@ import {
 } from '../redux/modules/roads';
 import {
   getRoadCountKey,
-  fetchRoadCountEpic
+  fetchProvincesRoadCountEpic,
+  fetchDistrictRoadCountEpic
 } from '../redux/modules/roadCount';
 import {
   ADMIN_MAP
@@ -56,6 +60,20 @@ const reducer = (
 };
 
 
+const fetchData = ({
+  roadsPage, roadsPageStatus, roadPageCount, roadCountStatus,
+  province, district, page, sortField, sortOrder, fetchRoads, fetchRoadCount
+}) => {
+  if (!roadsPage && roadsPageStatus !== 'pending' && roadsPageStatus !== 'error') {
+    fetchRoads(province, district, page, sortField, sortOrder);
+  }
+
+  if (!roadPageCount && roadCountStatus !== 'pending' && roadCountStatus !== 'error') {
+    fetchRoadCount(province, district);
+  }
+};
+
+
 const RoadTableContainer = compose(
   getContext({ language: React.PropTypes.string }),
   withRouter,
@@ -78,24 +96,41 @@ const RoadTableContainer = compose(
       const roadsPage = state.roads.roadsByPage[roadPageKey] && state.roads.roadsByPage[roadPageKey].roads;
       const roadsPageStatus = state.roads.roadsByPage[roadPageKey] && state.roads.roadsByPage[roadPageKey].status;
 
-      const roadCountKey = getRoadCountKey(province, district);
-      const roadCount = state.roadCount[roadCountKey] && state.roadCount[roadCountKey].count;
-      const roadPageCount = state.roadCount[roadCountKey] && state.roadCount[roadCountKey].pageCount;
-      const roadOsmCount = state.roadCount[roadCountKey] && state.roadCount[roadCountKey].osmCount;
-      const roadCountStatus = state.roadCount[roadCountKey] && state.roadCount[roadCountKey].status;
+      let roadCount;
+      let roadOsmCount;
+      let roadCountStatus;
+
+      if (district) {
+        const roadCountKey = getRoadCountKey(province, district);
+        // roadCount = state.roadCount.districts[roadCountKey] && state.roadCount.districts[roadCountKey].count;
+        // roadOsmCount = state.roadCount.districts[roadCountKey] && state.roadCount.districts[roadCountKey].osmCount;
+        roadCount = at(state, [`roadCount.districts.${roadCountKey}.count`])[0];
+        roadOsmCount = at(state, [`roadCount.districts.${roadCountKey}.osmCount`])[0];
+        roadCountStatus = state.roadCount.districts[roadCountKey] && state.roadCount.districts[roadCountKey].status;
+      } else {
+        roadCount = at(state, `roadCount.provinces.provinceCount.${province}.count`)[0];
+        roadOsmCount = at(state, `roadCount.provinces.provinceCount.${province}.osmCount`)[0];
+        // roadCount = state.roadCount.provinces.provinceCount[province] && state.roadCount.provinces.provinceCount[province].count;
+        // roadOsmCount = state.roadCount.provinces.provinceCount[province] && state.roadCount.provinces.provinceCount[province].osmCount;
+        roadCountStatus = state.roadCount.provinces.status;
+      }
 
       return {
         roadsPage,
         roadsPageStatus,
         roadCount,
-        roadPageCount,
+        roadPageCount: Math.ceil(roadCount / 20),
         roadOsmCount,
         roadCountStatus
       };
     },
     (dispatch) => ({
       fetchRoads: (province, district, page, sortField, sortOrder) => dispatch(fetchRoadsEpic(province, district, page, sortField, sortOrder)),
-      fetchRoadCount: (province, district) => dispatch(fetchRoadCountEpic(province, district))
+      fetchRoadCount: (province, district) => (
+        district ?
+          dispatch(fetchDistrictRoadCountEpic(province, district)) :
+          dispatch(fetchProvincesRoadCountEpic())
+      )
     })
   ),
   withHandlers({
@@ -109,32 +144,10 @@ const RoadTableContainer = compose(
   }),
   lifecycle({
     componentWillMount: function () {
-      const {
-        roadsPage, roadsPageStatus, roadPageCount, roadCountStatus,
-        province, district, page, sortField, sortOrder, fetchRoads, fetchRoadCount
-      } = this.props;
-
-      if (!roadsPage && roadsPageStatus !== 'pending' && roadsPageStatus !== 'error') {
-        fetchRoads(province, district, page, sortField, sortOrder);
-      }
-
-      if (!roadPageCount && roadCountStatus !== 'pending' && roadCountStatus !== 'error') {
-        fetchRoadCount(province, district);
-      }
+      fetchData(this.props);
     },
     componentWillReceiveProps: function (nextProps) {
-      const {
-        roadsPage, roadsPageStatus, roadPageCount, roadCountStatus,
-        province, district, page, sortField, sortOrder, fetchRoads, fetchRoadCount
-      } = nextProps;
-
-      if (!roadsPage && roadsPageStatus !== 'pending' && roadsPageStatus !== 'error') {
-        fetchRoads(province, district, page, sortField, sortOrder);
-      }
-
-      if (!roadPageCount && roadCountStatus !== 'pending' && roadCountStatus !== 'error') {
-        fetchRoadCount(province, district);
-      }
+      fetchData(nextProps);
     }
   })
 )(RoadTable);

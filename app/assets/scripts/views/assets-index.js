@@ -4,25 +4,28 @@ import { connect } from 'react-redux';
 import {
   compose,
   getContext,
-  lifecycle
+  lifecycle,
+  withProps
 } from 'recompose';
+import {
+  reduce
+} from 'lodash';
 import T from '../components/t';
 import {
-  fetchProvinces,
-  fetchVProMMsIdsCount,
-  fetchFieldVProMsIdsCount
+  fetchProvinces
 } from '../actions/action-creators';
+import {
+  fetchProvincesRoadCountEpic
+} from '../redux/modules/roadCount';
 import ProvinceTable from '../containers/province-table-container';
 import {
   ADMIN_MAP
 } from '../constants';
 
 
-const AssetsIndex = ({ provinces, fieldIdCount, VProMMsCount, provincesFetched, VProMMsCountFetched, fieldCountsFetched }) => {
-  const total = VProMMsCount.reduce((accum, { total_roads }) => accum + Number(total_roads), 0);
-  const field = fieldIdCount.reduce((accum, { total_roads }) => accum + Number(total_roads), 0);
-  const completion = field / total;
-
+const AssetsIndex = ({
+  provinces, provincesFetched, provincesRoadCount, totalRoadCount, osmRoadCount, provincesRoadCountStatus
+}) => {
   return (
     <div>
       <div className='a-header'>
@@ -31,27 +34,42 @@ const AssetsIndex = ({ provinces, fieldIdCount, VProMMsCount, provincesFetched, 
         </div>
       </div>
 
-      <div className='a-main__status'>
-        <h2>
-          <strong>{completion.toFixed(2)}% </strong>
-          <T>of VPRoMMS Ids have field data collected</T> ({field} of {total})
-        </h2>
-        <div className='meter'>
-          <div className='meter__internal' style={{width: `${completion}%`}}></div>
+      {
+        provincesRoadCountStatus === 'complete' &&
+        <div className='a-main__status'>
+          <h2>
+            <strong>{(osmRoadCount / totalRoadCount).toFixed(2)}% </strong>
+            <T>of VPRoMMS Ids have field data collected</T> ({osmRoadCount} of {totalRoadCount})
+          </h2>
+          <div className='meter'>
+            <div className='meter__internal' style={{width: `${osmRoadCount / totalRoadCount}%`}}></div>
+          </div>
         </div>
-      </div>
+      }
+
       <div>
-        {provincesFetched && VProMMsCountFetched && fieldCountsFetched ?
+        {provincesFetched && provincesRoadCountStatus === 'complete' &&
           <ProvinceTable
             provinces={provinces.filter(province => ADMIN_MAP.province[province.id])}
-            fieldIdCount={fieldIdCount}
-            VProMMsCount={VProMMsCount}
-          /> :
-          <div className='a-subnav'><h2><T>Loading</T></h2></div>
+            provincesRoadCount={provincesRoadCount}
+          />
         }
       </div>
     </div>
   );
+};
+
+
+const fetchData = ({
+  provinces, provincesRoadCount, provincesRoadCountStatus, fetchProvinces, fetchRoadCount
+}) => {
+  if (!provinces) {
+    fetchProvinces();
+  }
+
+  if (!provincesRoadCount && provincesRoadCountStatus !== 'pending' && provincesRoadCountStatus !== 'error') {
+    fetchRoadCount();
+  }
 };
 
 
@@ -61,22 +79,30 @@ export default compose(
     state => ({
       provinces: state.provinces.data.province,
       provincesFetched: state.provinces.fetched,
-      fieldIdCount: state.fieldIdCount.counts,
-      fieldCountsFetched: state.fieldIdCount.fetched,
-      VProMMsCount: state.roadIdCount.counts,
-      VProMMsCountFetched: state.roadIdCount.fetched
+      provincesRoadCount: state.roadCount.provinces.provinceCount,
+      provincesRoadCountStatus: state.roadCount.provinces.status
     }),
     dispatch => ({
-      _fetchProvinces: () => dispatch(fetchProvinces()),
-      _fetchVProMMsIdsCount: (level) => dispatch(fetchVProMMsIdsCount(level)),
-      _fetchFieldVProMsIdsCount: (level) => dispatch(fetchFieldVProMsIdsCount(level))
+      fetchProvinces: () => dispatch(fetchProvinces()),
+      fetchRoadCount: () => dispatch(fetchProvincesRoadCountEpic())
     })
   ),
   lifecycle({
     componentWillMount: function () {
-      this.props._fetchProvinces();
-      this.props._fetchVProMMsIdsCount('province');
-      this.props._fetchFieldVProMsIdsCount('province');
+      fetchData(this.props);
+    },
+    componentWillReceiveProps: function (nextProps) {
+      fetchData(nextProps);
     }
+  }),
+  withProps(({ provincesRoadCount, provincesRoadCountStatus }) => {
+    if (provincesRoadCount) {
+      return {
+        totalRoadCount: reduce(provincesRoadCount, (total, { count }) => total + count, 0),
+        osmRoadCount: reduce(provincesRoadCount, (total, { osmCount }) => total + osmCount, 0)
+      };
+    }
+
+    return {};
   })
 )(AssetsIndex);
