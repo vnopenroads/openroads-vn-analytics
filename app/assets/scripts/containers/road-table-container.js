@@ -102,16 +102,13 @@ const RoadTableContainer = compose(
 
       if (district) {
         const roadCountKey = getRoadCountKey(province, district);
-        // roadCount = state.roadCount.districts[roadCountKey] && state.roadCount.districts[roadCountKey].count;
-        // roadOsmCount = state.roadCount.districts[roadCountKey] && state.roadCount.districts[roadCountKey].osmCount;
+
         roadCount = at(state, [`roadCount.districts.${roadCountKey}.count`])[0];
         roadOsmCount = at(state, [`roadCount.districts.${roadCountKey}.osmCount`])[0];
         roadCountStatus = state.roadCount.districts[roadCountKey] && state.roadCount.districts[roadCountKey].status;
       } else {
         roadCount = at(state, `roadCount.provinces.provinceCount.${province}.count`)[0];
         roadOsmCount = at(state, `roadCount.provinces.provinceCount.${province}.osmCount`)[0];
-        // roadCount = state.roadCount.provinces.provinceCount[province] && state.roadCount.provinces.provinceCount[province].count;
-        // roadOsmCount = state.roadCount.provinces.provinceCount[province] && state.roadCount.provinces.provinceCount[province].osmCount;
         roadCountStatus = state.roadCount.provinces.status;
       }
 
