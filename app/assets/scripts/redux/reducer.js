@@ -151,52 +151,6 @@ const provinces = function (state = defaultProvinces, action) {
 };
 
 
-const defaultVProMMsIdCount = {
-  fetching: false,
-  fetched: false,
-  counts: []
-};
-
-const roadIdCount = function (state = defaultVProMMsIdCount, action) {
-  switch (action.type) {
-    case actions.REQUEST_VPROMMS_IDS_COUNT:
-      state = _.cloneDeep(state);
-      state.fetching = true;
-      break;
-    case actions.RECEIVE_VPROMMS_IDS_COUNT:
-      state = _.cloneDeep(state);
-      state.fetching = false;
-      state.fetched = true;
-      state.counts = action.json;
-      break;
-    case actions.REMOVE_VPROMMS_IDS_COUNT:
-      return defaultVProMMsIdCount;
-  }
-  return state;
-};
-
-const defaultFieldVProMMsIdsCount = {
-  fetching: false,
-  fetched: false,
-  counts: []
-};
-
-const fieldIdCount = function (state = defaultFieldVProMMsIdsCount, action) {
-  switch (action.type) {
-    case actions.REQUEST_VPROMMS_FIELD_IDS_COUNT:
-      state = _.cloneDeep(state);
-      state.fetching = true;
-      break;
-    case actions.RECEIVE_VPROMMS_FIELD_IDS_COUNT:
-      state = _.cloneDeep(state);
-      state.fetched = true;
-      state.fetching = false;
-      state.counts = action.json;
-      break;
-  }
-  return state;
-};
-
 const defaultAdminInfo = {
   fetched: false,
   fetching: false,
@@ -231,13 +185,11 @@ export default combineReducers({
   roads,
   roadCount,
   map,
-  fieldIdCount, // TODO - delete
   waytasks,
   osmChange,
   search,
   exploreMap,
   provinces,
-  roadIdCount, // TODO - delete
   setSearchType,
   setFilteredVProMMs,
   fieldVProMMsids // TODO - delete
