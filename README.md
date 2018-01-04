@@ -10,6 +10,28 @@ This repo contains the static assets that constitute the OpenRoads Vietnam websi
 
 ORMA–VN is a deployment of the ORMA platform, originally built by Development Seed and the World Bank for use in the Philippines; several more repos may be found in the `orma` GitHub organization, pertaining to that or other deployments.
 
+## Platform functionality
+
+View and edit a tabular inventory of all roads, their lengths and properties, and the presence or absence of field data.
+
+![](https://user-images.githubusercontent.com/4959135/34584717-e3345f84-f16a-11e7-83d7-bc179b126daf.gif)
+
+Visually explore the road network, leveraging field data to color-code by road condition or other properties.
+
+![](https://user-images.githubusercontent.com/4959135/34584763-0846726c-f16b-11e7-9e6b-66165979446c.gif)
+
+Make manual corrections to the road paths.
+
+![](https://user-images.githubusercontent.com/4959135/34585247-f372799c-f16c-11e7-8429-8b0b29cd8cd1.gif)
+
+Discover algorithmically-detected issues with the road network, and implement quick fixes.
+
+![](https://user-images.githubusercontent.com/4959135/34584968-de9c6eca-f16b-11e7-8845-ea1da50394b7.gif)
+
+View the platform in either English or Vietnamese.
+
+![](https://user-images.githubusercontent.com/4959135/34584981-e81cef6a-f16b-11e7-8cb5-1f3cbf94d515.gif)
+
 ## Running locally
 
 ### Environment setup
