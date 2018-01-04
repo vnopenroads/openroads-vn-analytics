@@ -125,50 +125,6 @@ export function fetchSearchResults (searchQuery) {
 
 
 // ////////////////////////////////////////////////////////////////
-//                   VProMMS IDs Source Data                     //
-// ////////////////////////////////////////////////////////////////
-function requestVProMMsidsCount () {
-  return {
-    type: actions.REQUEST_VPROMMS_IDS_COUNT
-  };
-}
-
-function receiveVProMMSidsCount (json) {
-  return {
-    type: actions.RECEIVE_VPROMMS_IDS_COUNT,
-    json: json
-  };
-}
-
-export function fetchVProMMsIdsCount (level, id) {
-  return function (dispatch) {
-    dispatch(requestVProMMsidsCount());
-    let url = `${config.api}/admin/roads/total`;
-    if (id) {
-      id = id.join('');
-      url = `${url}/${id}`;
-    }
-    if (level === 'district') {
-      url = `${url}?level=district`;
-    }
-    return fetch(url)
-    .then(response => response.json())
-    .then(json => {
-      if (json.statusCode >= 400) {
-        throw new Error('Bad Request');
-      }
-      dispatch(receiveVProMMSidsCount(json));
-    });
-  };
-}
-
-export function removeVProMMsIdsCount () {
-  return {
-    type: actions.REMOVE_VPROMMS_IDS_COUNT
-  };
-}
-
-// ////////////////////////////////////////////////////////////////
 //                         Explore Map                           //
 // ////////////////////////////////////////////////////////////////
 
@@ -190,36 +146,6 @@ export function exploreMapShowNoVpromms (bool) {
 // ///////////////////////////////////////////////////////////////
 //                             Roads                            //
 // ///////////////////////////////////////////////////////////////
-
-function requestVProMMsBbox () {
-  return {
-    type: actions.REQUEST_VPROMMS_BBOX
-  };
-}
-
-function recieveVProMMsBbox (json) {
-  return {
-    type: actions.RECIEVE_VPROMMS_BBOX,
-    json: json
-  };
-}
-export function fetchVProMMsBbox (vprommsId) {
-  return function (dispatch) {
-    dispatch(requestVProMMsBbox());
-    let url = `${config.api}/way/${vprommsId}/bbox`;
-    return fetch(url)
-    .then(response => {
-      return response.json();
-    })
-    .then(json => {
-      if (json.statusCode >= 400) {
-        return dispatch(recieveVProMMsBbox({}));
-      }
-      dispatch(recieveVProMMsBbox(json));
-    });
-  };
-}
-
 function requestFieldVProMMsids () {
   return {
     type: actions.REQUEST_VPROMMS_FIELD_IDS
@@ -244,35 +170,6 @@ export function fetchFieldVProMMsIds (json) {
         throw new Error('Bad Response');
       }
       dispatch(receiveFieldVProMMsids(json));
-    });
-  };
-}
-
-function requestFieldVProMMsIdsCount () {
-  return {
-    type: actions.REQUEST_VPROMMS_FIELD_IDS_COUNT
-  };
-}
-
-function receiveFieldVProMMsIdsCount (json) {
-  return {
-    type: actions.RECEIVE_VPROMMS_FIELD_IDS_COUNT,
-    json: json
-  };
-}
-
-export function fetchFieldVProMsIdsCount (level) {
-  return function (dispatch) {
-    dispatch(requestFieldVProMMsIdsCount());
-    let url = `${config.api}/field/roads/total`;
-    url = (level === 'district') ? `${url}?level=district` : url;
-    return fetch(url)
-    .then(response => response.json())
-    .then(json => {
-      if (json.statusCode >= 400) {
-        throw new Error('Bad Request');
-      }
-      dispatch(receiveFieldVProMMsIdsCount(json));
     });
   };
 }

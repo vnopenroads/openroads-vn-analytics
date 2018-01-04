@@ -11,12 +11,14 @@ import config from '../config';
 import lineColors from '../utils/line-colors';
 import {
   selectExploreMapLayer,
-  exploreMapShowNoVpromms,
-  fetchVProMMsBbox
+  exploreMapShowNoVpromms
 } from '../actions/action-creators';
 import {
   setMapPosition
 } from '../redux/modules/map';
+import {
+  fetchRoadBboxEpic
+} from '../redux/modules/roads';
 import MapSearch from '../components/map-search';
 import MapOptions from '../components/map-options';
 import MapLegend from '../components/map-legend';
@@ -44,7 +46,7 @@ var Explore = React.createClass({
     const { lng, lat, zoom, activeRoad } = this.props;
 
     if (activeRoad) {
-      this.props.fetchActiveRoad();
+      this.props.fetchActiveRoad(activeRoad);
     }
 
     this.map = new mapboxgl.Map({
@@ -59,21 +61,38 @@ var Explore = React.createClass({
 
     this.map.on('load', () => {
       // Load all roads with VPRoMMS values, and color by IRI
-      this.map.addLayer({
-        id: 'conflated',
-        type: 'line',
-        source: {
-          type: 'vector',
-          url: 'mapbox://openroads.vietnam-conflated'
-        },
-        'source-layer': 'conflated',
-        paint: { 'line-width': 4 },
-        layout: { 'line-cap': 'round' }
-      }).setPaintProperty(
-        'conflated',
-        'line-color',
-        lineColors['iri']
-      );
+      this.map
+        .addLayer({
+          id: 'active_road',
+          type: 'line',
+          source: {
+            type: 'vector',
+            url: 'mapbox://openroads.vietnam-conflated'
+          },
+          'source-layer': 'conflated',
+          paint: {
+            'line-width': 20,
+            'line-color': '#D3D3D3'
+          },
+          layout: { 'line-cap': 'round' },
+          filter: ['==', 'or_vpromms', activeRoad]
+        })
+        .addLayer({
+          id: 'conflated',
+          type: 'line',
+          source: {
+            type: 'vector',
+            url: 'mapbox://openroads.vietnam-conflated'
+          },
+          'source-layer': 'conflated',
+          paint: { 'line-width': 4 },
+          layout: { 'line-cap': 'round' }
+        })
+        .setPaintProperty(
+          'conflated',
+          'line-color',
+          lineColors['iri']
+        );
     });
   },
 
@@ -83,7 +102,8 @@ var Explore = React.createClass({
     }
 
     if (activeRoad !== this.props.activeRoad) {
-      this.props.fetchActiveRoad();
+      this.map.setFilter('active_road', ['==', 'or_vpromms', activeRoad]);
+      this.props.fetchActiveRoad(activeRoad);
     }
   },
 
@@ -151,7 +171,7 @@ var Explore = React.createClass({
 
 export default compose(
   withRouter,
-  withProps(({ location: { query: { activeRoad } } }) => ({
+  withProps(({ location: { query: { activeRoad = '' } } }) => ({
     activeRoad
   })),
   getContext({ language: React.PropTypes.string }),
@@ -166,7 +186,7 @@ export default compose(
       setMapPosition: (lng, lat, zoom) => dispatch(setMapPosition(lng, lat, zoom)),
       selectExploreMapLayer: (value) => dispatch(selectExploreMapLayer(value)),
       exploreMapShowNoVpromms: (checked) => dispatch(exploreMapShowNoVpromms(checked)),
-      fetchActiveRoad: () => dispatch(fetchVProMMsBbox(activeRoad))
+      fetchActiveRoad: (activeRoad) => dispatch(fetchRoadBboxEpic(activeRoad))
     })
   )
 )(Explore);

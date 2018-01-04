@@ -1,10 +1,10 @@
 import {
-  RECEIVE_ADMIN_BBOX,
-  RECIEVE_VPROMMS_BBOX
+  RECEIVE_ADMIN_BBOX
 } from '../../actions/action-types';
 import {
   bboxToLngLatZoom
 } from '../../utils/zoom';
+import { FETCH_ROAD_BBOX_SUCCESS } from './roads';
 
 
 /**
@@ -38,15 +38,15 @@ export default (
       zoom: action.zoom
     });
   } else if (action.type === RECEIVE_ADMIN_BBOX) {
-    const { lng, lat, zoom } = bboxToLngLatZoom(action.json.bbox, state.zoom);
+    const { lng, lat, zoom } = bboxToLngLatZoom(action.json.bbox);
 
     return Object.assign({}, state, {
       lng,
       lat,
       zoom
     });
-  } else if (action.type === RECIEVE_VPROMMS_BBOX) {
-    const { lng, lat, zoom } = bboxToLngLatZoom(action.json, state.zoom);
+  } else if (action.type === FETCH_ROAD_BBOX_SUCCESS) {
+    const { lng, lat, zoom } = bboxToLngLatZoom(action.bbox);
 
     return Object.assign({}, state, {
       lng,

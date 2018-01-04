@@ -34,6 +34,7 @@ const roadSelected = 'road-selected';
 const layers = [{
   id: 'road',
   type: 'line',
+  source,
   paint: {
     'line-width': 4,
     'line-opacity': 0.2
@@ -42,6 +43,7 @@ const layers = [{
 }, {
   id: roadHoverId,
   type: 'line',
+  source,
   paint: {
     'line-width': 6,
     'line-opacity': 0.9
@@ -51,6 +53,7 @@ const layers = [{
 }, {
   id: roadSelected,
   type: 'line',
+  source,
   paint: {
     'line-width': 6,
     'line-opacity': 0.9,
@@ -58,7 +61,7 @@ const layers = [{
   },
   layout: { 'line-cap': 'round' },
   filter: ['==', '_id', '']
-}].map(layer => Object.assign({source}, layer));
+}];
 
 const layerIds = layers.map(layer => layer.id);
 
