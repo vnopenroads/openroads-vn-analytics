@@ -67,7 +67,7 @@ var Explore = React.createClass({
           type: 'line',
           source: {
             type: 'vector',
-            url: 'mapbox://openroads.vietnam-conflated'
+            url: 'mapbox://openroads.vietnam-conflated-1'
           },
           'source-layer': 'conflated',
           paint: {
@@ -82,7 +82,7 @@ var Explore = React.createClass({
           type: 'line',
           source: {
             type: 'vector',
-            url: 'mapbox://openroads.vietnam-conflated'
+            url: 'mapbox://openroads.vietnam-conflated-1'
           },
           'source-layer': 'conflated',
           paint: { 'line-width': 4 },
