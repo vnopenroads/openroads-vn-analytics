@@ -15,7 +15,7 @@ export const MARK_WAY_TASK_PENDING = 'MARK_WAY_TASK_PENDING';
 export const MARK_WAY_TASK_PENDING_SUCCESS = 'MARK_WAY_TASK_PENDING_SUCCESS';
 export const MARK_WAY_TASK_PENDING_ERROR = 'MARK_WAY_TASK_PENDING_ERROR';
 export const SKIP_TASK = 'SKIP_TASK';
-
+export const SELECT_NEXT_WAY_TASK_PROVINCE = 'SELECT_NEXT_WAY_TASK_PROVINCE';
 
 /**
  * action creators
@@ -35,15 +35,23 @@ export const markWayTaskPending = () => ({ type: MARK_WAY_TASK_PENDING });
 export const markWayTaskPendingSuccess = () => ({ type: MARK_WAY_TASK_PENDING_SUCCESS });
 export const markWayTaskPendingError = () => ({ type: MARK_WAY_TASK_PENDING_ERROR });
 export const skipTask = id => ({ type: SKIP_TASK, id });
+export const selectWayTaskProvince = (provinceId) => ({ type: SELECT_NEXT_WAY_TASK_PROVINCE, selectedProvince: provinceId });
 
 
 export const fetchNextWayTaskEpic = () => (dispatch, getState) => {
   dispatch(fetchNextWayTask());
 
   const skipped = getState().waytasks.skipped;
-  const url = skipped.length > 0 ?
-    `${config.api}/tasks/next?skip=${skipped.join(',')}` :
-    `${config.api}/tasks/next`;
+  const selectedProvince = getState().waytasks.selectedProvince;
+
+  let params = {};
+  if (skipped.length) params['skip'] = skipped;
+  if (selectedProvince) params['province'] = selectedProvince;
+
+  let url = `${config.api}/tasks/next`;
+  if (Object.keys(params).length) {
+    url = url + '?' + Object.keys(params).map(key => `${key}=${params[key]}`).join('&');
+  }
 
   return fetch(url)
     .then(response => {
@@ -134,7 +142,9 @@ export default (
     countStatus: 'complete',
     id: null,
     geoJSON: null,
-    skipped: []
+    skipped: [],
+    provinces: [],
+    selectedProvince: null
   },
   action
 ) => {
@@ -173,6 +183,10 @@ export default (
   } else if (action.type === SKIP_TASK) {
     return Object.assign({}, state, {
       skipped: state.skipped.concat(action.id)
+    });
+  } else if (action.type === SELECT_NEXT_WAY_TASK_PROVINCE) {
+    return Object.assign({}, state, {
+      selectedProvince: action.selectedProvince
     });
   }
 
