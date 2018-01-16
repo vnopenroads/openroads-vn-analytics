@@ -66,6 +66,7 @@ export const fetchNextWayTaskEpic = () => (dispatch, getState) => {
       json.data.features.forEach(feature => {
         feature.properties._id = feature.meta.id;
       });
+      dispatch(fetchWayTaskCountEpic());
       return dispatch(fetchWayTaskSuccess(json.id, json.data));
     }, e => {
       console.error('Error requesting task', e);
@@ -96,10 +97,12 @@ export const fetchWayTaskEpic = taskId => (dispatch, getState) => {
 };
 
 
-export const fetchWayTaskCountEpic = () => dispatch => {
+export const fetchWayTaskCountEpic = () => (dispatch, getState) => {
   dispatch(fetchWayTaskCount());
+  const selectedProvince = getState().waytasks.selectedProvince;
+  const url = selectedProvince ? `${config.api}/tasks/count?province=${selectedProvince}` : `${config.api}/tasks/count`;
 
-  fetch(`${config.api}/tasks/count`)
+  fetch(url)
     .then(response => {
       if (response.status >= 400) {
         throw new Error(response.statusText);
