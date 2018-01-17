@@ -452,6 +452,7 @@ var Tasks = React.createClass({
         value={value}
         onChange= {this.handleProvinceChange}
         options={ provinceOptions }
+        placeholder = "Filter tasks by province..."
       />
     );
   },
