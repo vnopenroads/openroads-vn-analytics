@@ -2,8 +2,13 @@
   .panel__title {
     display: inline;
   }
+
   .panel__subtitle.tasks-remaining {
     display: inline;
     padding-left: 8px;
+  }
+
+  .panel__body .Select {
+    margin-bottom: $global-spacing;
   }
 }
