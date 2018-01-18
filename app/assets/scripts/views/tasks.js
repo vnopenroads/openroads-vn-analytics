@@ -22,11 +22,13 @@ import {
   fetchNextWayTaskEpic,
   fetchWayTaskCountEpic,
   markWayTaskPendingEpic,
-  skipTask
+  skipTask,
+  selectWayTaskProvince
 } from '../redux/modules/tasks';
+import { fetchProvinces } from '../actions/action-creators.js';
 import { createModifyLineString } from '../utils/to-osm';
 import T from '../components/t';
-
+import Select from 'react-select';
 
 const source = 'collisions';
 const roadHoverId = 'road-hover';
@@ -71,7 +73,8 @@ var Tasks = React.createClass({
       renderedFeatures: null,
       mode: null,
       hoverId: null,
-      selectedIds: []
+      selectedIds: [],
+      selectedProvince: null
     };
   },
 
@@ -88,7 +91,10 @@ var Tasks = React.createClass({
     meta: React.PropTypes.object,
     task: React.PropTypes.object,
     taskId: React.PropTypes.number,
-    taskCount: React.PropTypes.number
+    taskCount: React.PropTypes.number,
+    selectOptions: React.PropTypes.object,
+    selectedProvince: React.PropTypes.number,
+    selectNextTaskProvince: React.PropTypes.func
   },
 
   componentDidMount: function () {
@@ -237,7 +243,6 @@ var Tasks = React.createClass({
         </div>
       );
     }
-
     return (
       <div className='map__controls map__controls--top-right'>
         <div className='panel tasks-panel'>
@@ -253,6 +258,7 @@ var Tasks = React.createClass({
             </div>
           }
           <div className='panel__body'>
+            { this.props.selectOptions.province && this.props.selectOptions.province.length && this.renderProvinceSelect() }
             { mode === null && this.renderSelectMode() }
             { mode === 'dedupe' && this.renderDedupeMode() }
             { mode === 'join' && this.renderJoinMode() }
@@ -430,6 +436,27 @@ var Tasks = React.createClass({
     return <p>{selectedIds.length} <T>roads selected</T></p>;
   },
 
+  handleProvinceChange: function (selectedProvince) {
+    const value = selectedProvince ? selectedProvince.value : null;
+    this.props.selectNextTaskProvince(value);
+    this.props.fetchNextTask();
+  },
+
+  renderProvinceSelect: function () {
+    const { selectedProvince } = this.props;
+    const provinceOptions = this.props.selectOptions.province.map((p) => { return {value: p.id, label: p.name_en}; });
+    const value = selectedProvince;
+    return (
+      <Select
+        name="form-province-select"
+        value={value}
+        onChange= {this.handleProvinceChange}
+        options={ provinceOptions }
+        placeholder = "Filter tasks by province..."
+      />
+    );
+  },
+
   render: function () {
     const { taskId, taskStatus } = this.props;
     const { hoverId } = this.state;
@@ -485,9 +512,13 @@ export default compose(
       taskId: state.waytasks.id,
       taskCount: state.waytasks.taskCount,
       taskStatus: state.waytasks.status,
-      osmStatus: state.osmChange.status
+      osmStatus: state.osmChange.status,
+      selectOptions: state.provinces.data,
+      selectedProvince: state.waytasks.selectedProvince
     }),
     dispatch => ({
+      fetchProvinces: () => dispatch(fetchProvinces()),
+      selectNextTaskProvince: (provinceId) => dispatch(selectWayTaskProvince(provinceId)),
       fetchNextTask: () => dispatch(fetchNextWayTaskEpic()),
       fetchTaskCount: () => dispatch(fetchWayTaskCountEpic()),
       skipTask: (id) => dispatch(skipTask(id)),
@@ -500,6 +531,8 @@ export default compose(
   lifecycle({
     componentDidMount: function () {
       // TODO - data fetching for this page should be moved into a route container
+      // fire to get all the provinces here.
+      this.props.fetchProvinces();
       this.props.fetchNextTask();
       this.props.fetchTaskCount();
     }
