@@ -21,7 +21,8 @@ import {
   fetchAdminBbox
 } from '../actions/action-creators';
 import {
-  fetchRoadBboxEpic
+  fetchRoadBboxEpic,
+  fetchRoadPropertyEpic
 } from '../redux/modules/roads';
 import { withRouter } from 'react-router';
 
@@ -42,7 +43,8 @@ var MapSearch = React.createClass({
     _setFilteredVProMMs: React.PropTypes.func,
     fetchRoadBbox: React.PropTypes.func,
     _fetchFieldVProMMsIds: React.PropTypes.func,
-    _fetchAdminBbox: React.PropTypes.func
+    _fetchAdminBbox: React.PropTypes.func,
+    fetchRoadProperty: React.PropTypes.func
   },
 
   getInitialState: function () {
@@ -132,6 +134,7 @@ var MapSearch = React.createClass({
       // of the parent will prevent the re-render.
       // This is an artifact.
       this.props.fetchRoadBbox(VProMMsID);
+      this.props.fetchRoadProperty(VProMMsID);
     });
   },
 
@@ -297,6 +300,9 @@ export default compose(
           })
         })));
         dispatch(fetchRoadBboxEpic(vprommsId));
+      },
+      fetchRoadProperty: (vprommsId) => {
+        dispatch(fetchRoadPropertyEpic(vprommsId));
       }
     })
   )

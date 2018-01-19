@@ -10,6 +10,7 @@ import {
   setMapPosition
 } from '../redux/modules/map';
 import config from '../config';
+import { hash } from 'global-mercator';
 
 
 var Editor = React.createClass({
@@ -20,7 +21,8 @@ var Editor = React.createClass({
     lng: React.PropTypes.number,
     lat: React.PropTypes.number,
     zoom: React.PropTypes.number,
-    language: React.PropTypes.string.isRequired
+    language: React.PropTypes.string.isRequired,
+    way: React.PropTypes.string
   },
 
   // /////////////////////////////////////////////////////////////////////////////
@@ -48,17 +50,20 @@ var Editor = React.createClass({
   // /   is sent to the iframe alongside the proper prefix.
   // /
   messageListener: function (e) {
+    console.log('### url update', e);
     if (e.data.type === 'urlchange') {
       switch (e.data.id) {
         case 'or-editor':
           this.hash = e.data.url.replace(new RegExp(`(http:|https:)?${config.editorUrl}/?#?`), '');
           // this.props.dispatch(replace(`/${this.props.language}/editor/${this.hash}`));
+          console.log('#HASH', this.hash);
           break;
       }
     } else if (e.data.type === 'navigate') {
       switch (e.data.id) {
         case 'or-editor':
           // this.props.dispatch(push(e.data.url));
+          console.log('#HASH', this.hash);          
           break;
       }
     }
@@ -70,9 +75,10 @@ var Editor = React.createClass({
   },
 
   componentWillReceiveProps: function ({ lng, lat, zoom }) {
-    if (lng !== this.props.lng || lat !== this.props.lat || zoom !== this.props.zoom) {
-      this.map.flyTo({ center: [lng, lat], zoom });
-    }
+    console.log(this.props);
+    // if (lng !== this.props.lng || lat !== this.props.lat || zoom !== this.props.zoom) {
+      // this.map.flyTo({ center: [lng, lat], zoom });
+    // }
   },
 
   componentWillUnmount: function () {
@@ -88,8 +94,8 @@ var Editor = React.createClass({
   },
 
   render: function () {
-    const { lng, lat, zoom } = this.props;
-
+    const { lng, lat, zoom, way } = this.props;
+    console.log(way);
     return (
       <section className='inpage inpage--alt'>
         <header className='inpage__header'>
@@ -107,7 +113,7 @@ var Editor = React.createClass({
             <figure className='map'>
               <iframe
                 className='map__media'
-                src={`${config.editorUrl}#map=${zoom}/${lng}/${lat}`}
+                src={`${config.editorUrl}#id=${way}&map=${zoom}/${lng}/${lat}`}
                 id='main-frame'
                 name='main-frame'
                 ref="iframe"
@@ -127,10 +133,11 @@ module.exports = compose(
     state => ({
       lng: state.map.lng,
       lat: state.map.lat,
-      zoom: state.map.zoom
+      zoom: 16,
+      way: state.map.waySlug
     }),
     dispatch => ({
-      setMapPosition: (lng, lat, zoom) => dispatch(setMapPosition(lng, lat, zoom))
+      setMapPosition: (lng, lat, zoom, way) => dispatch(setMapPosition(lng, lat, zoom, way))
     })
   )
 )(Editor);
