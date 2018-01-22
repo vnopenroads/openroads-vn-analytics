@@ -10,8 +10,6 @@ import {
   setMapPosition
 } from '../redux/modules/map';
 import config from '../config';
-import { hash } from 'global-mercator';
-
 
 var Editor = React.createClass({
   displayName: 'Editor',
