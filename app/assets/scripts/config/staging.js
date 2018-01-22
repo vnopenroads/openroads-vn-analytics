@@ -4,7 +4,5 @@
  */
 
 module.exports = {
-  environment: 'staging',
-  api: 'http://localhost:4000',
-  editorUrl: 'http://localhost:8000'
+  environment: 'staging'
 };
