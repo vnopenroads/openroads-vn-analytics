@@ -57,7 +57,9 @@ export const DELETE_ROAD_PROPERTY_ERROR = 'DELETE_ROAD_PROPERTY_ERROR';
 export const FETCH_ROAD_BBOX = 'FETCH_ROAD_BBOX';
 export const FETCH_ROAD_BBOX_SUCCESS = 'FETCH_ROAD_BBOX_SUCCESS';
 export const FETCH_ROAD_BBOX_ERROR = 'FETCH_ROAD_BBOX_ERROR';
-
+export const FETCH_ROAD_PROPERTY = 'FETCH_ROAD_PROPERTY';
+export const FETCH_ROAD_PROPERTY_ERROR = 'FETCH_ROAD_PROPERTY';
+export const FETCH_ROAD_PROPERTY_SUCCESS = 'FETCH_ROAD_PROPERTY_SUCCESS';
 
 /**
  * actions
@@ -102,6 +104,9 @@ export const fetchRoadBbox = (roadId) => ({ type: FETCH_ROAD_BBOX, roadId });
 export const fetchRoadBboxSuccess = (roadId, bbox) => ({ type: FETCH_ROAD_BBOX_SUCCESS, roadId, bbox });
 export const fetchRoadBboxError = (roadId, error) => ({ type: FETCH_ROAD_BBOX_ERROR, roadId, error });
 
+export const fetchRoadProperty = (roadId) => ({ type: FETCH_ROAD_PROPERTY, roadId });
+export const fetchRoadPropertySuccess = (roadId, properties) => ({ type: FETCH_ROAD_PROPERTY_SUCCESS, roadId, properties });
+export const fetchRoadPropertyError = (roadId, error) => ({ type: FETCH_ROAD_PROPERTY_ERROR, roadId, error });
 
 export const fetchRoadsEpic = (province, district, page, sortField, sortOrder) => (dispatch) => {
   dispatch(fetchRoads(province, district, page, sortField, sortOrder));
@@ -291,6 +296,20 @@ export const fetchRoadBboxEpic = (roadId) => (dispatch) => {
     .catch(err => dispatch(fetchRoadBboxError(roadId, err)));
 };
 
+export const fetchRoadPropertyEpic = (roadId) => (dispatch) => {
+  dispatch(fetchRoadProperty());
+
+  return fetch(`${config.api}/properties/roads/${roadId}`)
+    .then(response => {
+      if (!response.ok) {
+        return new Error(response.status);
+      }
+
+      return response.json();
+    })
+    .then(property => dispatch(fetchRoadPropertySuccess(roadId, property)))
+    .catch(err => dispatch(fetchRoadPropertyError(roadId, err)));
+};
 
 /**
  * reducer
@@ -376,6 +395,14 @@ export default (
       roadsById: Object.assign({}, state.roadsById, {
         [action.id]: Object.assign({}, state.roadsById[action.id], {
           properties: omit(state.roadsById[action.id].properties, [action.key])
+        })
+      })
+    });
+  } else if (action.type === FETCH_ROAD_PROPERTY_SUCCESS) {
+    return Object.assign({}, state, {
+      roadsById: Object.assign({}, state.roadsById, {
+        [action.roadId]: Object.assign({}, state.roadsById[action.roadId], {
+          properties: action.properties
         })
       })
     });
