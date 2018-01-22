@@ -4,7 +4,10 @@ import {
 import {
   bboxToLngLatZoom
 } from '../../utils/zoom';
-import { FETCH_ROAD_BBOX_SUCCESS } from './roads';
+import {
+  FETCH_ROAD_BBOX_SUCCESS,
+  FETCH_ROAD_PROPERTY_SUCCESS
+ } from './roads';
 
 
 /**
@@ -25,6 +28,7 @@ export const setMapPosition = (lng, lat, zoom) =>
  */
 export default (
   state = {
+    waySlug: null,
     lat: 20.029,
     lng: 105.73,
     zoom: 6
@@ -53,6 +57,10 @@ export default (
       lat,
       zoom
     });
+  } else if (action.type === FETCH_ROAD_PROPERTY_SUCCESS) {
+    const waySlug = 'w' + action.properties.way_id;
+
+    return Object.assign({}, state, {waySlug});
   }
 
   return state;
