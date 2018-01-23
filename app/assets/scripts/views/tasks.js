@@ -29,6 +29,7 @@ import { fetchProvinces } from '../actions/action-creators.js';
 import { createModifyLineString } from '../utils/to-osm';
 import T from '../components/t';
 import Select from 'react-select';
+import _ from 'lodash';
 
 const source = 'collisions';
 const roadHoverId = 'road-hover';
@@ -74,7 +75,9 @@ var Tasks = React.createClass({
       mode: null,
       hoverId: null,
       selectedIds: [],
-      selectedProvince: null
+      selectedProvince: null,
+      selectedVprommids: [],
+      dedupeVprommid: null
     };
   },
 
@@ -129,6 +132,8 @@ var Tasks = React.createClass({
         if (features.length && features[0].properties._id) {
           let featId = features[0].properties._id;
           let selectedIds;
+          let vprommid = [features[0].properties.or_vpromms ? features[0].properties.or_vpromms : 'null'];
+          let selectedVprommids = vprommid.concat(this.state.selectedVprommids);
           if (this.state.mode === 'dedupe') {
             selectedIds = [featId];
           } else if (this.state.mode === 'join') {
@@ -152,7 +157,7 @@ var Tasks = React.createClass({
           }
 
           map.setFilter(roadSelected, ['in', '_id'].concat(selectedIds));
-          this.setState({ selectedIds }); // eslint-disable-line react/no-did-mount-set-state
+          this.setState({ selectedIds, selectedVprommids }); // eslint-disable-line react/no-did-mount-set-state
         }
       });
     });
@@ -280,7 +285,7 @@ var Tasks = React.createClass({
       features: selectedIds.map(id => task.features.find(f => f.properties._id === id))
     };
 
-    this.setState({mode: 'dedupe', renderedFeatures: selectedFeatures, selectedIds: []}, this.syncMap);
+    this.setState({mode: 'dedupe', renderedFeatures: selectedFeatures}, this.syncMap);
   },
 
   exitMode: function () {
@@ -289,15 +294,39 @@ var Tasks = React.createClass({
   },
 
   renderDedupeMode: function () {
+    const uniqVprommids = _.uniq(this.state.selectedVprommids);
+    const chooseVprommids = uniqVprommids.length > 1;
+
     return (
       <div className='form-group map__panel--form'>
         <h2><T>Remove Duplicate Roads</T></h2>
         <p><T>Click on a road to keep. The other roads here will be deleted.</T></p>
-        <button className={c('button button--secondary-raised-dark', {disabled: !this.state.selectedIds.length})} type='button' onClick={this.commitDedupe}><T>Confirm</T></button>
+        { chooseVprommids && this.renderVprommidSelect() }
+        <button className={c('button button--secondary-raised-dark', {disabled: !(this.state.selectedIds.length) || !(chooseVprommids && this.state.dedupeVprommid)})} type='button' onClick={this.commitDedupe}><T>Confirm</T></button>
         <br />
         <button className='button button--base-raised-dark' type='button' onClick={this.exitMode}><T>Cancel</T></button>
       </div>
     );
+  },
+
+  renderVprommidSelect: function () {
+    const uniqVprommids = _.uniq(this.state.selectedVprommids);
+    const vprommidOptions = uniqVprommids.map(x => { return {value: x, label: x}; });
+    let value = this.state.dedupeVprommid;
+    return (
+      <Select
+        name="form-vprommid-select"
+        searchable={ false }
+        value={value}
+        onChange={ this.handleSelectVprommid }
+        options={ vprommidOptions }
+        placeholder = "Select a VPROMMID to keep"
+      />
+    );
+  },
+
+  handleSelectVprommid: function (selectedVprommid) {
+    this.setState({ dedupeVprommid: selectedVprommid });
   },
 
   renderJoinMode: function () {
