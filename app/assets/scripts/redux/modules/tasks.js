@@ -1,6 +1,6 @@
 import config from '../../config';
 import { deleteEntireWaysEpic, REQUEST_OSM_CHANGE_SUCCESS } from './osm';
-
+import { editRoadEpic, editRoadPropertyEpic } from './roads';
 /**
  * constants
  */
@@ -141,10 +141,8 @@ export const markWayTaskPendingEpic = way_ids => dispatch => {
 export const dedupeWayTaskEpic = (taskId, wayIds, wayIdToKeep, dedupeId) => (dispatch, getState) => {
   dispatch(dedupeWayTask(taskId, wayIds, wayIdToKeep, dedupeId));
   // delete ways
-  dispatch(deleteEntireWaysEpic(taskId, wayIds));
- // on REQUEST_OSM_CHANGE_SUCCESS we'll check if the dedupeTaskId and osmChangeTaskId are the same 
- // and make a request to update the property. Except that I don't know how to reuse that action from ./osm.js and reduce it together?
-
+  dispatch(deleteEntireWaysEpic(taskId, wayIds))
+  .then(() => { dispatch(editRoadEpic(wayIdToKeep, dedupeId)); });
 };
 /**
  * reducer

@@ -72,7 +72,7 @@ export const queryOsmEpic = (taskId, payload) => (dispatch) => {
 export const deleteEntireWaysEpic = (taskId, wayIds) => (dispatch) => {
   dispatch(requestOsmChange(taskId));
 
-  fetch(`${config.api}/api/0.6/ways?nodes=true&excludeDoubleLinkedNodes=true&ways=${wayIds.join(',')}`)
+  return fetch(`${config.api}/api/0.6/ways?nodes=true&excludeDoubleLinkedNodes=true&ways=${wayIds.join(',')}`)
     .then(response => {
       if (response.status >= 400) {
         throw new Error(response.statusText);

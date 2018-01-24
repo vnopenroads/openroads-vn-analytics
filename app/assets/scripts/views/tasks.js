@@ -400,7 +400,7 @@ var Tasks = React.createClass({
     // this.props._deleteWays(this.props.taskId, toDelete.map(feature => feature.properties._id));
 
     // TODO - should deduping mark task as done?
-    // this.props._markTaskAsDone(toDelete.map(feature => feature.properties._id));
+    this.props._markTaskAsDone(toDelete.map(feature => feature.properties._id));
   },
 
   commitJoin: function () {
