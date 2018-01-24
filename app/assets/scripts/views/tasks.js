@@ -23,7 +23,8 @@ import {
   fetchWayTaskCountEpic,
   markWayTaskPendingEpic,
   skipTask,
-  selectWayTaskProvince
+  selectWayTaskProvince,
+  dedupeWayTaskEpic
 } from '../redux/modules/tasks';
 import { fetchProvinces } from '../actions/action-creators.js';
 import { createModifyLineString } from '../utils/to-osm';
@@ -97,7 +98,8 @@ var Tasks = React.createClass({
     taskCount: React.PropTypes.number,
     selectOptions: React.PropTypes.object,
     selectedProvince: React.PropTypes.number,
-    selectNextTaskProvince: React.PropTypes.func
+    selectNextTaskProvince: React.PropTypes.func,
+    dedupeWayTask: React.PropTypes.func
   },
 
   componentDidMount: function () {
@@ -132,7 +134,7 @@ var Tasks = React.createClass({
         if (features.length && features[0].properties._id) {
           let featId = features[0].properties._id;
           let selectedIds;
-          let vprommid = [features[0].properties.or_vpromms ? features[0].properties.or_vpromms : 'null'];
+          let vprommid = [features[0].properties.or_vpromms ? features[0].properties.or_vpromms : 'No ID'];
           let selectedVprommids = vprommid.concat(this.state.selectedVprommids);
           if (this.state.mode === 'dedupe') {
             selectedIds = [featId];
@@ -302,7 +304,7 @@ var Tasks = React.createClass({
         <h2><T>Remove Duplicate Roads</T></h2>
         <p><T>Click on a road to keep. The other roads here will be deleted.</T></p>
         { chooseVprommids && this.renderVprommidSelect() }
-        <button className={c('button button--secondary-raised-dark', {disabled: !(this.state.selectedIds.length) || !(chooseVprommids && this.state.dedupeVprommid)})} type='button' onClick={this.commitDedupe}><T>Confirm</T></button>
+        <button className={c('button button--secondary-raised-dark', {disabled: !(this.state.selectedIds.length === 1) || !(chooseVprommids && this.state.dedupeVprommid)})} type='button' onClick={this.commitDedupe}><T>Confirm</T></button>
         <br />
         <button className='button button--base-raised-dark' type='button' onClick={this.exitMode}><T>Cancel</T></button>
       </div>
@@ -320,7 +322,7 @@ var Tasks = React.createClass({
         value={value}
         onChange={ this.handleSelectVprommid }
         options={ vprommidOptions }
-        placeholder = "Select a VPROMMID to keep"
+        placeholder = "Select a VPROMMID to apply"
       />
     );
   },
@@ -390,14 +392,15 @@ var Tasks = React.createClass({
   },
 
   commitDedupe: function () {
-    const { selectedIds, renderedFeatures } = this.state;
+    const { selectedIds, renderedFeatures, dedupeVprommid } = this.state;
     const { features } = renderedFeatures;
     const toDelete = features.filter(feature => selectedIds[0] !== feature.properties._id);
-
-    this.props._deleteWays(this.props.taskId, toDelete.map(feature => feature.properties._id));
+    const wayIdToKeep = selectedIds[0];
+    this.props.dedupeWayTask(this.props.taskId, toDelete.map(feature => feature.properties._id), wayIdToKeep, dedupeVprommid.value);
+    // this.props._deleteWays(this.props.taskId, toDelete.map(feature => feature.properties._id));
 
     // TODO - should deduping mark task as done?
-    this.props._markTaskAsDone(toDelete.map(feature => feature.properties._id));
+    // this.props._markTaskAsDone(toDelete.map(feature => feature.properties._id));
   },
 
   commitJoin: function () {
@@ -548,6 +551,7 @@ export default compose(
     dispatch => ({
       fetchProvinces: () => dispatch(fetchProvinces()),
       selectNextTaskProvince: (provinceId) => dispatch(selectWayTaskProvince(provinceId)),
+      dedupeWayTask: (taskId, wayIds, wayIdToKeep, dedupeVprommid) => dispatch(dedupeWayTaskEpic(taskId, wayIds, wayIdToKeep, dedupeVprommid)),
       fetchNextTask: () => dispatch(fetchNextWayTaskEpic()),
       fetchTaskCount: () => dispatch(fetchWayTaskCountEpic()),
       skipTask: (id) => dispatch(skipTask(id)),
