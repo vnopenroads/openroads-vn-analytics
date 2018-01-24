@@ -147,7 +147,7 @@ var Tasks = React.createClass({
             if (uniqVprommids.length === 0) {
               // 2. if all are null - don't do anything.
               chooseVprommids = false;
-              applyVprommid = null;
+              applyVprommid = 'No ID';
             }
 
             if (uniqVprommids.length === 1) {
@@ -335,7 +335,7 @@ var Tasks = React.createClass({
   renderVprommidSelect: function () {
     const uniqVprommids = _.uniq(this.state.selectedVprommids);
     const vprommidOptions = uniqVprommids.map(x => { return {value: x, label: x}; });
-    let value = this.state.dedupeVprommid;
+    let value = this.state.applyVprommid;
     return (
       <Select
         name="form-vprommid-select"
@@ -413,11 +413,11 @@ var Tasks = React.createClass({
   },
 
   commitDedupe: function () {
-    const { selectedIds, renderedFeatures, dedupeVprommid } = this.state;
+    const { selectedIds, renderedFeatures, applyVprommid } = this.state;
     const { features } = renderedFeatures;
     const toDelete = features.filter(feature => selectedIds[0] !== feature.properties._id);
     const wayIdToKeep = selectedIds[0];
-    this.props.dedupeWayTask(this.props.taskId, toDelete.map(feature => feature.properties._id), wayIdToKeep, dedupeVprommid.value);
+    this.props.dedupeWayTask(this.props.taskId, toDelete.map(feature => feature.properties._id), wayIdToKeep, applyVprommid === 'No ID' ? null : applyVprommid);
     // this.props._deleteWays(this.props.taskId, toDelete.map(feature => feature.properties._id));
 
     // TODO - should deduping mark task as done?

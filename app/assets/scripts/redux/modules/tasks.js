@@ -1,6 +1,6 @@
 import config from '../../config';
 import { deleteEntireWaysEpic, REQUEST_OSM_CHANGE_SUCCESS } from './osm';
-import { editRoadEpic, editRoadPropertyEpic } from './roads';
+import { editRoadIdEpic } from './roads';
 /**
  * constants
  */
@@ -40,6 +40,8 @@ export const markWayTaskPendingError = () => ({ type: MARK_WAY_TASK_PENDING_ERRO
 export const skipTask = id => ({ type: SKIP_TASK, id });
 export const selectWayTaskProvince = (provinceId) => ({ type: SELECT_NEXT_WAY_TASK_PROVINCE, selectedProvince: provinceId });
 export const dedupeWayTask = (taskId, wayIds, wayIdToKeep, dedupeId) => ({ type: DEDUPE_WAY_TASK, taskId: taskId, wayIdsToDelete: wayIds, wayIdToKeep: wayIdToKeep, dedupeIdToApply: dedupeId });
+export const dedupeWayTaskSuccess = () => ({ type: DEDUPE_WAY_TASK_SUCCESS });
+export const dedupeWayTaskError = (error) => ({ type: DEDUPE_WAY_TASK_ERROR, error: error });
 
 export const fetchNextWayTaskEpic = () => (dispatch, getState) => {
   dispatch(fetchNextWayTask());
@@ -142,7 +144,11 @@ export const dedupeWayTaskEpic = (taskId, wayIds, wayIdToKeep, dedupeId) => (dis
   dispatch(dedupeWayTask(taskId, wayIds, wayIdToKeep, dedupeId));
   // delete ways
   dispatch(deleteEntireWaysEpic(taskId, wayIds))
-  .then(() => { dispatch(editRoadEpic(wayIdToKeep, dedupeId)); });
+  .then(() => {
+    dispatch(editRoadIdEpic(wayIdToKeep, dedupeId))
+    .then(() => { dispatch(dedupeWayTaskSuccess); })
+    .catch((err) => { dispatch(dedupeWayTaskError(err)); });
+  });
 };
 /**
  * reducer

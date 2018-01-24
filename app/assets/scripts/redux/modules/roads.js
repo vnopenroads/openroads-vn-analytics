@@ -60,6 +60,9 @@ export const FETCH_ROAD_BBOX_ERROR = 'FETCH_ROAD_BBOX_ERROR';
 export const FETCH_ROAD_PROPERTY = 'FETCH_ROAD_PROPERTY';
 export const FETCH_ROAD_PROPERTY_ERROR = 'FETCH_ROAD_PROPERTY';
 export const FETCH_ROAD_PROPERTY_SUCCESS = 'FETCH_ROAD_PROPERTY_SUCCESS';
+export const EDIT_ROAD_ID = 'EDIT_ROAD_ID';
+export const EDIT_ROAD_ID_SUCCESS = 'EDIT_ROAD_ID_SUCCESS';
+export const EDIT_ROAD_ID_ERROR = 'EDIT_ROAD_ID_ERROR';
 
 /**
  * actions
@@ -107,6 +110,10 @@ export const fetchRoadBboxError = (roadId, error) => ({ type: FETCH_ROAD_BBOX_ER
 export const fetchRoadProperty = (roadId) => ({ type: FETCH_ROAD_PROPERTY, roadId });
 export const fetchRoadPropertySuccess = (roadId, properties) => ({ type: FETCH_ROAD_PROPERTY_SUCCESS, roadId, properties });
 export const fetchRoadPropertyError = (roadId, error) => ({ type: FETCH_ROAD_PROPERTY_ERROR, roadId, error });
+
+export const editRoadId = (wayId, vprommId) => ({ type: EDIT_ROAD_ID, wayId, vprommId });
+export const editRoadIdSucess = (wayId, vprommId) => ({ type: EDIT_ROAD_ID_SUCCESS, wayId });
+export const editRoadIdError = (wayId, error) => ({ type: EDIT_ROAD_ID_ERROR, wayId, error });
 
 export const fetchRoadsEpic = (province, district, page, sortField, sortOrder) => (dispatch) => {
   dispatch(fetchRoads(province, district, page, sortField, sortOrder));
@@ -311,6 +318,27 @@ export const fetchRoadPropertyEpic = (roadId) => (dispatch) => {
     .catch(err => dispatch(fetchRoadPropertyError(roadId, err)));
 };
 
+export const editRoadIdEpic = (wayId, vprommId) => (dispatch) => {
+  dispatch(editRoadId(wayId, vprommId));
+
+  return fetch(`${config.api}/way/tags/vprommid/${wayId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json-patch+json'
+    },
+    body: JSON.stringify({'vprommid': vprommId})
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+
+      return response.json();
+    })
+    .then(wayId => dispatch(editRoadIdSucess(wayId)))
+    .catch(err => dispatch(editRoadError(err)));
+};
+
 /**
  * reducer
  */
@@ -406,6 +434,8 @@ export default (
         })
       })
     });
+  } else if (action.type === EDIT_ROAD_ID_SUCCESS) {
+    return Object.assign({}, state);
   }
 
   return state;
