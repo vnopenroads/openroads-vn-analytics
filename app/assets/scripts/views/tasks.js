@@ -78,7 +78,8 @@ var Tasks = React.createClass({
       selectedIds: [],
       selectedProvince: null,
       selectedVprommids: [],
-      dedupeVprommid: null
+      chooseVprommids: false,
+      applyVprommid: null
     };
   },
 
@@ -136,8 +137,30 @@ var Tasks = React.createClass({
           let selectedIds;
           let vprommid = [features[0].properties.or_vpromms ? features[0].properties.or_vpromms : 'No ID'];
           let selectedVprommids = vprommid.concat(this.state.selectedVprommids);
+          let chooseVprommids = false;
+          let applyVprommid = null;
+
           if (this.state.mode === 'dedupe') {
             selectedIds = [featId];
+            const uniqVprommids = _.uniq(this.state.selectedVprommids.filter((x) => { return x !== 'No ID'; }));
+            // check here for if vprommid selection is needed. here are the cases:
+            if (uniqVprommids.length === 0) {
+              // 2. if all are null - don't do anything.
+              chooseVprommids = false;
+              applyVprommid = null;
+            }
+
+            if (uniqVprommids.length === 1) {
+              // 1. if all roads have same vprommid - don't do anything.
+              chooseVprommids = false;
+              applyVprommid = uniqVprommids[0];
+            }
+
+            if (uniqVprommids.length > 1) {
+              chooseVprommids = true;
+              applyVprommid = null;
+              selectedVprommids = uniqVprommids.concat("No ID");
+            }
           } else if (this.state.mode === 'join') {
             if (this.state.selectedIds[0] === featId) {
               // in join, don't allow de-selecting the initially selected road
@@ -159,7 +182,7 @@ var Tasks = React.createClass({
           }
 
           map.setFilter(roadSelected, ['in', '_id'].concat(selectedIds));
-          this.setState({ selectedIds, selectedVprommids }); // eslint-disable-line react/no-did-mount-set-state
+          this.setState({ selectedIds, selectedVprommids, chooseVprommids, applyVprommid }); // eslint-disable-line react/no-did-mount-set-state
         }
       });
     });
@@ -296,15 +319,13 @@ var Tasks = React.createClass({
   },
 
   renderDedupeMode: function () {
-    const uniqVprommids = _.uniq(this.state.selectedVprommids);
-    const chooseVprommids = uniqVprommids.length > 1;
-
+    const chooseVprommids = this.state.chooseVprommids;
     return (
       <div className='form-group map__panel--form'>
         <h2><T>Remove Duplicate Roads</T></h2>
         <p><T>Click on a road to keep. The other roads here will be deleted.</T></p>
         { chooseVprommids && this.renderVprommidSelect() }
-        <button className={c('button button--secondary-raised-dark', {disabled: !(this.state.selectedIds.length === 1) || !(chooseVprommids && this.state.dedupeVprommid)})} type='button' onClick={this.commitDedupe}><T>Confirm</T></button>
+        <button className={c('button button--secondary-raised-dark', {disabled: !(this.state.selectedIds.length === 1) || !(this.state.applyVprommid)})} type='button' onClick={this.commitDedupe}><T>Confirm</T></button>
         <br />
         <button className='button button--base-raised-dark' type='button' onClick={this.exitMode}><T>Cancel</T></button>
       </div>
@@ -328,7 +349,7 @@ var Tasks = React.createClass({
   },
 
   handleSelectVprommid: function (selectedVprommid) {
-    this.setState({ dedupeVprommid: selectedVprommid });
+    this.setState({ applyVprommid: selectedVprommid });
   },
 
   renderJoinMode: function () {
@@ -583,6 +604,7 @@ function findIndex (haystack, fn) {
   });
   return idx;
 }
+
 
 function insertPointOnLine (feature, point) {
   const nearest = pointOnLine(feature, point);
