@@ -159,7 +159,7 @@ var Tasks = React.createClass({
             if (uniqVprommids.length > 1) {
               chooseVprommids = true;
               applyVprommid = null;
-              selectedVprommids = uniqVprommids.concat("No ID");
+              selectedVprommids = uniqVprommids.concat('No ID');
             }
           } else if (this.state.mode === 'join') {
             if (this.state.selectedIds[0] === featId) {
