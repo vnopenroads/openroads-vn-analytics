@@ -23,12 +23,14 @@ import {
   fetchWayTaskCountEpic,
   markWayTaskPendingEpic,
   skipTask,
-  selectWayTaskProvince
+  selectWayTaskProvince,
+  dedupeWayTaskEpic
 } from '../redux/modules/tasks';
 import { fetchProvinces } from '../actions/action-creators.js';
 import { createModifyLineString } from '../utils/to-osm';
 import T from '../components/t';
 import Select from 'react-select';
+import _ from 'lodash';
 
 const source = 'collisions';
 const roadHoverId = 'road-hover';
@@ -74,7 +76,10 @@ var Tasks = React.createClass({
       mode: null,
       hoverId: null,
       selectedIds: [],
-      selectedProvince: null
+      selectedProvince: null,
+      selectedVprommids: [],
+      chooseVprommids: false,
+      applyVprommid: null
     };
   },
 
@@ -94,7 +99,8 @@ var Tasks = React.createClass({
     taskCount: React.PropTypes.number,
     selectOptions: React.PropTypes.object,
     selectedProvince: React.PropTypes.number,
-    selectNextTaskProvince: React.PropTypes.func
+    selectNextTaskProvince: React.PropTypes.func,
+    dedupeWayTask: React.PropTypes.func
   },
 
   componentDidMount: function () {
@@ -129,8 +135,32 @@ var Tasks = React.createClass({
         if (features.length && features[0].properties._id) {
           let featId = features[0].properties._id;
           let selectedIds;
+          let vprommid = [features[0].properties.or_vpromms ? features[0].properties.or_vpromms : 'No ID'];
+          let selectedVprommids = vprommid.concat(this.state.selectedVprommids);
+          let chooseVprommids = false;
+          let applyVprommid = null;
+
           if (this.state.mode === 'dedupe') {
             selectedIds = [featId];
+            const uniqVprommids = _.uniq(this.state.selectedVprommids.filter((x) => { return x !== 'No ID'; }));
+            // check here for if vprommid selection is needed. here are the cases:
+            if (uniqVprommids.length === 0) {
+              // 2. if all are null - don't do anything.
+              chooseVprommids = false;
+              applyVprommid = 'No ID';
+            }
+
+            if (uniqVprommids.length === 1) {
+              // 1. if all roads have same vprommid - don't do anything.
+              chooseVprommids = false;
+              applyVprommid = uniqVprommids[0];
+            }
+
+            if (uniqVprommids.length > 1) {
+              chooseVprommids = true;
+              applyVprommid = null;
+              selectedVprommids = uniqVprommids.concat('No ID');
+            }
           } else if (this.state.mode === 'join') {
             if (this.state.selectedIds[0] === featId) {
               // in join, don't allow de-selecting the initially selected road
@@ -152,7 +182,7 @@ var Tasks = React.createClass({
           }
 
           map.setFilter(roadSelected, ['in', '_id'].concat(selectedIds));
-          this.setState({ selectedIds }); // eslint-disable-line react/no-did-mount-set-state
+          this.setState({ selectedIds, selectedVprommids, chooseVprommids, applyVprommid }); // eslint-disable-line react/no-did-mount-set-state
         }
       });
     });
@@ -280,7 +310,7 @@ var Tasks = React.createClass({
       features: selectedIds.map(id => task.features.find(f => f.properties._id === id))
     };
 
-    this.setState({mode: 'dedupe', renderedFeatures: selectedFeatures, selectedIds: []}, this.syncMap);
+    this.setState({mode: 'dedupe', renderedFeatures: selectedFeatures}, this.syncMap);
   },
 
   exitMode: function () {
@@ -289,15 +319,37 @@ var Tasks = React.createClass({
   },
 
   renderDedupeMode: function () {
+    const chooseVprommids = this.state.chooseVprommids;
     return (
       <div className='form-group map__panel--form'>
         <h2><T>Remove Duplicate Roads</T></h2>
         <p><T>Click on a road to keep. The other roads here will be deleted.</T></p>
-        <button className={c('button button--secondary-raised-dark', {disabled: !this.state.selectedIds.length})} type='button' onClick={this.commitDedupe}><T>Confirm</T></button>
+        { chooseVprommids && this.renderVprommidSelect() }
+        <button className={c('button button--secondary-raised-dark', {disabled: !(this.state.selectedIds.length === 1) || !(this.state.applyVprommid)})} type='button' onClick={this.commitDedupe}><T>Confirm</T></button>
         <br />
         <button className='button button--base-raised-dark' type='button' onClick={this.exitMode}><T>Cancel</T></button>
       </div>
     );
+  },
+
+  renderVprommidSelect: function () {
+    const uniqVprommids = _.uniq(this.state.selectedVprommids);
+    const vprommidOptions = uniqVprommids.map(x => { return {value: x, label: x}; });
+    let value = this.state.applyVprommid;
+    return (
+      <Select
+        name="form-vprommid-select"
+        searchable={ false }
+        value={value}
+        onChange={ this.handleSelectVprommid }
+        options={ vprommidOptions }
+        placeholder = "Select a VPROMMID to apply"
+      />
+    );
+  },
+
+  handleSelectVprommid: function (selectedVprommid) {
+    this.setState({ applyVprommid: selectedVprommid });
   },
 
   renderJoinMode: function () {
@@ -361,11 +413,12 @@ var Tasks = React.createClass({
   },
 
   commitDedupe: function () {
-    const { selectedIds, renderedFeatures } = this.state;
+    const { selectedIds, renderedFeatures, applyVprommid } = this.state;
     const { features } = renderedFeatures;
     const toDelete = features.filter(feature => selectedIds[0] !== feature.properties._id);
-
-    this.props._deleteWays(this.props.taskId, toDelete.map(feature => feature.properties._id));
+    const wayIdToKeep = selectedIds[0];
+    this.props.dedupeWayTask(this.props.taskId, toDelete.map(feature => feature.properties._id), wayIdToKeep, applyVprommid === 'No ID' ? null : applyVprommid);
+    // this.props._deleteWays(this.props.taskId, toDelete.map(feature => feature.properties._id));
 
     // TODO - should deduping mark task as done?
     this.props._markTaskAsDone(toDelete.map(feature => feature.properties._id));
@@ -519,6 +572,7 @@ export default compose(
     dispatch => ({
       fetchProvinces: () => dispatch(fetchProvinces()),
       selectNextTaskProvince: (provinceId) => dispatch(selectWayTaskProvince(provinceId)),
+      dedupeWayTask: (taskId, wayIds, wayIdToKeep, dedupeVprommid) => dispatch(dedupeWayTaskEpic(taskId, wayIds, wayIdToKeep, dedupeVprommid)),
       fetchNextTask: () => dispatch(fetchNextWayTaskEpic()),
       fetchTaskCount: () => dispatch(fetchWayTaskCountEpic()),
       skipTask: (id) => dispatch(skipTask(id)),
@@ -550,6 +604,7 @@ function findIndex (haystack, fn) {
   });
   return idx;
 }
+
 
 function insertPointOnLine (feature, point) {
   const nearest = pointOnLine(feature, point);

@@ -1,6 +1,6 @@
 import config from '../../config';
-
-
+import { deleteEntireWaysEpic, REQUEST_OSM_CHANGE_SUCCESS } from './osm';
+import { editRoadIdEpic } from './roads';
 /**
  * constants
  */
@@ -16,6 +16,9 @@ export const MARK_WAY_TASK_PENDING_SUCCESS = 'MARK_WAY_TASK_PENDING_SUCCESS';
 export const MARK_WAY_TASK_PENDING_ERROR = 'MARK_WAY_TASK_PENDING_ERROR';
 export const SKIP_TASK = 'SKIP_TASK';
 export const SELECT_NEXT_WAY_TASK_PROVINCE = 'SELECT_NEXT_WAY_TASK_PROVINCE';
+export const DEDUPE_WAY_TASK = 'DEDUPE_WAY_TASK';
+export const DEDUPE_WAY_TASK_SUCCESS = 'DEDUPE_WAY_TASK_SUCCESS';
+export const DEDUPE_WAY_TASK_ERROR = 'DEDUPE_WAY_TASK_ERROR';
 
 /**
  * action creators
@@ -36,7 +39,9 @@ export const markWayTaskPendingSuccess = () => ({ type: MARK_WAY_TASK_PENDING_SU
 export const markWayTaskPendingError = () => ({ type: MARK_WAY_TASK_PENDING_ERROR });
 export const skipTask = id => ({ type: SKIP_TASK, id });
 export const selectWayTaskProvince = (provinceId) => ({ type: SELECT_NEXT_WAY_TASK_PROVINCE, selectedProvince: provinceId });
-
+export const dedupeWayTask = (taskId, wayIds, wayIdToKeep, dedupeId) => ({ type: DEDUPE_WAY_TASK, taskId: taskId, wayIdsToDelete: wayIds, wayIdToKeep: wayIdToKeep, dedupeIdToApply: dedupeId });
+export const dedupeWayTaskSuccess = () => ({ type: DEDUPE_WAY_TASK_SUCCESS });
+export const dedupeWayTaskError = (error) => ({ type: DEDUPE_WAY_TASK_ERROR, error: error });
 
 export const fetchNextWayTaskEpic = () => (dispatch, getState) => {
   dispatch(fetchNextWayTask());
@@ -135,7 +140,16 @@ export const markWayTaskPendingEpic = way_ids => dispatch => {
     });
 };
 
-
+export const dedupeWayTaskEpic = (taskId, wayIds, wayIdToKeep, dedupeId) => (dispatch, getState) => {
+  dispatch(dedupeWayTask(taskId, wayIds, wayIdToKeep, dedupeId));
+  // delete ways
+  dispatch(deleteEntireWaysEpic(taskId, wayIds))
+  .then(() => {
+    dispatch(editRoadIdEpic(wayIdToKeep, dedupeId))
+    .then(() => { dispatch(dedupeWayTaskSuccess); })
+    .catch((err) => { dispatch(dedupeWayTaskError(err)); });
+  });
+};
 /**
  * reducer
  */
@@ -147,7 +161,12 @@ export default (
     geoJSON: null,
     skipped: [],
     provinces: [],
-    selectedProvince: null
+    selectedProvince: null,
+    dedupeTaskId: null,
+    wayIdsToDelete: [],
+    dedupeIdToApply: null,
+    wayIdToKeep: null,
+    osmChangeTaskId: null
   },
   action
 ) => {
@@ -190,6 +209,18 @@ export default (
   } else if (action.type === SELECT_NEXT_WAY_TASK_PROVINCE) {
     return Object.assign({}, state, {
       selectedProvince: action.selectedProvince
+    });
+  } else if (action.type === DEDUPE_WAY_TASK) {
+    console.log(action);
+    return Object.assign({}, state, {
+      dedupeTaskId: action.taskId,
+      wayIdsToDelete: action.wayIdsToDelete,
+      dedupeIdToApply: action.dedupeIdToApply,
+      wayIdToKeep: action.wayIdToKeep
+    });
+  } else if (action.type === REQUEST_OSM_CHANGE_SUCCESS) {
+    return Object.assign({}, state, {
+      osmChangeTaskId: action.taskId
     });
   }
 
