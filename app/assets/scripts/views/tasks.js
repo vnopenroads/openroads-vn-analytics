@@ -1,7 +1,8 @@
 import React from 'react';
 import {
   compose,
-  lifecycle
+  lifecycle,
+  getContext
 } from 'recompose';
 import { connect } from 'react-redux';
 import mapboxgl from 'mapbox-gl';
@@ -28,7 +29,9 @@ import {
 } from '../redux/modules/tasks';
 import { fetchProvinces } from '../actions/action-creators.js';
 import { createModifyLineString } from '../utils/to-osm';
-import T from '../components/t';
+import T, {
+  translate
+} from '../components/t';
 import Select from 'react-select';
 import _ from 'lodash';
 
@@ -100,7 +103,8 @@ var Tasks = React.createClass({
     selectOptions: React.PropTypes.object,
     selectedProvince: React.PropTypes.number,
     selectNextTaskProvince: React.PropTypes.func,
-    dedupeWayTask: React.PropTypes.func
+    dedupeWayTask: React.PropTypes.func,
+    language: React.PropTypes.string
   },
 
   componentDidMount: function () {
@@ -333,6 +337,7 @@ var Tasks = React.createClass({
   },
 
   renderVprommidSelect: function () {
+    const { language } = this.props;
     const uniqVprommids = _.uniq(this.state.selectedVprommids);
     const vprommidOptions = uniqVprommids.map(x => { return {value: x, label: x}; });
     let value = this.state.applyVprommid;
@@ -343,7 +348,7 @@ var Tasks = React.createClass({
         value={value}
         onChange={ this.handleSelectVprommid }
         options={ vprommidOptions }
-        placeholder = "Select a VPROMMID to apply"
+        placeholder={ translate(language, 'Select a VPROMMID to apply') }
       />
     );
   },
@@ -496,7 +501,7 @@ var Tasks = React.createClass({
   },
 
   renderProvinceSelect: function () {
-    const { selectedProvince } = this.props;
+    const { selectedProvince, language } = this.props;
     const provinceOptions = this.props.selectOptions.province.map((p) => { return {value: p.id, label: p.name_en}; });
     const value = selectedProvince;
     return (
@@ -505,7 +510,7 @@ var Tasks = React.createClass({
         value={value}
         onChange= {this.handleProvinceChange}
         options={ provinceOptions }
-        placeholder = "Filter tasks by province..."
+        placeholder ={ translate(language, 'Filter tasks by province') }
       />
     );
   },
@@ -559,6 +564,7 @@ var Tasks = React.createClass({
 
 
 export default compose(
+  getContext({ language: React.PropTypes.string }),
   connect(
     state => ({
       task: state.waytasks.geoJSON,
