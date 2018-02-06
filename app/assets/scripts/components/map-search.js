@@ -86,10 +86,10 @@ var MapSearch = React.createClass({
   },
 
   onSearchQueryChange: function (e) {
-    var searchVal = _.trim(e.target.value);
+    var searchVal = e.target.value;
     this.setState({ searchVal, showResults: true });
     // The search function is debounced.
-    this.search(searchVal);
+    this.search(_.trim(searchVal));
   },
 
   onSearchSubmit: function (e) {
