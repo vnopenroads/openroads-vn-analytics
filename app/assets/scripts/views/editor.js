@@ -71,8 +71,10 @@ var Editor = React.createClass({
     window.addEventListener('message', this.messageListener, false);
   },
 
-  componentWillReceiveProps: function ({ lng, lat, zoom }) {
+  componentWillReceiveProps: function ({ lng, lat, zoom, way }) {
     // there's nothing to do here for now.
+    console.log('# STUFF', lng, lat, zoom);
+    this.props.setMapPosition(lng, lat, zoom, way);
   },
 
   componentWillUnmount: function () {
@@ -89,7 +91,7 @@ var Editor = React.createClass({
 
   render: function () {
     const { lng, lat, way } = this.props;
-    const zoom = way ? 16 : this.props;
+    const zoom = way ? 16 : this.props.zoom;
     return (
       <section className='inpage inpage--alt'>
         <header className='inpage__header'>
