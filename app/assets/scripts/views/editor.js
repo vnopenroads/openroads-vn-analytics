@@ -72,8 +72,6 @@ var Editor = React.createClass({
   },
 
   componentWillReceiveProps: function ({ lng, lat, zoom, way }) {
-    // there's nothing to do here for now.
-    console.log('# STUFF', lng, lat, zoom);
     this.props.setMapPosition(lng, lat, zoom, way);
   },
 
