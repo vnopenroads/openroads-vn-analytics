@@ -540,6 +540,12 @@ var Tasks = React.createClass({
                   </div>
               }
               {
+                taskStatus === 'No tasks remaining' &&
+                  <div className='placeholder__fullscreen'>
+                    <h3 className='placeholder__message'><T>No tasks remaining</T></h3>
+                  </div>
+              }
+              {
                 !taskId && taskStatus === 'pending' &&
                   <div className='placeholder__fullscreen'>
                     <h3 className='placeholder__message'><T>Loading</T></h3>

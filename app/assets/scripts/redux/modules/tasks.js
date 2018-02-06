@@ -30,7 +30,7 @@ export const fetchWayTaskSuccess = (id, geoJSON) => ({
   id,
   geoJSON
 });
-export const fetchWayTaskError = () => ({ type: FETCH_WAY_TASK_ERROR });
+export const fetchWayTaskError = (error) => ({ type: FETCH_WAY_TASK_ERROR, error: error });
 export const fetchWayTaskCount = () => ({ type: FETCH_WAY_TASK_COUNT });
 export const fetchWayTaskCountSuccess = count => ({ type: FETCH_WAY_TASK_COUNT_SUCCESS, count });
 export const fetchWayTaskCountError = count => ({ type: FETCH_WAY_TASK_COUNT_ERROR });
@@ -75,7 +75,7 @@ export const fetchNextWayTaskEpic = () => (dispatch, getState) => {
       return dispatch(fetchWayTaskSuccess(json.id, json.data));
     }, e => {
       console.error('Error requesting task', e);
-      return dispatch(fetchWayTaskError());
+      return dispatch(fetchWayTaskError(e));
     });
 };
 
@@ -186,7 +186,7 @@ export default (
     });
   } else if (action.type === FETCH_WAY_TASK_ERROR) {
     return Object.assign({}, state, {
-      status: 'error'
+      status: action.error.message === 'No tasks remaining' ? 'No tasks remaining' : 'error'
     });
   } else if (action.type === FETCH_WAY_TASK_COUNT) {
     return Object.assign({}, state, {
@@ -211,7 +211,6 @@ export default (
       selectedProvince: action.selectedProvince
     });
   } else if (action.type === DEDUPE_WAY_TASK) {
-    console.log(action);
     return Object.assign({}, state, {
       dedupeTaskId: action.taskId,
       wayIdsToDelete: action.wayIdsToDelete,
