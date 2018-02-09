@@ -86,10 +86,10 @@ var MapSearch = React.createClass({
   },
 
   onSearchQueryChange: function (e) {
-    var searchVal = _.trim(e.target.value);
+    var searchVal = e.target.value;
     this.setState({ searchVal, showResults: true });
     // The search function is debounced.
-    this.search(searchVal);
+    this.search(_.trim(searchVal));
   },
 
   onSearchSubmit: function (e) {
@@ -181,7 +181,7 @@ var MapSearch = React.createClass({
         contents = _(data)
           .groupBy(o => o.level)
           .reduce((acc, level, key) => {
-            acc.push(<h4 key={`aa-type-admin-${key}`}><T>Admin Level</T> - {key}</h4>);
+            acc.push(<h4 key={`aa-type-admin-${key}`}><T>Admin Level</T> - <T>{key}</T></h4>);
 
             let adminAreas = level.reduce((_acc, o) => {
               return _acc.concat(<li key={o.id}><a href='#' onClick={this.onAAClick.bind(null, o)}>{this.props.language === 'en' ? o.name_en : o.name_vn}</a></li>);
