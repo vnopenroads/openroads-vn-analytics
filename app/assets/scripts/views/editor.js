@@ -125,9 +125,9 @@ module.exports = compose(
   getContext({ language: React.PropTypes.string }),
   connect(
     state => ({
-      lng: state.map.lng,
-      lat: state.map.lat,
-      zoom: state.map.zoom,
+      lng: state.map.lng || 108.239,
+      lat: state.map.lat || 15.930,
+      zoom: state.map.zoom || 6,
       way: state.map.waySlug
     }),
     dispatch => ({
