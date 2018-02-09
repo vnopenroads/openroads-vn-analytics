@@ -174,5 +174,7 @@
     "Articulated Truck (veh/day)": "Articulated Truck (veh/day)",
     "Traffic Annual Growth Scenario": "Traffic Annual Growth Scenario",
     "Length (ORMA)": "Length (ORMA)",
-    "Length (Tabular)": "Length (Tabular)"
+    "Length (Tabular)": "Length (Tabular)",
+    "Filter tasks by province": "Filter tasks by province",
+    "Select a VPROMMID to apply": "Select a VPROMMID to apply"
 }
