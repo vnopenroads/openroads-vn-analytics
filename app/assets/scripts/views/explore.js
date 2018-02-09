@@ -78,18 +78,74 @@ var Explore = React.createClass({
           filter: ['==', 'or_vpromms', activeRoad]
         })
         .addLayer({
-          id: 'conflated',
+          id: 'novpromm',
           type: 'line',
           source: {
             type: 'vector',
             url: 'mapbox://openroads.vietnam-conflated-1'
           },
           'source-layer': 'conflated',
-          paint: { 'line-width': 4 },
-          layout: { 'line-cap': 'round' }
+          paint: {
+            'line-width': [
+              'interpolate', ['linear'], ['zoom'],
+              0, 1,
+              10, 2
+            ]
+          },
+          layout: { 'line-cap': 'round' },
+          filter: ['!has', 'or_vpromms'],
+          maxzoom: 11
+        })
+        .addLayer({
+          id: 'novpromm_dashed',
+          type: 'line',
+          source: {
+            type: 'vector',
+            url: 'mapbox://openroads.vietnam-conflated-1'
+          },
+          'source-layer': 'conflated',
+          paint: {
+            'line-width': [
+              'interpolate', ['linear'], ['zoom'],
+              0, 1,
+              10, 2
+            ],
+            'line-dasharray': [1, 2, 1]
+          },
+          layout: { 'line-cap': 'round' },
+          filter: ['!has', 'or_vpromms'],
+          minzoom: 10
+        })
+        .addLayer({
+          id: 'vpromm',
+          type: 'line',
+          source: {
+            type: 'vector',
+            url: 'mapbox://openroads.vietnam-conflated-1'
+          },
+          'source-layer': 'conflated',
+          paint: {
+            'line-width': [
+              'interpolate', ['linear'], ['zoom'],
+              0, 1,
+              10, 2
+            ]
+          },
+          layout: {'line-cap': 'round'},
+          filter: ['has', 'or_vpromms']
         })
         .setPaintProperty(
-          'conflated',
+          'novpromm',
+          'line-color',
+          lineColors['iri']
+        )
+        .setPaintProperty(
+          'novpromm_dashed',
+          'line-color',
+          lineColors['iri']
+        )
+        .setPaintProperty(
+          'vpromm',
           'line-color',
           lineColors['iri']
         );
@@ -126,9 +182,11 @@ var Explore = React.createClass({
     this.props.exploreMapShowNoVpromms(checked);
 
     if (checked) {
-      this.map.setFilter('conflated', null);
+      this.map.setLayoutProperty('novpromm', 'visibility', 'visible');
+      this.map.setLayoutProperty('novpromm_dashed', 'visibility', 'visible');
     } else {
-      this.map.setFilter('conflated', ['has', 'or_vpromms']);
+      this.map.setLayoutProperty('novpromm', 'visibility', 'none');
+      this.map.setLayoutProperty('novpromm_dashed', 'visibility', 'none');
     }
   },
 
