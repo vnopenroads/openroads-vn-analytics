@@ -176,5 +176,8 @@
     "Length (ORMA)": "Length (ORMA)",
     "Length (Tabular)": "Length (Tabular)",
     "Filter tasks by province": "Filter tasks by province",
-    "Select a VPROMMID to apply": "Select a VPROMMID to apply"
+    "Select a VPROMMID to apply": "Select a VPROMMID to apply",
+    "province": "province",
+    "commune": "commune",
+    "district": "district"
 }
