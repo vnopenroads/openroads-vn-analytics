@@ -436,6 +436,10 @@ export default (
     });
   } else if (action.type === EDIT_ROAD_ID_SUCCESS) {
     return Object.assign({}, state);
+  } else if (action.type === DELETE_ROAD_SUCCESS) {
+    return Object.assign({}, state, {
+      roadsById: Object.assign({}, state.roadsById, delete state.roadsById[action.id])
+    });
   }
 
   return state;
