@@ -26,7 +26,7 @@ const MapOptions = ({ language, handleLayerChange, handleShowNoVpromms }) => (
           >
             <input type='checkbox' defaultChecked={true} name='show-no-vpromms' id='show-no-vpromms' value='show-no-vpromms' onChange={ e => handleShowNoVpromms(e) } />
             <span className='form__option__ui'></span>
-            <span className='form__option__text'><T>Road without VPRoMMS ID</T></span>
+            <span className='form__option__text'><T>Road without VPRoMMS ID</T> <b>----</b></span>
           </label>
         </div>
       </form>
