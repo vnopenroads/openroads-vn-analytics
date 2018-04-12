@@ -480,7 +480,7 @@ var Tasks = React.createClass({
   next: function () {
     this.map.setFilter(roadSelected, ['all', ['in', '_id', '']]);
     this.props.skipTask(this.props.taskId);
-    this.setState({ selectedIds: [], mode: null }, this.props.fetchNextTask);
+    this.setState({ selectedIds: [], mode: null, selectedVprommids: [] }, this.props.fetchNextTask);
   },
 
   renderSelectedIds: function () {
