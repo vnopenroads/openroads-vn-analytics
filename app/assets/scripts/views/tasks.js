@@ -12,6 +12,8 @@ import c from 'classnames';
 import intersect from '@turf/line-intersect';
 import pointOnLine from '@turf/point-on-line';
 import point from 'turf-point';
+import { coordReduce } from '@turf/meta';
+import getDistance from '@turf/distance';
 import {
   queryOsmEpic,
   deleteEntireWaysEpic
@@ -438,23 +440,31 @@ var Tasks = React.createClass({
     const changes = [];
 
     if (!intersectingFeatures.features.length) {
-      // lines don't intersect, join them from the nearest endpoint of line 1
-      // find the end of line 1 that's closest to line 2
-      // add that point to both ways
-      let start = pointOnLine(line2, point(line1.geometry.coordinates[0]));
-      let end = pointOnLine(line2, point(line1.geometry.coordinates[line1.geometry.coordinates.length - 1]));
-      let fromStart = start.properties.dist < end.properties.dist;
-      let intersection = fromStart ? start : end;
-      let connectingFeature = Object.assign({}, line1, {
-        geometry: {
-          type: 'LineString',
-          coordinates: fromStart
-            ? [intersection.geometry.coordinates].concat(line1.geometry.coordinates)
-            : line1.geometry.coordinates.concat([intersection.geometry.coordinates])
+      // lines don't intersect, find the two nearest points on the two respective lines.
+      const closestPoints = coordReduce(line1, (context, line1Point) => {
+        // If we find two points with shorter distance between them,
+        // set the coordinates on the second line to this variable.
+        let closerLine2Point = null;
+        let bestDistance = coordReduce(line2, (currentBest, line2Point) => {
+          let distance = getDistance(line1Point, line2Point);
+          if (distance < currentBest) {
+            closerLine2Point = line2Point;
+            return distance;
+          }
+          return currentBest;
+        }, context.distance);
+
+        if (closerLine2Point) {
+          return {
+            distance: bestDistance,
+            line1Point,
+            line2Point: closerLine2Point
+          };
         }
-      });
-      changes.push(connectingFeature);
-      changes.push(insertPointOnLine(line2, intersection));
+        return context;
+      }, {distance: Infinity, line1Point: null, line2Point: null});
+      changes.push(insertPointOnLine(line1, point(closestPoints.line2Point)));
+      changes.push(insertPointOnLine(line2, point(closestPoints.line1Point)));
     } else {
       let intersection = intersectingFeatures.features[0];
       changes.push(insertPointOnLine(line1, intersection));
