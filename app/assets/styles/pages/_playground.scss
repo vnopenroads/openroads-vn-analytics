@@ -3,8 +3,10 @@
    ========================================================================== */
 
 .task-panel {
+  height: 100%;
+  
   .panel__sectitle {
-      margin-bottom: $global-spacing;
+    margin-bottom: $global-spacing;
   }
 
   .panel__subtitle {
