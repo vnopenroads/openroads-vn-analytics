@@ -44,6 +44,12 @@
   }
 }
 
+.panel__sectitle {
+  @include heading(1rem);
+  line-height: 1.25rem;
+  margin: 0;
+}
+
 .panel__subtitle {
   @extend .heading-alt;
   position: relative;
@@ -117,7 +123,7 @@
   background: #fff;
   min-height: 1rem;
   border-radius: 0 0 $base-border-radius $base-border-radius;
-  box-shadow: 0 -$base-border-width 0 0 $base-alpha-color;
+  box-shadow: 0 (-$base-border-width) 0 0 $base-alpha-color;
 
   &:empty {
     padding: 0;
@@ -164,9 +170,8 @@
   }
 }
 
-
 /**
- * "pha-" prefix stands for "panel action"
+ * "pha-" prefix stands for "panel header action"
  */
 
 [class^="pha-"],
@@ -192,4 +197,39 @@
 
 .pha-xmark::before {
   @extend %collecticon-xmark;
+}
+
+
+
+/* Panel header actions
+   ========================================================================== */
+
+.panel__f-actions {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  * {
+    vertical-align: top;
+  }
+}
+
+/**
+ * "pfa-" prefix stands for "panel footer action"
+ */
+
+[class^="pfa-"],
+[class*=" pfa-"] {
+  @extend .button, .button--medium;
+  min-width: 7rem;
+}
+
+.pfa-primary {
+  @extend .button--secondary-raised-dark;
+
+}
+
+.pfa-secondary {
+  @extend .button--base-raised-light;
 }

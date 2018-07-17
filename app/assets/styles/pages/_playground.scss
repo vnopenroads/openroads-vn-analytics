@@ -1,0 +1,30 @@
+/* ==========================================================================
+   Page: Playground
+   ========================================================================== */
+
+.task-panel {
+  .panel__sectitle {
+      margin-bottom: $global-spacing;
+  }
+
+  .panel__subtitle {
+    position: absolute;
+    top: $global-spacing;
+    right: $global-spacing;
+    text-transform: none;
+    margin: 0;
+
+    * {
+      line-height: 1.25rem;
+      vertical-align: top;
+    }
+
+    &::before {
+      @extend %collecticon-clock;
+      margin-right: 0.25rem;
+      font-size: 1rem;
+      line-height: 1.25rem;
+      vertical-align: top;
+    }
+  }
+}
