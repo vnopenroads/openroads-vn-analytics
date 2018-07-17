@@ -20,7 +20,7 @@ var Playground = React.createClass({
 
             <figure className='map'>
 
-              <div className='map__controls map__controls--top-right'>
+              <div className='map__controls map__controls--top-right map__controls--column'>
 
                 <article className='panel task-panel'>
                   <header className='panel__header'>

@@ -81,6 +81,18 @@
       left: $global-spacing * 2;
     }
   }
+
+  &--column {
+    top: $global-spacing;
+    right: $global-spacing;
+    height: calc(100% - #{$global-spacing} * 2);
+
+    @include media(xlarge-up) {
+      top: $global-spacing * 2;
+      right: $global-spacing * 2;
+      height: calc(100% - #{$global-spacing} * 4);
+    }
+  }
 }
 
 
