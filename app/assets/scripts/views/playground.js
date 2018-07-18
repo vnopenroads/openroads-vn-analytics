@@ -154,11 +154,16 @@ var Playground = React.createClass({
                       </div>
                     </section>
 
+                    <div className='prose task-prose'>
+                      <p>2 roads were removed and submitted to the system for review.</p>
+                      <p>Do you want to continue to work on this task or move to the next one?</p>
+                    </div>
+
                   </div>
                   <footer className='panel__footer'>
                     <div className='panel__f-actions'>
                       <button type='button' className='pfa-secondary' title='Jump to next task'><span>Skip task</span></button>
-                      <button type='button' className='pfa-primary' title='Continue with the workflow'><span>Continue</span></button>
+                      <button type='button' className='pfa-primary' title='Continue to next step'><span>Continue</span></button>
                     </div>
                   </footer>
                 </article>

@@ -115,3 +115,20 @@
   margin: 0;
   text-transform: none;
 }
+
+.task-prose {
+  padding: $global-spacing;
+  margin: 0 (-$global-spacing);
+
+  &:first-child {
+    margin-top: -$global-spacing;
+  }
+
+  &:last-child {
+    margin-bottom: -$global-spacing;
+  }
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+}
