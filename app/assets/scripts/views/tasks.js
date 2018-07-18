@@ -650,7 +650,7 @@ function insertPointOnLine (feature, point) {
   const targetIndex = index === 0 ? 0
     : index === coordinates.length - 1 ? coordinates.length
     : getDistance(point, coordinates[index - 1]) < getDistance(point, coordinates[index + 1]) ? index : index + 1;
-  coordinates.splice(index, 0, point.geometry.coordinates);
+  coordinates.splice(targetIndex, 0, point.geometry.coordinates);
   return Object.assign({}, feature, {
     geometry: {
       type: 'LineString',
