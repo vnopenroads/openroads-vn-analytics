@@ -463,8 +463,24 @@ var Tasks = React.createClass({
         }
         return context;
       }, {distance: Infinity, line1Point: null, line2Point: null});
-      changes.push(insertPointOnLine(line1, point(closestPoints.line2Point)));
-      changes.push(insertPointOnLine(line2, point(closestPoints.line1Point)));
+
+
+      // Figure out where to add the extra point.
+      // For either line, if the closest coordinate is at the start or tail end of the line,
+      // we can just add it to the beginning or end.
+      const line1Point = pointOnLine(line1, point(closestPoints.line1Point));
+      const line2Point = pointOnLine(line2, point(closestPoints.line2Point));
+
+      if (line1Point.properties.index === 0
+        || line1Point.properties.index === line1.geometry.coordinates.length - 1) {
+        changes.push(insertPointOnLine(line1, line2Point));
+      } else if (line2Point.properties.index === 0
+        || line2Point.properties.index === line2.geometry.coordinates.length - 1) {
+        changes.push(insertPointOnLine(line2, line1Point));
+      } else {
+        changes.push(insertPointOnLine(line1, point(closestPoints.line2Point)));
+        changes.push(insertPointOnLine(line2, point(closestPoints.line1Point)));
+      }
     } else {
       let intersection = intersectingFeatures.features[0];
       changes.push(insertPointOnLine(line1, intersection));
@@ -627,11 +643,15 @@ function findIndex (haystack, fn) {
   return idx;
 }
 
-
 function insertPointOnLine (feature, point) {
   const nearest = pointOnLine(feature, point);
+  const { index } = nearest.properties;
   const coordinates = feature.geometry.coordinates.slice();
-  coordinates.splice(nearest.properties.index + 1, 0, point.geometry.coordinates);
+  const targetIndex = index === 0 ? 0
+    : index === coordinates.length - 1 ? coordinates.length
+    : getDistance(point, coordinates[index - 1]) < getDistance(point, coordinates[index + 1]) ? index : index + 1
+  console.log(targetIndex, index);
+  coordinates.splice(index, 0, point.geometry.coordinates);
   return Object.assign({}, feature, {
     geometry: {
       type: 'LineString',
