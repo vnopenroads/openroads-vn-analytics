@@ -38,7 +38,7 @@ export function fetchAdmins (id = null) {
         console.timeEnd('fetch subregions');
         dispatch(receiveAdmins(json));
       });
-      // catch any error in the network call.
+    // catch any error in the network call.
   };
 }
 
@@ -66,13 +66,13 @@ export function fetchAdminInfo (id) {
     dispatch(requestAdminInfo());
     const url = `${config.api}/admin/${id}/info`;
     return fetch(url)
-    .then(response => response.json())
-    .then(json => {
-      if (json.statusCode >= 400) {
-        throw new Error('Bad Request');
-      }
-      dispatch(receiveAdminInfo(json));
-    });
+      .then(response => response.json())
+      .then(json => {
+        if (json.statusCode >= 400) {
+          throw new Error('Bad Request');
+        }
+        dispatch(receiveAdminInfo(json));
+      });
   };
 }
 
@@ -119,7 +119,7 @@ export function fetchSearchResults (searchQuery) {
         // setTimeout(() => dispatch(receiveSearchResults(json)), 2000);
         dispatch(receiveSearchResults(json));
       });
-      // catch any error in the network call.
+    // catch any error in the network call.
   };
 }
 
@@ -164,13 +164,13 @@ export function fetchFieldVProMMsIds (json) {
     dispatch(requestFieldVProMMsids());
     const url = `${config.api}/field/ids`;
     return fetch(url)
-    .then(response => response.json())
-    .then(json => {
-      if (json.statusCode >= 400) {
-        throw new Error('Bad Response');
-      }
-      dispatch(receiveFieldVProMMsids(json));
-    });
+      .then(response => response.json())
+      .then(json => {
+        if (json.statusCode >= 400) {
+          throw new Error('Bad Response');
+        }
+        dispatch(receiveFieldVProMMsids(json));
+      });
   };
 }
 
@@ -214,16 +214,16 @@ export function fetchAdminBbox (id) {
     dispatch(requestAdminBbox());
     let url = `${config.api}/admin/${id}/info`;
     return fetch(url)
-    .then(response => {
-      return response.json();
-    })
-    .then(json => {
+      .then(response => {
+        return response.json();
+      })
+      .then(json => {
       // if not found, throw an error.
-      if (json.statusCode >= 400) {
-        throw new Error('Bad response');
-      }
-      dispatch(receiveAdminBbox(json));
-    });
+        if (json.statusCode >= 400) {
+          throw new Error('Bad response');
+        }
+        dispatch(receiveAdminBbox(json));
+      });
   };
 }
 
@@ -245,12 +245,12 @@ export function fetchProvinces () {
     dispatch(requestProvinces());
     let url = `${config.api}/admin/province/units`;
     return fetch(url)
-    .then(response => response.json())
-    .then(json => {
-      if (json.statusCode >= 400) {
-        throw new Error('Bad response');
-      }
-      dispatch(receiveProvinces(json));
-    });
+      .then(response => response.json())
+      .then(json => {
+        if (json.statusCode >= 400) {
+          throw new Error('Bad response');
+        }
+        dispatch(receiveProvinces(json));
+      });
   };
 }

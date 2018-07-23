@@ -123,12 +123,12 @@ export const fetchWayTaskCountEpic = () => (dispatch, getState) => {
 };
 
 
-export const markWayTaskPendingEpic = way_ids => dispatch => {
+export const markWayTaskPendingEpic = wayIds => dispatch => {
   dispatch(markWayTaskPending());
 
   return fetch(`${config.api}/tasks/pending`, {
     method: 'PUT',
-    body: new Blob([JSON.stringify({ way_ids: way_ids })], { type: 'application/json' })
+    body: new Blob([JSON.stringify({ way_ids: wayIds })], { type: 'application/json' })
   })
     .then(response => {
       if (response.status >= 400) {
@@ -144,11 +144,11 @@ export const dedupeWayTaskEpic = (taskId, wayIds, wayIdToKeep, dedupeId) => (dis
   dispatch(dedupeWayTask(taskId, wayIds, wayIdToKeep, dedupeId));
   // delete ways
   dispatch(deleteEntireWaysEpic(taskId, wayIds))
-  .then(() => {
-    dispatch(editRoadIdEpic(wayIdToKeep, dedupeId))
-    .then(() => { dispatch(dedupeWayTaskSuccess); })
-    .catch((err) => { dispatch(dedupeWayTaskError(err)); });
-  });
+    .then(() => {
+      dispatch(editRoadIdEpic(wayIdToKeep, dedupeId))
+        .then(() => { dispatch(dedupeWayTaskSuccess); })
+        .catch((err) => { dispatch(dedupeWayTaskError(err)); });
+    });
 };
 /**
  * reducer

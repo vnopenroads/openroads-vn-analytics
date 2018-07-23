@@ -1,38 +1,39 @@
 {
-  "extends": ["semistandard"],
+  "extends": ["standard"],
   "env": {
     "es6": true,
     "browser": true
   },
   "plugins": [
-    "react",
-    "mocha"
+    "react"
   ],
-  "globals": {
-    "it": false,
-    "describe": false
-  },
-  "ecmaFeatures": {
-    "jsx": true
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true
+  }
   },
   "rules": {
+    "semi": [2, "always"],
+    "no-extra-semi": 2,
+    "semi-spacing": [2, { "before": false, "after": true }],
     "no-spaced-func": 0,
     "no-unexpected-multiline": 0,
     "no-multiple-empty-lines": 0,
     "operator-linebreak": 0,
-    "react/display-name": 0,
+    "react/display-name": 0 ,
     "react/jsx-no-duplicate-props": 2,
     "react/jsx-no-undef": 2,
     "react/jsx-uses-react": 2,
     "react/jsx-uses-vars": 2,
     "react/no-danger": 2,
-    "react/no-deprecated": 2,
-    "react/no-did-mount-set-state": [2, "allow-in-fuc"],
-    "react/no-did-update-set-state": [2, "allow-in-fuc"],
+    "react/no-deprecated": 1,
+    "react/no-did-mount-set-state": 2,
+    "react/no-did-update-set-state": 2,
     "react/no-direct-mutation-state": 2,
     "react/no-is-mounted": 2,
     "react/no-unknown-property": 2,
-    "react/prop-types": 2,
+    "react/prop-types": 1,
     "react/react-in-jsx-scope": 2
   }
 }
