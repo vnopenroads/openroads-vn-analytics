@@ -11,7 +11,7 @@ var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var sourcemaps = require('gulp-sourcemaps');
-var gutil = require('gulp-util');
+var log = require('fancy-log');
 var exit = require('gulp-exit');
 var rev = require('gulp-rev');
 var revReplace = require('gulp-rev-replace');
@@ -29,14 +29,14 @@ var pkg;
 // Environment
 // Set the correct environment, which controls what happens in config.js
 if (!process.env.DS_ENV) {
-  if (!process.env.TRAVIS_BRANCH || process.env.TRAVIS_BRANCH !== process.env.PRODUCTION_BRANCH) {
+  if (!process.env.CIRCLE_BRANCH || process.env.CIRCLE_BRANCH !== process.env.PRODUCTION_BRANCH) {
     process.env.DS_ENV = 'staging';
   } else {
     process.env.DS_ENV = 'production';
   }
 }
 
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+var prodBuild = false;
 
 // /////////////////////////////////////////////////////////////////////////////
 // ------------------------- Helper functions --------------------------------//
@@ -52,10 +52,11 @@ readPackage();
 // ---------------------------------------------------------------------------//
 
 gulp.task('default', ['clean'], function () {
+  prodBuild = true;
   gulp.start('build');
 });
 
-gulp.task('serve', ['vendorScripts', 'javascript', 'styles', 'fonts'], function () {
+gulp.task('serve', ['vendorScripts', 'javascript', 'styles'], function () {
   browserSync({
     port: 3000,
     server: {
@@ -70,12 +71,12 @@ gulp.task('serve', ['vendorScripts', 'javascript', 'styles', 'fonts'], function 
   gulp.watch([
     'app/*.html',
     'app/assets/graphics/**/*',
-    '.tmp/assets/fonts/**/*'
+    '!app/assets/graphics/collecticons/**/*'
   ]).on('change', reload);
 
   gulp.watch('app/assets/styles/**/*.scss', ['styles']);
-  gulp.watch('app/assets/fonts/**/*', ['fonts']);
   gulp.watch('package.json', ['vendorScripts']);
+  gulp.watch('app/assets/graphics/collecticons/**', ['collecticons']);
 });
 
 gulp.task('clean', function () {
@@ -83,14 +84,6 @@ gulp.task('clean', function () {
     .then(function () {
       $.cache.clearAll();
     });
-});
-
-gulp.task('build', ['vendorScripts', 'javascript', 'collecticons'], function () {
-  gulp.start(['html', 'images', 'fonts', 'extras'], function () {
-    return gulp.src('dist/**/*')
-      .pipe($.size({title: 'build', gzip: true}))
-      .pipe(exit());
-  });
 });
 
 // /////////////////////////////////////////////////////////////////////////////
@@ -108,7 +101,7 @@ gulp.task('javascript', function () {
     cache: {},
     packageCache: {},
     fullPaths: true
-  }));
+  }), {poll: true});
 
   function bundler () {
     if (pkg.dependencies) {
@@ -121,6 +114,9 @@ gulp.task('javascript', function () {
           message: e.message
         });
         console.log('Javascript error:', e);
+        if (prodBuild) {
+          process.exit(1);
+        }
         // Allows the watch to continue.
         this.emit('end');
       })
@@ -134,8 +130,8 @@ gulp.task('javascript', function () {
   }
 
   watcher
-  .on('log', gutil.log)
-  .on('update', bundler);
+    .on('log', log)
+    .on('update', bundler);
 
   return bundler();
 });
@@ -150,7 +146,7 @@ gulp.task('vendorScripts', function () {
     require: pkg.dependencies ? Object.keys(pkg.dependencies) : []
   });
   return vb.bundle()
-    .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+    .on('error', log.bind(log, 'Browserify Error'))
     .pipe(source('vendor.js'))
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true}))
@@ -170,12 +166,14 @@ gulp.task('collecticons', function (done) {
     'app/assets/graphics/collecticons/',
     '--font-embed',
     '--font-dest', 'app/assets/fonts',
-    '--font-name', 'collecticons',
+    '--font-name', 'Collecticons',
     '--font-types', 'woff',
     '--style-format', 'sass',
     '--style-dest', 'app/assets/styles/core/',
     '--style-name', 'collecticons',
     '--class-name', 'collecticon',
+    '--author-name', 'Development Seed',
+    '--author-url', 'https://developmentseed.org/',
     '--no-preview'
   ];
 
@@ -187,6 +185,14 @@ gulp.task('collecticons', function (done) {
 // --------------------------- Helper tasks -----------------------------------//
 // ----------------------------------------------------------------------------//
 
+gulp.task('build', ['vendorScripts', 'javascript', 'collecticons'], function () {
+  gulp.start(['html', 'images', 'extras'], function () {
+    return gulp.src('dist/**/*')
+      .pipe($.size({title: 'build', gzip: true}))
+      .pipe(exit());
+  });
+});
+
 gulp.task('styles', function () {
   return gulp.src('app/assets/styles/main.scss')
     .pipe($.plumber(function (e) {
@@ -195,6 +201,9 @@ gulp.task('styles', function () {
         message: e.message
       });
       console.log('Sass error:', e.toString());
+      if (prodBuild) {
+        process.exit(1);
+      }
       // Allows the watch to continue.
       this.emit('end');
     }))
@@ -209,7 +218,7 @@ gulp.task('styles', function () {
           return v;
         }
       },
-      includePaths: require('node-bourbon').with(['node_modules/jeet'])
+      includePaths: require('node-bourbon').with('node_modules/jeet')
     }))
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest('.tmp/assets/styles'))
@@ -219,8 +228,9 @@ gulp.task('styles', function () {
 gulp.task('html', ['styles'], function () {
   return gulp.src('app/*.html')
     .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
-    // Turn off problematic minification, for now
-    // .pipe($.if('*.js', $.uglify()))
+    // Do not compress comparisons, to avoid MapboxGLJS minification issue
+    // https://github.com/mapbox/mapbox-gl-js/issues/4359#issuecomment-286277540
+    .pipe($.if('*.js', $.uglify({compress: {comparisons: false}})))
     .pipe($.if('*.css', $.csso()))
     .pipe($.if(/\.(css|js)$/, rev()))
     .pipe(revReplace())
@@ -229,20 +239,15 @@ gulp.task('html', ['styles'], function () {
 
 gulp.task('images', function () {
   return gulp.src('app/assets/graphics/**/*')
-    .pipe($.cache($.imagemin({
-      progressive: true,
-      interlaced: true,
+    .pipe($.cache($.imagemin([
+      $.imagemin.gifsicle({interlaced: true}),
+      $.imagemin.jpegtran({progressive: true}),
+      $.imagemin.optipng({optimizationLevel: 5}),
       // don't remove IDs from SVGs, they are often used
       // as hooks for embedding and styling
-      svgoPlugins: [{cleanupIDs: false}]
-    })))
+      $.imagemin.svgo({plugins: [{cleanupIDs: false}]})
+    ])))
     .pipe(gulp.dest('dist/assets/graphics'));
-});
-
-gulp.task('fonts', function () {
-  return gulp.src('app/assets/fonts/**/*')
-    .pipe(gulp.dest('.tmp/assets/fonts'))
-    .pipe(gulp.dest('dist/assets/fonts'));
 });
 
 gulp.task('extras', function () {
