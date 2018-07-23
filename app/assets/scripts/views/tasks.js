@@ -34,6 +34,7 @@ import { createModifyLineString } from '../utils/to-osm';
 import T, {
   translate
 } from '../components/t';
+import TaskListItem from '../components/task-list-item';
 import Select from 'react-select';
 import _ from 'lodash';
 
@@ -78,7 +79,10 @@ var Tasks = React.createClass({
   getInitialState: function () {
     return {
       renderedFeatures: null,
-      mode: null,
+      mode: 'dedupe',
+
+      // Steps are 0, 1 and 2 in accordance with new step workflow
+      step: 0,
       hoverId: null,
       selectedIds: [],
       selectedProvince: null,
@@ -265,12 +269,12 @@ var Tasks = React.createClass({
   },
 
   renderInstrumentPanel: function () {
-    const { mode, renderedFeatures } = this.state;
-    const { taskCount, osmStatus } = this.props;
+    const { mode, step, renderedFeatures } = this.state;
+    const { taskCount, osmStatus, language } = this.props;
 
     if (osmStatus === 'pending') {
       return (
-        <div className='map__controls map__controls--top-right'>
+        <div className='map__controls map__controls--column-right'>
           <div className='panel tasks-panel'>
             <div className='panel__body'>
               <h2><T>Performing action...</T></h2>
@@ -280,26 +284,47 @@ var Tasks = React.createClass({
       );
     }
     return (
-      <div className='map__controls map__controls--top-right'>
-        <div className='panel tasks-panel'>
+      <div className='map__controls map__controls--column-right'>
+        <article className='panel task-panel'>
           {renderedFeatures &&
-            <div className='panel__header'>
+            <header className='panel__header'>
               <div className='panel__headline'>
-                <div>
-                  <h2 className='panel__title'><T>Task</T></h2>
-                  {taskCount && <p className='panel__subtitle tasks-remaining'>({taskCount} <T>Tasks Remaining</T>)</p>}
-                </div>
-                <p className='panel__subtitle'><T>Showing</T> {renderedFeatures.features.length} <T>Roads</T></p>
+                <h1 className='panel__sectitle'><T>Task</T> #000</h1>
+                <p className='panel__subtitle'><time dateTime='2018-07-15T16:00'><T>Updated 2 days ago</T></time></p>
+                <h2 className='panel__title'><T>Prepare workflow</T></h2>
               </div>
-            </div>
+            </header>
           }
           <div className='panel__body'>
-            { this.props.selectOptions.province && this.props.selectOptions.province.length && this.renderProvinceSelect() }
-            { mode === null && this.renderSelectMode() }
-            { mode === 'dedupe' && this.renderDedupeMode() }
-            { mode === 'join' && this.renderJoinMode() }
+          {/* Render the mode select drop-down only if in step 0 */}
+          { step === 0 &&
+            <section className='task-group'>
+              <header className='task-group__header'>
+                <h1 className='task-group__title'><T>Select action to perform</T></h1>
+              </header>
+              <div className='task-group__body'>
+                <form className='form task-group__actions'>
+                  <div className='form__group'>
+                    <label className='form__label visually-hidden'><T>Actions</T></label>
+                      <select className='form__control' value={ mode } onChange={ this.handleChangeMode }>
+                        <option value='dedupe'><T>Remove duplicates</T></option>
+                        <option value='join'><T>Create intersection</T></option>
+                      </select>
+                  </div>
+                </form>
+              </div>
+            </section>
+          }
+          { mode === 'dedupe' && this.renderDedupeMode() }
+          { mode === 'join' && this.renderJoinMode() }
           </div>
-        </div>
+          <footer className='panel__footer'>
+            <div className='panel__f-actions'>
+              <button type='button' className='pfa-secondary'><span><T>Skip task</T></span></button>
+              <button type='button' className='pfa-primary'><span><T>Continue</T></span></button>
+            </div>
+          </footer>
+        </article>
       </div>
     );
   },
@@ -319,24 +344,77 @@ var Tasks = React.createClass({
     this.setState({mode: 'dedupe', renderedFeatures: selectedFeatures}, this.syncMap);
   },
 
+  handleChangeMode: function(event) {
+    this.setState({mode: event.target.value});
+  },
+
   exitMode: function () {
     const { task } = this.props;
     this.setState({mode: null, renderedFeatures: task, selectedIds: []}, this.syncMap);
   },
 
   renderDedupeMode: function () {
-    const chooseVprommids = this.state.chooseVprommids;
+    const { step, renderedFeatures } = this.state;
+    if (!renderedFeatures) {
+      return (
+        <div />
+      )
+    }
+    if (step === 0) {
+      return this.renderDedupeStep0();
+    } else if (step === 1) {
+      return this.renderDedupeStep1();
+    } else if (step === 2) {
+      return this.renderDedupeStep2();
+    }
+
+    // const chooseVprommids = this.state.chooseVprommids;
+    // return (
+    //   <div className='form-group map__panel--form'>
+    //     <h2><T>Remove Duplicate Roads</T></h2>
+    //     <p><T>Click on a road to keep. The other roads here will be deleted.</T></p>
+    //     { chooseVprommids && this.renderVprommidSelect() }
+    //     <button className={c('button button--secondary-raised-dark', {disabled: !(this.state.selectedIds.length === 1) || !(this.state.applyVprommid)})} type='button' onClick={this.commitDedupe}><T>Confirm</T></button>
+    //     <br />
+    //     <button className='button button--base-raised-dark' type='button' onClick={this.exitMode}><T>Cancel</T></button>
+    //   </div>
+    // );
+  },
+
+  toggleSelectItem: function(id) {
+    console.log('toggle item selection', id);
+    console.log('what is this', this.props);
+  },
+
+  renderDedupeStep0: function() {
+    const { renderedFeatures, mode } = this.state;
+    const { language } = this.props;
     return (
-      <div className='form-group map__panel--form'>
-        <h2><T>Remove Duplicate Roads</T></h2>
-        <p><T>Click on a road to keep. The other roads here will be deleted.</T></p>
-        { chooseVprommids && this.renderVprommidSelect() }
-        <button className={c('button button--secondary-raised-dark', {disabled: !(this.state.selectedIds.length === 1) || !(this.state.applyVprommid)})} type='button' onClick={this.commitDedupe}><T>Confirm</T></button>
-        <br />
-        <button className='button button--base-raised-dark' type='button' onClick={this.exitMode}><T>Cancel</T></button>
-      </div>
+      <section className='task-group'>
+        <header className='task-group__header'>
+          <h1 className='task-group__title'><T>Select roads to work on</T></h1>
+        </header>
+        <div className='task-group__body'>
+          <ul className='road-list'>
+          {
+            renderedFeatures.features.map(road => 
+              <TaskListItem
+                vpromm={ road.properties.or_vpromms }
+                _id={ road.properties._id }
+                mode={ mode }
+                language={ language }
+                key={ road.properties._id }
+                toggleSelect={ this.toggleSelectItem }
+              />
+            )
+          }
+          </ul>
+        </div>
+      </section>
+
     );
   },
+
 
   renderVprommidSelect: function () {
     const { language } = this.props;
@@ -550,42 +628,41 @@ var Tasks = React.createClass({
         <header className='inpage__header'>
           <div className='inner'>
             <div className='inpage__headline'>
-              <h1 className='inpage__title'><T>Tasks</T></h1>
+              <h1 className='inpage__title'><T>Playground</T></h1>
             </div>
           </div>
         </header>
         <div className='inpage__body'>
           <div className='inner'>
 
-            <div className='task-container'>
-              <figure className='map'>
-                <div className='map__media' id='map'></div>
-              </figure>
+            <figure className='map'>
+              <div className='map__media' id='map'></div>
               {
                 hoverId && this.renderPropertiesOverlay()
               }
               {
                 taskStatus === 'error' &&
-                  <div className='placeholder__fullscreen'>
-                    <h3 className='placeholder__message'><T>Error</T></h3>
-                  </div>
+                <div className='placeholder__fullscreen'>
+                  <h3 className='placeholder__message'><T>Error</T></h3>
+                </div>
               }
               {
                 taskStatus === 'No tasks remaining' &&
-                  <div className='placeholder__fullscreen'>
-                    <h3 className='placeholder__message'><T>No tasks remaining</T></h3>
-                  </div>
+                <div className='placeholder__fullscreen'>
+                  <h3 className='placeholder__message'><T>No tasks remaining</T></h3>
+                </div>
               }
               {
                 !taskId && taskStatus === 'pending' &&
-                  <div className='placeholder__fullscreen'>
-                    <h3 className='placeholder__message'><T>Loading</T></h3>
-                  </div>
+                <div className='placeholder__fullscreen'>
+                  <h3 className='placeholder__message'><T>Loading</T></h3>
+                </div>
               }
               {
                 this.renderInstrumentPanel()
               }
-            </div>
+            </figure>
+            
 
           </div>
         </div>
