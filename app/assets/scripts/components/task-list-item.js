@@ -33,9 +33,9 @@ const TaskListItem = React.createClass({
   },
 
   render: function() {
-    const { _id, vpromm, language, mode, selected } = this.props;
+    const { _id, vpromm, language, mode, selected, isHighlighted } = this.props;
     return (
-      <li className='road-list__item' onMouseOver={ this.handleMouseOver } onMouseOut={ this.handleMouseOut }>
+      <li className={`road-list__item ${isHighlighted ? 'road--highlight' : ''}`} onMouseOver={ this.handleMouseOver } onMouseOut={ this.handleMouseOut }>
         <article className='road' id='road-{_id}'>
           <header className='road__header'>
             <div className='road__headline'>

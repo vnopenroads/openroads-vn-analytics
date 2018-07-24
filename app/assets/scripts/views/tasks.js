@@ -422,7 +422,7 @@ var Tasks = React.createClass({
   },
 
   renderDedupeStep0: function() {
-    const { renderedFeatures, mode, selectedStep0 } = this.state;
+    const { renderedFeatures, mode, selectedStep0, hoverId } = this.state;
     const { language } = this.props;
     return (
       <section className='task-group'>
@@ -440,6 +440,7 @@ var Tasks = React.createClass({
                 language={ language }
                 key={ road.properties._id }
                 selected={ selectedStep0.includes(road.properties._id) }
+                isHighlighted={ road.properties._id === hoverId }
                 onMouseOver={ this.hoverItemOver }
                 onMouseOut={ this.hoverItemOut }
                 toggleSelect={ this.selectStep0 }
