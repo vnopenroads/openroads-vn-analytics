@@ -23,7 +23,7 @@ const TaskListItem = React.createClass({
   },
 
   render: function() {
-    const { _id, vpromm, language, mode } = this.props;
+    const { _id, vpromm, language, mode, selected } = this.props;
     return (
       <li className='road-list__item'>
         <article className='road' id='road-{_id}'>
@@ -36,7 +36,14 @@ const TaskListItem = React.createClass({
             </div>
             <div className='road__h-actions'>
             <label className='form__option form__option--custom-checkbox'>
-              <input type='checkbox' name='road-{ _id }--checkbox' id='road-{ _id }--checkbox' value='road-{ _id }' onChange={this.toggleSelect} />
+              <input
+                type='checkbox'
+                name={ `road-${ _id }--checkbox` }
+                id={ `road-${ _id }--checkbox` }
+                value={ `road-${ _id }` }
+                onChange={ this.toggleSelect }
+                checked={ selected }
+              />
               <span className='form__option__ui'></span>
               <span className='form__option__text visually-hidden'><T>Selected</T></span>
             </label>

@@ -81,10 +81,12 @@ var Tasks = React.createClass({
       renderedFeatures: null,
       mode: 'dedupe',
 
-      // Steps are 0, 1 and 2 in accordance with new step workflow
+       // Steps are 0, 1 and 2 in accordance with new step workflow
       step: 0,
       hoverId: null,
       selectedIds: [],
+      selectedStep0: [], // ids of selected features in step 0
+      selectedStep1: null, // in step "1", there can only ever be one id selected
       selectedProvince: null,
       selectedVprommids: [],
       chooseVprommids: false,
@@ -141,60 +143,70 @@ var Tasks = React.createClass({
       });
 
       map.on('click', (e) => {
+        const { step } = this.state;
         let features = map.queryRenderedFeatures(e.point, { layers: [ roadHoverId ] });
         if (features.length && features[0].properties._id) {
           let featId = features[0].properties._id;
-          let selectedIds;
-          let vprommid = [features[0].properties.or_vpromms ? features[0].properties.or_vpromms : 'No ID'];
-          let selectedVprommids = vprommid.concat(this.state.selectedVprommids);
-          let chooseVprommids = false;
-          let applyVprommid = null;
-
-          if (this.state.mode === 'dedupe') {
-            selectedIds = [featId];
-            const uniqVprommids = _.uniq(this.state.selectedVprommids.filter((x) => { return x !== 'No ID'; }));
-            // check here for if vprommid selection is needed. here are the cases:
-            if (uniqVprommids.length === 0) {
-              // 2. if all are null - don't do anything.
-              chooseVprommids = false;
-              applyVprommid = 'No ID';
-            }
-
-            if (uniqVprommids.length === 1) {
-              // 1. if all roads have same vprommid - don't do anything.
-              chooseVprommids = false;
-              applyVprommid = uniqVprommids[0];
-            }
-
-            if (uniqVprommids.length > 1) {
-              chooseVprommids = true;
-              applyVprommid = null;
-              selectedVprommids = uniqVprommids.concat('No ID');
-            }
-          } else if (this.state.mode === 'join') {
-            if (this.state.selectedIds[0] === featId) {
-              // in join, don't allow de-selecting the initially selected road
-              selectedIds = [].concat(this.state.selectedIds);
-            } else {
-              // in join, there can only be 2 selections
-              selectedIds = [this.state.selectedIds[0], featId];
-            }
+          if (step === 0) {
+            this.selectStep0(featId);
+          } else if (step === 1) {
+            this.selectStep1(featId);
           } else {
-            // Clone the selected array.
-            selectedIds = [].concat(this.state.selectedIds);
-            let idx = findIndex(selectedIds, o => o === featId);
-
-            if (idx === -1) {
-              selectedIds.push(featId);
-            } else {
-              selectedIds.splice(idx, 1);
-            }
+            return;
           }
-
-          map.setFilter(roadSelected, ['in', '_id'].concat(selectedIds));
-          this.setState({ selectedIds, selectedVprommids, chooseVprommids, applyVprommid }); // eslint-disable-line react/no-did-mount-set-state
         }
       });
+          // let selectedIds;
+          // let vprommid = [features[0].properties.or_vpromms ? features[0].properties.or_vpromms : 'No ID'];
+          // let selectedVprommids = vprommid.concat(this.state.selectedVprommids);
+          // let chooseVprommids = false;
+          // let applyVprommid = null;
+
+          // if (this.state.mode === 'dedupe') {
+          //   selectedIds = [featId];
+          //   const uniqVprommids = _.uniq(this.state.selectedVprommids.filter((x) => { return x !== 'No ID'; }));
+          //   // check here for if vprommid selection is needed. here are the cases:
+          //   if (uniqVprommids.length === 0) {
+          //     // 2. if all are null - don't do anything.
+          //     chooseVprommids = false;
+          //     applyVprommid = 'No ID';
+          //   }
+
+          //   if (uniqVprommids.length === 1) {
+          //     // 1. if all roads have same vprommid - don't do anything.
+          //     chooseVprommids = false;
+          //     applyVprommid = uniqVprommids[0];
+          //   }
+
+          //   if (uniqVprommids.length > 1) {
+          //     chooseVprommids = true;
+          //     applyVprommid = null;
+          //     selectedVprommids = uniqVprommids.concat('No ID');
+          //   }
+          // } else if (this.state.mode === 'join') {
+          //   if (this.state.selectedIds[0] === featId) {
+          //     // in join, don't allow de-selecting the initially selected road
+          //     selectedIds = [].concat(this.state.selectedIds);
+          //   } else {
+          //     // in join, there can only be 2 selections
+          //     selectedIds = [this.state.selectedIds[0], featId];
+          //   }
+          // } else {
+          //   // Clone the selected array.
+          //   selectedIds = [].concat(this.state.selectedIds);
+          //   let idx = findIndex(selectedIds, o => o === featId);
+
+          //   if (idx === -1) {
+          //     selectedIds.push(featId);
+          //   } else {
+          //     selectedIds.splice(idx, 1);
+          //   }
+          // }
+
+          // map.setFilter(roadSelected, ['in', '_id'].concat(selectedIds));
+      //     this.setState({ selectedIds, selectedVprommids, chooseVprommids, applyVprommid }); // eslint-disable-line react/no-did-mount-set-state
+      //   }
+      // });
     });
   },
 
@@ -229,6 +241,7 @@ var Tasks = React.createClass({
     const features = this.state.renderedFeatures;
     const { map } = this;
     const existingSource = map.getSource(source);
+    const selectedIds = [].concat(this.state.selectedStep0);
     if (!existingSource) {
       map.addSource(source, {
         type: 'geojson',
@@ -244,7 +257,7 @@ var Tasks = React.createClass({
       linear: true,
       padding: 25
     });
-    map.setFilter(roadSelected, ['in', '_id'].concat(this.state.selectedIds));
+    map.setFilter(roadSelected, ['in', '_id'].concat(selectedIds));
   },
 
   renderPropertiesOverlay: function () {
@@ -381,13 +394,28 @@ var Tasks = React.createClass({
     // );
   },
 
-  toggleSelectItem: function(id) {
-    console.log('toggle item selection', id);
-    console.log('what is this', this.props);
+  // trigger when an item is selected during step 0
+  selectStep0: function(id) {
+    const { mode, selectedStep0 } = this.state;
+    let selectedClone = [].concat(selectedStep0);
+    if (mode === 'dedupe') { // user can select multiple
+      if (selectedClone.includes(id)) {
+        selectedClone.splice(selectedClone.indexOf(id));
+      } else {
+        selectedClone.push(id);
+      }
+    } else if (mode === 'join') { // Intersect mode will only allow one element to be selected
+      if (selectedClone[0] === id) {
+        selectedClone = [];
+      } else {
+        selectedClone[0] = id;
+      }
+    }
+    this.setState({ selectedStep0: selectedClone }, this.syncMap);
   },
 
   renderDedupeStep0: function() {
-    const { renderedFeatures, mode } = this.state;
+    const { renderedFeatures, mode, selectedStep0 } = this.state;
     const { language } = this.props;
     return (
       <section className='task-group'>
@@ -404,7 +432,8 @@ var Tasks = React.createClass({
                 mode={ mode }
                 language={ language }
                 key={ road.properties._id }
-                toggleSelect={ this.toggleSelectItem }
+                selected={ selectedStep0.includes(road.properties._id) }
+                toggleSelect={ this.selectStep0 }
               />
             )
           }
