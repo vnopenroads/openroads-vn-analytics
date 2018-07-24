@@ -360,13 +360,9 @@ var Tasks = React.createClass({
     this.setState({mode: 'dedupe', renderedFeatures: selectedFeatures}, this.syncMap);
   },
 
+  // reset selected items when user changes mode, user can only change mode in step 0
   handleChangeMode: function(event) {
-    this.setState({mode: event.target.value});
-  },
-
-  exitMode: function () {
-    const { task } = this.props;
-    this.setState({mode: null, renderedFeatures: task, selectedIds: []}, this.syncMap);
+    this.setState({mode: event.target.value, selectedStep0: []}, this.syncMap);
   },
 
   renderDedupeMode: function () {
