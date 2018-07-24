@@ -313,7 +313,7 @@ var Tasks = React.createClass({
           }
           <div className='panel__body'>
           {/* Render the mode select drop-down only if in step 0 */}
-          { step === 0 &&
+          { step === 0 && renderedFeatures &&
             <section className='task-group'>
               <header className='task-group__header'>
                 <h1 className='task-group__title'><T>Select action to perform</T></h1>
@@ -331,8 +331,10 @@ var Tasks = React.createClass({
               </div>
             </section>
           }
-          { mode === 'dedupe' && this.renderDedupeMode() }
-          { mode === 'join' && this.renderJoinMode() }
+          { step === 0 && renderedFeatures && this.renderStep0() }
+          { step === 1 && renderedFeatures && this.renderStep1() }
+          { step === 2 && renderedFeatures && this.renderStep2() }
+
           </div>
           <footer className='panel__footer'>
             <div className='panel__f-actions'>
@@ -365,34 +367,6 @@ var Tasks = React.createClass({
     this.setState({mode: event.target.value, selectedStep0: []}, this.syncMap);
   },
 
-  renderDedupeMode: function () {
-    const { step, renderedFeatures } = this.state;
-    if (!renderedFeatures) {
-      return (
-        <div />
-      )
-    }
-    if (step === 0) {
-      return this.renderDedupeStep0();
-    } else if (step === 1) {
-      return this.renderDedupeStep1();
-    } else if (step === 2) {
-      return this.renderDedupeStep2();
-    }
-
-    // const chooseVprommids = this.state.chooseVprommids;
-    // return (
-    //   <div className='form-group map__panel--form'>
-    //     <h2><T>Remove Duplicate Roads</T></h2>
-    //     <p><T>Click on a road to keep. The other roads here will be deleted.</T></p>
-    //     { chooseVprommids && this.renderVprommidSelect() }
-    //     <button className={c('button button--secondary-raised-dark', {disabled: !(this.state.selectedIds.length === 1) || !(this.state.applyVprommid)})} type='button' onClick={this.commitDedupe}><T>Confirm</T></button>
-    //     <br />
-    //     <button className='button button--base-raised-dark' type='button' onClick={this.exitMode}><T>Cancel</T></button>
-    //   </div>
-    // );
-  },
-
   // trigger when an item is selected during step 0
   selectStep0: function(id) {
     const { mode, selectedStep0 } = this.state;
@@ -418,16 +392,18 @@ var Tasks = React.createClass({
   },
 
   hoverItemOut: function(id) {
-    this.setState({ hoverId: null }, this.syncMap);
+    this.setState({ hoverId: '' }, this.syncMap);
   },
 
-  renderDedupeStep0: function() {
+  renderStep0: function() {
     const { renderedFeatures, mode, selectedStep0, hoverId } = this.state;
     const { language } = this.props;
+    const title = mode === 'dedupe' ? 'Select roads to work on' : 'Select road to work on';
+    const type = mode === 'dedupe' ? 'checkbox' : 'radio';
     return (
       <section className='task-group'>
         <header className='task-group__header'>
-          <h1 className='task-group__title'><T>Select roads to work on</T></h1>
+          <h1 className='task-group__title'><T>{ title }</T></h1>
         </header>
         <div className='task-group__body'>
           <ul className='road-list'>
@@ -437,6 +413,7 @@ var Tasks = React.createClass({
                 vpromm={ road.properties.or_vpromms }
                 _id={ road.properties._id }
                 mode={ mode }
+                type={ type }
                 language={ language }
                 key={ road.properties._id }
                 selected={ selectedStep0.includes(road.properties._id) }
