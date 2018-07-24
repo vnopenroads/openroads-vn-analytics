@@ -15,7 +15,7 @@ import Explore from './views/explore';
 import Assets from './views/assets';
 import AssetsIndex from './views/assets-index';
 import AssetsAA from './views/assets-admin-area';
-import AAFieldMap from './components/aa-field-map';
+import AssetsDetail from './views/assets-detail';
 import Upload from './views/upload';
 import Faq from './views/faq';
 
@@ -40,7 +40,7 @@ render((
         <Route path='faq' component={Faq} pageClass='faq' />
         <Route path='assets' component={Assets}>
           <IndexRoute component={AssetsIndex} pageClass='assets' />
-          <Route path='road/:vpromm' component={AAFieldMap} pageClass='assets-aa' />
+          <Route path='road/:vpromm' component={AssetsDetail} pageClass='assets-aa' />
           <Route path=':aaId' component={AssetsAA} pageClass='assets-aa' />
           <Route path=':aaId/:aaIdSub' component={AssetsAA} pageClass='assets-aa' />
         </Route>
