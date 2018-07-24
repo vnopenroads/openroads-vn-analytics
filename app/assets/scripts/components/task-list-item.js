@@ -13,8 +13,8 @@ const TaskListItem = React.createClass({
     language: React.PropTypes.string,
     selected: React.PropTypes.bool,
     toggleSelect: React.PropTypes.func,
-    onMouseover: React.PropTypes.func,
-    onMouseout: React.PropTypes.func
+    onMouseOver: React.PropTypes.func,
+    onMouseOut: React.PropTypes.func
   },
 
   toggleSelect: function() {
@@ -22,10 +22,20 @@ const TaskListItem = React.createClass({
     toggleSelect(_id);
   },
 
+  handleMouseOver: function() {
+    const { _id, onMouseOver } = this.props;
+    onMouseOver(_id);
+  },
+
+  handleMouseOut: function() {
+    const { _id, onMouseOut } = this.props;
+    onMouseOut(_id);
+  },
+
   render: function() {
     const { _id, vpromm, language, mode, selected } = this.props;
     return (
-      <li className='road-list__item'>
+      <li className='road-list__item' onMouseOver={ this.handleMouseOver } onMouseOut={ this.handleMouseOut }>
         <article className='road' id='road-{_id}'>
           <header className='road__header'>
             <div className='road__headline'>

@@ -138,8 +138,9 @@ var Tasks = React.createClass({
           id = '';
         }
 
-        this.setState({hoverId: id}); // eslint-disable-line react/no-did-mount-set-state
-        map.setFilter(roadHoverId, ['==', '_id', id]);
+        this.hoverItemOver(id);
+        // this.setState({hoverId: id}); // eslint-disable-line react/no-did-mount-set-state
+        // map.setFilter(roadHoverId, ['==', '_id', id]);
       });
 
       map.on('click', (e) => {
@@ -242,6 +243,7 @@ var Tasks = React.createClass({
     const { map } = this;
     const existingSource = map.getSource(source);
     const selectedIds = [].concat(this.state.selectedStep0);
+    const hoverId = this.state.hoverId;
     if (!existingSource) {
       map.addSource(source, {
         type: 'geojson',
@@ -258,6 +260,7 @@ var Tasks = React.createClass({
       padding: 25
     });
     map.setFilter(roadSelected, ['in', '_id'].concat(selectedIds));
+    map.setFilter(roadHoverId, ['==', '_id', hoverId]);
   },
 
   renderPropertiesOverlay: function () {
@@ -414,6 +417,14 @@ var Tasks = React.createClass({
     this.setState({ selectedStep0: selectedClone }, this.syncMap);
   },
 
+  hoverItemOver: function(id) {
+    this.setState({ hoverId: id }, this.syncMap);
+  },
+
+  hoverItemOut: function(id) {
+    this.setState({ hoverId: null }, this.syncMap);
+  },
+
   renderDedupeStep0: function() {
     const { renderedFeatures, mode, selectedStep0 } = this.state;
     const { language } = this.props;
@@ -433,6 +444,8 @@ var Tasks = React.createClass({
                 language={ language }
                 key={ road.properties._id }
                 selected={ selectedStep0.includes(road.properties._id) }
+                onMouseOver={ this.hoverItemOver }
+                onMouseOut={ this.hoverItemOut }
                 toggleSelect={ this.selectStep0 }
               />
             )
