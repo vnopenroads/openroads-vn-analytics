@@ -284,10 +284,11 @@ var Tasks = React.createClass({
 
           </div>
           <footer className='panel__footer'>
-            <div className='panel__f-actions'>
-              <button type='button' className='pfa-secondary'><span><T>Skip task</T></span></button>
-              <button type='button' className='pfa-primary'><span><T>Continue</T></span></button>
-            </div>
+
+              { step === 0 && renderedFeatures && this.renderActionsStep0() }
+              { step === 1 && renderedFeatures && this.renderActionsStep1() }
+              { step === 2 && renderedFeatures && this.renderActionsStep2() }
+            
           </footer>
         </article>
       </div>
@@ -363,6 +364,21 @@ var Tasks = React.createClass({
     );
   },
 
+  renderActionsStep0: function() {
+    const { mode, selectedStep0 } = this.state;
+    let isDisabled;
+    if (mode === 'dedupe') {
+      isDisabled = selectedStep0.length < 2;
+    } else if (mode === 'join') {
+      isDisabled = selectedStep0.length === 0;
+    }
+    return (
+      <div className='panel__f-actions'>
+        <button type='button' className='pfa-secondary' onClick={ this.next }><span><T>Skip task</T></span></button>
+        <button type='button' className={`pfa-primary ${isDisabled ? 'disabled' : ''}`} disabled={ isDisabled } onClick={ this.gotoStep1 }><span><T>Continue</T></span></button>
+      </div>
+    );
+  },
 
   renderVprommidSelect: function () {
     const { language } = this.props;
