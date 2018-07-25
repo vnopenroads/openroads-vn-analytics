@@ -54,6 +54,9 @@ export const EDIT_ROAD_PROPERTY_ERROR = 'EDIT_ROAD_PROPERTY_ERROR';
 export const DELETE_ROAD_PROPERTY = 'DELETE_ROAD_PROPERTY';
 export const DELETE_ROAD_PROPERTY_SUCCESS = 'DELETE_ROAD_PROPERTY_SUCCESS';
 export const DELETE_ROAD_PROPERTY_ERROR = 'DELETE_ROAD_PROPERTY_ERROR';
+export const OP_ON_ROAD_PROPERTY = 'OP_ON_ROAD_PROPERTY';
+export const OP_ON_ROAD_PROPERTY_SUCCESS = 'OP_ON_ROAD_PROPERTY_SUCCESS';
+export const OP_ON_ROAD_PROPERTY_ERROR = 'OP_ON_ROAD_PROPERTY_ERROR';
 export const FETCH_ROAD_BBOX = 'FETCH_ROAD_BBOX';
 export const FETCH_ROAD_BBOX_SUCCESS = 'FETCH_ROAD_BBOX_SUCCESS';
 export const FETCH_ROAD_BBOX_ERROR = 'FETCH_ROAD_BBOX_ERROR';
@@ -102,6 +105,10 @@ export const editRoadPropertyError = (id, key, value, error) => ({ type: EDIT_RO
 export const deleteRoadProperty = (id, key) => ({ type: DELETE_ROAD_PROPERTY, id, key });
 export const deleteRoadPropertySuccess = (id, key) => ({ type: DELETE_ROAD_PROPERTY_SUCCESS, id, key });
 export const deleteRoadPropertyError = (id, key, error) => ({ type: DELETE_ROAD_PROPERTY_ERROR, id, key, error });
+
+export const opOnRoadProperty = () => ({ type: OP_ON_ROAD_PROPERTY });
+export const opOnRoadPropertySuccess = (data) => ({ type: OP_ON_ROAD_PROPERTY_SUCCESS, data });
+export const opOnRoadPropertyError = (error) => ({ type: OP_ON_ROAD_PROPERTY_ERROR, error });
 
 export const fetchRoadBbox = (roadId) => ({ type: FETCH_ROAD_BBOX, roadId });
 export const fetchRoadBboxSuccess = (roadId, bbox) => ({ type: FETCH_ROAD_BBOX_SUCCESS, roadId, bbox });
@@ -243,6 +250,32 @@ export const createRoadPropertyEpic = (id, key, value) => (dispatch) => {
       dispatch(createRoadPropertySuccess(id, key, value));
     })
     .catch((err) => dispatch(createRoadPropertyError(id, key, value, err)));
+};
+
+
+export const opOnRoadPropertyEpic = (id, operations) => (dispatch) => {
+  dispatch(opOnRoadProperty());
+
+  const computeOps = (type, ops) => (ops[type] || []).map(field => ({type, path: `/${field.key}`, value: field.value}));
+  const ops = computeOps('add', operations)
+    .concat(computeOps('replace', operations))
+    .concat(computeOps('remove', operations));
+
+  return fetch(`${config.api}/properties/roads/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json-patch+json'
+    },
+    body: JSON.stringify(ops)
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+
+      return response.json();
+    })
+    .then(res => dispatch(opOnRoadPropertySuccess(res)), (err) => dispatch(opOnRoadPropertyError(err)));
 };
 
 

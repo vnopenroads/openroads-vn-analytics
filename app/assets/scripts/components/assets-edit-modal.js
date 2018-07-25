@@ -17,10 +17,30 @@ class AssetsEditModal extends React.Component {
     this.addField = this.addField.bind(this);
     this.renderFields = this.renderFields.bind(this);
     this.onSave = this.onSave.bind(this);
+    this.onCloseClick = this.onCloseClick.bind(this);
 
+    this.state = this.prepareState(props);
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (this.props.roadPropsOp.processing && !nextProps.roadPropsOp.processing) {
+      if (!nextProps.roadPropsOp.error) {
+        this.props.onCloseClick(true);
+      } else {
+        alert('An error occurred while saving. Please try again.');
+      }
+    }
+
+    if (!this.props.revealed && nextProps.revealed) {
+      this.setState(this.prepareState(nextProps));
+    }
+  }
+
+  prepareState (props) {
     const roadProperties = props.roadProps.data.properties;
     const propertyNames = Object.keys(roadProperties);
-    this.state = {
+
+    return {
       fields: propertyNames.map(p => ({
         id: uniqueId('property'),
         key: p,
@@ -67,6 +87,12 @@ class AssetsEditModal extends React.Component {
     this.setState({ fields });
   }
 
+  onCloseClick (e) {
+    // Block while processing.
+    if (this.props.roadPropsOp.processing) return;
+    this.props.onCloseClick(true);
+  }
+
   onSave () {
     const fieldsToAdd = this.state.fields.filter(field => !field.existing && field.key !== '');
     const fieldsToUpdate = this.state.fields.filter(field => field.existing && field.value !== field.valueOriginal);
@@ -78,8 +104,14 @@ class AssetsEditModal extends React.Component {
 
     if (!fieldsToAdd.length && !fieldsToUpdate.length && !fieldsToRemove.length) {
       // Nothing to do. Just close.
-      return this.props.onCloseClick();
+      return this.props.onCloseClick(true);
     }
+
+    return this.props.opOnRoadProperty(this.props.vpromm, {
+      add: fieldsToAdd,
+      replace: fieldsToUpdate,
+      remove: fieldsToRemove
+    });
   }
 
   renderFields ({id, key, value, existing}) {
@@ -125,7 +157,7 @@ class AssetsEditModal extends React.Component {
       <Modal
         id='assets-edit-modal'
         className='modal--medium'
-        onCloseClick={this.props.onCloseClick}
+        onCloseClick={this.onCloseClick}
         revealed={this.props.revealed} >
 
         <ModalHeader>
@@ -134,7 +166,7 @@ class AssetsEditModal extends React.Component {
           </div>
         </ModalHeader>
         <ModalBody>
-          <form className='form'>
+          <form className={c('form', {disabled: this.props.roadPropsOp.processing})} disabled={this.props.roadPropsOp.processing}>
             <div className='inner'>
               {this.state.fields.map(this.renderFields)}
               <div className='form__extra-actions'>
@@ -144,8 +176,8 @@ class AssetsEditModal extends React.Component {
           </form>
         </ModalBody>
         <ModalFooter>
-          <button className='button button--primary-raised-light' type='button' onClick={this.props.onCloseClick}><span>Cancel</span></button>
-          <button className='button button--primary-raised-light' type='submit' onClick={this.onSave}><span>Save</span></button>
+          <button className={c('button button--primary-raised-light', {disabled: this.props.roadPropsOp.processing})} disabled={this.props.roadPropsOp.processing} type='button' onClick={this.onCloseClick}><span>Cancel</span></button>
+          <button className={c('button button--primary-raised-light', {disabled: this.props.roadPropsOp.processing})} disabled={this.props.roadPropsOp.processing} type='submit' onClick={this.onSave}><span>Save</span></button>
         </ModalFooter>
       </Modal>
     );
@@ -157,7 +189,9 @@ if (environment !== 'production') {
     vpromm: PropTypes.string,
     revealed: PropTypes.bool,
     roadProps: PropTypes.object,
-    onCloseClick: PropTypes.func
+    roadPropsOp: PropTypes.object,
+    onCloseClick: PropTypes.func,
+    opOnRoadProperty: PropTypes.func
   };
 }
 

@@ -25,8 +25,13 @@ import {
   FETCH_ROAD_PROPERTY,
   FETCH_ROAD_PROPERTY_ERROR,
   FETCH_ROAD_PROPERTY_SUCCESS,
+  OP_ON_ROAD_PROPERTY,
+  OP_ON_ROAD_PROPERTY_SUCCESS,
+  OP_ON_ROAD_PROPERTY_ERROR,
   fetchRoadGeometryEpic,
-  fetchRoadPropertyEpic
+  fetchRoadPropertyEpic,
+  deleteRoadEpic,
+  opOnRoadPropertyEpic
 } from '../redux/modules/roads';
 import {
   setMapPosition
@@ -77,8 +82,16 @@ class AssetsDetail extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (this.props.roadGeo.fetching && nextProps.roadGeo.fetching && !nextProps.roadGeo.error) {
+    if (this.props.roadGeo.fetching && !nextProps.roadGeo.fetching && !nextProps.roadGeo.error) {
       this.setupMapStyle();
+    }
+    if (this.props.roadPropsOp.processing && !nextProps.roadPropsOp.processing && !nextProps.roadPropsOp.error) {
+      // Why the setTimeout you ask?
+      // For some reason redux-fractal doesn't play well with thunks.
+      // It thinks that the action is being dispatched from a reducer and
+      // throws an error. "Reducers may not dispatch actions."
+      // This is meant to refresh the data after properties are saved.
+      setTimeout(() => { this.props.fetchRoadProperty(this.props.vpromm); }, 0);
     }
   }
 
@@ -109,7 +122,7 @@ class AssetsDetail extends React.Component {
     }
   }
 
-  onModalClose () {
+  onModalClose (success = true) {
     this.setState({ editModalOpen: false });
   }
 
@@ -129,7 +142,8 @@ class AssetsDetail extends React.Component {
         </div>
       )
     }, () => {
-      console.log('deleted');
+      this.props.deleteRoad(this.props.vpromm);
+      this.props.router.push({pathname: `/${this.props.language}/assets`})
     });
   }
 
@@ -193,7 +207,9 @@ class AssetsDetail extends React.Component {
         {this.props.roadProps.fetched ? <AssetsEditModal
           revealed={this.state.editModalOpen}
           onCloseClick={this.onModalClose}
+          opOnRoadProperty={this.props.opOnRoadProperty}
           vpromm={vpromm}
+          roadPropsOp={this.props.roadPropsOp}
           roadProps={this.props.roadProps} /> : null}
       </div>
     );
@@ -203,11 +219,15 @@ class AssetsDetail extends React.Component {
 if (environment !== 'production') {
   AssetsDetail.propTypes = {
     vpromm: PropTypes.string,
+    router: PropTypes.object,
     roadGeo: PropTypes.object,
     roadProps: PropTypes.object,
+    roadPropsOp: PropTypes.object,
     language: PropTypes.string,
     fetchRoadProperty: PropTypes.func,
-    fetchRoadGeometry: PropTypes.func
+    fetchRoadGeometry: PropTypes.func,
+    deleteRoad: PropTypes.func,
+    opOnRoadProperty: PropTypes.func
   };
 }
 
@@ -225,7 +245,7 @@ const stateRoadProps = {
 const reducerRoadProps = (state = stateRoadProps, action) => {
   switch (action.type) {
     case FETCH_ROAD_PROPERTY:
-      return {...state, fetching: true};
+      return {...state, fetching: true, fetched: false, error: false};
     case FETCH_ROAD_PROPERTY_ERROR:
       return {...state, fetching: false, fetched: true, error: true};
     case FETCH_ROAD_PROPERTY_SUCCESS:
@@ -245,7 +265,7 @@ const stateRoadGeo = {
 const reducerRoadGeo = (state = stateRoadGeo, action) => {
   switch (action.type) {
     case FETCH_ROAD_GEOMETRY:
-      return {...state, fetching: true};
+      return {...state, fetching: true, fetched: false, error: false};
     case FETCH_ROAD_GEOMETRY_ERROR:
       return {...state, fetching: false, fetched: true, error: true};
     case FETCH_ROAD_GEOMETRY_SUCCESS:
@@ -255,11 +275,37 @@ const reducerRoadGeo = (state = stateRoadGeo, action) => {
   return state;
 };
 
+// Road operations state and reducer.
+// Handles operations done to the properties.
+const stateOpOnRoad = {
+  processing: false,
+  data: {}
+};
+
+const reducerOpOnRoad = (state = stateOpOnRoad, action) => {
+  switch (action.type) {
+    case OP_ON_ROAD_PROPERTY:
+      return {...state, processing: true, error: false};
+    case OP_ON_ROAD_PROPERTY_SUCCESS:
+      return {...state, processing: false, error: false, data: action.data};
+    case OP_ON_ROAD_PROPERTY_ERROR:
+      return {...state, processing: false, error: true};
+  }
+
+  return state;
+};
+
 const reducer = combineReducers({
   properties: reducerRoadProps,
-  geometry: reducerRoadGeo
+  geometry: reducerRoadGeo,
+  operations: reducerOpOnRoad
 });
 
+// Notes:
+// The state for each road is handled locally with redux-fractal.
+// The data from the api is also saved in the global state but since each
+// mapStateToProps (either local() or connect()) causes a render is difficult
+// to merge both therefore we're handling everything here.
 export default compose(
   withRouter,
   getContext({ language: React.PropTypes.string }),
@@ -280,7 +326,8 @@ export default compose(
     createStore: () => createStore(reducer),
     mapStateToProps: (state) => ({
       roadProps: state.properties,
-      roadGeo: state.geometry
+      roadGeo: state.geometry,
+      roadPropsOp: state.operations
     }),
     filterGlobalActions: ({ type }) => [
       FETCH_ROAD_GEOMETRY,
@@ -288,7 +335,10 @@ export default compose(
       FETCH_ROAD_GEOMETRY_ERROR,
       FETCH_ROAD_PROPERTY,
       FETCH_ROAD_PROPERTY_SUCCESS,
-      FETCH_ROAD_PROPERTY_ERROR
+      FETCH_ROAD_PROPERTY_ERROR,
+      OP_ON_ROAD_PROPERTY,
+      OP_ON_ROAD_PROPERTY_SUCCESS,
+      OP_ON_ROAD_PROPERTY_ERROR
     ].indexOf(type) > -1
   }),
   connect(
@@ -296,7 +346,10 @@ export default compose(
     (dispatch) => ({
       setMapPosition: (...args) => dispatch(setMapPosition(...args)),
       fetchRoadGeometry: (...args) => dispatch(fetchRoadGeometryEpic(...args)),
-      fetchRoadProperty: (...args) => dispatch(fetchRoadPropertyEpic(...args))
+      fetchRoadProperty: (...args) => dispatch(fetchRoadPropertyEpic(...args)),
+      opOnRoadProperty: (...args) => dispatch(opOnRoadPropertyEpic(...args)),
+      deleteRoad: (...args) => dispatch(deleteRoadEpic(...args))
     })
   )
 )(AssetsDetail);
+
