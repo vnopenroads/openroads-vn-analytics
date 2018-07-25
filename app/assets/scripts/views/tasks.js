@@ -519,7 +519,7 @@ var Tasks = React.createClass({
 
 
   gotoStep0: function() {
-    this.setState({step: 0});
+    this.setState({step: 0, selectedStep1: null}, this.syncMap);
   },
 
   gotoStep1: function() {
@@ -617,7 +617,7 @@ var Tasks = React.createClass({
   next: function () {
     this.map.setFilter(roadSelected, ['all', ['in', '_id', '']]);
     this.props.skipTask(this.props.taskId);
-    this.setState({ selectedIds: [], mode: null, selectedVprommids: [] }, this.props.fetchNextTask);
+    this.setState({ selectedStep0: [], selectedStep1: null, mode: null, selectedVpromm: null }, this.props.fetchNextTask);
   },
 
   handleProvinceChange: function (selectedProvince) {
