@@ -235,6 +235,12 @@ var Tasks = React.createClass({
     const { mode, step, renderedFeatures } = this.state;
     const { taskCount, osmStatus, language } = this.props;
 
+    // we need to assign these translated strings as variables
+    // because if we use the <T> tag inside an <option>, it generates invalid markup
+    // by inserting a <span> around the string
+    const removeDuplicatesT = translate(language, 'Remove duplicates');
+    const createIntersectionT = translate(language, 'Create intersection');
+
     if (osmStatus === 'pending') {
       return (
         <div className='map__controls map__controls--column-right'>
@@ -270,8 +276,8 @@ var Tasks = React.createClass({
                   <div className='form__group'>
                     <label className='form__label visually-hidden'><T>Actions</T></label>
                       <select className='form__control' value={ mode } onChange={ this.handleChangeMode }>
-                        <option value='dedupe'><T>Remove duplicates</T></option>
-                        <option value='join'><T>Create intersection</T></option>
+                        <option value='dedupe'>{ removeDuplicatesT }</option>
+                        <option value='join'>{ createIntersectionT }</option>
                       </select>
                   </div>
                 </form>
