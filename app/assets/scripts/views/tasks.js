@@ -139,8 +139,6 @@ var Tasks = React.createClass({
         }
 
         this.hoverItemOver(id);
-        // this.setState({hoverId: id}); // eslint-disable-line react/no-did-mount-set-state
-        // map.setFilter(roadHoverId, ['==', '_id', id]);
       });
 
       map.on('click', (e) => {
@@ -157,57 +155,6 @@ var Tasks = React.createClass({
           }
         }
       });
-          // let selectedIds;
-          // let vprommid = [features[0].properties.or_vpromms ? features[0].properties.or_vpromms : 'No ID'];
-          // let selectedVprommids = vprommid.concat(this.state.selectedVprommids);
-          // let chooseVprommids = false;
-          // let applyVprommid = null;
-
-          // if (this.state.mode === 'dedupe') {
-          //   selectedIds = [featId];
-          //   const uniqVprommids = _.uniq(this.state.selectedVprommids.filter((x) => { return x !== 'No ID'; }));
-          //   // check here for if vprommid selection is needed. here are the cases:
-          //   if (uniqVprommids.length === 0) {
-          //     // 2. if all are null - don't do anything.
-          //     chooseVprommids = false;
-          //     applyVprommid = 'No ID';
-          //   }
-
-          //   if (uniqVprommids.length === 1) {
-          //     // 1. if all roads have same vprommid - don't do anything.
-          //     chooseVprommids = false;
-          //     applyVprommid = uniqVprommids[0];
-          //   }
-
-          //   if (uniqVprommids.length > 1) {
-          //     chooseVprommids = true;
-          //     applyVprommid = null;
-          //     selectedVprommids = uniqVprommids.concat('No ID');
-          //   }
-          // } else if (this.state.mode === 'join') {
-          //   if (this.state.selectedIds[0] === featId) {
-          //     // in join, don't allow de-selecting the initially selected road
-          //     selectedIds = [].concat(this.state.selectedIds);
-          //   } else {
-          //     // in join, there can only be 2 selections
-          //     selectedIds = [this.state.selectedIds[0], featId];
-          //   }
-          // } else {
-          //   // Clone the selected array.
-          //   selectedIds = [].concat(this.state.selectedIds);
-          //   let idx = findIndex(selectedIds, o => o === featId);
-
-          //   if (idx === -1) {
-          //     selectedIds.push(featId);
-          //   } else {
-          //     selectedIds.splice(idx, 1);
-          //   }
-          // }
-
-          // map.setFilter(roadSelected, ['in', '_id'].concat(selectedIds));
-      //     this.setState({ selectedIds, selectedVprommids, chooseVprommids, applyVprommid }); // eslint-disable-line react/no-did-mount-set-state
-      //   }
-      // });
     });
   },
 
@@ -347,21 +294,6 @@ var Tasks = React.createClass({
     );
   },
 
-  onJoin: function () {
-    this.setState({mode: 'join'});
-  },
-
-  onDedupe: function () {
-    const { selectedIds } = this.state;
-    const { task } = this.props;
-    const selectedFeatures = {
-      type: 'FeatureCollection',
-      features: selectedIds.map(id => task.features.find(f => f.properties._id === id))
-    };
-
-    this.setState({mode: 'dedupe', renderedFeatures: selectedFeatures}, this.syncMap);
-  },
-
   // reset selected items when user changes mode, user can only change mode in step 0
   handleChangeMode: function(event) {
     this.setState({mode: event.target.value, selectedStep0: []}, this.syncMap);
@@ -453,66 +385,6 @@ var Tasks = React.createClass({
     this.setState({ applyVprommid: selectedVprommid });
   },
 
-  renderJoinMode: function () {
-    return (
-      <div className='form-group map__panel--form'>
-        <h2>Create an Intersection</h2>
-        <p>Click on a road to create an intersection with.</p>
-        <button className={c('button button--secondary-raised-dark', {disabled: this.state.selectedIds.length !== 2})} type='button' onClick={this.commitJoin}><T>Confirm</T></button>
-        <br />
-        <button className='button button--base-raised-dark' type='button' onClick={this.exitMode}><T>Cancel</T></button>
-      </div>
-    );
-  },
-
-  renderSelectMode: function () {
-    return (
-      <div>
-        <div className='form-group'>
-          <p>1. <T>Select roads to work on</T></p>
-          <div className='map__panel--selected'>
-            {this.renderSelectedIds()}
-          </div>
-        </div>
-        <div className='form-group map__panel--form'>
-          <p>2. <T>Choose an action to perform</T></p>
-          <button
-            className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length < 2})}
-            type='button'
-            onClick={this.onDedupe}
-          >
-            <T>Remove Duplicates</T>
-          </button>
-          <br />
-          <button
-            className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length !== 1})}
-            type='button'
-            onClick={this.onJoin}
-          >
-            <T>Create Intersection</T>
-          </button>
-        </div>
-        <div className='form-group map__panel--form'>
-          <button
-            className='button button--base-raised-light'
-            type='button'
-            onClick={this.markAsDone}
-          >
-            <T>Finish task</T>
-          </button>
-          <br />
-          <button
-            className='button button--secondary-raised-dark'
-            type='button'
-            onClick={this.next}
-          >
-            <T>Skip task</T>
-          </button>
-        </div>
-      </div>
-    );
-  },
-
   commitDedupe: function () {
     const { selectedIds, renderedFeatures, applyVprommid } = this.state;
     const { features } = renderedFeatures;
@@ -601,17 +473,6 @@ var Tasks = React.createClass({
     this.map.setFilter(roadSelected, ['all', ['in', '_id', '']]);
     this.props.skipTask(this.props.taskId);
     this.setState({ selectedIds: [], mode: null, selectedVprommids: [] }, this.props.fetchNextTask);
-  },
-
-  renderSelectedIds: function () {
-    const { selectedIds } = this.state;
-    if (!selectedIds.length) {
-      return <p className='empty'><T>No roads selected yet. Click a road to select it</T></p>;
-    }
-    if (selectedIds.length === 1) {
-      return <p><T>1 road selected. Select at least one more</T></p>;
-    }
-    return <p>{selectedIds.length} <T>roads selected</T></p>;
   },
 
   handleProvinceChange: function (selectedProvince) {
