@@ -14,8 +14,8 @@ class AssetsEditModal extends React.Component {
   constructor (props) {
     super(props);
 
-    this.addField = this.addField.bind(this);
-    this.renderFields = this.renderFields.bind(this);
+    this.addProperty = this.addProperty.bind(this);
+    this.renderProperties = this.renderProperties.bind(this);
     this.onSave = this.onSave.bind(this);
     this.onCloseClick = this.onCloseClick.bind(this);
 
@@ -41,18 +41,18 @@ class AssetsEditModal extends React.Component {
     const propertyNames = Object.keys(roadProperties);
 
     return {
-      fields: propertyNames.map(p => ({
+      properties: propertyNames.map(p => ({
         id: uniqueId('property'),
         key: p,
         value: roadProperties[p],
         valueOriginal: roadProperties[p],
         existing: true
-      })).concat(this.getBaseField()),
-      fieldsToRemove: []
+      })).concat(this.getBaseProperty()),
+      propertiesToRemove: []
     };
   }
 
-  getBaseField () {
+  getBaseProperty () {
     return {
       id: uniqueId('property'),
       key: '',
@@ -61,30 +61,30 @@ class AssetsEditModal extends React.Component {
     };
   }
 
-  addField () {
-    const fields = this.state.fields.concat(this.getBaseField());
-    this.setState({fields});
+  addProperty () {
+    const properties = this.state.properties.concat(this.getBaseProperty());
+    this.setState({properties});
   }
 
-  removeField (id) {
-    const field = this.state.fields.find(o => o.id === id);
-    const fields = this.state.fields.filter(o => o.id !== id);
-    let fieldsToRemove = this.state.fieldsToRemove;
-    // Only fields that already should be removed from the DB.
+  removeProperty (id) {
+    const field = this.state.properties.find(o => o.id === id);
+    const properties = this.state.properties.filter(o => o.id !== id);
+    let propertiesToRemove = this.state.propertiesToRemove;
+    // Only properties that already should be removed from the DB.
     if (field.existing) {
-      fieldsToRemove = fieldsToRemove.concat(field);
+      propertiesToRemove = propertiesToRemove.concat(field);
     }
-    this.setState({fields, fieldsToRemove});
+    this.setState({properties, propertiesToRemove});
   }
 
-  onFieldChange (id, what, event) {
-    let fields = clone(this.state.fields);
-    const idx = findIndex(fields, ['id', id]);
+  onPropertyChange (id, what, event) {
+    let properties = clone(this.state.properties);
+    const idx = findIndex(properties, ['id', id]);
 
     const val = event.target.value;
-    fields[idx][what] = val;
+    properties[idx][what] = val;
 
-    this.setState({ fields });
+    this.setState({ properties });
   }
 
   onCloseClick (e) {
@@ -94,38 +94,40 @@ class AssetsEditModal extends React.Component {
   }
 
   onSave () {
-    const fieldsToAdd = this.state.fields.filter(field => !field.existing && field.key !== '');
-    const fieldsToUpdate = this.state.fields.filter(field => field.existing && field.value !== field.valueOriginal);
-    const fieldsToRemove = this.state.fieldsToRemove;
+    const propertiesToAdd = this.state.properties.filter(property => !property.existing && property.key !== '');
+    const propertiesToUpdate = this.state.properties.filter(property => property.existing && property.value !== property.valueOriginal);
+    const propertiesToRemove = this.state.propertiesToRemove;
 
-    console.log('fieldsToAdd', fieldsToAdd);
-    console.log('fieldsToUpdate', fieldsToUpdate);
-    console.log('fieldsToRemove', fieldsToRemove);
+    console.log('propertiesToAdd', propertiesToAdd);
+    console.log('propertiesToUpdate', propertiesToUpdate);
+    console.log('propertiesToRemove', propertiesToRemove);
 
-    if (!fieldsToAdd.length && !fieldsToUpdate.length && !fieldsToRemove.length) {
+    if (!propertiesToAdd.length && !propertiesToUpdate.length && !propertiesToRemove.length) {
       // Nothing to do. Just close.
       return this.props.onCloseClick(true);
     }
 
     return this.props.opOnRoadProperty(this.props.vpromm, {
-      add: fieldsToAdd,
-      replace: fieldsToUpdate,
-      remove: fieldsToRemove
+      add: propertiesToAdd,
+      replace: propertiesToUpdate,
+      remove: propertiesToRemove
     });
   }
 
-  renderFields ({id, key, value, existing}) {
-    const newFields = this.state.fields.filter(o => !o.existing).length;
+  renderProperties ({id, key, value, existing}) {
+    const newProperties = this.state.properties.filter(o => !o.existing).length;
 
     return existing ? (
       <div className='form__group' key={id}>
         <div className='form__inner-header'>
-          <label className='form__label' htmlFor={id}>{key}</label>
+          <div className='form__inner-headline'>
+            <label className='form__label' htmlFor={id}>{key}</label>
+          </div>
+          <div className='form__inner-actions'>
+            <button type='button' className='fia-trash' title={'Delete property'} onClick={this.removeProperty.bind(this, id)}><span>Delete</span></button>
+          </div>
         </div>
-        <div className='form__inner-actions'>
-          <button type='button' className='fia-trash' title={'Delete property'} onClick={this.removeField.bind(this, id)}><span>Delete</span></button>
-        </div>
-        <input type='text' id={id} name={id} className='form__control' value={value} onChange={this.onFieldChange.bind(this, id, 'value')} />
+        <input type='text' id={id} name={id} className='form__control' value={value} onChange={this.onPropertyChange.bind(this, id, 'value')} />
       </div>
     ) : (
       <fieldset className='form__fieldset' key={id}>
@@ -134,18 +136,18 @@ class AssetsEditModal extends React.Component {
             <legend className='form__legend'>New Property</legend>
           </div>
           <div className='form__inner-actions'>
-            <button type='button' className={c('fia-trash', {disabled: newFields <= 1})} title={'Delete property'} onClick={this.removeField.bind(this, id)}><span>Delete</span></button>
+            <button type='button' className={c('fia-trash', {disabled: newProperties <= 1})} title={'Delete property'} onClick={this.removeProperty.bind(this, id)}><span>Delete</span></button>
           </div>
         </div>
 
         <div className='form__hascol form__hascol--2'>
           <div className='form__group'>
             <label className='form__label' htmlFor={`key-${id}`}>Name</label>
-            <input type='text' id={`key-${id}`} name={`key-${id}`} className='form__control' value={key} onChange={this.onFieldChange.bind(this, id, 'key')} />
+            <input type='text' id={`key-${id}`} name={`key-${id}`} className='form__control' value={key} onChange={this.onPropertyChange.bind(this, id, 'key')} />
           </div>
           <div className='form__group'>
             <label className='form__label' htmlFor={`value-${id}`}>Value</label>
-            <input type='text' id={`value-${id}`} name={`value-${id}`} className='form__control' value={value} onChange={this.onFieldChange.bind(this, id, 'value')} />
+            <input type='text' id={`value-${id}`} name={`value-${id}`} className='form__control' value={value} onChange={this.onPropertyChange.bind(this, id, 'value')} />
           </div>
         </div>
       </fieldset>
@@ -153,6 +155,8 @@ class AssetsEditModal extends React.Component {
   }
 
   render () {
+    const { processing } = this.props.roadPropsOp;
+
     return (
       <Modal
         id='assets-edit-modal'
@@ -162,22 +166,22 @@ class AssetsEditModal extends React.Component {
 
         <ModalHeader>
           <div className='modal__headline'>
-            <h1 className='modal__title'>Edit properties of {this.props.vpromm}</h1>
+            <h1 className='modal__title'>Edit attributes of {this.props.vpromm}</h1>
           </div>
         </ModalHeader>
         <ModalBody>
-          <form className={c('form', {disabled: this.props.roadPropsOp.processing})} disabled={this.props.roadPropsOp.processing}>
+          <form className={c('form', {disabled: processing})} disabled={processing}>
             <div className='inner'>
-              {this.state.fields.map(this.renderFields)}
+              {this.state.properties.map(this.renderProperties)}
               <div className='form__extra-actions'>
-                <button type='button' className='fea-plus' title='Add new file' onClick={this.addField}><span>New property</span></button>
+                <button type='button' className='fea-plus' title='Add new file' onClick={this.addProperty}><span>New property</span></button>
               </div>
             </div>
           </form>
         </ModalBody>
         <ModalFooter>
-          <button className={c('button button--primary-raised-light', {disabled: this.props.roadPropsOp.processing})} disabled={this.props.roadPropsOp.processing} type='button' onClick={this.onCloseClick}><span>Cancel</span></button>
-          <button className={c('button button--primary-raised-light', {disabled: this.props.roadPropsOp.processing})} disabled={this.props.roadPropsOp.processing} type='submit' onClick={this.onSave}><span>Save</span></button>
+          <button className={c('button button--primary-raised-light', {disabled: processing})} disabled={processing} type='button' onClick={this.onCloseClick}><span>Cancel</span></button>
+          <button className={c('button button--primary-raised-light', {disabled: processing})} disabled={processing} type='submit' onClick={this.onSave}><span>Save</span></button>
         </ModalFooter>
       </Modal>
     );

@@ -162,7 +162,7 @@ class AssetsDetail extends React.Component {
 
     return (
       <section>
-        <h1>Properties</h1>
+        <h1>Attributes</h1>
         <dl>
           {propNames.map(renderDlItem)}
         </dl>
@@ -188,7 +188,7 @@ class AssetsDetail extends React.Component {
             direction='down'
             alignment='right' >
             <ul className='drop__menu drop__menu--iconified'>
-              <li><a href='#' className='drop__menu-item' onClick={this.onEditProperties}>Properties</a></li>
+              <li><a href='#' className='drop__menu-item' onClick={this.onEditProperties}>Attributes</a></li>
               <li><Link to={`/${language}/editor?way=823`} className='drop__menu-item'>Geometry</Link></li>
             </ul>
             <ul className='drop__menu drop__menu--iconified'>
