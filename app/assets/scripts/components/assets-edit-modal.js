@@ -23,14 +23,6 @@ class AssetsEditModal extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (this.props.roadPropsOp.processing && !nextProps.roadPropsOp.processing) {
-      if (!nextProps.roadPropsOp.error) {
-        this.props.onCloseClick(true);
-      } else {
-        alert('An error occurred while saving. Please try again.');
-      }
-    }
-
     if (!this.props.revealed && nextProps.revealed) {
       this.setState(this.prepareState(nextProps));
     }
@@ -41,6 +33,7 @@ class AssetsEditModal extends React.Component {
     const propertyNames = Object.keys(roadProperties);
 
     return {
+      vpromm: props.vpromm,
       properties: propertyNames.map(p => ({
         id: uniqueId('property'),
         key: p,
@@ -77,6 +70,10 @@ class AssetsEditModal extends React.Component {
     this.setState({properties, propertiesToRemove});
   }
 
+  onValueChange (what, event) {
+    this.setState({ [what]: event.target.value });
+  }
+
   onPropertyChange (id, what, event) {
     let properties = clone(this.state.properties);
     const idx = findIndex(properties, ['id', id]);
@@ -90,28 +87,43 @@ class AssetsEditModal extends React.Component {
   onCloseClick (e) {
     // Block while processing.
     if (this.props.roadPropsOp.processing) return;
-    this.props.onCloseClick(true);
+    this.props.onCloseClick();
   }
 
   onSave () {
     const propertiesToAdd = this.state.properties.filter(property => !property.existing && property.key !== '');
     const propertiesToUpdate = this.state.properties.filter(property => property.existing && property.value !== property.valueOriginal);
     const propertiesToRemove = this.state.propertiesToRemove;
+    const originalVpromm = this.props.vpromm;
+    const newVpromm = this.state.vpromm;
+    const diffVpromm = newVpromm !== originalVpromm;
 
     console.log('propertiesToAdd', propertiesToAdd);
     console.log('propertiesToUpdate', propertiesToUpdate);
     console.log('propertiesToRemove', propertiesToRemove);
+    console.log('diffVpromm', diffVpromm);
 
-    if (!propertiesToAdd.length && !propertiesToUpdate.length && !propertiesToRemove.length) {
+    if (!propertiesToAdd.length && !propertiesToUpdate.length && !propertiesToRemove.length && !diffVpromm) {
       // Nothing to do. Just close.
-      return this.props.onCloseClick(true);
+      return this.props.onCloseClick();
     }
+
+    const handleError = () => alert('An error occurred while saving. Please try again.');
+    const handleSuccess = (data) => this.props.onCloseClick(data);
 
     return this.props.opOnRoadProperty(this.props.vpromm, {
       add: propertiesToAdd,
       replace: propertiesToUpdate,
       remove: propertiesToRemove
-    });
+    })
+      .then(result => {
+        if (result.error) return handleError();
+        if (diffVpromm) {
+          return this.props.editRoad(originalVpromm, newVpromm)
+            .then(result => result.error ? handleError() : handleSuccess({action: 'redirect', vpromm: newVpromm}));
+        }
+        return handleSuccess({action: 'refresh'});
+      });
   }
 
   renderProperties ({id, key, value, existing}) {
@@ -172,6 +184,11 @@ class AssetsEditModal extends React.Component {
         <ModalBody>
           <form className={c('form', {disabled: processing})} disabled={processing}>
             <div className='inner'>
+              <div className='form__group form__group--primary'>
+                <label className='form__label' htmlFor='vpromm'>VPRoMMS</label>
+                <input type='text' id='vpromm' name='vpromm' className='form__control' value={this.state.vpromm} onChange={this.onValueChange.bind(this, 'vpromm')} />
+              </div>
+
               {this.state.properties.map(this.renderProperties)}
               <div className='form__extra-actions'>
                 <button type='button' className='fea-plus' title='Add new file' onClick={this.addProperty}><span>New property</span></button>
@@ -195,7 +212,8 @@ if (environment !== 'production') {
     roadProps: PropTypes.object,
     roadPropsOp: PropTypes.object,
     onCloseClick: PropTypes.func,
-    opOnRoadProperty: PropTypes.func
+    opOnRoadProperty: PropTypes.func,
+    editRoad: PropTypes.func
   };
 }
 

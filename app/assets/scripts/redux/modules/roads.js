@@ -205,11 +205,12 @@ export const editRoadEpic = (id, newId) => (dispatch) => {
       return response.json();
     })
     .then(({ id: newId }) => {
-      dispatch(editRoadSuccess(id, newId));
-      dispatch(clearRoadsPages());
-      dispatch(clearRoadCount());
-    })
-    .catch((err) => dispatch(editRoadError(id, newId, err.message)));
+      return Promise.all([
+        dispatch(editRoadSuccess(id, newId)),
+        dispatch(clearRoadsPages()),
+        dispatch(clearRoadCount())
+      ]);
+    }, (err) => dispatch(editRoadError(id, newId, err.message)));
 };
 
 

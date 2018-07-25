@@ -31,6 +31,7 @@ import {
   fetchRoadGeometryEpic,
   fetchRoadPropertyEpic,
   deleteRoadEpic,
+  editRoadEpic,
   opOnRoadPropertyEpic
 } from '../redux/modules/roads';
 import {
@@ -85,14 +86,6 @@ class AssetsDetail extends React.Component {
     if (this.props.roadGeo.fetching && !nextProps.roadGeo.fetching && !nextProps.roadGeo.error) {
       this.setupMapStyle();
     }
-    if (this.props.roadPropsOp.processing && !nextProps.roadPropsOp.processing && !nextProps.roadPropsOp.error) {
-      // Why the setTimeout you ask?
-      // For some reason redux-fractal doesn't play well with thunks.
-      // It thinks that the action is being dispatched from a reducer and
-      // throws an error. "Reducers may not dispatch actions."
-      // This is meant to refresh the data after properties are saved.
-      setTimeout(() => { this.props.fetchRoadProperty(this.props.vpromm); }, 0);
-    }
   }
 
   // componentWillUnmount () {
@@ -122,8 +115,18 @@ class AssetsDetail extends React.Component {
     }
   }
 
-  onModalClose (success = true) {
+  onModalClose (data = {}) {
     this.setState({ editModalOpen: false });
+    if (data.action === 'refresh') {
+      // Why the setTimeout you ask?
+      // For some reason redux-fractal doesn't play well with thunks.
+      // It thinks that the action is being dispatched from a reducer and
+      // throws an error. "Reducers may not dispatch actions."
+      // This is meant to refresh the data after properties are saved.
+      setTimeout(() => { this.props.fetchRoadProperty(this.props.vpromm); }, 0);
+    } else if (data.action === 'redirect') {
+      setTimeout(() => { this.props.router.push({pathname: `/${this.props.language}/assets/roads/${data.vpromm}/`}); }, 0);
+    }
   }
 
   onEditProperties (e) {
@@ -208,6 +211,7 @@ class AssetsDetail extends React.Component {
           revealed={this.state.editModalOpen}
           onCloseClick={this.onModalClose}
           opOnRoadProperty={this.props.opOnRoadProperty}
+          editRoad={this.props.editRoad}
           vpromm={vpromm}
           roadPropsOp={this.props.roadPropsOp}
           roadProps={this.props.roadProps} /> : null}
@@ -227,7 +231,8 @@ if (environment !== 'production') {
     fetchRoadProperty: PropTypes.func,
     fetchRoadGeometry: PropTypes.func,
     deleteRoad: PropTypes.func,
-    opOnRoadProperty: PropTypes.func
+    opOnRoadProperty: PropTypes.func,
+    editRoad: PropTypes.func
   };
 }
 
@@ -348,7 +353,8 @@ export default compose(
       fetchRoadGeometry: (...args) => dispatch(fetchRoadGeometryEpic(...args)),
       fetchRoadProperty: (...args) => dispatch(fetchRoadPropertyEpic(...args)),
       opOnRoadProperty: (...args) => dispatch(opOnRoadPropertyEpic(...args)),
-      deleteRoad: (...args) => dispatch(deleteRoadEpic(...args))
+      deleteRoad: (...args) => dispatch(deleteRoadEpic(...args)),
+      editRoad: (...args) => dispatch(editRoadEpic(...args))
     })
   )
 )(AssetsDetail);
