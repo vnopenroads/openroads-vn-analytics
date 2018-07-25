@@ -83,14 +83,15 @@ var Tasks = React.createClass({
 
        // Steps are 0, 1 and 2 in accordance with new step workflow
       step: 0,
-      hoverId: null,
+      hoverId: '',
       selectedIds: [],
       selectedStep0: [], // ids of selected features in step 0
       selectedStep1: null, // in step "1", there can only ever be one id selected
       selectedProvince: null,
-      selectedVprommids: [],
-      chooseVprommids: false,
-      applyVprommid: null
+      selectedVpromm: null,
+      // selectedVprommids: [],
+      // chooseVprommids: false,
+      // applyVprommid: null
     };
   },
 
@@ -190,6 +191,9 @@ var Tasks = React.createClass({
     const { map } = this;
     const existingSource = map.getSource(source);
     const selectedIds = [].concat(this.state.selectedStep0);
+    if (this.state.selectedStep1) {
+      selectedIds.push(this.state.selectedStep1);
+    }
     const hoverId = this.state.hoverId;
     if (!existingSource) {
       map.addSource(source, {
@@ -231,16 +235,27 @@ var Tasks = React.createClass({
     );
   },
 
+  getPanelTitle: function() {
+    const { mode, step } = this.state;
+    if (step === 0) {
+      return 'Prepare workflow';
+    }
+    if (step === 1 && mode === 'dedupe') {
+      return 'Remove duplicates';
+    }
+    if (step === 1 && mode === 'join') {
+      return 'Create intersection';
+    }
+    if (step === 2) {
+      return 'Workflow completed'
+    }
+  },
+
   renderInstrumentPanel: function () {
     const { mode, step, renderedFeatures } = this.state;
     const { taskCount, osmStatus, language } = this.props;
 
-    // we need to assign these translated strings as variables
-    // because if we use the <T> tag inside an <option>, it generates invalid markup
-    // by inserting a <span> around the string
-    const removeDuplicatesT = translate(language, 'Remove duplicates');
-    const createIntersectionT = translate(language, 'Create intersection');
-
+    const panelTitle = this.getPanelTitle();
     if (osmStatus === 'pending') {
       return (
         <div className='map__controls map__controls--column-right'>
@@ -260,40 +275,20 @@ var Tasks = React.createClass({
               <div className='panel__headline'>
                 <h1 className='panel__sectitle'><T>Task</T> #000</h1>
                 <p className='panel__subtitle'><time dateTime='2018-07-15T16:00'><T>Updated 2 days ago</T></time></p>
-                <h2 className='panel__title'><T>Prepare workflow</T></h2>
+                <h2 className='panel__title'><T>{ panelTitle }</T></h2>
               </div>
             </header>
           }
-          <div className='panel__body'>
-          {/* Render the mode select drop-down only if in step 0 */}
-          { step === 0 && renderedFeatures &&
-            <section className='task-group'>
-              <header className='task-group__header'>
-                <h1 className='task-group__title'><T>Select action to perform</T></h1>
-              </header>
-              <div className='task-group__body'>
-                <form className='form task-group__actions'>
-                  <div className='form__group'>
-                    <label className='form__label visually-hidden'><T>Actions</T></label>
-                      <select className='form__control' value={ mode } onChange={ this.handleChangeMode }>
-                        <option value='dedupe'>{ removeDuplicatesT }</option>
-                        <option value='join'>{ createIntersectionT }</option>
-                      </select>
-                  </div>
-                </form>
-              </div>
-            </section>
-          }
+
           { step === 0 && renderedFeatures && this.renderStep0() }
           { step === 1 && renderedFeatures && this.renderStep1() }
-          { step === 2 && renderedFeatures && this.renderStep2() }
+          { step === 2 && renderedFeatures && this.renderStep2() }          
 
-          </div>
           <footer className='panel__footer'>
 
-              { step === 0 && renderedFeatures && this.renderActionsStep0() }
-              { step === 1 && renderedFeatures && this.renderActionsStep1() }
-              { step === 2 && renderedFeatures && this.renderActionsStep2() }
+            { step === 0 && renderedFeatures && this.renderActionsStep0() }
+            { step === 1 && renderedFeatures && this.renderActionsStep1() }
+            { step === 2 && renderedFeatures && this.renderActionsStep2() }
             
           </footer>
         </article>
@@ -326,6 +321,10 @@ var Tasks = React.createClass({
     this.setState({ selectedStep0: selectedClone }, this.syncMap);
   },
 
+  selectStep1: function(id) {
+    this.setState({ selectedStep1: id }, this.syncMap);
+  },
+
   hoverItemOver: function(id) {
     this.setState({ hoverId: id }, this.syncMap);
   },
@@ -339,34 +338,57 @@ var Tasks = React.createClass({
     const { language } = this.props;
     const title = mode === 'dedupe' ? 'Select roads to work on' : 'Select road to work on';
     const type = mode === 'dedupe' ? 'checkbox' : 'radio';
-    return (
-      <section className='task-group'>
-        <header className='task-group__header'>
-          <h1 className='task-group__title'><T>{ title }</T></h1>
-        </header>
-        <div className='task-group__body'>
-          <ul className='road-list'>
-          {
-            renderedFeatures.features.map(road => 
-              <TaskListItem
-                vpromm={ road.properties.or_vpromms }
-                _id={ road.properties._id }
-                mode={ mode }
-                type={ type }
-                language={ language }
-                key={ road.properties._id }
-                selected={ selectedStep0.includes(road.properties._id) }
-                isHighlighted={ road.properties._id === hoverId }
-                onMouseOver={ this.hoverItemOver }
-                onMouseOut={ this.hoverItemOut }
-                toggleSelect={ this.selectStep0 }
-              />
-            )
-          }
-          </ul>
-        </div>
-      </section>
 
+    // we need to assign these translated strings as variables
+    // because if we use the <T> tag inside an <option>, it generates invalid markup
+    // by inserting a <span> around the string
+    const removeDuplicatesT = translate(language, 'Remove duplicates');
+    const createIntersectionT = translate(language, 'Create intersection');
+    return (
+      <div className='panel__body'>
+        <section className='task-group'>
+          <header className='task-group__header'>
+            <h1 className='task-group__title'><T>Select action to perform</T></h1>
+          </header>
+          <div className='task-group__body'>
+            <form className='form task-group__actions'>
+              <div className='form__group'>
+                <label className='form__label visually-hidden'><T>Actions</T></label>
+                <select className='form__control' value={ mode } onChange={ this.handleChangeMode }>
+                  <option value='dedupe'>{ removeDuplicatesT }</option>
+                  <option value='join'>{ createIntersectionT }</option>
+                </select>
+              </div>
+            </form>
+          </div>
+        </section>
+        <section className='task-group'>
+          <header className='task-group__header'>
+            <h1 className='task-group__title'><T>{ title }</T></h1>
+          </header>
+          <div className='task-group__body'>
+            <ul className='road-list'>
+            {
+              renderedFeatures.features.map(road => 
+                <TaskListItem
+                  vpromm={ road.properties.or_vpromms }
+                  _id={ road.properties._id }
+                  mode={ mode }
+                  type={ type }
+                  language={ language }
+                  key={ road.properties._id }
+                  selected={ selectedStep0.includes(road.properties._id) }
+                  isHighlighted={ road.properties._id === hoverId }
+                  onMouseOver={ this.hoverItemOver }
+                  onMouseOut={ this.hoverItemOut }
+                  toggleSelect={ this.selectStep0 }
+                />
+              )
+            }
+            </ul>
+          </div>
+        </section>
+      </div>
     );
   },
 
@@ -380,27 +402,128 @@ var Tasks = React.createClass({
     }
     return (
       <div className='panel__f-actions'>
-        <button type='button' className='pfa-secondary' onClick={ this.next }><span><T>Skip task</T></span></button>
-        <button type='button' className={`pfa-primary ${isDisabled ? 'disabled' : ''}`} disabled={ isDisabled } onClick={ this.gotoStep1 }><span><T>Continue</T></span></button>
+        <button type='button' className='pfa-secondary' onClick={ this.next }>
+          <span><T>Skip task</T></span>
+        </button>
+        <button
+          type='button'
+          className={`pfa-primary ${isDisabled ? 'disabled' : ''}`}
+          disabled={ isDisabled }
+          onClick={ this.gotoStep1 }
+        >
+          <span><T>Continue</T></span>
+        </button>
       </div>
     );
   },
 
-  renderVprommidSelect: function () {
-    const { language } = this.props;
-    const uniqVprommids = _.uniq(this.state.selectedVprommids);
-    const vprommidOptions = uniqVprommids.map(x => { return {value: x, label: x}; });
-    let value = this.state.applyVprommid;
+  renderActionsStep1: function() {
+    const { mode, selectedStep1 } = this.state;
+    const isDisabled = !selectedStep1;
+    let onClick;
+    if (mode === 'join') {
+      onClick = this.applyJoin;
+    } else if (mode === 'dedupe') {
+      onClick = this.applyDedupe;
+    }
     return (
-      <Select
-        name="form-vprommid-select"
-        searchable={ false }
-        value={value}
-        onChange={ this.handleSelectVprommid }
-        options={ vprommidOptions }
-        placeholder={ translate(language, 'Select a VPROMMID to apply') }
-      />
+      <div className='panel__f-actions'>
+        <button type='button' className='pfa-secondary' onClick={ this.gotoStep0 }>
+          <span><T>Back</T></span>
+        </button>
+        <button
+          type='button'
+          className={`pfa-primary ${isDisabled ? 'disabled' : ''}`}
+          disabled={ isDisabled }
+          onClick={ onClick }
+        >
+          <span><T>Apply</T></span>
+        </button>
+      </div>
+    );    
+  },
+
+  getSelectedVpromms: function() {
+    const { renderedFeatures, selectedStep0 } = this.state;
+    const vpromms = renderedFeatures.features
+                    .filter(feat => selectedStep0.includes(feat.properties._id))
+                    .map(feat => feat.properties.or_vpromms || 'No ID');
+    return _.uniq(vpromms);
+  },
+
+
+  renderStep1: function() {
+    const { mode, selectedStep0, selectedStep1, renderedFeatures, hoverId } = this.state;
+    const { language } = this.props;
+    let step1Features;
+    const title = mode === 'dedupe' ? 'Select Road to Keep' : 'Select Road to Intersect With';
+    if (mode === 'dedupe') {
+      // in dedupe mode, show all features selected in previous step
+      step1Features = renderedFeatures.features.filter(feat => selectedStep0.includes(feat.properties._id));
+    } else if (mode === 'join') {
+      // in join mode, show all features except the one selected in previous step
+      step1Features = renderedFeatures.features.filter(feat => feat.properties._id !== selectedStep0[0]);
+    }
+    const vpromms = this.getSelectedVpromms();
+    return (
+      <div className='panel__body'>
+        <section className='task-group'>
+          <header className='task-group__header'>
+            <h1 className='task-group__title'><T>{ title }</T></h1>
+          </header>
+          <div className='task-group__body'>
+            <ul className='road-list'>
+            {
+              step1Features.map(road => 
+                <TaskListItem
+                  vpromm={ road.properties.or_vpromms }
+                  _id={ road.properties._id }
+                  mode={ mode }
+                  type='radio'
+                  language={ language }
+                  key={ road.properties._id }
+                  selected={ selectedStep1 === road.properties._id }
+                  isHighlighted={ road.properties._id === hoverId }
+                  onMouseOver={ this.hoverItemOver }
+                  onMouseOut={ this.hoverItemOut }
+                  toggleSelect={ this.selectStep1 }
+                />
+              )
+            }
+            </ul>
+          </div>
+        </section>
+      { mode === 'dedupe' &&
+        <section className='task-group'>
+          <header className='task-group__header'>
+            <h1 className='task-group__title'><T>Select VPROMMID to Apply</T></h1>
+          </header>
+          <div className='task-group__body'>
+            <form className='form task-group__actions'>
+              <div className='form__group'>
+                <label className='form__label visually-hidden'><T>VPROMMIDs</T></label>
+                <select className='form__control' onChange={ this.selectVpromm }>
+                { vpromms.map(id => 
+                  <option key={ id } value={ id }>{ id }</option>
+                  )
+                }
+                </select>
+              </div>
+            </form>
+          </div>
+        </section>
+      }
+      </div>
     );
+  },
+
+
+  gotoStep0: function() {
+    this.setState({step: 0});
+  },
+
+  gotoStep1: function() {
+    this.setState({step: 1});
   },
 
   handleSelectVprommid: function (selectedVprommid) {
@@ -527,7 +650,7 @@ var Tasks = React.createClass({
         <header className='inpage__header'>
           <div className='inner'>
             <div className='inpage__headline'>
-              <h1 className='inpage__title'><T>Playground</T></h1>
+              <h1 className='inpage__title'><T>Tasks</T></h1>
             </div>
           </div>
         </header>
