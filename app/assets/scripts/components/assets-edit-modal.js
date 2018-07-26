@@ -30,7 +30,8 @@ class AssetsEditModal extends React.Component {
 
   prepareState (props) {
     const roadProperties = props.roadProps.data.properties;
-    const propertyNames = Object.keys(roadProperties);
+    let propertyNames = Object.keys(roadProperties);
+    propertyNames.sort((a, b) => a.toLowerCase() > b.toLowerCase() ? 1 : -1);
 
     return {
       vpromm: props.vpromm,

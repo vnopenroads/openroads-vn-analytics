@@ -156,7 +156,9 @@ class AssetsDetail extends React.Component {
 
     if (!fetched) return null;
 
-    const propNames = Object.keys(data.properties);
+    let propNames = Object.keys(data.properties);
+    propNames.sort((a, b) => a.toLowerCase() > b.toLowerCase() ? 1 : -1);
+
     const renderDlItem = (name) => {
       return [
         <dt key={`dt-${name}`}>{name}</dt>,
