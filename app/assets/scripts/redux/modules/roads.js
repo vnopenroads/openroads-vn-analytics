@@ -257,7 +257,10 @@ export const createRoadPropertyEpic = (id, key, value) => (dispatch) => {
 export const opOnRoadPropertyEpic = (id, operations) => (dispatch) => {
   dispatch(opOnRoadProperty());
 
-  const computeOps = (type, ops) => (ops[type] || []).map(field => ({type, path: `/${field.key}`, value: field.value}));
+  const computeOps = (type, ops) => (ops[type] || []).map(field => {
+    const path = field.key.replace(/~/g, '~0').replace(/\//g, '~1');
+    return {op: type, path: `/${path}`, value: field.value};
+  });
   const ops = computeOps('add', operations)
     .concat(computeOps('replace', operations))
     .concat(computeOps('remove', operations));
@@ -274,7 +277,7 @@ export const opOnRoadPropertyEpic = (id, operations) => (dispatch) => {
         throw new Error(response.status);
       }
 
-      return response.json();
+      return {ok: true};
     })
     .then(res => dispatch(opOnRoadPropertySuccess(res)), (err) => dispatch(opOnRoadPropertyError(err)));
 };
