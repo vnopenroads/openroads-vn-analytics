@@ -282,14 +282,14 @@ var Tasks = React.createClass({
 
           { step === 0 && renderedFeatures && this.renderStep0() }
           { step === 1 && renderedFeatures && this.renderStep1() }
-          { step === 2 && renderedFeatures && this.renderStep2() }          
+          { step === 2 && renderedFeatures && this.renderStep2() }
 
           <footer className='panel__footer'>
 
             { step === 0 && renderedFeatures && this.renderActionsStep0() }
             { step === 1 && renderedFeatures && this.renderActionsStep1() }
             { step === 2 && renderedFeatures && this.renderActionsStep2() }
-            
+
           </footer>
         </article>
       </div>
@@ -369,7 +369,7 @@ var Tasks = React.createClass({
           <div className='task-group__body'>
             <ul className='road-list'>
             {
-              renderedFeatures.features.map(road => 
+              renderedFeatures.features.map(road =>
                 <TaskListItem
                   vpromm={ road.properties.or_vpromms }
                   _id={ road.properties._id }
@@ -440,7 +440,7 @@ var Tasks = React.createClass({
           <span><T>Apply</T></span>
         </button>
       </div>
-    );    
+    );
   },
 
   getSelectedVpromms: function() {
@@ -474,7 +474,7 @@ var Tasks = React.createClass({
           <div className='task-group__body'>
             <ul className='road-list'>
             {
-              step1Features.map(road => 
+              step1Features.map(road =>
                 <TaskListItem
                   vpromm={ road.properties.or_vpromms }
                   _id={ road.properties._id }
@@ -503,7 +503,7 @@ var Tasks = React.createClass({
               <div className='form__group'>
                 <label className='form__label visually-hidden'><T>VPROMMIDs</T></label>
                 <select className='form__control' onChange={ this.selectVpromm }>
-                { vpromms.map(id => 
+                { vpromms.map(id =>
                   <option key={ id } value={ id }>{ id }</option>
                   )
                 }
@@ -652,6 +652,19 @@ var Tasks = React.createClass({
             <div className='inpage__headline'>
               <h1 className='inpage__title'><T>Tasks</T></h1>
             </div>
+            
+            <div className='inpage__actions'>
+              <div className='form__group task-search'>
+                <label className='form__label' htmlFor='form-select-1'>Search admin area</label>
+                <select className='form__control form__control--medium' id='form-select-1'>
+                  <option>Option 1</option>
+                  <option>Option 2</option>
+                  <option>Option 3</option>
+                  <option>Option 4</option>
+                  <option>Option 5</option>
+                </select>
+              </div>
+            </div>
           </div>
         </header>
         <div className='inpage__body'>
@@ -684,7 +697,7 @@ var Tasks = React.createClass({
                 this.renderInstrumentPanel()
               }
             </figure>
-            
+
 
           </div>
         </div>

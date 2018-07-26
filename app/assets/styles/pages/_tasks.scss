@@ -147,3 +147,15 @@
      margin-bottom: 0;
    }
  }
+
+ /* Task search
+    ========================================================================== */
+
+.task-search {
+  width: 12rem;
+  margin-bottom: 0;
+
+  .form__label {
+    @extend .visually-hidden;
+  }
+}
