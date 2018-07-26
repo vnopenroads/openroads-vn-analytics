@@ -12,20 +12,19 @@ import T from './t';
 
 const PageNumber = withHandlers({
   buttonClick: ({ setPage, page }) => () => setPage(page)
-})
-  (({ page, currentPage, buttonClick }) => (
-    <li>
-      {page === currentPage ?
-        <strong>{page}</strong> :
-        <button
-          className="button button-base-light"
-          onClick={buttonClick}
-        >
-          {page}
-        </button>
-      }
-    </li>
-  ));
+})(({ page, currentPage, buttonClick }) => (
+  <li>
+    {page === currentPage ?
+      <strong>{page}</strong> :
+      <button
+        className="button button-base-light"
+        onClick={buttonClick}
+      >
+        {page}
+      </button>
+    }
+  </li>
+));
 
 
 const RoadPagination = ({

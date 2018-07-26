@@ -51,7 +51,7 @@ const RoadPropertyForm = ({
               value={newPropertyKey}
               onChange={updateNewPropertyKey}
               placeholder={translate(language, 'Key')}
-              />
+            />
             <input
               className="value-input"
               type="text"
