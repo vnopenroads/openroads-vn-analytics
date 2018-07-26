@@ -90,7 +90,7 @@ class AssetsEditModal extends React.Component {
     this.props.onCloseClick();
   }
 
-  onSave () {
+  async onSave () {
     const propertiesToAdd = this.state.properties.filter(property => !property.existing && property.key !== '');
     const propertiesToUpdate = this.state.properties.filter(property => property.existing && property.value !== property.valueOriginal);
     const propertiesToRemove = this.state.propertiesToRemove;
@@ -103,27 +103,29 @@ class AssetsEditModal extends React.Component {
     console.log('propertiesToRemove', propertiesToRemove);
     console.log('diffVpromm', diffVpromm);
 
-    if (!propertiesToAdd.length && !propertiesToUpdate.length && !propertiesToRemove.length && !diffVpromm) {
-      // Nothing to do. Just close.
-      return this.props.onCloseClick();
+    try {
+      let successRes = {};
+
+      if (propertiesToAdd.length || propertiesToUpdate.length || propertiesToRemove.length) {
+        const res = await this.props.opOnRoadProperty(this.props.vpromm, {
+          add: propertiesToAdd,
+          replace: propertiesToUpdate,
+          remove: propertiesToRemove
+        });
+        if (res.error) throw new Error(res.error);
+        successRes = {action: 'refresh'};
+      }
+
+      if (diffVpromm) {
+        const res = await this.props.editRoad(originalVpromm, newVpromm);
+        if (res.error) throw new Error(res.error);
+        successRes = {action: 'redirect', vpromm: newVpromm};
+      }
+
+      this.props.onCloseClick(successRes);
+    } catch (error) {
+      alert('An error occurred while saving. Please try again.');
     }
-
-    const handleError = () => alert('An error occurred while saving. Please try again.');
-    const handleSuccess = (data) => this.props.onCloseClick(data);
-
-    return this.props.opOnRoadProperty(this.props.vpromm, {
-      add: propertiesToAdd,
-      replace: propertiesToUpdate,
-      remove: propertiesToRemove
-    })
-      .then(result => {
-        if (result.error) return handleError();
-        if (diffVpromm) {
-          return this.props.editRoad(originalVpromm, newVpromm)
-            .then(result => result.error ? handleError() : handleSuccess({action: 'redirect', vpromm: newVpromm}));
-        }
-        return handleSuccess({action: 'refresh'});
-      });
   }
 
   renderProperties ({id, key, value, existing}) {
