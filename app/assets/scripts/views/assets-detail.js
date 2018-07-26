@@ -84,6 +84,11 @@ class AssetsDetail extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    if (this.props.vpromm !== nextProps.vpromm) {
+      this.props.fetchRoadProperty(nextProps.vpromm);
+      this.props.fetchRoadGeometry(nextProps.vpromm);
+    }
+
     if (this.props.roadGeo.fetching && !nextProps.roadGeo.fetching && !nextProps.roadGeo.error) {
       this.setupMapStyle();
     }
@@ -126,7 +131,7 @@ class AssetsDetail extends React.Component {
       // This is meant to refresh the data after properties are saved.
       setTimeout(() => { this.props.fetchRoadProperty(this.props.vpromm); }, 0);
     } else if (data.action === 'redirect') {
-      setTimeout(() => { this.props.router.push({pathname: `/${this.props.language}/assets/roads/${data.vpromm}/`}); }, 0);
+      setTimeout(() => { this.props.router.push({pathname: `/${this.props.language}/assets/road/${data.vpromm}/`}); }, 0);
     }
   }
 
