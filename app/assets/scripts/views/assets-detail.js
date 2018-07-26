@@ -14,6 +14,7 @@ import { createStore, combineReducers } from 'redux';
 import { Link, withRouter } from 'react-router';
 import bbox from '@turf/bbox';
 import mapboxgl from 'mapbox-gl';
+import c from 'classnames';
 
 import Dropdown from '../components/dropdown';
 import AssetsEditModal from '../components/assets-edit-modal';
@@ -146,7 +147,7 @@ class AssetsDetail extends React.Component {
       )
     }, () => {
       this.props.deleteRoad(this.props.vpromm);
-      this.props.router.push({pathname: `/${this.props.language}/assets`})
+      this.props.router.push({pathname: `/${this.props.language}/assets`});
     });
   }
 
@@ -173,6 +174,30 @@ class AssetsDetail extends React.Component {
     );
   }
 
+  renderReviewStatus () {
+    const reviewState = 'pending';
+    const classForState = (state) => c('drop__menu-item', {'drop__menu-item--active': reviewState === state});
+
+    // Temp
+    const noop = e => e.preventDefault();
+
+    return (
+      <Dropdown
+        className='review-status-menu'
+        triggerClassName='button button--primary-raised-light'
+        triggerActiveClassName='button--active'
+        triggerText={reviewState}
+        triggerTitle='Change review state'
+        direction='down'
+        alignment='center' >
+        <ul className='drop__menu drop__menu--select'>
+          <li><a href='#' className={classForState('pending')} onClick={noop}>Pending</a></li>
+          <li><a href='#' className={classForState('reviewed')} onClick={noop}>Reviewed</a></li>
+        </ul>
+      </Dropdown>
+    );
+  }
+
   render () {
     const { vpromm, language } = this.props;
 
@@ -180,6 +205,8 @@ class AssetsDetail extends React.Component {
       <div className="aa-map-page">
         <div className="a-headline a-header">
           <h1>{vpromm}</h1>
+
+          {this.renderReviewStatus()}
 
           <a href={`${api}/properties/roads/${vpromm}.geojson`} className='button button--base-raised-light'>Download</a>
           <Dropdown
