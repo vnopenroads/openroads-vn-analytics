@@ -652,10 +652,15 @@ var Tasks = React.createClass({
             <div className='inpage__headline'>
               <h1 className='inpage__title'><T>Tasks</T></h1>
             </div>
-            
+            <nav className='inpage__nav'>
+              <ul className='inpage__menu'>
+                <li><a className='inpage__menu-link inpage__menu-link--active' href='#' title='View'><span><T>Solve</T> <small className='label'>490</small></span></a></li>
+                <li><a className='inpage__menu-link' href='#' title='View'><span><T>Stats</T></span></a></li>
+              </ul>
+            </nav>
             <div className='inpage__actions'>
               <div className='form__group task-search'>
-                <label className='form__label' htmlFor='form-select-1'>Search admin area</label>
+                <label className='form__label' htmlFor='form-select-1'><T>Search admin area</T></label>
                 <select className='form__control form__control--medium' id='form-select-1'>
                   <option>Option 1</option>
                   <option>Option 2</option>
