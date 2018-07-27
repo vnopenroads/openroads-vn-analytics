@@ -17,7 +17,7 @@
   }
 
   .a-headline h1 {
-    @include heading(1.25rem, large-up); 
+    @include heading(1.25rem, large-up);
     margin: 0;
   }
 
@@ -39,7 +39,7 @@
     }
   }
 
-  
+
   .a-main__status {
     min-height: 4.5rem;
     padding: 0.5rem 1rem;
@@ -62,8 +62,8 @@
       }
     }
     .field-data {
-      * { 
-        margin-right: .5rem; 
+      * {
+        margin-right: .5rem;
       }
     }
   }
@@ -163,7 +163,7 @@
   }
   .table {
     margin-bottom: 2rem;
-    
+
     .edit-row,
     .delete-row,
     .error-row {
@@ -277,7 +277,7 @@ td.table-properties-cell-view-buttons {
     }
     &.error {
       border: 0;
-      margin: 0;      
+      margin: 0;
     }
 
     .property-edited {
@@ -450,7 +450,7 @@ td.table-properties-cell-view-buttons {
   margin: 0 0 ($global-spacing * 2) 0;
 
   h2 {
-    @include heading(1rem, medium-up); 
+    @include heading(1rem, medium-up);
     margin: 0 0 ($global-spacing / 2) 0;
     opacity: 0.64;
   }
@@ -530,5 +530,18 @@ td.table-properties-cell-view-buttons {
     strong {
       color: $secondary-color
     }
+  }
+}
+
+.aa-map-container {
+  position: relative;
+  width: 100%;
+  height: 16rem;
+  margin-bottom: $global-spacing * 3;
+
+  .aa-map {
+    position: absolute;
+    width: 100%;
+    height: 100%;
   }
 }

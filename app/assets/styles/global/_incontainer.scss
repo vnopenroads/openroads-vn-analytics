@@ -1,0 +1,76 @@
+/* ==========================================================================
+   Global: Incontainer
+   ========================================================================== */
+
+.incontainer {
+}
+
+.incontainer__header {
+  display: flex;
+  margin-bottom: $global-spacing * 3;
+}
+
+.incontainer__headline {
+  position: relative;
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.incontainer__title {
+  @include heading(1.75rem);
+  margin: 0;
+}
+
+.incontainer__subtitle {
+  @extend .heading-alt;
+  position: relative;
+  color: rgba($base-font-color, 0.64);
+  font-size: 1rem;
+  line-height: 1.25rem;
+  margin: ($global-spacing / 4) 0;
+
+  &:first-child {
+    margin-top: -1.25rem;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.incontainer__hactions {
+  // > *:last-child:not(:first-child) {
+  //   margin-left: auto;
+  // }
+
+  > *:not(:last-child) {
+    margin-right: $global-spacing / 4;
+  }
+}
+
+.incontainer__breadcrumb {
+  position: absolute;
+  top: -$global-spacing;
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.875rem;
+  line-height: 1rem;
+  text-transform: uppercase;
+  width: 80vw;
+
+  a {
+    @extend .truncated;
+    max-width: 14rem;
+  }
+
+  li {
+    &:not(:last-child)::after {
+      content: '/';
+      margin: 0 ($global-spacing / 4);
+    }
+  }
+}

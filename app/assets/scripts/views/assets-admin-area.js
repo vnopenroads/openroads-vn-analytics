@@ -66,7 +66,7 @@ var AssetsAA = React.createClass({
               !aaIdSub && aaId &&
                 <div className='a-head-actions'>
                   <a
-                    className='button button--secondary-raised-dark'
+                    className='button button--primary-raised-dark'
                     href={`${config.provinceDumpBaseUrl}${aaId}.csv`}
                     target="_blank"
                   >

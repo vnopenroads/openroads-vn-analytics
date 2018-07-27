@@ -209,30 +209,39 @@ class AssetsDetail extends React.Component {
     const { vpromm, language } = this.props;
 
     return (
-      <div className="aa-map-page">
-        <div className="a-headline a-header">
-          <h1>{vpromm}</h1>
+      <div className='incontainer'>
+        <div className='incontainer__header'>
+          <div className='incontainer__headline'>
+            <h2 className='incontainer__title'>{vpromm}</h2>
 
-          {this.renderReviewStatus()}
+            <ol className='incontainer__breadcrumb'>
+              <li><a title='View' href='#'>Overview</a></li>
+              <li><a title='View' href='#'>Province name</a></li>
+              <li><a title='View' href='#'>District name</a></li>
+            </ol>
+          </div>
+          <div className='incontainer__hactions'>
+            {this.renderReviewStatus()}
 
-          <a href={`${api}/properties/roads/${vpromm}.geojson`} className='button button--base-raised-light'>Download</a>
-          <Dropdown
-            className='browse-menu'
-            triggerClassName='button button--primary-raised-dark'
-            triggerActiveClassName='button--active'
-            triggerText='Edit'
-            triggerTitle='Toggle menu options'
-            direction='down'
-            alignment='right' >
-            <ul className='drop__menu drop__menu--iconified'>
-              <li><a href='#' className='drop__menu-item' onClick={this.onEditProperties}>Attributes</a></li>
-              <li><Link to={`/${language}/editor?way=823`} className='drop__menu-item'>Geometry</Link></li>
-            </ul>
-            <ul className='drop__menu drop__menu--iconified'>
-              <li><a href='#' className='drop__menu-item' onClick={this.onEditDelete}>Delete</a></li>
-            </ul>
+            <a href={`${api}/properties/roads/${vpromm}.geojson`} className='button button--base-raised-light'>Download</a>
 
-          </Dropdown>
+            <Dropdown
+              className='browse-menu'
+              triggerClassName='button button--primary-raised-dark'
+              triggerActiveClassName='button--active'
+              triggerText='Edit'
+              triggerTitle='Toggle menu options'
+              direction='down'
+              alignment='right' >
+              <ul className='drop__menu drop__menu--iconified'>
+                <li><a href='#' className='drop__menu-item' onClick={this.onEditProperties}>Attributes</a></li>
+                <li><Link to={`/${language}/editor?way=823`} className='drop__menu-item'>Geometry</Link></li>
+              </ul>
+              <ul className='drop__menu drop__menu--iconified'>
+                <li><a href='#' className='drop__menu-item' onClick={this.onEditDelete}>Delete</a></li>
+              </ul>
+            </Dropdown>
+          </div>
         </div>
 
         <div className='aa-map-container'>
@@ -392,4 +401,3 @@ export default compose(
     })
   )
 )(AssetsDetail);
-
