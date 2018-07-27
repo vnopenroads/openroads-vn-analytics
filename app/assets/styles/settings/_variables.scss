@@ -6,8 +6,9 @@
    ========================================================================== */
 
 $base-color: #252525;                   // Asphalt
-$primary-color: #3d0a08;                // Aubergine
-$secondary-color: #da251d;              // Red
+$primary-color: #da251d;                // Red
+$secondary-color: #3d0a08;              // Aubergine
+
 
 /* State colors */
 
@@ -18,7 +19,7 @@ $info-color: #3498DB;                   // Peter River
 
 /* Helper colors */
 
-$link-color: $secondary-color;
+$link-color: $primary-color;
 $base-alpha-color: rgba($base-color, 0.12);
 
 
