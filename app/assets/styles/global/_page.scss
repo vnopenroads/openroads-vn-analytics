@@ -8,7 +8,7 @@
 
 .site__header {
   @extend .antialiased;
-  background: $primary-color;
+  background: $base-color;
   color: #fff;
   padding: 0.5rem 0;
   position: relative;
@@ -16,7 +16,7 @@
   transition: all 0.24s ease 0s;
 
   > .inner {
-    @extend .row;
+    @extend .row, .row--centered;
     display: flex;
     flex-flow: row nowrap;
   }
@@ -159,7 +159,7 @@
   display: flex;
   flex-direction: column;
   padding: 0.5rem;
-  background: $primary-color;
+  background: $base-color;
   border-radius: $base-border-radius;
   box-shadow: 0 0 0 2px rgba(#fff, 0.12);
   min-width: 10rem;
@@ -202,7 +202,7 @@
     background: rgba(#fff, 0.12);
     border-radius: $base-border-radius;
   }
-}   
+}
 
 
 /* Body
@@ -371,7 +371,7 @@
     .back-button {
       padding: 0;
     }
-    .aa-map-container {  
+    .aa-map-container {
       width: 100%;
       height: 300px;
       position: relative;

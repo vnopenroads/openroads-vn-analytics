@@ -9,7 +9,7 @@
 
   .inpage__header {
     @extend .antialiased;
-    background: $primary-color;
+    background: $base-color;
     color: #fff;
     padding: $global-spacing 0;
     position: relative;
@@ -21,10 +21,8 @@
     }
 
     > .inner {
-      @extend .row;
-      max-width: none;
+      @extend .row, .row--centered;
       display: flex;
-      width: 100%;
     }
   }
 
