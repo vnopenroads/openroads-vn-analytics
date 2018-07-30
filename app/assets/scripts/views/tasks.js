@@ -703,13 +703,7 @@ var Tasks = React.createClass({
             <div className='inpage__actions'>
               <div className='form__group task-search'>
                 <label className='form__label' htmlFor='form-select-1'><T>Search admin area</T></label>
-                <select className='form__control form__control--medium' id='form-select-1'>
-                  <option>Option 1</option>
-                  <option>Option 2</option>
-                  <option>Option 3</option>
-                  <option>Option 4</option>
-                  <option>Option 5</option>
-                </select>
+                { this.props.selectOptions.province && this.renderProvinceSelect() }
               </div>
             </div>
           </div>
