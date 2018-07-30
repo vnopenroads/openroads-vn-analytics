@@ -422,9 +422,9 @@ var Tasks = React.createClass({
     const isDisabled = !selectedStep1;
     let onClick;
     if (mode === 'join') {
-      onClick = this.applyJoin;
+      onClick = this.commitJoin;
     } else if (mode === 'dedupe') {
-      onClick = this.applyDedupe;
+      onClick = this.commitDedupe;
     }
     return (
       <div className='panel__f-actions'>
@@ -440,6 +440,15 @@ var Tasks = React.createClass({
           <span><T>Apply</T></span>
         </button>
       </div>
+    );
+  },
+
+  renderActionsStep2: function() {
+    return (
+      <div className='panel__f-actions'>
+        <button type='button' className='pfa-secondary'><span><T>Do more</T></span></button>
+        <button type='button' className='pfa-primary'><span><T>Next task</T></span></button>
+      </div>                  
     );
   },
 
@@ -517,6 +526,22 @@ var Tasks = React.createClass({
     );
   },
 
+  renderStep2: function() {
+    const { mode, selectedStep0 } = this.state;
+    const { language } = this.props;
+  
+    const numRoads = mode === 'dedupe' ? selectedStep0.length - 1 : 2;
+    const roadStr = numRoads === 1 ? translate(language, 'road was') : translate(language, 'roads were');
+    const actionStr = mode === 'dedupe' ? translate(language, 'removed') : translate(language, 'intersected');
+    return (
+      <div className='panel__body'>
+        <div className='prose task-prose'>
+          <p>{numRoads} {roadStr} {actionStr} <T>and submitted to the system for review.</T></p>
+          <p><T>Do you want to continue to work on this task or move to the next one?</T></p>
+        </div>      
+      </div>      
+    );
+  },
 
   gotoStep0: function() {
     this.setState({step: 0, selectedStep1: null}, this.syncMap);
@@ -526,27 +551,32 @@ var Tasks = React.createClass({
     this.setState({step: 1});
   },
 
+  gotoStep2: function() {
+    this.setState({step: 2});
+  },
+
   handleSelectVprommid: function (selectedVprommid) {
     this.setState({ applyVprommid: selectedVprommid });
   },
 
   commitDedupe: function () {
-    const { selectedIds, renderedFeatures, applyVprommid } = this.state;
+    const { selectedStep0, selectedStep1, renderedFeatures, applyVprommid } = this.state;
     const { features } = renderedFeatures;
-    const toDelete = features.filter(feature => selectedIds[0] !== feature.properties._id);
-    const wayIdToKeep = selectedIds[0];
+    const toDelete = features.filter(feature => feature.properties._id !== selectedStep1);
+    const wayIdToKeep = selectedStep1;
     this.props.dedupeWayTask(this.props.taskId, toDelete.map(feature => feature.properties._id), wayIdToKeep, applyVprommid === 'No ID' ? null : applyVprommid);
     // this.props._deleteWays(this.props.taskId, toDelete.map(feature => feature.properties._id));
 
     // TODO - should deduping mark task as done?
     this.props._markTaskAsDone(toDelete.map(feature => feature.properties._id));
+    this.gotoStep2();
   },
 
   commitJoin: function () {
-    const { selectedIds, renderedFeatures } = this.state;
+    const { selectedStep0, selectedStep1, renderedFeatures } = this.state;
     const { features } = renderedFeatures;
-    const line1 = features.find(f => f.properties._id === selectedIds[0]);
-    const line2 = features.find(f => f.properties._id === selectedIds[1]);
+    const line1 = features.find(f => f.properties._id === selectedStep0[0]);
+    const line2 = features.find(f => f.properties._id === selectedStep1);
     const intersectingFeatures = intersect(line1, line2);
     const changes = [];
 
@@ -604,6 +634,8 @@ var Tasks = React.createClass({
 
     // TODO - should deduping mark task as done?
     this.props._markTaskAsDone([line1.properties._id, line2.properties._id]);
+
+    this.gotoStep2();
   },
 
   markAsDone: function () {
@@ -644,6 +676,8 @@ var Tasks = React.createClass({
   render: function () {
     const { taskId, taskStatus } = this.props;
     const { hoverId } = this.state;
+    const renderPanel = !((taskStatus === 'error' || taskStatus === 'No tasks remaining') ||
+      (!taskId && taskStatus === 'pending'))
 
     return (
       <section className='inpage inpage--alt'>
@@ -699,7 +733,7 @@ var Tasks = React.createClass({
                 </div>
               }
               {
-                this.renderInstrumentPanel()
+                renderPanel && this.renderInstrumentPanel()
               }
             </figure>
 
