@@ -443,11 +443,19 @@ var Tasks = React.createClass({
     );
   },
 
+  doMore: function() {
+    this.setState({
+      selectedStep0: [],
+      selectedStep1: null,
+      step: 0
+    }, this.syncMap);
+  },
+
   renderActionsStep2: function() {
     return (
       <div className='panel__f-actions'>
-        <button type='button' className='pfa-secondary'><span><T>Do more</T></span></button>
-        <button type='button' className='pfa-primary'><span><T>Next task</T></span></button>
+        <button type='button' className='pfa-secondary' onClick={ this.doMore }><span><T>Do more</T></span></button>
+        <button type='button' onClick={ this.next } className='pfa-primary'><span><T>Next task</T></span></button>
       </div>                  
     );
   },
@@ -649,7 +657,7 @@ var Tasks = React.createClass({
   next: function () {
     this.map.setFilter(roadSelected, ['all', ['in', '_id', '']]);
     this.props.skipTask(this.props.taskId);
-    this.setState({ selectedStep0: [], selectedStep1: null, mode: null, selectedVpromm: null }, this.props.fetchNextTask);
+    this.setState({ selectedStep0: [], selectedStep1: null, mode: 'dedupe', selectedVpromm: null, step: 0 }, this.props.fetchNextTask);
   },
 
   handleProvinceChange: function (selectedProvince) {
