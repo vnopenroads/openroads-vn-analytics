@@ -545,3 +545,12 @@ td.table-properties-cell-view-buttons {
     height: 100%;
   }
 }
+
+
+/* Assets: Single
+   ========================================================================== */
+
+.button-review-status {
+  @extend .button, .button--base-raised-light, .drop__toggle--caret;
+  margin-right: auto !important;
+}

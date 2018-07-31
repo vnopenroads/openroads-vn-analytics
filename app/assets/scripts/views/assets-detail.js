@@ -182,7 +182,7 @@ class AssetsDetail extends React.Component {
   }
 
   renderReviewStatus () {
-    const reviewState = 'pending';
+    const reviewState = 'Pending';
     const classForState = (state) => c('drop__menu-item', {'drop__menu-item--active': reviewState === state});
 
     // Temp
@@ -191,7 +191,7 @@ class AssetsDetail extends React.Component {
     return (
       <Dropdown
         className='review-status-menu'
-        triggerClassName='button button--primary-raised-light'
+        triggerClassName='button-review-status'
         triggerActiveClassName='button--active'
         triggerText={reviewState}
         triggerTitle='Change review state'
@@ -223,11 +223,11 @@ class AssetsDetail extends React.Component {
           <div className='incontainer__hactions'>
             {this.renderReviewStatus()}
 
-            <a href={`${api}/properties/roads/${vpromm}.geojson`} className='button button--base-raised-light'>Download</a>
+            <a href={`${api}/properties/roads/${vpromm}.geojson`} className='ica-download'>Download</a>
 
             <Dropdown
               className='browse-menu'
-              triggerClassName='button button--primary-raised-dark'
+              triggerClassName='ica-pencil ica-main'
               triggerActiveClassName='button--active'
               triggerText='Edit'
               triggerTitle='Toggle menu options'

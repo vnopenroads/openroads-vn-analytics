@@ -41,18 +41,25 @@
 }
 
 .incontainer__hactions {
-  // > *:last-child:not(:first-child) {
-  //   margin-left: auto;
-  // }
+  flex: 1 0 auto;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  margin-left: $global-spacing;
 
   > *:not(:last-child) {
     margin-right: $global-spacing / 4;
+  }
+
+  .button {
+    min-width: 8rem;
   }
 }
 
 .incontainer__breadcrumb {
   position: absolute;
-  top: -$global-spacing;
+  top: -$global-spacing * 1.5;
   display: flex;
   list-style: none;
   margin: 0;
@@ -73,4 +80,40 @@
       margin: 0 ($global-spacing / 4);
     }
   }
+}
+
+
+/* Incontainer actions
+   ========================================================================== */
+
+/**
+ * "ica-" prefix stands for "incontainer action"
+ */
+
+[class^="ica-"],
+[class*=" ica-"] {
+  @extend .button;
+  min-width: 8rem;
+}
+
+.ica-main {
+  @extend .button--primary-raised-dark;
+}
+
+.ica-download,
+.ica-pencil,
+.ica-export {
+   @extend .button--base-raised-light;
+}
+
+.ica-download::before {
+  @extend %collecticon-download-2;
+}
+
+.ica-pencil::before {
+  @extend %collecticon-pencil;
+}
+
+.ica-export::before {
+  @extend %collecticon-share;
 }
