@@ -253,7 +253,7 @@ var Tasks = React.createClass({
 
   renderInstrumentPanel: function () {
     const { mode, step, renderedFeatures } = this.state;
-    const { taskCount, osmStatus, language } = this.props;
+    const { osmStatus, language, taskId } = this.props;
 
     const panelTitle = this.getPanelTitle();
     if (osmStatus === 'pending') {
@@ -273,7 +273,7 @@ var Tasks = React.createClass({
           {renderedFeatures &&
             <header className='panel__header'>
               <div className='panel__headline'>
-                <h1 className='panel__sectitle'><T>Task</T> #000</h1>
+                <h1 className='panel__sectitle'><T>Task</T> #{ taskId }</h1>
                 <p className='panel__subtitle'><time dateTime='2018-07-15T16:00'><T>Updated 2 days ago</T></time></p>
                 <h2 className='panel__title'><T>{ panelTitle }</T></h2>
               </div>
@@ -682,7 +682,7 @@ var Tasks = React.createClass({
   },
 
   render: function () {
-    const { taskId, taskStatus } = this.props;
+    const { taskId, taskCount, taskStatus } = this.props;
     const { hoverId } = this.state;
     const renderPanel = !((taskStatus === 'error' || taskStatus === 'No tasks remaining') ||
       (!taskId && taskStatus === 'pending'))
@@ -696,7 +696,7 @@ var Tasks = React.createClass({
             </div>
             <nav className='inpage__nav'>
               <ul className='inpage__menu'>
-                <li><a className='inpage__menu-link inpage__menu-link--active' href='#' title='View'><span><T>Solve</T> <small className='label'>490</small></span></a></li>
+                <li><a className='inpage__menu-link inpage__menu-link--active' href='#' title='View'><span><T>Solve</T> <small className='label'>{ taskCount }</small></span></a></li>
                 <li><a className='inpage__menu-link' href='#' title='View'><span><T>Stats</T></span></a></li>
               </ul>
             </nav>
