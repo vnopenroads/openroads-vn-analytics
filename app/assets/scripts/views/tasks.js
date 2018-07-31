@@ -14,6 +14,7 @@ import pointOnLine from '@turf/point-on-line';
 import point from 'turf-point';
 import { coordReduce } from '@turf/meta';
 import getDistance from '@turf/distance';
+import moment from 'moment';
 import {
   queryOsmEpic,
   deleteEntireWaysEpic
@@ -108,6 +109,7 @@ var Tasks = React.createClass({
     meta: React.PropTypes.object,
     task: React.PropTypes.object,
     taskId: React.PropTypes.number,
+    taskUpdatedAt: React.PropTypes.string,
     taskCount: React.PropTypes.number,
     selectOptions: React.PropTypes.object,
     selectedProvince: React.PropTypes.number,
@@ -253,8 +255,9 @@ var Tasks = React.createClass({
 
   renderInstrumentPanel: function () {
     const { mode, step, renderedFeatures } = this.state;
-    const { osmStatus, language, taskId } = this.props;
-
+    const { osmStatus, language, taskId, taskUpdatedAt } = this.props;
+    const diffDays = moment(taskUpdatedAt).diff(moment(), 'days');
+    const daysText = diffDays === 1 ? translate(language, 'day ago') : translate(language, 'days ago');
     const panelTitle = this.getPanelTitle();
     if (osmStatus === 'pending') {
       return (
@@ -274,7 +277,7 @@ var Tasks = React.createClass({
             <header className='panel__header'>
               <div className='panel__headline'>
                 <h1 className='panel__sectitle'><T>Task</T> #{ taskId }</h1>
-                <p className='panel__subtitle'><time dateTime='2018-07-15T16:00'><T>Updated 2 days ago</T></time></p>
+                <p className='panel__subtitle'><time dateTime={ taskUpdatedAt }>{ diffDays } { daysText }</time></p>
                 <h2 className='panel__title'><T>{ panelTitle }</T></h2>
               </div>
             </header>
@@ -754,6 +757,7 @@ export default compose(
     state => ({
       task: state.waytasks.geoJSON,
       taskId: state.waytasks.id,
+      taskUpdatedAt: state.waytasks.updatedAt,
       taskCount: state.waytasks.taskCount,
       taskStatus: state.waytasks.status,
       osmStatus: state.osmChange.status,
