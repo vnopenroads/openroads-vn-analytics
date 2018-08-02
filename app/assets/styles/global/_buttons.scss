@@ -33,8 +33,7 @@
     transform: none;
   }
 
-  &,
-  &:focus {
+  &, &:focus {
     outline: none; // This causes usability problems. Needs fixing.
   }
 
@@ -42,8 +41,8 @@
 
   &::before,
   &::after,
-  [class^="collecticon-"],
-  [class*=" collecticon-"] {
+  [class^="uisi-"],
+  [class*=" uisi-"] {
     font-size: 1rem;
   }
 
@@ -77,19 +76,19 @@
 /* Base Raised Light */
 
 .button--base-raised-light {
-  @include button-variation($base-font-color, "raised", "light");
+  @include button-variation($base-color, "raised", "light");
 }
 
 /* Base Raised Dark */
 
 .button--base-raised-dark {
-  @include button-variation($base-font-color, "raised", "dark");
+  @include button-variation($base-color, "raised", "dark");
 }
 
 /* Base Plain */
 
 .button--base-plain {
-  @include button-variation($base-font-color, "plain", "light");
+  @include button-variation($base-color, "plain", "light");
 }
 
 /* Primary Raised Light */
@@ -108,24 +107,6 @@
 
 .button--primary-plain {
   @include button-variation($primary-color, "plain", "light");
-}
-
-/* Secondary Raised Light */
-
-.button--secondary-raised-light {
-  @include button-variation($secondary-color, "raised", "light");
-}
-
-/* Secondary Raised Dark */
-
-.button--secondary-raised-dark {
-  @include button-variation($secondary-color, "raised", "dark");
-}
-
-/* Secondary Plain */
-
-.button--secondary-plain {
-  @include button-variation($secondary-color, "plain", "light");
 }
 
 /* Danger Raised Light */
@@ -213,7 +194,7 @@
   &::after {
     margin: 0;
   }
-  > *:not([class^="collecticon-"]):not([class*=" collecticon-"]) {
+  > *:not([class^="uisi-"]):not([class*=" uisi-"]) {
     @extend .visually-hidden;
   }
   :not(.button-group) & {
@@ -315,52 +296,4 @@
   > .button + .button {
     margin-top: -$base-border-width;
   }
-}
-
-
-/* Semantic buttons
-   ========================================================================== */
-
-.button-verify {
-  @extend .button;
-  @extend .button--small;
-  @extend .button--base-raised-light;
-}
-
-.button-edit {
-  @extend .button; 
-  @extend .button--small;
-  @extend .button--primary-raised-dark;
-}
-
-.button-stats-prev,
-.button-stats-next {
-  @extend .button;
-  @extend .button--small;
-  @extend .button--base-raised-light;
-  @extend .button--text-hidden;
-}
-
-.button-stats-prev:before {
-  @extend %collecticon-chevron-left;
-}
-
-.button-stats-next:before {
-  @extend %collecticon-chevron-right;
-}
-
-.button-search {
-  @extend .button;
-  @extend .button--base-raised-light;
-  @extend .button--text-hidden;
-
-  &:before {
-    @extend %collecticon-magnifier-right;
-  }
-}
-
-.button-filter {
-  @extend .button;
-  @extend .button--medium;
-  @extend .button--base-raised-light;
 }

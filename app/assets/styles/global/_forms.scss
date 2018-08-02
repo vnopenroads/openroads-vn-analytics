@@ -65,7 +65,7 @@ select.form__control {
   appearance: none;
   padding-right: 2rem;
   cursor: pointer;
-  background-image: url('data:image/svg+xml;utf8,' + urlencode('<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="10px" height="5px" viewBox="0 0 10 5" enable-background="new 0 0 10 5" xml:space="preserve"><g><polygon fill="#{$base-font-color}" points="5,5 0,0 10,0  "/></g></svg>'));
+  background-image: url('data:image/svg+xml;utf8,' + urlencode('<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="10px" height="5px" viewBox="0 0 10 5" enable-background="new 0 0 10 5" xml:space="preserve"><g><polygon fill="#{$link-color}" points="5,5 0,0 10,0  "/></g></svg>'));
   background-position: calc(100% - 0.5rem) center;
   background-repeat: no-repeat;
 
@@ -799,6 +799,58 @@ label[for] {
 
   &::before {
     @extend %collecticon-sm-plus;
+  }
+}
+
+
+/* Form columns (simple grid system)
+   ========================================================================== */
+
+.form__hascol {
+  @extend .clearfix;
+  margin-bottom: $global-spacing;
+
+  > *:not(.form__option) {
+    margin: ($global-spacing) 0 0 0;
+  }
+}
+
+.form__hascol--2 {
+  > * {
+    $col-group: 2;
+    @include column(6/12, $cycle: $col-group);
+
+    @for $child from 1 through $col-group {
+      &:nth-child(#{$child}) {
+        margin-top: 0;
+      }
+    }
+  }
+}
+
+.form__hascol--3 {
+  > * {
+    $col-group: 3;
+    @include column(4/12, $cycle: $col-group);
+
+    @for $child from 1 through $col-group {
+      &:nth-child(#{$child}) {
+        margin-top: 0;
+      }
+    }
+  }
+}
+
+.form__hascol--4 {
+  > * {
+    $col-group: 4;
+    @include column(3/12, $cycle: $col-group);
+
+    @for $child from 1 through $col-group {
+      &:nth-child(#{$child}) {
+        margin-top: 0;
+      }
+    }
   }
 }
 

@@ -68,6 +68,7 @@
   line-height: 1rem;
   text-transform: uppercase;
   width: 80vw;
+  color: rgba($base-font-color, 0.48);
 
   a {
     @extend .truncated;
