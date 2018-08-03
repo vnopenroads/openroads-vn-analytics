@@ -256,8 +256,8 @@ var Tasks = React.createClass({
   renderInstrumentPanel: function () {
     const { mode, step, renderedFeatures } = this.state;
     const { osmStatus, language, taskId, taskUpdatedAt } = this.props;
-    const diffDays = moment(taskUpdatedAt).diff(moment(), 'days');
-    const daysText = diffDays === 1 ? translate(language, 'day ago') : translate(language, 'days ago');
+    const diffHours = moment(taskUpdatedAt).diff(moment(), 'hours');
+    const hoursText = diffHours === 1 ? translate(language, 'hour ago') : translate(language, 'hours ago');
     const panelTitle = this.getPanelTitle();
     if (osmStatus === 'pending') {
       return (
@@ -277,7 +277,7 @@ var Tasks = React.createClass({
             <header className='panel__header'>
               <div className='panel__headline'>
                 <h1 className='panel__sectitle'><T>Task</T> #{ taskId }</h1>
-                <p className='panel__subtitle'><time dateTime={ taskUpdatedAt }>{ diffDays } { daysText }</time></p>
+                <p className='panel__subtitle'><time dateTime={ taskUpdatedAt }>{ diffHours } { hoursText }</time></p>
                 <h2 className='panel__title'><T>{ panelTitle }</T></h2>
               </div>
             </header>
