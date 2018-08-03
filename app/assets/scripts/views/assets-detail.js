@@ -15,6 +15,9 @@ import { Link, withRouter } from 'react-router';
 import bbox from '@turf/bbox';
 import mapboxgl from 'mapbox-gl';
 import c from 'classnames';
+import T, {
+  translate
+} from '../components/t';
 
 import Dropdown from '../components/dropdown';
 import AssetsEditModal from '../components/assets-edit-modal';
@@ -68,7 +71,7 @@ class AssetsDetail extends React.Component {
 
   componentDidMount () {
     this.map = new mapboxgl.Map({
-      container: 'aa-map',
+      container: 'asset-map',
       center: [106.12774207395364, 16.185396038978936],
       zoom: 4,
       style: 'mapbox://styles/mapbox/light-v9',
@@ -111,8 +114,8 @@ class AssetsDetail extends React.Component {
       type: 'line',
       source: 'road-geometry',
       paint: {
-        'line-width': 2,
-        'line-color': '#808080'
+        'line-width': 4,
+        'line-color': '#da251d'
       }
     });
 
@@ -173,8 +176,8 @@ class AssetsDetail extends React.Component {
 
     return (
       <section>
-        <h1>Attributes</h1>
-        <dl>
+        <h3>Attributes</h3>
+        <dl className='attributes-list'>
           {propNames.map(renderDlItem)}
         </dl>
       </section>
@@ -197,6 +200,7 @@ class AssetsDetail extends React.Component {
         triggerTitle='Change review state'
         direction='down'
         alignment='center' >
+        <h3 className='drop__title'><T>Review status</T></h3>
         <ul className='drop__menu drop__menu--select'>
           <li><a href='#' className={classForState('pending')} onClick={noop}>Pending</a></li>
           <li><a href='#' className={classForState('reviewed')} onClick={noop}>Reviewed</a></li>
@@ -233,20 +237,21 @@ class AssetsDetail extends React.Component {
               triggerTitle='Toggle menu options'
               direction='down'
               alignment='right' >
-              <ul className='drop__menu drop__menu--iconified'>
-                <li><a href='#' className='drop__menu-item' onClick={this.onEditProperties}>Attributes</a></li>
-                <li><Link to={`/${language}/editor?way=823`} className='drop__menu-item'>Geometry</Link></li>
+              <ul className='drop__menu drop__menu--iconified edit-menu'>
+                <li><a href='#' className='drop__menu-item em-attributes' onClick={this.onEditProperties}>Attributes</a></li>
+                <li><Link to={`/${language}/editor?way=823`} className='drop__menu-item em-geometry'>Geometry</Link></li>
               </ul>
               <ul className='drop__menu drop__menu--iconified'>
-                <li><a href='#' className='drop__menu-item' onClick={this.onEditDelete}>Delete</a></li>
+                <li><a href='#' className='drop__menu-item em-delete' onClick={this.onEditDelete}>Delete</a></li>
               </ul>
             </Dropdown>
           </div>
         </div>
 
-        <div className='aa-map-container'>
-          <div id='aa-map' className='aa-map' />
-        </div>
+        <figure className='map map--detail'>
+          <div className='map__media' id='asset-map' />
+          <figcaption className='map__caption'><T>Asset geometry.</T></figcaption>
+        </figure>
 
         {this.renderProperties()}
 
