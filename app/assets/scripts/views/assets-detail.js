@@ -234,7 +234,7 @@ class AssetsDetail extends React.Component {
           <div className='incontainer__hactions'>
             {this.renderReviewStatus()}
 
-            <a href={`${api}/properties/roads/${vpromm}.geojson`} className='ica-download'><T>Download</T></a>
+            <a href={`${api}/properties/roads/${vpromm}.geojson?download`} className='ica-download'><T>Download</T></a>
 
             <Dropdown
               className='browse-menu'

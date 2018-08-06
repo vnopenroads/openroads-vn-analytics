@@ -29,7 +29,7 @@ const RowReadView = ({
               <T>Explore</T>
             </Link>
 
-            <a className='a-table-action' href={`${api}/properties/roads/${vpromm}.geojson`}>
+            <a className='a-table-action' href={`${api}/properties/roads/${vpromm}.geojson?download`}>
               <T>Download</T>
             </a>
           </div>
