@@ -85,6 +85,15 @@ class AssetsDetail extends React.Component {
     this.map.on('load', () => {
       this.setupMapStyle();
     });
+
+    // Disable map rotation using right click + drag.
+    this.map.dragRotate.disable();
+
+    // Disable map rotation using touch rotation gesture.
+    this.map.touchZoomRotate.disableRotation();
+
+    // Remove compass.
+    document.querySelector('.mapboxgl-ctrl .mapboxgl-ctrl-compass').remove();
   }
 
   componentWillReceiveProps (nextProps) {
