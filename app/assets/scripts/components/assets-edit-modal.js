@@ -2,6 +2,9 @@
 import React, { PropTypes } from 'react';
 import c from 'classnames';
 import { clone, findIndex } from 'lodash';
+import T, {
+  translate
+} from '../components/t';
 
 import { Modal, ModalHeader, ModalBody, ModalFooter } from './modal';
 
@@ -148,7 +151,7 @@ class AssetsEditModal extends React.Component {
       <fieldset className='form__fieldset' key={id}>
         <div className='form__inner-header'>
           <div className='form__inner-headline'>
-            <legend className='form__legend'>New Property</legend>
+            <legend className='form__legend'><T>New attribute</T></legend>
           </div>
           <div className='form__inner-actions'>
             <button type='button' className={c('fia-trash', {disabled: newProperties <= 1})} title={'Delete property'} onClick={this.removeProperty.bind(this, id)}><span>Delete</span></button>
@@ -181,27 +184,34 @@ class AssetsEditModal extends React.Component {
 
         <ModalHeader>
           <div className='modal__headline'>
-            <h1 className='modal__title'>Edit attributes of {this.props.vpromm}</h1>
+            <h1 className='modal__title'><T>Edit attributes of</T> {this.props.vpromm}</h1>
           </div>
         </ModalHeader>
         <ModalBody>
           <form className={c('form', {disabled: processing})} disabled={processing}>
             <div className='inner'>
-              <div className='form__group form__group--primary'>
-                <label className='form__label' htmlFor='vpromm'>VPRoMMS</label>
-                <input type='text' id='vpromm' name='vpromm' className='form__control' value={this.state.vpromm} onChange={this.onValueChange.bind(this, 'vpromm')} />
-              </div>
+              <fieldset className='form__fieldset'>
+                <legend className='form__legend'><T>Meta</T></legend>
+                <div className='form__group'>
+                  <label className='form__label' htmlFor='vpromm'>VPRoMM ID</label>
+                  <input type='text' id='vpromm' name='vpromm' className='form__control' value={this.state.vpromm} onChange={this.onValueChange.bind(this, 'vpromm')} />
+                </div>
+              </fieldset>
 
-              {this.state.properties.map(this.renderProperties)}
+              <fieldset className='form__fieldset'>
+                <legend className='form__legend'><T>Attributes</T></legend>
+                {this.state.properties.map(this.renderProperties)}
+              </fieldset>
+
               <div className='form__extra-actions'>
-                <button type='button' className='fea-plus' title='Add new file' onClick={this.addProperty}><span>New property</span></button>
+                <button type='button' className='fea-plus' title='Add new file' onClick={this.addProperty}><span>New attribute</span></button>
               </div>
             </div>
           </form>
         </ModalBody>
         <ModalFooter>
-          <button className={c('button button--primary-raised-light', {disabled: processing})} disabled={processing} type='button' onClick={this.onCloseClick}><span>Cancel</span></button>
-          <button className={c('button button--primary-raised-light', {disabled: processing})} disabled={processing} type='submit' onClick={this.onSave}><span>Save</span></button>
+          <button className={c('mfa-xmark', {disabled: processing})} disabled={processing} type='button' onClick={this.onCloseClick}><span>Cancel</span></button>
+          <button className={c('mfa-main mfa-tick', {disabled: processing})} disabled={processing} type='submit' onClick={this.onSave}><span>Save</span></button>
         </ModalFooter>
       </Modal>
     );
