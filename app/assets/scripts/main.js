@@ -41,9 +41,9 @@ render((
         <Route path='playground' component={Playground} pageClass='playground' />
         <Route path='assets' component={Assets}>
           <IndexRoute component={AssetsIndex} pageClass='assets' />
-          <Route path='road/:vpromm' component={AssetsDetail} pageClass='assets-aa' />
-          <Route path=':aaId' component={AssetsAA} pageClass='assets-aa' />
-          <Route path=':aaId/:aaIdSub' component={AssetsAA} pageClass='assets-aa' />
+          <Route path='road/:vpromm' component={AssetsDetail} pageClass='assets-inner-canvas' />
+          <Route path=':aaId' component={AssetsAA} pageClass='assets-inner-canvas' />
+          <Route path=':aaId/:aaIdSub' component={AssetsAA} pageClass='assets-inner-canvas' />
         </Route>
         <IndexRoute component={Home} pageClass='page--landing' />
         <Route path='*' component={UhOh}/>
