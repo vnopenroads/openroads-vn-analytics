@@ -126,7 +126,16 @@ var Tasks = React.createClass({
       style: 'mapbox://styles/mapbox/light-v9',
       failIfMajorPerformanceCaveat: false,
       zoom: 12
-    }).addControl(new mapboxgl.NavigationControl(), 'bottom-left');
+    }).addControl(new mapboxgl.NavigationControl(), 'top-left');
+
+    // Disable map rotation using right click + drag.
+    this.map.dragRotate.disable();
+
+    // Disable map rotation using touch rotation gesture.
+    this.map.touchZoomRotate.disableRotation();
+
+    // Remove compass.
+    document.querySelector('.mapboxgl-ctrl .mapboxgl-ctrl-compass').remove();
 
     this.onMapLoaded(() => {
       map.on('mousemove', (e) => {

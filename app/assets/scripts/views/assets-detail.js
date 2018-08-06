@@ -80,7 +80,7 @@ class AssetsDetail extends React.Component {
     });
 
     this.map.addControl(new mapboxgl.ScaleControl({ unit: 'metric' }));
-    this.map.addControl(new mapboxgl.NavigationControl());
+    this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
 
     this.map.on('load', () => {
       this.setupMapStyle();
