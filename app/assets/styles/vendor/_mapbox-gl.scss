@@ -62,21 +62,41 @@
 .mapboxgl-ctrl-top-left {
   top: $global-spacing;
   left: $global-spacing;
+
+  @include media(xlarge-up) {
+    top: $global-spacing * 2;
+    left: $global-spacing * 2;
+  }
 }
 
 .mapboxgl-ctrl-top-right {
   top: $global-spacing;
   right: $global-spacing;
+
+  @include media(xlarge-up) {
+    top: $global-spacing * 2;
+    right: $global-spacing * 2;
+  }
 }
 
 .mapboxgl-ctrl-bottom-left {
   bottom: $global-spacing;
   left: $global-spacing;
+
+  @include media(xlarge-up) {
+    bottom: $global-spacing;
+    left: $global-spacing * 2;
+  }
 }
 
 .mapboxgl-ctrl-bottom-right {
   right: $global-spacing;
   bottom: $global-spacing;
+
+  @include media(xlarge-up) {
+    right: $global-spacing * 2;
+    bottom: $global-spacing;
+  }
 }
 
 .mapboxgl-ctrl {
