@@ -18,7 +18,8 @@ class AssetsEditModal extends React.Component {
     super(props);
 
     this.addProperty = this.addProperty.bind(this);
-    this.renderProperties = this.renderProperties.bind(this);
+    this.renderExistingProperties = this.renderExistingProperties.bind(this);
+    this.renderNewProperties = this.renderNewProperties.bind(this);
     this.onSave = this.onSave.bind(this);
     this.onCloseClick = this.onCloseClick.bind(this);
 
@@ -44,7 +45,7 @@ class AssetsEditModal extends React.Component {
         value: roadProperties[p],
         valueOriginal: roadProperties[p],
         existing: true
-      })).concat(this.getBaseProperty()),
+      })),
       propertiesToRemove: []
     };
   }
@@ -102,11 +103,6 @@ class AssetsEditModal extends React.Component {
     const newVpromm = this.state.vpromm;
     const diffVpromm = newVpromm !== originalVpromm;
 
-    console.log('propertiesToAdd', propertiesToAdd);
-    console.log('propertiesToUpdate', propertiesToUpdate);
-    console.log('propertiesToRemove', propertiesToRemove);
-    console.log('diffVpromm', diffVpromm);
-
     try {
       let successRes = {};
 
@@ -132,10 +128,8 @@ class AssetsEditModal extends React.Component {
     }
   }
 
-  renderProperties ({id, key, value, existing}) {
-    const newProperties = this.state.properties.filter(o => !o.existing).length;
-
-    return existing ? (
+  renderExistingProperties ({id, key, value}) {
+    return (
       <div className='form__group' key={id}>
         <div className='form__inner-header'>
           <div className='form__inner-headline'>
@@ -147,14 +141,20 @@ class AssetsEditModal extends React.Component {
         </div>
         <input type='text' id={id} name={id} className='form__control' value={value} onChange={this.onPropertyChange.bind(this, id, 'value')} />
       </div>
-    ) : (
+    );
+  }
+
+  renderNewProperties ({id, key, value}) {
+    const newProperties = this.state.properties.filter(o => !o.existing).length;
+
+    return (
       <fieldset className='form__fieldset' key={id}>
         <div className='form__inner-header'>
           <div className='form__inner-headline'>
             <legend className='form__legend'><T>New attribute</T></legend>
           </div>
           <div className='form__inner-actions'>
-            <button type='button' className={c('fia-trash', {disabled: newProperties <= 1})} title={'Delete property'} onClick={this.removeProperty.bind(this, id)}><span>Delete</span></button>
+            <button type='button' className={c('fia-trash')} title={'Delete property'} onClick={this.removeProperty.bind(this, id)}><span>Delete</span></button>
           </div>
         </div>
 
@@ -171,7 +171,6 @@ class AssetsEditModal extends React.Component {
       </fieldset>
     );
   }
-
   render () {
     const { processing } = this.props.roadPropsOp;
 
@@ -200,8 +199,10 @@ class AssetsEditModal extends React.Component {
 
               <fieldset className='form__fieldset'>
                 <legend className='form__legend'><T>Attributes</T></legend>
-                {this.state.properties.map(this.renderProperties)}
+                {this.state.properties.filter(o => o.existing).map(this.renderExistingProperties)}
               </fieldset>
+
+              {this.state.properties.filter(o => !o.existing).map(this.renderNewProperties)}
 
               <div className='form__extra-actions'>
                 <button type='button' className='fea-plus' title='Add new file' onClick={this.addProperty}><span>New attribute</span></button>
