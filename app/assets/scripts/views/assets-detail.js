@@ -210,12 +210,14 @@ class AssetsDetail extends React.Component {
   }
 
   render () {
-    const { vpromm, language, roadProps } = this.props;
+    const { vpromm, language, roadProps, roadGeo } = this.props;
 
     const disId = get(roadProps, 'data.district.id', null);
     const disName = get(roadProps, 'data.district.name', null);
     const provId = get(roadProps, 'data.province.id', null);
     const provName = get(roadProps, 'data.province.name', null);
+
+    const hasGeometry = get(roadGeo, 'data.features', []).length > 0;
 
     return (
       <div className='incontainer'>
@@ -253,9 +255,9 @@ class AssetsDetail extends React.Component {
           </div>
         </div>
 
-        <figure className='map map--detail'>
+        <figure className={c('map map--detail', {'map--no-geometry': !hasGeometry})}>
           <div className='map__media' id='asset-map' />
-          <figcaption className='map__caption'><T>Asset geometry.</T></figcaption>
+          <figcaption className='map__caption'>{hasGeometry ? <T>Asset geometry</T> : <T>No asset geometry</T>}</figcaption>
         </figure>
 
         {this.renderProperties()}

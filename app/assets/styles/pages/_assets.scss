@@ -580,7 +580,15 @@ td.table-properties-cell-view-buttons {
   }
 
   .map__caption {
-    @extend .visually-hidden;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+
+  &:not(.map--no-geometry) {
+    .map__caption {
+      @extend .visually-hidden;
+    }
   }
 }
 
