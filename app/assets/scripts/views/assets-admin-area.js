@@ -60,8 +60,8 @@ var AssetsAA = React.createClass({
             {children && renderAdminName(children, aaId, aaIdSub)}
 
             <ol className='incontainer__breadcrumb'>
-              <li><a title='View' href='#'>Overview</a></li>
-              <li><a title='View' href='#'>Province name</a></li>
+              <li><Link title='View' to={`${language}/assets`}>Overview</Link></li>
+              {aaIdSub && <li><Link title='View' to={`${language}/assets/${aaId}`}>{ADMIN_MAP.province[aaId].name}</Link></li>}
             </ol>
           </div>
           {!aaIdSub && aaId &&
