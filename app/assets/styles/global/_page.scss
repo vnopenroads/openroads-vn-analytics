@@ -2,7 +2,6 @@
    Global: Page
    ========================================================================== */
 
-
 /* Header
    ========================================================================== */
 
@@ -31,9 +30,9 @@
 }
 
 .site__headline {
-  line-height: 1.25rem;
-  padding: 0.325rem 0;
   flex: 0 0 auto;
+  display: flex;
+  align-items: center;
   transition: all 0.24s ease 0s;
 }
 
@@ -102,17 +101,8 @@
   font-size: 1rem;
 
   button {
-    background: transparent;
-    color: white;
-    border: 0;
-    line-height: 2rem;
-    text-align: center;
-    cursor: pointer;
-    border-radius: 0;
-
-    &::before {
-      line-height: inherit !important;
-    }
+    @extend .button, .button--achromic-plain, .button--text-hidden;
+    vertical-align: top;
 
     .site__nav-block--reveal & {
       background: rgba(#fff, 0.12);
@@ -152,6 +142,7 @@
   box-shadow: 0 0 0 2px rgba(#fff, 0.12);
   min-width: 10rem;
   list-style: none;
+  text-align: left;
 
   > li {
     &:first-child {
@@ -169,22 +160,27 @@
 
   .site__nav-block--global & {
     flex-direction: row;
-    margin: 0 0 0 ($global-spacing / 2);
+    margin: 0 0 0 ($global-spacing / 1.5);
     padding: 0 0 0 ($global-spacing / 2);
-    box-shadow: inset 2px 0 0 0 rgba(#fff, 0.12);
+    box-shadow: inset 1px 0 0 0 rgba(#fff, 0.12);
     border-radius: 0;
   }
 }
 
 .site__menu-item {
-  display: block;
-  line-height: 2rem;
-  padding: 0 ($global-spacing / 2);
-  font-weight: $base-font-bold;
+  @extend .button, .button--achromic-plain;
 
   &--active {
-    background: rgba(#fff, 0.12);
-    border-radius: $base-border-radius;
+    @button--active;
+  }
+}
+
+.site__nav-block--global {
+  .site__menu-block {
+    overflow: visible;
+  }
+  .site__menu li:last-child {
+    margin-right: -$global-spacing / 2;
   }
 }
 
