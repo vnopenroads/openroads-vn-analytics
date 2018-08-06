@@ -2,7 +2,8 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import {
   toPairs,
-  find
+  find,
+  get
 } from 'lodash';
 import {
   compose,
@@ -209,7 +210,12 @@ class AssetsDetail extends React.Component {
   }
 
   render () {
-    const { vpromm, language } = this.props;
+    const { vpromm, language, roadProps } = this.props;
+
+    const disId = get(roadProps, 'data.district.id', null);
+    const disName = get(roadProps, 'data.district.name', null);
+    const provId = get(roadProps, 'data.province.id', null);
+    const provName = get(roadProps, 'data.province.name', null);
 
     return (
       <div className='incontainer'>
@@ -218,9 +224,9 @@ class AssetsDetail extends React.Component {
             <h2 className='incontainer__title'>{vpromm}</h2>
 
             <ol className='incontainer__breadcrumb'>
-              <li><a title='View' href='#'>Overview</a></li>
-              <li><a title='View' href='#'>Province name</a></li>
-              <li><a title='View' href='#'>District name</a></li>
+              <li><Link title='View assets page' to={`/${language}/assets`}>Overview</Link></li>
+              {provId && <li><Link title='View province page' to={`/${language}/assets/${provId}`}>{provName}</Link></li>}
+              {disId && <li><Link title='View district page' to={`/${language}/assets/${provId}/${disId}`}>{disName}</Link></li>}
             </ol>
           </div>
           <div className='incontainer__hactions'>
