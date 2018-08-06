@@ -24,9 +24,7 @@ const renderAdminName = (children, aaId, aaIdSub) => {
     ADMIN_MAP.province[aaId].name;
 
   return (
-    <div className='a-headline'>
-      <h1>{adminName}</h1>
-    </div>
+    <h2 className='incontainer__title'>{adminName}</h2>
   );
 };
 
@@ -56,62 +54,41 @@ var AssetsAA = React.createClass({
     const { adminInfoFetched, language, adminInfo: { children }, params: { aaId, aaIdSub } } = this.props;
 
     return (
-      <div ref='a-admin-area' className='a-admin-area-show'>
-        <section>
-          <header className='a-header'>
-            {
-              children && renderAdminName(children, aaId, aaIdSub)
-            }
-            {
-              !aaIdSub && aaId &&
-                <div className='a-head-actions'>
-                  <a
-                    className='button button--primary-raised-dark'
-                    href={`${config.provinceDumpBaseUrl}${aaId}.csv`}
-                    target="_blank"
-                  >
-                    <T>Download Roads</T>
-                  </a>
-                </div>
-            }
-          </header>
-          {
-            aaIdSub ?
-              <div className="back-button">
-                <i className="collecticon-chevron-left" />
-                <Link
-                  to={`/${this.props.language}/assets/${aaId}`}
-                >
-                  {ADMIN_MAP.province[aaId].name}
-                </Link>
-              </div> :
-              <div className="back-button">
-                <i className="collecticon-chevron-left" />
-                <Link
-                  to={`/${this.props.language}/assets`}
-                >
-                  <T>Provinces</T>
-                </Link>
-              </div>
-          }
-          <div>
-            {
-              !aaIdSub && adminInfoFetched &&
-                <DistrictList
-                  districts={children}
-                  aaId={aaId}
-                  language={language}
-                />
-            }
+      <div className='incontainer'>
+        <div className='incontainer__header'>
+          <div className='incontainer__headline'>
+            {children && renderAdminName(children, aaId, aaIdSub)}
 
-            <RoadTable />
+            <ol className='incontainer__breadcrumb'>
+              <li><a title='View' href='#'>Overview</a></li>
+              <li><a title='View' href='#'>Province name</a></li>
+            </ol>
           </div>
-        </section>
+          {!aaIdSub && aaId &&
+          <div className='incontainer__hactions'>
+            <a href={`${config.provinceDumpBaseUrl}${aaId}.csv`} className='ica-download'><T>Download</T></a>
+            <a href='#' className='ica-plus ica-main'><T>Add assets</T></a>
+          </div>
+          }
+        </div>
+
+        <div>
+          {
+            !aaIdSub && adminInfoFetched &&
+              <DistrictList
+                districts={children}
+                aaId={aaId}
+                language={language}
+              />
+          }
+        </div>
+
+        <RoadTable />
+
       </div>
     );
   }
 });
-
 
 export default compose(
   getContext({ language: React.PropTypes.string }),

@@ -149,8 +149,7 @@ class AssetsDetail extends React.Component {
       title: 'Delete road',
       body: (
         <div>
-          <p>Are you sure you want to delete road {this.props.vpromm}?</p>
-          <p>This action is irreversible.</p>
+          <p><T>Are you sure you want to delete road {this.props.vpromm}? Note that this action is irreversible.</T></p>
         </div>
       )
     }, () => {
@@ -227,7 +226,7 @@ class AssetsDetail extends React.Component {
           <div className='incontainer__hactions'>
             {this.renderReviewStatus()}
 
-            <a href={`${api}/properties/roads/${vpromm}.geojson`} className='ica-download'>Download</a>
+            <a href={`${api}/properties/roads/${vpromm}.geojson`} className='ica-download'><T>Download</T></a>
 
             <Dropdown
               className='browse-menu'
