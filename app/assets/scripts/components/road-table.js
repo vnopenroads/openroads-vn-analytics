@@ -29,7 +29,7 @@ const RoadTable = ({
         <div className='a-subnav loading'><h2><T>Loading</T></h2></div> :
         roadsPageStatus === 'error' ?
           <div className='a-subnav error'><h2><T>Error</T></h2></div> :
-          <div className="table">
+          <div className="table a-table">
             <table>
               <thead>
                 <tr>

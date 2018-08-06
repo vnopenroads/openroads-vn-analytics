@@ -2,447 +2,60 @@
    Page: Assets
    ========================================================================== */
 
-.assets,
-.assets-aa {
-  .aa-main {
-    @extend .row;
-    @extend .row--centered;
-  }
+ .a-main__status {
+   min-height: 4.5rem;
+   padding: 0.5rem 1rem;
+   margin: 1rem 0 2rem 0;
+   border: 1px solid rgb(220, 220, 220);
+   border-radius: $base-border-radius;
+   background-color: #FFF;
 
-  .a-header {
-    display: flex;
-    width: 100%;
-    padding: $global-spacing 0 $global-spacing 0;
-    align-items: center;
-  }
+   h2 {
+     font-size: 0.8rem;
+     color: $base-color;
+     font-weight: 400;
+     margin: 0.2rem 1rem 0 0.2rem;
+     display: block;
 
-  .a-headline h1 {
-    @include heading(1.25rem, large-up);
-    margin: 0;
-  }
+     strong {
+       font-weight: 800;
+       font-size: 1rem;
+       color: $base-color;
+     }
+   }
+   .field-data {
+     * {
+       margin-right: .5rem;
+     }
+   }
+ }
 
-  .a-head-actions {
-    flex: 1 1 auto;
-    text-align: right;
-    font-size: 0;
-    white-space: nowrap;
+.meter {
+  position: relative;
+  width: 100%;
+  margin: 0.4rem 0 0.5rem;
+  height: 1rem;
+  border-radius: $full-border-radius;
+  background: rgba($base-color, 0.12);
+  border: 0;
+  overflow: hidden;
 
-    > * {
-      display: inline-block;
-    }
-
-    .drop-content {
-      margin-top: $global-spacing / 4;
-      width: 100%;
-      left: auto;
-      right: 0;
-    }
-  }
-
-
-  .a-main__status {
-    min-height: 4.5rem;
-    padding: 0.5rem 1rem;
-    margin: 1rem 0 2rem 0;
-    border: 1px solid rgb(220, 220, 220);
-    border-radius: $base-border-radius;
-    background-color: #FFF;
-
-    h2 {
-      font-size: 0.8rem;
-      color: $base-color;
-      font-weight: 400;
-      margin: 0.2rem 1rem 0 0.2rem;
-      display: block;
-
-      strong {
-        font-weight: 800;
-        font-size: 1rem;
-        color: $base-color;
-      }
-    }
-    .field-data {
-      * {
-        margin-right: .5rem;
-      }
-    }
-  }
-
-  .a-main__create-row {
-    fieldset {
-      border: none;
-      margin: 0;
-      padding: 0;
-    }
-    button.create-new-road {
-      color: #444;
-      margin-bottom: 4px;
-      &:hover {
-        color: $secondary-color;
-      }
-      i {
-        margin-right: 6px;
-      }
-    }
-    .a-main__create-row-form {
-      min-height: 4.5rem;
-      padding: 0.5rem 1rem;
-      margin: 1rem 0 2rem 0;
-      border: 1px solid rgb(220, 220, 220);
-      border-radius: $base-border-radius;
-      background-color: #FFF;
-
-      button {
-        margin: 0 8px;
-        padding: 2px 12px;
-        font-size: 14px;
-        &[disabled],
-        &:disabled {
-          background-color: lighten($secondary-color, 20);
-          cursor: not-allowed;
-        }
-      }
-      input {
-        margin-bottom: 1rem;
-      }
-      p.invalid {
-        color: $secondary-color;
-      }
-    }
-  }
-
-  .meter {
-    position: relative;
-    width: 100%;
-    margin: 0.4rem 0 0.5rem;
+  .meter__internal {
     height: 1rem;
-    border-radius: $full-border-radius;
-    background: rgba($base-color, 0.12);
-    border: 0;
-    overflow: hidden;
-
-    .meter__internal {
-      height: 1rem;
-      background-color: $primary-color;
-    }
-
-    &::after {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 2;
-      content: '';
-      pointer-events: none;
-      box-shadow: inset 0 0 0 1px $base-alpha-color;
-      border-radius: $full-border-radius;
-    }
-  }
-
-  .collecticons {
-    margin-right: 0.25rem;
-  }
-}
-
-
-// Tables
-
-.table-container {
-  .error,
-  .loading {
-    height: 1077px;
-    border: 1px solid rgb(220, 220, 220);;
-    border-radius: $base-border-radius;
-    margin-bottom: 10rem;
-
-    h2 {
-      text-align: center;
-      margin: 6rem;
-    }
-  }
-  .table {
-    margin-bottom: 2rem;
-
-    .edit-row,
-    .delete-row,
-    .error-row {
-      fieldset {
-        border: none;
-        margin: 0;
-        padding: 0;
-      }
-      td {
-        padding: 1rem 0.5rem;
-      }
-      p {
-        margin-bottom: 0;
-      }
-      p.invalid {
-        color: $secondary-color;
-        margin-top: 12px;
-      }
-      button {
-        margin: 0 8px;
-        padding: 2px 12px;
-        &[disabled],
-        &:disabled {
-          background-color: lighten($secondary-color, 20);
-          cursor: not-allowed;
-        }
-      }
-    }
-  }
-}
-
-.a-table-action {
-  @extend .button, .button--small, .button--base-raised-light;
-  margin: 0 ($global-spacing / 4) 0 0;
-  min-width: 5rem;
-}
-
-.table-properties-head {
-  width: 20rem;
-  &.sortable {
-    cursor: pointer;
-  }
-}
-
-.table-properties-head.button-column {
-  width: 70px;
-}
-
-td.table-properties-cell-view-buttons {
-  button {
-    cursor: pointer;
-    border: none;
-    padding: 5px;
-    background-color: transparent;
-    &::before {
-      color: #666;
-    }
-  }
-}
-
-.table-properties-head,
-.table-properties-cell {
-  text-align: left;
-}
-
-.table-properties {
-  transform: translateZ(0);
-  overflow: scroll;
-  height: auto;
-  max-height: 16rem;
-  margin: ($global-spacing / 2) 0 0 0;
-  opacity: 1;
-}
-
-.button-table-expand {
-  @extend .button, .button--small, .button--base-raised-light;
-  min-width: 4.5rem;
-
-  * {
-    vertical-align: top;
+    background-color: $primary-color;
   }
 
   &::after {
-    opacity: 0.48;
-    font-size: 1rem;
-    margin-left: 0.25rem;
-    line-height: inherit;
-    vertical-align: top;
-  }
-}
-
-.button-table-expand--show::after {
-  @extend %collecticon-sm-chevron-down;
-}
-
-.button-table-expand--hide::after {
-  @extend %collecticon-sm-chevron-up;
-}
-
-.table-properties-list {
-  text-align: left;
-  font-size: .875rem;
-  overflow-wrap: break-word;
-
-  .table-properties-row {
-    height: 1rem;
-    box-shadow: 0 0 0 1px #ddd;
-
-    &.pending {
-      color: #aaa;
-    }
-    &.error {
-      border: 0;
-      margin: 0;
-    }
-
-    .property-edited {
-      color: $success-color;
-      float: right;
-      line-height: 2rem;
-    }
-
-    .error-message {
-      color: $secondary-color;
-    }
-
-    .property-key,
-    .property-value {
-      padding: 0 6px;
-      line-height: 2rem;
-      border-bottom: 2px solid transparent;
-    }
-    .property-key {
-      padding-right: $global-spacing / 2;
-      padding-left: 0;
-      font-weight: $base-font-bold;
-    }
-    .property-value {
-      padding-left: $global-spacing / 2;
-      cursor: pointer;
-      &:hover {
-        border-bottom: 2px solid #aaa;
-      }
-    }
-    .delete-propery {
-      padding: 0;
-      color: #ccc;
-      font-weight: 200;
-      min-width: 24px;
-
-      &:hover {
-        color: #aaa;
-      }
-
-      &::before {
-        margin: 0;
-      }
-    }
-    .property-value-input {
-      fieldset {
-        margin: 0;
-        border: 0;
-        padding: 0;
-      }
-      input {
-        padding: 0 6px;
-        margin: 0;
-        line-height: 24px;
-      }
-    }
-    .confirm-delete {
-      font-weight: 400;
-      margin-bottom: 4px;
-      button {
-        margin-left: 12px;
-        padding: 0px 12px;
-        font-size: 12px;
-      }
-    }
-  }
-}
-
-.create-road-property-form {
-  margin: 1rem 0;
-
-  fieldset {
-    border: 0;
-    padding: 0;
-    margin: 0;
-  }
-
-  h3 {
-    font-size: 16px;
-    font-weight: 400;
-    margin-bottom: 4px;
-    line-height: 28px;
-    padding: 0;
-    color: $secondary-color;
-  }
-
-  input {
-    display: inline-block;
-    width: 46%;
-    margin-right: 4px;
-    font-size: 14px;
-    padding: 2px 4px;
-    border: 0;
-    border-bottom: 1px solid #ccc;
-
-    &:hover {
-      border-bottom: 1px solid #999;
-    }
-
-    &.key-input {
-      font-weight: 600;
-    }
-  }
-
-  button.submit,
-  button.cancel {
-    margin: 1rem 0;
-    padding: 0px 12px;
-    margin-right: 20px;
-    font-size: 12px;
-  }
-  button.submit {
-    &[disabled],
-    &:disabled {
-      background-color: lighten($secondary-color, 20);
-      cursor: not-allowed;
-    }
-  }
-  button.cancel {
-    &[disabled],
-    &:disabled {
-      background-color: #efefef;
-      cursor: not-allowed;
-    }
-  }
-
-  .create-new-property {
-    color: #444;
-    margin-bottom: 4px;
-    padding: 0;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 28px;
-    &:hover {
-      color: $secondary-color;
-    }
-    i {
-      position: relative;
-      bottom: 1px;
-      margin-right: 6px;
-    }
-  }
-
-  .error-message {
-    color: $secondary-color
-  }
-}
-
-.table-properties-chart {
-  .bar {
-    display: inline-block;
-    height: 10px;
-    background-color: $secondary-color;
-  }
-
-  dt {
-    margin-bottom: 0;
-  }
-  dd {
-    margin-bottom: 6px;
-  }
-
-  dd > .value {
-    padding-left: $global-spacing / 2;
-    font-size: 14px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    content: '';
+    pointer-events: none;
+    box-shadow: inset 0 0 0 1px $base-alpha-color;
+    border-radius: $full-border-radius;
   }
 }
 
@@ -511,12 +124,18 @@ td.table-properties-cell-view-buttons {
   }
 }
 
+.a-table {
+  margin-bottom: $global-spacing * 2;
+}
 
-// paginator
+.a-table-action {
+  @extend .button, .button--small, .button--base-raised-light;
+  margin: 0 ($global-spacing / 4) 0 0;
+}
 
 .a-paginator {
   text-align: center;
-  margin-bottom: 8rem;
+
   li {
     display: inline-block;
     margin-right: 0.5rem;
@@ -530,19 +149,6 @@ td.table-properties-cell-view-buttons {
     strong {
       color: $secondary-color
     }
-  }
-}
-
-.aa-map-container {
-  position: relative;
-  width: 100%;
-  height: 16rem;
-  margin-bottom: $global-spacing * 3;
-
-  .aa-map {
-    position: absolute;
-    width: 100%;
-    height: 100%;
   }
 }
 
