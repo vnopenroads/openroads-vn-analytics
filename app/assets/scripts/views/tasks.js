@@ -9,6 +9,7 @@ import mapboxgl from 'mapbox-gl';
 import config from '../config';
 import getExtent from 'turf-extent';
 import c from 'classnames';
+import { Link, withRouter } from 'react-router';
 import intersect from '@turf/line-intersect';
 import pointOnLine from '@turf/point-on-line';
 import point from 'turf-point';
@@ -459,7 +460,7 @@ var Tasks = React.createClass({
       <div className='panel__f-actions'>
         <button type='button' className='pfa-secondary' onClick={ this.doMore }><span><T>Do more</T></span></button>
         <button type='button' onClick={ this.next } className='pfa-primary'><span><T>Next task</T></span></button>
-      </div>                  
+      </div>
     );
   },
 
@@ -540,7 +541,7 @@ var Tasks = React.createClass({
   renderStep2: function() {
     const { mode, selectedStep0 } = this.state;
     const { language } = this.props;
-  
+
     const numRoads = mode === 'dedupe' ? selectedStep0.length - 1 : 2;
     const roadStr = numRoads === 1 ? translate(language, 'road was') : translate(language, 'roads were');
     const actionStr = mode === 'dedupe' ? translate(language, 'removed') : translate(language, 'intersected');
@@ -549,8 +550,8 @@ var Tasks = React.createClass({
         <div className='prose task-prose'>
           <p>{numRoads} {roadStr} {actionStr} <T>and submitted to the system for review.</T></p>
           <p><T>Do you want to continue to work on this task or move to the next one?</T></p>
-        </div>      
-      </div>      
+        </div>
+      </div>
     );
   },
 
@@ -699,8 +700,8 @@ var Tasks = React.createClass({
             </div>
             <nav className='inpage__nav'>
               <ul className='inpage__menu'>
-                <li><a className='inpage__menu-link inpage__menu-link--active' href='#' title='View'><span><T>Solve</T> <small className='label'>{ taskCount }</small></span></a></li>
-                <li><a className='inpage__menu-link' href='#' title='View'><span><T>Stats</T></span></a></li>
+                <li><Link to={`/${this.props.language}/tasks`} className='inpage__menu-link' activeClassName='inpage__menu-link--active' title='View'><span><T>Solve</T> <small className='label'>{ taskCount }</small></span></Link></li>
+                <li><a className='inpage__menu-link disabled' href='#' title='View'><span><T>Stats</T></span></a></li>
               </ul>
             </nav>
             <div className='inpage__actions'>
