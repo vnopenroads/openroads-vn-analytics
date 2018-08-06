@@ -580,9 +580,24 @@ td.table-properties-cell-view-buttons {
   }
 
   .map__caption {
+    @extend .antialiased;
     position: absolute;
-    top: 50%;
-    left: 50%;
+    z-index: 120;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba($base-color, 0.64);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    text-shadow: 0 0 16px rgba($base-color, 0.48);
+
+    > *:last-child {
+      margin-bottom: 0;
+    }
   }
 
   &:not(.map--no-geometry) {

@@ -257,7 +257,7 @@ class AssetsDetail extends React.Component {
 
         <figure className={c('map map--detail', {'map--no-geometry': !hasGeometry})}>
           <div className='map__media' id='asset-map' />
-          <figcaption className='map__caption'>{hasGeometry ? <T>Asset geometry</T> : <T>No asset geometry</T>}</figcaption>
+          <figcaption className='map__caption'><p>{hasGeometry ? <T>Asset geometry</T> : <T>This asset doesn't contain geometry.</T>}</p></figcaption>
         </figure>
 
         {this.renderProperties()}
