@@ -30,74 +30,68 @@ const SiteHeader = ({language, pathname}) => (
 
       <nav className='site__nav' role='navigation'>
         <Dropdown
-          className='menu-language'
+          className='site__menu-language'
           triggerClassName='button-language'
           triggerActiveClassName='button--active'
-          triggerText={language}
+          triggerText={language === 'en' ? 'English' : 'Tiếng Việth'}
           triggerTitle={translate(language, 'Change Language')}
           direction='down'
-          alignment='center' >
+          alignment='left' >
           <ul className='drop__menu drop__menu--select'>
             <li><Link to={pathname.replace(/^\/[a-z]+/, '/en')} className={classForLanguage(language, 'en')}>English</Link></li>
             <li><Link to={pathname.replace(/^\/[a-z]+/, '/vi')} className={classForLanguage(language, 'vi')}>Tiếng Việt</Link></li>
           </ul>
         </Dropdown>
-
-        <div className={`site__nav-block site__nav-block--global`}>
-          <h2 className='site__menu-toggle'><T>Menu</T></h2>
-          <div className='site__menu-block' id='menu-block-global'>
-            <ul className='site__menu'>
-              <li>
-                <Link
-                  to={`/${language}/assets`}
-                  className='site__menu-item'
-                  activeClassName='site__menu-item--active'>
-                  <T>Assets</T>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to={`/${language}/explore`}
-                  className='site__menu-item'
-                  activeClassName='site__menu-item--active'>
-                  <T>Explore</T>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to={`/${language}/editor`}
-                  className='site__menu-item'
-                  activeClassName='site__menu-item--active'>
-                  <T>Editor</T>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to={`/${language}/tasks`}
-                  className='site__menu-item'
-                  activeClassName='site__menu-item--active'>
-                  <T>Tasks</T>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to={`/${language}/upload`}
-                  className='site__menu-item'
-                  activeClassName='site__menu-item--active'>
-                  <T>Upload</T>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to={`/${language}/faq`}
-                  className='site__menu-item'
-                  activeClassName='site__menu-item--active'>
-                  <T>FAQ</T>
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <ul className='site__menu-global'>
+          <li>
+            <Link
+              to={`/${language}/assets`}
+              className='site__menu-global-item'
+              activeClassName='site__menu-global-item--active'>
+              <T>Assets</T>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to={`/${language}/explore`}
+              className='site__menu-global-item'
+              activeClassName='site__menu-global-item--active'>
+              <T>Explore</T>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to={`/${language}/editor`}
+              className='site__menu-global-item'
+              activeClassName='site__menu-global-item--active'>
+              <T>Editor</T>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to={`/${language}/tasks`}
+              className='site__menu-global-item'
+              activeClassName='site__menu-global-item--active'>
+              <T>Tasks</T>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to={`/${language}/upload`}
+              className='site__menu-global-item'
+              activeClassName='site__menu-global-item--active'>
+              <T>Upload</T>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to={`/${language}/faq`}
+              className='site__menu-global-item'
+              activeClassName='site__menu-global-item--active'>
+              <T>FAQ</T>
+            </Link>
+          </li>
+        </ul>
       </nav>
     </div>
   </header>

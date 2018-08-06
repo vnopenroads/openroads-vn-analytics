@@ -11,7 +11,7 @@
   color: #fff;
   padding: $global-spacing 0;
   position: relative;
-  z-index: 99999;
+  z-index: 200;
   transition: all 0.24s ease 0s;
 
   > .inner {
@@ -68,120 +68,34 @@
   flex: 1 1 auto;
 }
 
-.site__nav-block {
-  position: relative;
-}
-
-.site__menu-block {
-  position: absolute;
-  right: 0;
-  top: 1.5rem;
-  overflow: hidden;
-  max-height: 0;
-  opacity: 1;
-
-  transition: all 0.24s ease 0s;
-
-  .site__nav-block--reveal & {
-    overflow: visible;
-    max-height: 64rem;
-    opacity: 1;
-    top: 2.5rem;
-  }
-
-  .site__nav-block--global & {
-    position: static;
-    max-height: 64rem;
-    opacity: 1;
-  }
-}
-
-.site__menu-toggle {
-  margin: 0;
-  font-size: 1rem;
-
-  button {
-    @extend .button, .button--achromic-plain, .button--text-hidden;
-    vertical-align: top;
-
-    .site__nav-block--reveal & {
-      background: rgba(#fff, 0.12);
-    }
-  }
-
-  span {
-    @extend .visually-hidden;
-  }
-
-  .site__nav-block--language & {
-    button::before {
-      @extend %collecticon-globe;
-    }
-  }
-
-  .site__nav-block--global & {
-    @extend .visually-hidden;
-  }
-}
-
-.back-button {
-  padding-bottom: 14px;
-
-  i {
-    margin-right: 4px;
-    color: $secondary-color;
-  }
-}
-
-.site__menu {
-  display: flex;
-  flex-direction: column;
-  padding: 0.5rem;
-  background: $base-color;
-  border-radius: $base-border-radius;
-  box-shadow: 0 0 0 2px rgba(#fff, 0.12);
-  min-width: 10rem;
+.site__menu-global {
   list-style: none;
-  text-align: left;
+  display: flex;
+  flex-direction: row;
+  margin: 0 0 0 ($global-spacing / 2);
+  padding: 0 0 0 ($global-spacing / 2);
+  box-shadow: -1px 0 0 0 rgba(#fff, 0.12);
 
   > li {
-    &:first-child {
-      margin-left: 0;
-    }
+    margin-right: $global-spacing / 4;
 
     &:last-child {
-      margin-right: 0;
+      margin-right: -$global-spacing / 2;
     }
-
-    .site__nav-block--global & {
-      margin: 0 ($global-spacing / 4);
-    }
-  }
-
-  .site__nav-block--global & {
-    flex-direction: row;
-    margin: 0 0 0 ($global-spacing / 1.5);
-    padding: 0 0 0 ($global-spacing / 2);
-    box-shadow: inset 1px 0 0 0 rgba(#fff, 0.12);
-    border-radius: 0;
   }
 }
 
-.site__menu-item {
+.button-language,
+.site__menu-global-item {
   @extend .button, .button--achromic-plain;
 
   &--active {
-    @button--active;
+    @extend .button--active;
   }
 }
 
-.site__nav-block--global {
-  .site__menu-block {
-    overflow: visible;
-  }
-  .site__menu li:last-child {
-    margin-right: -$global-spacing / 2;
-  }
+.button-language {
+  @extend .drop__toggle--caret;
 }
 
 

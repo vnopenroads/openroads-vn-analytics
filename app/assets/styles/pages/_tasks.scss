@@ -159,3 +159,12 @@
     @extend .visually-hidden;
   }
 }
+
+.Select-control {
+  height: 2rem;
+  border: 0;
+}
+
+.Select-input {
+  height: 2rem;
+}
