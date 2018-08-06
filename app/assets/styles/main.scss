@@ -41,7 +41,7 @@
  * https://github.com/kennethormandy/normalize-opentype.css
  */
 
-@import "vendor/normalize-opentype";
+// @import "vendor/normalize-opentype";
 
 
 /* Settings
@@ -86,6 +86,7 @@
 @import "pages/upload";
 @import "pages/tasks";
 @import "pages/faq";
+@import "pages/playground";
 
 
 /* Components

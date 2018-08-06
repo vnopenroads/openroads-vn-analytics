@@ -14,6 +14,7 @@ import pointOnLine from '@turf/point-on-line';
 import point from 'turf-point';
 import { coordReduce } from '@turf/meta';
 import getDistance from '@turf/distance';
+import moment from 'moment';
 import {
   queryOsmEpic,
   deleteEntireWaysEpic
@@ -34,6 +35,7 @@ import { createModifyLineString } from '../utils/to-osm';
 import T, {
   translate
 } from '../components/t';
+import TaskListItem from '../components/task-list-item';
 import Select from 'react-select';
 import _ from 'lodash';
 
@@ -78,13 +80,19 @@ var Tasks = React.createClass({
   getInitialState: function () {
     return {
       renderedFeatures: null,
-      mode: null,
-      hoverId: null,
+      mode: 'dedupe',
+
+       // Steps are 0, 1 and 2 in accordance with new step workflow
+      step: 0,
+      hoverId: '',
       selectedIds: [],
+      selectedStep0: [], // ids of selected features in step 0
+      selectedStep1: null, // in step "1", there can only ever be one id selected
       selectedProvince: null,
-      selectedVprommids: [],
-      chooseVprommids: false,
-      applyVprommid: null
+      selectedVpromm: null,
+      // selectedVprommids: [],
+      // chooseVprommids: false,
+      // applyVprommid: null
     };
   },
 
@@ -101,6 +109,7 @@ var Tasks = React.createClass({
     meta: React.PropTypes.object,
     task: React.PropTypes.object,
     taskId: React.PropTypes.number,
+    taskUpdatedAt: React.PropTypes.string,
     taskCount: React.PropTypes.number,
     selectOptions: React.PropTypes.object,
     selectedProvince: React.PropTypes.number,
@@ -132,63 +141,21 @@ var Tasks = React.createClass({
           id = '';
         }
 
-        this.setState({hoverId: id}); // eslint-disable-line react/no-did-mount-set-state
-        map.setFilter(roadHoverId, ['==', '_id', id]);
+        this.hoverItemOver(id);
       });
 
       map.on('click', (e) => {
+        const { step } = this.state;
         let features = map.queryRenderedFeatures(e.point, { layers: [ roadHoverId ] });
         if (features.length && features[0].properties._id) {
           let featId = features[0].properties._id;
-          let selectedIds;
-          let vprommid = [features[0].properties.or_vpromms ? features[0].properties.or_vpromms : 'No ID'];
-          let selectedVprommids = vprommid.concat(this.state.selectedVprommids);
-          let chooseVprommids = false;
-          let applyVprommid = null;
-
-          if (this.state.mode === 'dedupe') {
-            selectedIds = [featId];
-            const uniqVprommids = _.uniq(this.state.selectedVprommids.filter((x) => { return x !== 'No ID'; }));
-            // check here for if vprommid selection is needed. here are the cases:
-            if (uniqVprommids.length === 0) {
-              // 2. if all are null - don't do anything.
-              chooseVprommids = false;
-              applyVprommid = 'No ID';
-            }
-
-            if (uniqVprommids.length === 1) {
-              // 1. if all roads have same vprommid - don't do anything.
-              chooseVprommids = false;
-              applyVprommid = uniqVprommids[0];
-            }
-
-            if (uniqVprommids.length > 1) {
-              chooseVprommids = true;
-              applyVprommid = null;
-              selectedVprommids = uniqVprommids.concat('No ID');
-            }
-          } else if (this.state.mode === 'join') {
-            if (this.state.selectedIds[0] === featId) {
-              // in join, don't allow de-selecting the initially selected road
-              selectedIds = [].concat(this.state.selectedIds);
-            } else {
-              // in join, there can only be 2 selections
-              selectedIds = [this.state.selectedIds[0], featId];
-            }
+          if (step === 0) {
+            this.selectStep0(featId);
+          } else if (step === 1) {
+            this.selectStep1(featId);
           } else {
-            // Clone the selected array.
-            selectedIds = [].concat(this.state.selectedIds);
-            let idx = findIndex(selectedIds, o => o === featId);
-
-            if (idx === -1) {
-              selectedIds.push(featId);
-            } else {
-              selectedIds.splice(idx, 1);
-            }
+            return;
           }
-
-          map.setFilter(roadSelected, ['in', '_id'].concat(selectedIds));
-          this.setState({ selectedIds, selectedVprommids, chooseVprommids, applyVprommid }); // eslint-disable-line react/no-did-mount-set-state
         }
       });
     });
@@ -225,6 +192,11 @@ var Tasks = React.createClass({
     const features = this.state.renderedFeatures;
     const { map } = this;
     const existingSource = map.getSource(source);
+    const selectedIds = [].concat(this.state.selectedStep0);
+    if (this.state.selectedStep1) {
+      selectedIds.push(this.state.selectedStep1);
+    }
+    const hoverId = this.state.hoverId;
     if (!existingSource) {
       map.addSource(source, {
         type: 'geojson',
@@ -240,7 +212,8 @@ var Tasks = React.createClass({
       linear: true,
       padding: 25
     });
-    map.setFilter(roadSelected, ['in', '_id'].concat(this.state.selectedIds));
+    map.setFilter(roadSelected, ['in', '_id'].concat(selectedIds));
+    map.setFilter(roadHoverId, ['==', '_id', hoverId]);
   },
 
   renderPropertiesOverlay: function () {
@@ -264,13 +237,31 @@ var Tasks = React.createClass({
     );
   },
 
-  renderInstrumentPanel: function () {
-    const { mode, renderedFeatures } = this.state;
-    const { taskCount, osmStatus } = this.props;
+  getPanelTitle: function() {
+    const { mode, step } = this.state;
+    if (step === 0) {
+      return 'Prepare workflow';
+    }
+    if (step === 1 && mode === 'dedupe') {
+      return 'Remove duplicates';
+    }
+    if (step === 1 && mode === 'join') {
+      return 'Create intersection';
+    }
+    if (step === 2) {
+      return 'Workflow completed'
+    }
+  },
 
+  renderInstrumentPanel: function () {
+    const { mode, step, renderedFeatures } = this.state;
+    const { osmStatus, language, taskId, taskUpdatedAt } = this.props;
+    const diffHours = moment(taskUpdatedAt).diff(moment(), 'hours');
+    const hoursText = diffHours === 1 ? translate(language, 'hour ago') : translate(language, 'hours ago');
+    const panelTitle = this.getPanelTitle();
     if (osmStatus === 'pending') {
       return (
-        <div className='map__controls map__controls--top-right'>
+        <div className='map__controls map__controls--column-right'>
           <div className='panel tasks-panel'>
             <div className='panel__body'>
               <h2><T>Performing action...</T></h2>
@@ -280,162 +271,323 @@ var Tasks = React.createClass({
       );
     }
     return (
-      <div className='map__controls map__controls--top-right'>
-        <div className='panel tasks-panel'>
+      <div className='map__controls map__controls--column-right'>
+        <article className='panel task-panel'>
           {renderedFeatures &&
-            <div className='panel__header'>
+            <header className='panel__header'>
               <div className='panel__headline'>
-                <div>
-                  <h2 className='panel__title'><T>Task</T></h2>
-                  {taskCount && <p className='panel__subtitle tasks-remaining'>({taskCount} <T>Tasks Remaining</T>)</p>}
-                </div>
-                <p className='panel__subtitle'><T>Showing</T> {renderedFeatures.features.length} <T>Roads</T></p>
+                <h1 className='panel__sectitle'><T>Task</T> #{ taskId }</h1>
+                <p className='panel__subtitle'><time dateTime={ taskUpdatedAt }>{ diffHours } { hoursText }</time></p>
+                <h2 className='panel__title'><T>{ panelTitle }</T></h2>
               </div>
-            </div>
+            </header>
           }
-          <div className='panel__body'>
-            { this.props.selectOptions.province && this.props.selectOptions.province.length && this.renderProvinceSelect() }
-            { mode === null && this.renderSelectMode() }
-            { mode === 'dedupe' && this.renderDedupeMode() }
-            { mode === 'join' && this.renderJoinMode() }
-          </div>
-        </div>
+
+          { step === 0 && renderedFeatures && this.renderStep0() }
+          { step === 1 && renderedFeatures && this.renderStep1() }
+          { step === 2 && renderedFeatures && this.renderStep2() }
+
+          <footer className='panel__footer'>
+
+            { step === 0 && renderedFeatures && this.renderActionsStep0() }
+            { step === 1 && renderedFeatures && this.renderActionsStep1() }
+            { step === 2 && renderedFeatures && this.renderActionsStep2() }
+
+          </footer>
+        </article>
       </div>
     );
   },
 
-  onJoin: function () {
-    this.setState({mode: 'join'});
+  // reset selected items when user changes mode, user can only change mode in step 0
+  handleChangeMode: function(event) {
+    this.setState({mode: event.target.value, selectedStep0: []}, this.syncMap);
   },
 
-  onDedupe: function () {
-    const { selectedIds } = this.state;
-    const { task } = this.props;
-    const selectedFeatures = {
-      type: 'FeatureCollection',
-      features: selectedIds.map(id => task.features.find(f => f.properties._id === id))
-    };
-
-    this.setState({mode: 'dedupe', renderedFeatures: selectedFeatures}, this.syncMap);
+  // trigger when an item is selected during step 0
+  selectStep0: function(id) {
+    const { mode, selectedStep0 } = this.state;
+    let selectedClone = [].concat(selectedStep0);
+    if (mode === 'dedupe') { // user can select multiple
+      if (selectedClone.includes(id)) {
+        selectedClone.splice(selectedClone.indexOf(id));
+      } else {
+        selectedClone.push(id);
+      }
+    } else if (mode === 'join') { // Intersect mode will only allow one element to be selected
+      if (selectedClone[0] === id) {
+        selectedClone = [];
+      } else {
+        selectedClone[0] = id;
+      }
+    }
+    this.setState({ selectedStep0: selectedClone }, this.syncMap);
   },
 
-  exitMode: function () {
-    const { task } = this.props;
-    this.setState({mode: null, renderedFeatures: task, selectedIds: []}, this.syncMap);
+  selectStep1: function(id) {
+    this.setState({ selectedStep1: id }, this.syncMap);
   },
 
-  renderDedupeMode: function () {
-    const chooseVprommids = this.state.chooseVprommids;
-    return (
-      <div className='form-group map__panel--form'>
-        <h2><T>Remove Duplicate Roads</T></h2>
-        <p><T>Click on a road to keep. The other roads here will be deleted.</T></p>
-        { chooseVprommids && this.renderVprommidSelect() }
-        <button className={c('button button--secondary-raised-dark', {disabled: !(this.state.selectedIds.length === 1) || !(this.state.applyVprommid)})} type='button' onClick={this.commitDedupe}><T>Confirm</T></button>
-        <br />
-        <button className='button button--base-raised-dark' type='button' onClick={this.exitMode}><T>Cancel</T></button>
-      </div>
-    );
+  hoverItemOver: function(id) {
+    this.setState({ hoverId: id }, this.syncMap);
   },
 
-  renderVprommidSelect: function () {
+  hoverItemOut: function(id) {
+    this.setState({ hoverId: '' }, this.syncMap);
+  },
+
+  renderStep0: function() {
+    const { renderedFeatures, mode, selectedStep0, hoverId } = this.state;
     const { language } = this.props;
-    const uniqVprommids = _.uniq(this.state.selectedVprommids);
-    const vprommidOptions = uniqVprommids.map(x => { return {value: x, label: x}; });
-    let value = this.state.applyVprommid;
+    const title = mode === 'dedupe' ? 'Select roads to work on' : 'Select road to work on';
+    const type = mode === 'dedupe' ? 'checkbox' : 'radio';
+
+    // we need to assign these translated strings as variables
+    // because if we use the <T> tag inside an <option>, it generates invalid markup
+    // by inserting a <span> around the string
+    const removeDuplicatesT = translate(language, 'Remove duplicates');
+    const createIntersectionT = translate(language, 'Create intersection');
     return (
-      <Select
-        name="form-vprommid-select"
-        searchable={ false }
-        value={value}
-        onChange={ this.handleSelectVprommid }
-        options={ vprommidOptions }
-        placeholder={ translate(language, 'Select a VPROMMID to apply') }
-      />
+      <div className='panel__body'>
+        <section className='task-group'>
+          <header className='task-group__header'>
+            <h1 className='task-group__title'><T>Select action to perform</T></h1>
+          </header>
+          <div className='task-group__body'>
+            <form className='form task-group__actions'>
+              <div className='form__group'>
+                <label className='form__label visually-hidden'><T>Actions</T></label>
+                <select className='form__control' value={ mode } onChange={ this.handleChangeMode }>
+                  <option value='dedupe'>{ removeDuplicatesT }</option>
+                  <option value='join'>{ createIntersectionT }</option>
+                </select>
+              </div>
+            </form>
+          </div>
+        </section>
+        <section className='task-group'>
+          <header className='task-group__header'>
+            <h1 className='task-group__title'><T>{ title }</T></h1>
+          </header>
+          <div className='task-group__body'>
+            <ul className='road-list'>
+            {
+              renderedFeatures.features.map(road =>
+                <TaskListItem
+                  vpromm={ road.properties.or_vpromms }
+                  _id={ road.properties._id }
+                  mode={ mode }
+                  type={ type }
+                  language={ language }
+                  key={ road.properties._id }
+                  selected={ selectedStep0.includes(road.properties._id) }
+                  isHighlighted={ road.properties._id === hoverId }
+                  onMouseOver={ this.hoverItemOver }
+                  onMouseOut={ this.hoverItemOut }
+                  toggleSelect={ this.selectStep0 }
+                />
+              )
+            }
+            </ul>
+          </div>
+        </section>
+      </div>
     );
+  },
+
+  renderActionsStep0: function() {
+    const { mode, selectedStep0 } = this.state;
+    let isDisabled;
+    if (mode === 'dedupe') {
+      isDisabled = selectedStep0.length < 2;
+    } else if (mode === 'join') {
+      isDisabled = selectedStep0.length === 0;
+    }
+    return (
+      <div className='panel__f-actions'>
+        <button type='button' className='pfa-secondary' onClick={ this.next }>
+          <span><T>Skip task</T></span>
+        </button>
+        <button
+          type='button'
+          className={`pfa-primary ${isDisabled ? 'disabled' : ''}`}
+          disabled={ isDisabled }
+          onClick={ this.gotoStep1 }
+        >
+          <span><T>Continue</T></span>
+        </button>
+      </div>
+    );
+  },
+
+  renderActionsStep1: function() {
+    const { mode, selectedStep1 } = this.state;
+    const isDisabled = !selectedStep1;
+    let onClick;
+    if (mode === 'join') {
+      onClick = this.commitJoin;
+    } else if (mode === 'dedupe') {
+      onClick = this.commitDedupe;
+    }
+    return (
+      <div className='panel__f-actions'>
+        <button type='button' className='pfa-secondary' onClick={ this.gotoStep0 }>
+          <span><T>Back</T></span>
+        </button>
+        <button
+          type='button'
+          className={`pfa-primary ${isDisabled ? 'disabled' : ''}`}
+          disabled={ isDisabled }
+          onClick={ onClick }
+        >
+          <span><T>Apply</T></span>
+        </button>
+      </div>
+    );
+  },
+
+  doMore: function() {
+    this.setState({
+      selectedStep0: [],
+      selectedStep1: null,
+      step: 0
+    }, this.syncMap);
+  },
+
+  renderActionsStep2: function() {
+    return (
+      <div className='panel__f-actions'>
+        <button type='button' className='pfa-secondary' onClick={ this.doMore }><span><T>Do more</T></span></button>
+        <button type='button' onClick={ this.next } className='pfa-primary'><span><T>Next task</T></span></button>
+      </div>                  
+    );
+  },
+
+  getSelectedVpromms: function() {
+    const { renderedFeatures, selectedStep0 } = this.state;
+    const vpromms = renderedFeatures.features
+                    .filter(feat => selectedStep0.includes(feat.properties._id))
+                    .map(feat => feat.properties.or_vpromms || 'No ID');
+    return _.uniq(vpromms);
+  },
+
+
+  renderStep1: function() {
+    const { mode, selectedStep0, selectedStep1, renderedFeatures, hoverId } = this.state;
+    const { language } = this.props;
+    let step1Features;
+    const title = mode === 'dedupe' ? 'Select Road to Keep' : 'Select Road to Intersect With';
+    if (mode === 'dedupe') {
+      // in dedupe mode, show all features selected in previous step
+      step1Features = renderedFeatures.features.filter(feat => selectedStep0.includes(feat.properties._id));
+    } else if (mode === 'join') {
+      // in join mode, show all features except the one selected in previous step
+      step1Features = renderedFeatures.features.filter(feat => feat.properties._id !== selectedStep0[0]);
+    }
+    const vpromms = this.getSelectedVpromms();
+    return (
+      <div className='panel__body'>
+        <section className='task-group'>
+          <header className='task-group__header'>
+            <h1 className='task-group__title'><T>{ title }</T></h1>
+          </header>
+          <div className='task-group__body'>
+            <ul className='road-list'>
+            {
+              step1Features.map(road =>
+                <TaskListItem
+                  vpromm={ road.properties.or_vpromms }
+                  _id={ road.properties._id }
+                  mode={ mode }
+                  type='radio'
+                  language={ language }
+                  key={ road.properties._id }
+                  selected={ selectedStep1 === road.properties._id }
+                  isHighlighted={ road.properties._id === hoverId }
+                  onMouseOver={ this.hoverItemOver }
+                  onMouseOut={ this.hoverItemOut }
+                  toggleSelect={ this.selectStep1 }
+                />
+              )
+            }
+            </ul>
+          </div>
+        </section>
+      { mode === 'dedupe' &&
+        <section className='task-group'>
+          <header className='task-group__header'>
+            <h1 className='task-group__title'><T>Select VPROMMID to Apply</T></h1>
+          </header>
+          <div className='task-group__body'>
+            <form className='form task-group__actions'>
+              <div className='form__group'>
+                <label className='form__label visually-hidden'><T>VPROMMIDs</T></label>
+                <select className='form__control' onChange={ this.selectVpromm }>
+                { vpromms.map(id =>
+                  <option key={ id } value={ id }>{ id }</option>
+                  )
+                }
+                </select>
+              </div>
+            </form>
+          </div>
+        </section>
+      }
+      </div>
+    );
+  },
+
+  renderStep2: function() {
+    const { mode, selectedStep0 } = this.state;
+    const { language } = this.props;
+  
+    const numRoads = mode === 'dedupe' ? selectedStep0.length - 1 : 2;
+    const roadStr = numRoads === 1 ? translate(language, 'road was') : translate(language, 'roads were');
+    const actionStr = mode === 'dedupe' ? translate(language, 'removed') : translate(language, 'intersected');
+    return (
+      <div className='panel__body'>
+        <div className='prose task-prose'>
+          <p>{numRoads} {roadStr} {actionStr} <T>and submitted to the system for review.</T></p>
+          <p><T>Do you want to continue to work on this task or move to the next one?</T></p>
+        </div>      
+      </div>      
+    );
+  },
+
+  gotoStep0: function() {
+    this.setState({step: 0, selectedStep1: null}, this.syncMap);
+  },
+
+  gotoStep1: function() {
+    this.setState({step: 1});
+  },
+
+  gotoStep2: function() {
+    this.setState({step: 2});
   },
 
   handleSelectVprommid: function (selectedVprommid) {
     this.setState({ applyVprommid: selectedVprommid });
   },
 
-  renderJoinMode: function () {
-    return (
-      <div className='form-group map__panel--form'>
-        <h2>Create an Intersection</h2>
-        <p>Click on a road to create an intersection with.</p>
-        <button className={c('button button--secondary-raised-dark', {disabled: this.state.selectedIds.length !== 2})} type='button' onClick={this.commitJoin}><T>Confirm</T></button>
-        <br />
-        <button className='button button--base-raised-dark' type='button' onClick={this.exitMode}><T>Cancel</T></button>
-      </div>
-    );
-  },
-
-  renderSelectMode: function () {
-    return (
-      <div>
-        <div className='form-group'>
-          <p>1. <T>Select roads to work on</T></p>
-          <div className='map__panel--selected'>
-            {this.renderSelectedIds()}
-          </div>
-        </div>
-        <div className='form-group map__panel--form'>
-          <p>2. <T>Choose an action to perform</T></p>
-          <button
-            className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length < 2})}
-            type='button'
-            onClick={this.onDedupe}
-          >
-            <T>Remove Duplicates</T>
-          </button>
-          <br />
-          <button
-            className={c('button button--base-raised-light', {disabled: this.state.selectedIds.length !== 1})}
-            type='button'
-            onClick={this.onJoin}
-          >
-            <T>Create Intersection</T>
-          </button>
-        </div>
-        <div className='form-group map__panel--form'>
-          <button
-            className='button button--base-raised-light'
-            type='button'
-            onClick={this.markAsDone}
-          >
-            <T>Finish task</T>
-          </button>
-          <br />
-          <button
-            className='button button--secondary-raised-dark'
-            type='button'
-            onClick={this.next}
-          >
-            <T>Skip task</T>
-          </button>
-        </div>
-      </div>
-    );
-  },
-
   commitDedupe: function () {
-    const { selectedIds, renderedFeatures, applyVprommid } = this.state;
+    const { selectedStep0, selectedStep1, renderedFeatures, applyVprommid } = this.state;
     const { features } = renderedFeatures;
-    const toDelete = features.filter(feature => selectedIds[0] !== feature.properties._id);
-    const wayIdToKeep = selectedIds[0];
+    const toDelete = features.filter(feature => feature.properties._id !== selectedStep1);
+    const wayIdToKeep = selectedStep1;
     this.props.dedupeWayTask(this.props.taskId, toDelete.map(feature => feature.properties._id), wayIdToKeep, applyVprommid === 'No ID' ? null : applyVprommid);
     // this.props._deleteWays(this.props.taskId, toDelete.map(feature => feature.properties._id));
 
     // TODO - should deduping mark task as done?
     this.props._markTaskAsDone(toDelete.map(feature => feature.properties._id));
+    this.gotoStep2();
   },
 
   commitJoin: function () {
-    const { selectedIds, renderedFeatures } = this.state;
+    const { selectedStep0, selectedStep1, renderedFeatures } = this.state;
     const { features } = renderedFeatures;
-    const line1 = features.find(f => f.properties._id === selectedIds[0]);
-    const line2 = features.find(f => f.properties._id === selectedIds[1]);
+    const line1 = features.find(f => f.properties._id === selectedStep0[0]);
+    const line2 = features.find(f => f.properties._id === selectedStep1);
     const intersectingFeatures = intersect(line1, line2);
     const changes = [];
 
@@ -493,6 +645,8 @@ var Tasks = React.createClass({
 
     // TODO - should deduping mark task as done?
     this.props._markTaskAsDone([line1.properties._id, line2.properties._id]);
+
+    this.gotoStep2();
   },
 
   markAsDone: function () {
@@ -506,18 +660,7 @@ var Tasks = React.createClass({
   next: function () {
     this.map.setFilter(roadSelected, ['all', ['in', '_id', '']]);
     this.props.skipTask(this.props.taskId);
-    this.setState({ selectedIds: [], mode: null, selectedVprommids: [] }, this.props.fetchNextTask);
-  },
-
-  renderSelectedIds: function () {
-    const { selectedIds } = this.state;
-    if (!selectedIds.length) {
-      return <p className='empty'><T>No roads selected yet. Click a road to select it</T></p>;
-    }
-    if (selectedIds.length === 1) {
-      return <p><T>1 road selected. Select at least one more</T></p>;
-    }
-    return <p>{selectedIds.length} <T>roads selected</T></p>;
+    this.setState({ selectedStep0: [], selectedStep1: null, mode: 'dedupe', selectedVpromm: null, step: 0 }, this.props.fetchNextTask);
   },
 
   handleProvinceChange: function (selectedProvince) {
@@ -542,8 +685,10 @@ var Tasks = React.createClass({
   },
 
   render: function () {
-    const { taskId, taskStatus } = this.props;
+    const { taskId, taskCount, taskStatus } = this.props;
     const { hoverId } = this.state;
+    const renderPanel = !((taskStatus === 'error' || taskStatus === 'No tasks remaining') ||
+      (!taskId && taskStatus === 'pending'))
 
     return (
       <section className='inpage inpage--alt'>
@@ -552,40 +697,51 @@ var Tasks = React.createClass({
             <div className='inpage__headline'>
               <h1 className='inpage__title'><T>Tasks</T></h1>
             </div>
+            <nav className='inpage__nav'>
+              <ul className='inpage__menu'>
+                <li><a className='inpage__menu-link inpage__menu-link--active' href='#' title='View'><span><T>Solve</T> <small className='label'>{ taskCount }</small></span></a></li>
+                <li><a className='inpage__menu-link' href='#' title='View'><span><T>Stats</T></span></a></li>
+              </ul>
+            </nav>
+            <div className='inpage__actions'>
+              <div className='form__group task-search'>
+                <label className='form__label' htmlFor='form-select-1'><T>Search admin area</T></label>
+                { this.props.selectOptions.province && this.renderProvinceSelect() }
+              </div>
+            </div>
           </div>
         </header>
         <div className='inpage__body'>
           <div className='inner'>
 
-            <div className='task-container'>
-              <figure className='map'>
-                <div className='map__media' id='map'></div>
-              </figure>
+            <figure className='map'>
+              <div className='map__media' id='map'></div>
               {
                 hoverId && this.renderPropertiesOverlay()
               }
               {
                 taskStatus === 'error' &&
-                  <div className='placeholder__fullscreen'>
-                    <h3 className='placeholder__message'><T>Error</T></h3>
-                  </div>
+                <div className='placeholder__fullscreen'>
+                  <h3 className='placeholder__message'><T>Error</T></h3>
+                </div>
               }
               {
                 taskStatus === 'No tasks remaining' &&
-                  <div className='placeholder__fullscreen'>
-                    <h3 className='placeholder__message'><T>No tasks remaining</T></h3>
-                  </div>
+                <div className='placeholder__fullscreen'>
+                  <h3 className='placeholder__message'><T>No tasks remaining</T></h3>
+                </div>
               }
               {
                 !taskId && taskStatus === 'pending' &&
-                  <div className='placeholder__fullscreen'>
-                    <h3 className='placeholder__message'><T>Loading</T></h3>
-                  </div>
+                <div className='placeholder__fullscreen'>
+                  <h3 className='placeholder__message'><T>Loading</T></h3>
+                </div>
               }
               {
-                this.renderInstrumentPanel()
+                renderPanel && this.renderInstrumentPanel()
               }
-            </div>
+            </figure>
+
 
           </div>
         </div>
@@ -601,6 +757,7 @@ export default compose(
     state => ({
       task: state.waytasks.geoJSON,
       taskId: state.waytasks.id,
+      taskUpdatedAt: state.waytasks.updatedAt,
       taskCount: state.waytasks.taskCount,
       taskStatus: state.waytasks.status,
       osmStatus: state.osmChange.status,

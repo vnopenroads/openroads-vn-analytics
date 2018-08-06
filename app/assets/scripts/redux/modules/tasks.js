@@ -25,9 +25,10 @@ export const DEDUPE_WAY_TASK_ERROR = 'DEDUPE_WAY_TASK_ERROR';
  */
 export const fetchWayTask = (id) => ({ type: FETCH_WAY_TASK, id });
 export const fetchNextWayTask = () => ({ type: FETCH_NEXT_WAY_TASK });
-export const fetchWayTaskSuccess = (id, geoJSON) => ({
+export const fetchWayTaskSuccess = (id, updatedAt, geoJSON) => ({
   type: FETCH_WAY_TASK_SUCCESS,
   id,
+  updatedAt,
   geoJSON
 });
 export const fetchWayTaskError = (error) => ({ type: FETCH_WAY_TASK_ERROR, error: error });
@@ -72,7 +73,7 @@ export const fetchNextWayTaskEpic = () => (dispatch, getState) => {
         feature.properties._id = feature.meta.id;
       });
       dispatch(fetchWayTaskCountEpic());
-      return dispatch(fetchWayTaskSuccess(json.id, json.data));
+      return dispatch(fetchWayTaskSuccess(json.id, json.updated_at, json.data));
     }, e => {
       console.error('Error requesting task', e);
       return dispatch(fetchWayTaskError(e));
@@ -182,6 +183,7 @@ export default (
     return Object.assign({}, state, {
       geoJSON: action.geoJSON,
       id: action.id,
+      updatedAt: action.updatedAt,
       status: 'complete'
     });
   } else if (action.type === FETCH_WAY_TASK_ERROR) {
