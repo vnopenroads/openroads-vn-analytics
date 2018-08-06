@@ -24,7 +24,16 @@
       @extend .row;
       max-width: none;
       display: flex;
-      width: 100%;
+      flex-flow: row nowrap;
+      align-items: center;
+
+      > *:not(:first-child) {
+        margin-left: $global-spacing * 2;
+      }
+
+      > *:last-child:not(:first-child) {
+        margin-left: auto;
+      }
     }
   }
 
@@ -65,10 +74,45 @@
   }
 
   .inpage__actions {
-    flex: 1 1 auto;
-    text-align: right;
-    font-size: 0;
-    white-space: nowrap;
+    > * {
+      vertical-align: top;
+      margin-left: $global-spacing / 2;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+
+  .inpage__menu {
+    list-style: none;
+    display: flex;
+    flex-flow: row nowrap;
+    margin: 0;
+    padding: 0;
+
+    > * {
+      margin-right: $global-spacing / 2;
+    }
+
+    .label {
+      display: inline-flex;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      border-radius: $base-border-radius;
+      padding: 0 ($global-spacing / 4);
+      background-color: rgba($primary-color, 0.64);
+      margin: 0 (-$global-spacing / 4) 0 ($global-spacing / 4);
+      font-weight: inherit;
+    }
+  }
+
+  .inpage__menu-link {
+    @extend .button, .button--achromic-plain;
+
+    &--active {
+      @extend .button--active;
+    }
   }
 
   &__body {

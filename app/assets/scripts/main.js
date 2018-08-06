@@ -18,6 +18,7 @@ import AssetsAA from './views/assets-admin-area';
 import AAFieldMap from './components/aa-field-map';
 import Upload from './views/upload';
 import Faq from './views/faq';
+import Playground from './views/playground';
 
 
 const validateLanguage = ({ params: { lang } }, replace) => {
@@ -25,7 +26,6 @@ const validateLanguage = ({ params: { lang } }, replace) => {
     replace('/en/404');
   }
 };
-
 
 render((
   <Provider store={store}>
@@ -38,6 +38,7 @@ render((
         <Route path='editor/*' component={Editor} pageClass='editor' />
         <Route path='explore' component={Explore} pageClass='explore' />
         <Route path='faq' component={Faq} pageClass='faq' />
+        <Route path='playground' component={Playground} pageClass='playground' />
         <Route path='assets' component={Assets}>
           <IndexRoute component={AssetsIndex} pageClass='assets' />
           <Route path='road/:vpromm' component={AAFieldMap} pageClass='assets-aa' />
