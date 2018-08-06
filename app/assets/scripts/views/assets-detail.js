@@ -226,7 +226,7 @@ class AssetsDetail extends React.Component {
     const provId = get(roadProps, 'data.province.id', null);
     const provName = get(roadProps, 'data.province.name', null);
 
-    const hasGeometry = get(roadGeo, 'data.features', []).length > 0;
+    let hasGeometry = roadGeo.fetched ? get(roadGeo, 'data.features', []).length > 0 : true;
 
     return (
       <div className='incontainer'>
