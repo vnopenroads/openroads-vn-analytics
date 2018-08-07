@@ -51,6 +51,9 @@ export const CREATE_ROAD_PROPERTY_ERROR = 'CREATE_ROAD_PROPERTY_ERROR';
 export const EDIT_ROAD_PROPERTY = 'EDIT_ROAD_PROPERTY';
 export const EDIT_ROAD_PROPERTY_SUCCESS = 'EDIT_ROAD_PROPERTY_SUCCESS';
 export const EDIT_ROAD_PROPERTY_ERROR = 'EDIT_ROAD_PROPERTY_ERROR';
+export const EDIT_ROAD_STATUS = 'EDIT_ROAD_STATUS';
+export const EDIT_ROAD_STATUS_SUCCESS = 'EDIT_ROAD_STATUS_SUCCESS';
+export const EDIT_ROAD_STATUS_ERROR = 'EDIT_ROAD_STATUS_ERROR';
 export const DELETE_ROAD_PROPERTY = 'DELETE_ROAD_PROPERTY';
 export const DELETE_ROAD_PROPERTY_SUCCESS = 'DELETE_ROAD_PROPERTY_SUCCESS';
 export const DELETE_ROAD_PROPERTY_ERROR = 'DELETE_ROAD_PROPERTY_ERROR';
@@ -101,6 +104,10 @@ export const createRoadPropertyError = (id, key, value, error) => ({ type: CREAT
 export const editRoadProperty = (id, key, value) => ({ type: EDIT_ROAD_PROPERTY, id, key, value });
 export const editRoadPropertySuccess = (id, key, value) => ({ type: EDIT_ROAD_PROPERTY_SUCCESS, id, key, value });
 export const editRoadPropertyError = (id, key, value, error) => ({ type: EDIT_ROAD_PROPERTY_ERROR, id, key, value, error });
+
+export const editRoadStatus = (id, value) => ({ type: EDIT_ROAD_STATUS, id, value });
+export const editRoadStatusSuccess = (id, value) => ({ type: EDIT_ROAD_STATUS_SUCCESS, id, value });
+export const editRoadStatusError = (id, value, error) => ({ type: EDIT_ROAD_STATUS_ERROR, id, value, error });
 
 export const deleteRoadProperty = (id, key) => ({ type: DELETE_ROAD_PROPERTY, id, key });
 export const deleteRoadPropertySuccess = (id, key) => ({ type: DELETE_ROAD_PROPERTY_SUCCESS, id, key });
@@ -212,6 +219,33 @@ export const editRoadEpic = (id, newId) => (dispatch) => {
         dispatch(clearRoadCount())
       ]);
     }, (err) => dispatch(editRoadError(id, newId, err.message)));
+};
+
+
+export const editRoadStatusEpic = (id, status) => (dispatch) => {
+  dispatch(editRoad(id, status));
+
+  return fetch(`${config.api}/properties/roads/${id}/status`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ status })
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+
+      return response.json();
+    })
+    .then(() => {
+      return Promise.all([
+        dispatch(editRoadStatusSuccess(id, status)),
+        dispatch(clearRoadsPages()),
+        dispatch(clearRoadCount())
+      ]);
+    }, (err) => dispatch(editRoadStatusError(id, status, err.message)));
 };
 
 
@@ -461,6 +495,14 @@ export default (
       roadsById: Object.assign({}, state.roadsById, {
         [action.id]: Object.assign({}, state.roadsById[action.id], {
           properties: omit(state.roadsById[action.id].properties, [action.key])
+        })
+      })
+    });
+  } else if (action.type === EDIT_ROAD_STATUS_SUCCESS) {
+    return Object.assign({}, state, {
+      roadsById: Object.assign({}, state.roadsById, {
+        [action.id]: Object.assign({}, state.roadsById[action.id], {
+          status: action.value
         })
       })
     });

@@ -33,11 +33,13 @@ import {
   OP_ON_ROAD_PROPERTY,
   OP_ON_ROAD_PROPERTY_SUCCESS,
   OP_ON_ROAD_PROPERTY_ERROR,
+  EDIT_ROAD_STATUS_SUCCESS,
   fetchRoadGeometryEpic,
   fetchRoadPropertyEpic,
   deleteRoadEpic,
   editRoadEpic,
-  opOnRoadPropertyEpic
+  opOnRoadPropertyEpic,
+  editRoadStatusEpic
 } from '../redux/modules/roads';
 import {
   setMapPosition
@@ -168,6 +170,17 @@ class AssetsDetail extends React.Component {
     });
   }
 
+  async onStateChange (status, e) {
+    e.preventDefault();
+
+    try {
+      const res = await this.props.editRoadStatus(this.props.vpromm, status);
+      if (res.error) throw new Error(res.error);
+    } catch (error) {
+      alert('An error occurred while saving. Please try again.');
+    }
+  }
+
   renderProperties () {
     const { fetched, data } = this.props.roadProps;
 
@@ -201,25 +214,28 @@ class AssetsDetail extends React.Component {
   }
 
   renderReviewStatus () {
-    const reviewState = 'Pending';
-    const classForState = (state) => c('drop__menu-item', {'drop__menu-item--active': reviewState === state});
+    const stateMap = {
+      'pending': translate(this.props.language, 'Pending'),
+      'reviewed': translate(this.props.language, 'Reviewed')
+    };
 
-    // Temp
-    const noop = e => e.preventDefault();
+    const reviewState = this.props.roadProps.data.status || 'pending';
+    const triggerText = this.props.roadProps.fetched ? stateMap[reviewState] : 'Loading';
+    const classForState = (state) => c('drop__menu-item', {'drop__menu-item--active': reviewState === state});
 
     return (
       <Dropdown
         className='review-status-menu'
         triggerClassName='button-review-status'
         triggerActiveClassName='button--active'
-        triggerText={reviewState}
+        triggerText={triggerText}
         triggerTitle='Change review state'
         direction='down'
         alignment='left' >
         <h3 className='drop__title'><T>Review status</T></h3>
         <ul className='drop__menu drop__menu--select'>
-          <li><a href='#' className={classForState('pending')} onClick={noop}>Pending</a></li>
-          <li><a href='#' className={classForState('reviewed')} onClick={noop}>Reviewed</a></li>
+          <li><a href='#' className={classForState('pending')} onClick={this.onStateChange.bind(this, 'pending')} data-hook='dropdown:close'>{stateMap['pending']}</a></li>
+          <li><a href='#' className={classForState('reviewed')} onClick={this.onStateChange.bind(this, 'reviewed')} data-hook='dropdown:close'>{stateMap['reviewed']}</a></li>
         </ul>
       </Dropdown>
     );
@@ -276,7 +292,7 @@ class AssetsDetail extends React.Component {
           {!hasGeometry ? (
             <div className='no-content no-content--geometry'>
               <p><T>This asset doesn't have geometry.</T></p>
-              <p><Link to={`/${language}/editor?way=823`} className='button button--achromic-glass'><T>Edit geometry</T></Link></p>
+              <p><Link to={`/${language}/editor?way=${this.props.vpromm}`} className='button button--achromic-glass'><T>Edit geometry</T></Link></p>
             </div>
           ) : null}
           <figcaption className='map__caption'><p><T>Asset geometry</T></p></figcaption>
@@ -309,7 +325,8 @@ if (environment !== 'production') {
     fetchRoadGeometry: PropTypes.func,
     deleteRoad: PropTypes.func,
     opOnRoadProperty: PropTypes.func,
-    editRoad: PropTypes.func
+    editRoad: PropTypes.func,
+    editRoadStatus: PropTypes.func
   };
 }
 
@@ -332,6 +349,8 @@ const reducerRoadProps = (state = stateRoadProps, action) => {
       return {...state, fetching: false, fetched: true, error: true};
     case FETCH_ROAD_PROPERTY_SUCCESS:
       return {...state, fetching: false, fetched: true, data: action.properties};
+    case EDIT_ROAD_STATUS_SUCCESS:
+      return {...state, data: {...state.data, status: action.value}};
   }
 
   return state;
@@ -420,7 +439,8 @@ export default compose(
       FETCH_ROAD_PROPERTY_ERROR,
       OP_ON_ROAD_PROPERTY,
       OP_ON_ROAD_PROPERTY_SUCCESS,
-      OP_ON_ROAD_PROPERTY_ERROR
+      OP_ON_ROAD_PROPERTY_ERROR,
+      EDIT_ROAD_STATUS_SUCCESS
     ].indexOf(type) > -1
   }),
   connect(
@@ -431,7 +451,8 @@ export default compose(
       fetchRoadProperty: (...args) => dispatch(fetchRoadPropertyEpic(...args)),
       opOnRoadProperty: (...args) => dispatch(opOnRoadPropertyEpic(...args)),
       deleteRoad: (...args) => dispatch(deleteRoadEpic(...args)),
-      editRoad: (...args) => dispatch(editRoadEpic(...args))
+      editRoad: (...args) => dispatch(editRoadEpic(...args)),
+      editRoadStatus: (...args) => dispatch(editRoadStatusEpic(...args))
     })
   )
 )(AssetsDetail);
