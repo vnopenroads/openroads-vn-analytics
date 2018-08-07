@@ -95,7 +95,11 @@
 }
 
 .button-language {
-  @extend .drop__toggle--caret;
+  @extend .button--text-hidden;
+
+  &::before {
+    @extend %collecticon-globe;
+  }
 }
 
 

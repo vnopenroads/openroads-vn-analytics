@@ -208,7 +208,7 @@ class AssetsDetail extends React.Component {
         triggerText={reviewState}
         triggerTitle='Change review state'
         direction='down'
-        alignment='center' >
+        alignment='left' >
         <h3 className='drop__title'><T>Review status</T></h3>
         <ul className='drop__menu drop__menu--select'>
           <li><a href='#' className={classForState('pending')} onClick={noop}>Pending</a></li>

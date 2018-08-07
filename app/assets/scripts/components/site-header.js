@@ -36,7 +36,8 @@ const SiteHeader = ({language, pathname}) => (
           triggerText={language === 'en' ? 'English' : 'Tiếng Việth'}
           triggerTitle={translate(language, 'Change Language')}
           direction='down'
-          alignment='left' >
+          alignment='center' >
+          <h3 className='drop__title'><T>Select language</T></h3>
           <ul className='drop__menu drop__menu--select'>
             <li><Link to={pathname.replace(/^\/[a-z]+/, '/en')} className={classForLanguage(language, 'en')}>English</Link></li>
             <li><Link to={pathname.replace(/^\/[a-z]+/, '/vi')} className={classForLanguage(language, 'vi')}>Tiếng Việt</Link></li>
