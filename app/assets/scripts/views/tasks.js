@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import mapboxgl from 'mapbox-gl';
 import config from '../config';
 import getExtent from 'turf-extent';
-import c from 'classnames';
 import intersect from '@turf/line-intersect';
 import pointOnLine from '@turf/point-on-line';
 import point from 'turf-point';
@@ -82,17 +81,14 @@ var Tasks = React.createClass({
       renderedFeatures: null,
       mode: 'dedupe',
 
-       // Steps are 0, 1 and 2 in accordance with new step workflow
+      // Steps are 0, 1 and 2 in accordance with new step workflow
       step: 0,
       hoverId: '',
       selectedIds: [],
       selectedStep0: [], // ids of selected features in step 0
       selectedStep1: null, // in step "1", there can only ever be one id selected
       selectedProvince: null,
-      selectedVpromm: null,
-      // selectedVprommids: [],
-      // chooseVprommids: false,
-      // applyVprommid: null
+      selectedVpromm: null
     };
   },
 
@@ -154,7 +150,7 @@ var Tasks = React.createClass({
           } else if (step === 1) {
             this.selectStep1(featId);
           } else {
-            return;
+            // do nothing
           }
         }
       });
@@ -237,7 +233,7 @@ var Tasks = React.createClass({
     );
   },
 
-  getPanelTitle: function() {
+  getPanelTitle: function () {
     const { mode, step } = this.state;
     if (step === 0) {
       return 'Prepare workflow';
@@ -249,14 +245,14 @@ var Tasks = React.createClass({
       return 'Create intersection';
     }
     if (step === 2) {
-      return 'Workflow completed'
+      return 'Workflow completed';
     }
   },
 
   renderInstrumentPanel: function () {
-    const { mode, step, renderedFeatures } = this.state;
+    const { step, renderedFeatures } = this.state;
     const { osmStatus, language, taskId, taskUpdatedAt } = this.props;
-    const diffHours = moment(taskUpdatedAt).diff(moment(), 'hours');
+    const diffHours = moment().diff(taskUpdatedAt, 'hours');
     const hoursText = diffHours === 1 ? translate(language, 'hour ago') : translate(language, 'hours ago');
     const panelTitle = this.getPanelTitle();
     if (osmStatus === 'pending') {
@@ -300,12 +296,12 @@ var Tasks = React.createClass({
   },
 
   // reset selected items when user changes mode, user can only change mode in step 0
-  handleChangeMode: function(event) {
+  handleChangeMode: function (event) {
     this.setState({mode: event.target.value, selectedStep0: []}, this.syncMap);
   },
 
   // trigger when an item is selected during step 0
-  selectStep0: function(id) {
+  selectStep0: function (id) {
     const { mode, selectedStep0 } = this.state;
     let selectedClone = [].concat(selectedStep0);
     if (mode === 'dedupe') { // user can select multiple
@@ -324,19 +320,19 @@ var Tasks = React.createClass({
     this.setState({ selectedStep0: selectedClone }, this.syncMap);
   },
 
-  selectStep1: function(id) {
+  selectStep1: function (id) {
     this.setState({ selectedStep1: id }, this.syncMap);
   },
 
-  hoverItemOver: function(id) {
+  hoverItemOver: function (id) {
     this.setState({ hoverId: id }, this.syncMap);
   },
 
-  hoverItemOut: function(id) {
+  hoverItemOut: function (id) {
     this.setState({ hoverId: '' }, this.syncMap);
   },
 
-  renderStep0: function() {
+  renderStep0: function () {
     const { renderedFeatures, mode, selectedStep0, hoverId } = this.state;
     const { language } = this.props;
     const title = mode === 'dedupe' ? 'Select roads to work on' : 'Select road to work on';
@@ -371,23 +367,23 @@ var Tasks = React.createClass({
           </header>
           <div className='task-group__body'>
             <ul className='road-list'>
-            {
-              renderedFeatures.features.map(road =>
-                <TaskListItem
-                  vpromm={ road.properties.or_vpromms }
-                  _id={ road.properties._id }
-                  mode={ mode }
-                  type={ type }
-                  language={ language }
-                  key={ road.properties._id }
-                  selected={ selectedStep0.includes(road.properties._id) }
-                  isHighlighted={ road.properties._id === hoverId }
-                  onMouseOver={ this.hoverItemOver }
-                  onMouseOut={ this.hoverItemOut }
-                  toggleSelect={ this.selectStep0 }
-                />
-              )
-            }
+              {
+                renderedFeatures.features.map(road =>
+                  <TaskListItem
+                    vpromm={ road.properties.or_vpromms }
+                    _id={ road.properties._id }
+                    mode={ mode }
+                    type={ type }
+                    language={ language }
+                    key={ road.properties._id }
+                    selected={ selectedStep0.includes(road.properties._id) }
+                    isHighlighted={ road.properties._id === hoverId }
+                    onMouseOver={ this.hoverItemOver }
+                    onMouseOut={ this.hoverItemOut }
+                    toggleSelect={ this.selectStep0 }
+                  />
+                )
+              }
             </ul>
           </div>
         </section>
@@ -395,7 +391,7 @@ var Tasks = React.createClass({
     );
   },
 
-  renderActionsStep0: function() {
+  renderActionsStep0: function () {
     const { mode, selectedStep0 } = this.state;
     let isDisabled;
     if (mode === 'dedupe') {
@@ -420,7 +416,7 @@ var Tasks = React.createClass({
     );
   },
 
-  renderActionsStep1: function() {
+  renderActionsStep1: function () {
     const { mode, selectedStep1 } = this.state;
     const isDisabled = !selectedStep1;
     let onClick;
@@ -446,7 +442,7 @@ var Tasks = React.createClass({
     );
   },
 
-  doMore: function() {
+  doMore: function () {
     this.setState({
       selectedStep0: [],
       selectedStep1: null,
@@ -454,25 +450,25 @@ var Tasks = React.createClass({
     }, this.syncMap);
   },
 
-  renderActionsStep2: function() {
+  renderActionsStep2: function () {
     return (
       <div className='panel__f-actions'>
         <button type='button' className='pfa-secondary' onClick={ this.doMore }><span><T>Do more</T></span></button>
         <button type='button' onClick={ this.next } className='pfa-primary'><span><T>Next task</T></span></button>
-      </div>                  
+      </div>
     );
   },
 
-  getSelectedVpromms: function() {
+  getSelectedVpromms: function () {
     const { renderedFeatures, selectedStep0 } = this.state;
     const vpromms = renderedFeatures.features
-                    .filter(feat => selectedStep0.includes(feat.properties._id))
-                    .map(feat => feat.properties.or_vpromms || 'No ID');
+      .filter(feat => selectedStep0.includes(feat.properties._id))
+      .map(feat => feat.properties.or_vpromms || 'No ID');
     return _.uniq(vpromms);
   },
 
 
-  renderStep1: function() {
+  renderStep1: function () {
     const { mode, selectedStep0, selectedStep1, renderedFeatures, hoverId } = this.state;
     const { language } = this.props;
     let step1Features;
@@ -493,27 +489,27 @@ var Tasks = React.createClass({
           </header>
           <div className='task-group__body'>
             <ul className='road-list'>
-            {
-              step1Features.map(road =>
-                <TaskListItem
-                  vpromm={ road.properties.or_vpromms }
-                  _id={ road.properties._id }
-                  mode={ mode }
-                  type='radio'
-                  language={ language }
-                  key={ road.properties._id }
-                  selected={ selectedStep1 === road.properties._id }
-                  isHighlighted={ road.properties._id === hoverId }
-                  onMouseOver={ this.hoverItemOver }
-                  onMouseOut={ this.hoverItemOut }
-                  toggleSelect={ this.selectStep1 }
-                />
-              )
-            }
+              {
+                step1Features.map(road =>
+                  <TaskListItem
+                    vpromm={ road.properties.or_vpromms }
+                    _id={ road.properties._id }
+                    mode={ mode }
+                    type='radio'
+                    language={ language }
+                    key={ road.properties._id }
+                    selected={ selectedStep1 === road.properties._id }
+                    isHighlighted={ road.properties._id === hoverId }
+                    onMouseOver={ this.hoverItemOver }
+                    onMouseOut={ this.hoverItemOut }
+                    toggleSelect={ this.selectStep1 }
+                  />
+                )
+              }
             </ul>
           </div>
         </section>
-      { mode === 'dedupe' &&
+        { mode === 'dedupe' &&
         <section className='task-group'>
           <header className='task-group__header'>
             <h1 className='task-group__title'><T>Select VPROMMID to Apply</T></h1>
@@ -523,24 +519,23 @@ var Tasks = React.createClass({
               <div className='form__group'>
                 <label className='form__label visually-hidden'><T>VPROMMIDs</T></label>
                 <select className='form__control' onChange={ this.selectVpromm }>
-                { vpromms.map(id =>
-                  <option key={ id } value={ id }>{ id }</option>
+                  { vpromms.map(id =>
+                    <option key={ id } value={ id }>{ id }</option>
                   )
-                }
+                  }
                 </select>
               </div>
             </form>
           </div>
         </section>
-      }
+        }
       </div>
     );
   },
 
-  renderStep2: function() {
+  renderStep2: function () {
     const { mode, selectedStep0 } = this.state;
     const { language } = this.props;
-  
     const numRoads = mode === 'dedupe' ? selectedStep0.length - 1 : 2;
     const roadStr = numRoads === 1 ? translate(language, 'road was') : translate(language, 'roads were');
     const actionStr = mode === 'dedupe' ? translate(language, 'removed') : translate(language, 'intersected');
@@ -549,20 +544,20 @@ var Tasks = React.createClass({
         <div className='prose task-prose'>
           <p>{numRoads} {roadStr} {actionStr} <T>and submitted to the system for review.</T></p>
           <p><T>Do you want to continue to work on this task or move to the next one?</T></p>
-        </div>      
-      </div>      
+        </div>
+      </div>
     );
   },
 
-  gotoStep0: function() {
+  gotoStep0: function () {
     this.setState({step: 0, selectedStep1: null}, this.syncMap);
   },
 
-  gotoStep1: function() {
+  gotoStep1: function () {
     this.setState({step: 1});
   },
 
-  gotoStep2: function() {
+  gotoStep2: function () {
     this.setState({step: 2});
   },
 
@@ -571,7 +566,7 @@ var Tasks = React.createClass({
   },
 
   commitDedupe: function () {
-    const { selectedStep0, selectedStep1, renderedFeatures, applyVprommid } = this.state;
+    const { selectedStep1, renderedFeatures, applyVprommid } = this.state;
     const { features } = renderedFeatures;
     const toDelete = features.filter(feature => feature.properties._id !== selectedStep1);
     const wayIdToKeep = selectedStep1;
@@ -688,7 +683,7 @@ var Tasks = React.createClass({
     const { taskId, taskCount, taskStatus } = this.props;
     const { hoverId } = this.state;
     const renderPanel = !((taskStatus === 'error' || taskStatus === 'No tasks remaining') ||
-      (!taskId && taskStatus === 'pending'))
+      (!taskId && taskStatus === 'pending'));
 
     return (
       <section className='inpage inpage--alt'>
@@ -787,18 +782,6 @@ export default compose(
     }
   })
 )(Tasks);
-
-function findIndex (haystack, fn) {
-  let idx = -1;
-  haystack.some((o, i) => {
-    if (fn(o)) {
-      idx = i;
-      return true;
-    }
-    return false;
-  });
-  return idx;
-}
 
 function insertPointOnLine (feature, point) {
   const nearest = pointOnLine(feature, point);

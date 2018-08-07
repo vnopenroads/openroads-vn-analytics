@@ -19,40 +19,40 @@ const TaskListItem = React.createClass({
     onMouseOut: React.PropTypes.func
   },
 
-  toggleSelect: function() {
+  toggleSelect: function () {
     const { _id, toggleSelect } = this.props;
     toggleSelect(_id);
   },
 
-  handleMouseOver: function() {
+  handleMouseOver: function () {
     const { _id, onMouseOver } = this.props;
     onMouseOver(_id);
   },
 
-  handleMouseOut: function() {
+  handleMouseOut: function () {
     const { _id, onMouseOut } = this.props;
     onMouseOut(_id);
   },
 
-  renderCheckbox: function() {
+  renderCheckbox: function () {
     const { _id, selected } = this.props;
     return (
       <label className='form__option form__option--custom-checkbox'>
         <input
           type='checkbox'
-          name={ `road-${ _id }--checkbox` }
-          id={ `road-${ _id }--checkbox` }
-          value={ `road-${ _id }` }
+          name={ `road-${_id}--checkbox` }
+          id={ `road-${_id}--checkbox` }
+          value={ `road-${_id}` }
           onChange={ this.toggleSelect }
           checked={ selected }
         />
         <span className='form__option__ui'></span>
         <span className='form__option__text visually-hidden'><T>Selected</T></span>
       </label>
-    );    
+    );
   },
 
-  renderRadio: function() {
+  renderRadio: function () {
     const { _id, selected } = this.props;
     return (
       <label className='form__option form__option--custom-radio'>
@@ -70,17 +70,17 @@ const TaskListItem = React.createClass({
     );
   },
 
-  render: function() {
-    const { _id, vpromm, language, type, mode, selected, isHighlighted } = this.props;
+  render: function () {
+    const { vpromm, language, type, isHighlighted } = this.props;
     return (
       <li className='road-list__item' onMouseOver={ this.handleMouseOver } onMouseOut={ this.handleMouseOut }>
         <article className={`road ${isHighlighted ? 'road--highlight' : ''}`} id='road-{_id}'>
           <header className='road__header'>
             <div className='road__headline'>
               <h1 className='road__title'>{ vpromm || translate(language, 'No ID')}</h1>
-            { vpromm &&
+              { vpromm &&
               <p className='road__subtitle'>Fixme: Get Province</p>
-            }
+              }
             </div>
             <div className='road__h-actions'>
               { type === 'checkbox' && this.renderCheckbox() }
@@ -91,6 +91,6 @@ const TaskListItem = React.createClass({
       </li>
     );
   }
-})
+});
 
 module.exports = TaskListItem;
