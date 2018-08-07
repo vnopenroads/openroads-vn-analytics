@@ -50,6 +50,7 @@
 
 .panel__title {
   @include heading(1.25rem);
+  line-height: 1.5rem;
   margin: 0;
 
   a.panel__contents & {
@@ -230,7 +231,7 @@
 [class^="pfa-"],
 [class*=" pfa-"] {
   @extend .button, .button--medium;
-  min-width: 7rem;
+  min-width: 8rem;
 }
 
 .pfa-primary {
