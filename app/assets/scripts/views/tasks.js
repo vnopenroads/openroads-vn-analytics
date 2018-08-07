@@ -226,10 +226,12 @@ var Tasks = React.createClass({
     const { hoverId } = this.state;
     const { task } = this.props;
     const properties = task.features.find(c => hoverId === c.properties._id).properties;
-    const displayList = Object.keys(properties).map(key => key.charAt(0) === '_' ? null : [
-      <dt key={`${key}-key`}><strong>{key}</strong></dt>,
-      <dd key={`${key}-value`}>{properties[key] ? properties[key] : '--'}</dd>
-    ]).filter(Boolean);
+    const displayList = Object.keys(properties)
+      .filter(key => key.charAt(0) !== '_' && typeof properties[key] === 'string')
+      .map(key => [
+        <dt key={`${key}-key`}><strong>{key}</strong></dt>,
+        <dd key={`${key}-value`}>{properties[key] ? properties[key] : '--'}</dd>
+      ]);
     return (
       <div className='map__controls map__controls--top-left'>
         <figcaption className='panel properties-panel'>
@@ -504,6 +506,7 @@ var Tasks = React.createClass({
                 step1Features.map(road =>
                   <TaskListItem
                     vpromm={ road.properties.or_vpromms }
+                    province={ road.properties.province }
                     _id={ road.properties._id }
                     mode={ mode }
                     type='radio'
