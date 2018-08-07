@@ -172,6 +172,11 @@ class AssetsDetail extends React.Component {
     }
   }
 
+  hasGeometry () {
+    const { roadGeo } = this.props;
+    return roadGeo.fetched ? get(roadGeo, 'data.features', []).length > 0 : true;
+  }
+
   renderProperties () {
     const { fetched, data } = this.props.roadProps;
 
@@ -233,14 +238,13 @@ class AssetsDetail extends React.Component {
   }
 
   render () {
-    const { vpromm, language, roadProps, roadGeo } = this.props;
+    const { vpromm, language, roadProps } = this.props;
 
     const disId = get(roadProps, 'data.district.id', null);
     const disName = get(roadProps, 'data.district.name', null);
     const provId = get(roadProps, 'data.province.id', null);
     const provName = get(roadProps, 'data.province.name', null);
-
-    let hasGeometry = roadGeo.fetched ? get(roadGeo, 'data.features', []).length > 0 : true;
+    const hasGeometry = this.hasGeometry();
 
     return (
       <div className='incontainer'>
@@ -275,7 +279,7 @@ class AssetsDetail extends React.Component {
                   stored by the reducer in redux/modules/map.js once the road
                   properties are loaded.
                 */}
-                <li><Link to={`/${language}/editor?way=w${roadProps.data.way_id}`} className='drop__menu-item em-geometry'>Geometry</Link></li>
+                <li><Link to={`/${language}/editor?way=w${roadProps.data.way_id}`} className={c('drop__menu-item em-geometry', {disabled: !hasGeometry})} disabled={!hasGeometry}>Geometry</Link></li>
               </ul>
               <ul className='drop__menu drop__menu--iconified'>
                 <li><a href='#' className='drop__menu-item em-delete' onClick={this.onEditDelete}>Delete</a></li>
@@ -289,7 +293,7 @@ class AssetsDetail extends React.Component {
           {!hasGeometry ? (
             <div className='no-content no-content--geometry'>
               <p><T>This asset doesn't have geometry.</T></p>
-              <p><Link to={`/${language}/editor?way=${this.props.vpromm}`} className='button button--achromic-glass'><T>Edit geometry</T></Link></p>
+              <p><Link to={`/${language}/upload`} className='button button--achromic-glass'><T>Upload geometry</T></Link></p>
             </div>
           ) : null}
           <figcaption className='map__caption'><p><T>Asset geometry</T></p></figcaption>
