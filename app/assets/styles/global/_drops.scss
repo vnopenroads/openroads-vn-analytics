@@ -327,6 +327,11 @@
     color: $link-color;
     font-weight: $base-font-bold;
 
+    &:hover,
+    &:focus {
+      background-color: tint($link-color, 92%);
+    }
+
     &::after {
       @extend %collecticon-sm-tick;
       position: absolute;
