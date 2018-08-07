@@ -193,7 +193,7 @@ class AssetsDetail extends React.Component {
         ) : (
           <div className='no-content no-content--attributes'>
             <p><T>This asset doesn't have any attributes.</T></p>
-            <p><a className='button button--primary-raised-light' href='#' onClick={this.onEditProperties}><T>Edit attributes</T></a></p>
+            <p><a className='button button--base-raised-light' href='#' onClick={this.onEditProperties}><T>Edit attributes</T></a></p>
           </div>
         )}
       </section>
@@ -276,7 +276,7 @@ class AssetsDetail extends React.Component {
           {!hasGeometry ? (
             <div className='no-content no-content--geometry'>
               <p><T>This asset doesn't have geometry.</T></p>
-              <p><Link to={`/${language}/editor?way=823`} className='button button--primary-raised-light'><T>Edit geometry</T></Link></p>
+              <p><Link to={`/${language}/editor?way=823`} className='button button--achromic-glass'><T>Edit geometry</T></Link></p>
             </div>
           ) : null}
           <figcaption className='map__caption'><p><T>Asset geometry</T></p></figcaption>
