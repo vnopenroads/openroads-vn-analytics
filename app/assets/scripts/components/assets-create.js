@@ -83,7 +83,7 @@ class AssetsCreateModal extends React.Component {
 
         <ModalHeader>
           <div className='modal__headline'>
-            <h1 className='modal__title'><T>Create new Asset</T></h1>
+            <h1 className='modal__title'><T>Add new asset</T></h1>
           </div>
         </ModalHeader>
         <ModalBody>
