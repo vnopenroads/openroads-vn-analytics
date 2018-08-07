@@ -2,9 +2,7 @@
 import React, { PropTypes } from 'react';
 import c from 'classnames';
 import { clone, findIndex } from 'lodash';
-import T, {
-  translate
-} from '../components/t';
+import T from '../components/t';
 
 import { Modal, ModalHeader, ModalBody, ModalFooter } from './modal';
 
