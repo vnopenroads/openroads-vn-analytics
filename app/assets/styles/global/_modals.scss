@@ -187,7 +187,7 @@
    ========================================================================== */
 
 .modal__button-dismiss {
-  @extend .button, .button--medium, .button--primary-plain, .button--text-hidden;
+  @extend .button, .button--medium, .button--base-plain, .button--text-hidden;
   position: absolute;
   top: $global-spacing * 2;
     right: $global-spacing * 2;
