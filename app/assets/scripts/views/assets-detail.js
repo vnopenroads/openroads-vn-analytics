@@ -186,9 +186,16 @@ class AssetsDetail extends React.Component {
     return (
       <section>
         <h3>Attributes</h3>
-        <dl className='attributes-list'>
-          {propNames.map(renderDlItem)}
-        </dl>
+        {propNames.length ? (
+          <dl className='attributes-list'>
+            {propNames.map(renderDlItem)}
+          </dl>
+        ) : (
+          <div className='no-content no-content--attributes'>
+            <p><T>This asset doesn't have any attributes.</T></p>
+            <p><a className='button button--primary-raised-light' href='#' onClick={this.onEditProperties}><T>Edit attributes</T></a></p>
+          </div>
+        )}
       </section>
     );
   }
@@ -264,9 +271,15 @@ class AssetsDetail extends React.Component {
           </div>
         </div>
 
-        <figure className={c('map map--detail', {'map--no-geometry': !hasGeometry})}>
+        <figure className='map map--detail'>
           <div className='map__media' id='asset-map' />
-          <figcaption className='map__caption'><p>{hasGeometry ? <T>Asset geometry</T> : <T>This asset doesn't contain geometry.</T>}</p></figcaption>
+          {!hasGeometry ? (
+            <div className='no-content no-content--geometry'>
+              <p><T>This asset doesn't have geometry.</T></p>
+              <p><Link to={`/${language}/editor?way=823`} className='button button--primary-raised-light'><T>Edit geometry</T></Link></p>
+            </div>
+          ) : null}
+          <figcaption className='map__caption'><p><T>Asset geometry</T></p></figcaption>
         </figure>
 
         {this.renderProperties()}
