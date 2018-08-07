@@ -95,7 +95,8 @@ class AssetsEditModal extends React.Component {
     this.props.onCloseClick();
   }
 
-  async onSave () {
+  async onSave (e) {
+    e.preventDefault();
     const propertiesToAdd = this.state.properties.filter(property => !property.existing && property.key !== '');
     const propertiesToUpdate = this.state.properties.filter(property => property.existing && property.value !== property.valueOriginal);
     const propertiesToRemove = this.state.propertiesToRemove;
@@ -145,8 +146,6 @@ class AssetsEditModal extends React.Component {
   }
 
   renderNewProperties ({id, key, value}) {
-    const newProperties = this.state.properties.filter(o => !o.existing).length;
-
     return (
       <fieldset className='form__fieldset' key={id}>
         <div className='form__inner-header'>
@@ -187,7 +186,7 @@ class AssetsEditModal extends React.Component {
           </div>
         </ModalHeader>
         <ModalBody>
-          <form className={c('form', {disabled: processing})} disabled={processing}>
+          <form className={c('form', {disabled: processing})} disabled={processing} onSubmit={this.onSave}>
             <div className='inner'>
               <fieldset className='form__fieldset'>
                 <legend className='form__legend'><T>Meta</T></legend>
