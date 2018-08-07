@@ -71,6 +71,7 @@ export const fetchNextWayTaskEpic = () => (dispatch, getState) => {
     .then(json => {
       json.data.features.forEach(feature => {
         feature.properties._id = feature.meta.id;
+        feature.properties.province = json.province;
       });
       dispatch(fetchWayTaskCountEpic());
       return dispatch(fetchWayTaskSuccess(json.id, json.updated_at, json.data));

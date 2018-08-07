@@ -381,6 +381,7 @@ var Tasks = React.createClass({
                 renderedFeatures.features.map(road =>
                   <TaskListItem
                     vpromm={ road.properties.or_vpromms }
+                    province={ road.properties.province }
                     _id={ road.properties._id }
                     mode={ mode }
                     type={ type }
