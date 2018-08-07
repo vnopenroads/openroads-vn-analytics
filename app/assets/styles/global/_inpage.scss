@@ -1,11 +1,12 @@
 /* ==========================================================================
    Global: Inpage
    ========================================================================== */
-
-.inpage {
+  
+ .inpage {
   display: flex;
   flex-direction: column;
   flex: 1;
+  overflow-x: hidden; // Prevents map from overflowing horizontally.
 
   .inpage__header {
     @extend .antialiased;
