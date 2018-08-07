@@ -156,10 +156,10 @@ class AssetsDetail extends React.Component {
   onEditDelete (e) {
     e.preventDefault();
     showConfirm({
-      title: 'Delete road',
+      title: 'Delete asset',
       body: (
         <div>
-          <p><T>Are you sure you want to delete road {this.props.vpromm}? Note that this action is irreversible.</T></p>
+          <p><T>Are you sure you want to delete road <strong>{this.props.vpromm}</strong>?<br /> Note that this action is irreversible.</T></p>
         </div>
       )
     }, () => {
