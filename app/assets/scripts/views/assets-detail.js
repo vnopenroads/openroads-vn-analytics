@@ -42,9 +42,6 @@ import {
   editRoadStatusEpic
 } from '../redux/modules/roads';
 import {
-  setMapPosition
-} from '../redux/modules/map';
-import {
   ADMIN_MAP
 } from '../constants';
 import { mbToken, api, environment } from '../config';
@@ -108,12 +105,6 @@ class AssetsDetail extends React.Component {
       this.setupMapStyle();
     }
   }
-
-  // componentWillUnmount () {
-  //   const { lng, lat } = this.map.getCenter();
-  //   const zoom = this.map.getZoom();
-  //   this.props.setMapPosition(lng, lat, zoom);
-  // }
 
   setupMapStyle () {
     const { fetched, data } = this.props.roadGeo;
@@ -278,7 +269,13 @@ class AssetsDetail extends React.Component {
               alignment='right' >
               <ul className='drop__menu drop__menu--iconified edit-menu'>
                 <li><a href='#' className='drop__menu-item em-attributes' onClick={this.onEditProperties}>Attributes</a></li>
-                <li><Link to={`/${language}/editor?way=823`} className='drop__menu-item em-geometry'>Geometry</Link></li>
+                {/*
+                  We're including the way id in the url just to show it, as it
+                  isn't doing anything. The way id for the editor is being
+                  stored by the reducer in redux/modules/map.js once the road
+                  properties are loaded.
+                */}
+                <li><Link to={`/${language}/editor?way=w${roadProps.data.way_id}`} className='drop__menu-item em-geometry'>Geometry</Link></li>
               </ul>
               <ul className='drop__menu drop__menu--iconified'>
                 <li><a href='#' className='drop__menu-item em-delete' onClick={this.onEditDelete}>Delete</a></li>
@@ -446,7 +443,6 @@ export default compose(
   connect(
     (state, props) => ({}),
     (dispatch) => ({
-      setMapPosition: (...args) => dispatch(setMapPosition(...args)),
       fetchRoadGeometry: (...args) => dispatch(fetchRoadGeometryEpic(...args)),
       fetchRoadProperty: (...args) => dispatch(fetchRoadPropertyEpic(...args)),
       opOnRoadProperty: (...args) => dispatch(opOnRoadPropertyEpic(...args)),
