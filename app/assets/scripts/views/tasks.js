@@ -42,6 +42,7 @@ import _ from 'lodash';
 const source = 'collisions';
 const roadHoverId = 'road-hover';
 const roadSelected = 'road-selected';
+const roadSelectedStep1 = 'road-selected-step1';
 const layers = [{
   id: 'road',
   type: 'line',
@@ -69,6 +70,17 @@ const layers = [{
     'line-width': 6,
     'line-opacity': 0.9,
     'line-color': '#FF0000'
+  },
+  layout: { 'line-cap': 'round' },
+  filter: ['==', '_id', '']
+}, {
+  id: roadSelectedStep1,
+  type: 'line',
+  source,
+  paint: {
+    'line-width': 6,
+    'line-opacity': 0.9,
+    'line-color': '#8F1812'
   },
   layout: { 'line-cap': 'round' },
   filter: ['==', '_id', '']
@@ -199,9 +211,7 @@ var Tasks = React.createClass({
     const { map } = this;
     const existingSource = map.getSource(source);
     const selectedIds = [].concat(this.state.selectedStep0);
-    if (this.state.selectedStep1) {
-      selectedIds.push(this.state.selectedStep1);
-    }
+    const selectedStep1 = this.state.selectedStep1 || '';
     const hoverId = this.state.hoverId;
     if (!existingSource) {
       map.addSource(source, {
@@ -220,6 +230,7 @@ var Tasks = React.createClass({
     });
     map.setFilter(roadSelected, ['in', '_id'].concat(selectedIds));
     map.setFilter(roadHoverId, ['==', '_id', hoverId]);
+    map.setFilter(roadSelectedStep1, ['==', '_id', selectedStep1]);
   },
 
   renderPropertiesOverlay: function () {
