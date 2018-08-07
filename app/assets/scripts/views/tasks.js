@@ -252,7 +252,7 @@ var Tasks = React.createClass({
   renderInstrumentPanel: function () {
     const { step, renderedFeatures } = this.state;
     const { osmStatus, language, taskId, taskUpdatedAt } = this.props;
-    const diffHours = moment(taskUpdatedAt).diff(moment(), 'hours');
+    const diffHours = moment().diff(taskUpdatedAt, 'hours');
     const hoursText = diffHours === 1 ? translate(language, 'hour ago') : translate(language, 'hours ago');
     const panelTitle = this.getPanelTitle();
     if (osmStatus === 'pending') {
