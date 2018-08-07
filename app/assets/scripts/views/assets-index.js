@@ -34,10 +34,9 @@ const AssetsIndex = ({
         </div>
 
         <div className='incontainer__hactions'>
-          <a href='#' className='ica-plus ica-main'><T>Add assets</T></a>
+          <a href='#' className='ica-plus ica-main'><T>Add asset</T></a>
         </div>
       </div>
-
       {
         provincesRoadCountStatus === 'complete' &&
         <div className='a-main__status'>
@@ -50,7 +49,8 @@ const AssetsIndex = ({
           </div>
         </div>
       }
-      {provincesFetched && provincesRoadCountStatus === 'complete' &&
+      {
+        provincesFetched && provincesRoadCountStatus === 'complete' &&
         <ProvinceTable
           provinces={provinces.filter(province => ADMIN_MAP.province[province.id])}
           provincesRoadCount={provincesRoadCount}

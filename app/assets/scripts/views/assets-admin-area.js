@@ -67,7 +67,7 @@ var AssetsAA = React.createClass({
           {!aaIdSub && aaId &&
           <div className='incontainer__hactions'>
             <a href={`${config.provinceDumpBaseUrl}${aaId}.csv`} className='ica-download'><T>Download</T></a>
-            <a href='#' className='ica-plus ica-main'><T>Add assets</T></a>
+            <a href='#' className='ica-plus ica-main'><T>Add asset</T></a>
           </div>
           }
         </div>
