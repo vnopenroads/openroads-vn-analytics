@@ -1,7 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
 import Row from '../containers/road-table-row-container';
-import CreateRoadForm from '../containers/create-road-form-container';
 import RoadPagination from './road-pagination';
 import RoadProgressBar from './road-progress-bar';
 import T from './t';
