@@ -21,9 +21,6 @@ const RoadTable = ({
           roadCount={roadCount}
         />
     }
-
-    <CreateRoadForm />
-
     {
       roadsPageStatus === 'pending' ?
         <div className='a-subnav loading'><h2><T>Loading</T></h2></div> :

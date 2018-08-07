@@ -16,6 +16,7 @@ import config from '../config';
 import {
   ADMIN_MAP
 } from '../constants';
+import AssetsCreate from '../components/assets-create';
 
 
 const renderAdminName = (children, aaId, aaIdSub) => {
@@ -28,29 +29,37 @@ const renderAdminName = (children, aaId, aaIdSub) => {
   );
 };
 
+class AssetsAA extends React.Component {
+  constructor (props) {
+    super(props);
 
-var AssetsAA = React.createClass({
-  displayName: 'AssetsAA',
+    this.onCreateAssetClick = this.onCreateAssetClick.bind(this);
 
-  propTypes: {
-    _fetchAdminInfo: React.PropTypes.func,
-    params: React.PropTypes.object,
-    language: React.PropTypes.string,
-    adminInfo: React.PropTypes.object,
-    adminInfoFetched: React.PropTypes.bool
-  },
+    this.state = {
+      createModalOpen: false
+    };
+  }
 
-  componentWillMount: function () {
+  componentWillMount () {
     this.props._fetchAdminInfo(this.props.params.aaId);
-  },
+  }
 
-  componentWillReceiveProps: function (nextProps) {
+  componentWillReceiveProps (nextProps) {
     if (this.props.params.aaId !== nextProps.params.aaId) {
       this.props._fetchAdminInfo(nextProps.params.aaId);
     }
-  },
+  }
 
-  render: function () {
+  onModalClose (data = {}) {
+    this.setState({ createModalOpen: false });
+  }
+
+  onCreateAssetClick (e) {
+    e.preventDefault();
+    this.setState({ createModalOpen: true });
+  }
+
+  render () {
     const { adminInfoFetched, language, adminInfo: { children }, params: { aaId, aaIdSub } } = this.props;
 
     return (
@@ -64,12 +73,12 @@ var AssetsAA = React.createClass({
               {aaIdSub && <li><Link title='View' to={`${language}/assets/${aaId}`}>{ADMIN_MAP.province[aaId].name}</Link></li>}
             </ol>
           </div>
-          {!aaIdSub && aaId &&
+
           <div className='incontainer__hactions'>
-            <a href={`${config.provinceDumpBaseUrl}${aaId}.csv`} className='ica-download'><T>Download</T></a>
-            <a href='#' className='ica-plus ica-main'><T>Add asset</T></a>
+            {!aaIdSub && aaId && <a href={`${config.provinceDumpBaseUrl}${aaId}.csv`} className='ica-download'><T>Download</T></a>}
+            <AssetsCreate />
           </div>
-          }
+
         </div>
 
         <div>
@@ -88,7 +97,21 @@ var AssetsAA = React.createClass({
       </div>
     );
   }
-});
+}
+
+if (config.environment !== 'production') {
+  AssetsAA.propTypes = {
+    _fetchAdminInfo: React.PropTypes.func,
+    params: React.PropTypes.object,
+    language: React.PropTypes.string,
+    adminInfo: React.PropTypes.object,
+    adminInfoFetched: React.PropTypes.bool
+  };
+}
+
+//
+//
+//
 
 export default compose(
   getContext({ language: React.PropTypes.string }),

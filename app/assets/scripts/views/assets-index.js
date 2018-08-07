@@ -21,6 +21,7 @@ import ProvinceTable from '../containers/province-table-container';
 import {
   ADMIN_MAP
 } from '../constants';
+import AssetsCreate from '../components/assets-create';
 
 
 const AssetsIndex = ({
@@ -34,7 +35,7 @@ const AssetsIndex = ({
         </div>
 
         <div className='incontainer__hactions'>
-          <a href='#' className='ica-plus ica-main'><T>Add asset</T></a>
+          <AssetsCreate />
         </div>
       </div>
       {

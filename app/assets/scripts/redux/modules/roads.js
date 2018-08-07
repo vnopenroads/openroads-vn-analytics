@@ -179,11 +179,12 @@ export const createRoadEpic = (id) => (dispatch) => {
       return response.json();
     })
     .then((id) => {
-      dispatch(createRoadSuccess(id));
-      dispatch(clearRoadsPages());
-      dispatch(clearRoadCount());
-    })
-    .catch((err) => dispatch(createRoadError(err.message)));
+      return Promise.all([
+        dispatch(createRoadSuccess(id)),
+        dispatch(clearRoadsPages()),
+        dispatch(clearRoadCount())
+      ]);
+    }, (err) => dispatch(createRoadError(err.message)));
 };
 
 
