@@ -294,12 +294,12 @@
     position: relative;
     display: block;
     padding: 0.25rem 1rem;
-    color: $link-color;
+    color: inherit;
     transition: all 0.16s ease 0s;
 
     &:hover,
     &:focus {
-      background-color: tint($link-color, 92%);
+      background-color: tint($base-color, 92%);
       opacity: 1;
     }
   }
