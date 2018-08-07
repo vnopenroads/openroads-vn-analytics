@@ -25,7 +25,7 @@ const Home = ({ language }) => (
         <h2><T>Access and improve Road Networks</T></h2>
         <p className='description'><T>Work with the OpenRoads project to close this critical information gap and create a comprehensive road network of Vietnam</T></p>
         <div className='cta-block'>
-          <Link to={`/${language}/assets`} className='button button--large button--primary-raised-light'><T>View assets</T></Link> <small>or</small> <Link to={`/${language}/explore`} className='button button--large button--primary-raised-dark'><T>Explore on map</T></Link>
+          <Link to={`/${language}/assets`} className='button button--xlarge button--base-raised-light'><T>View assets</T></Link> <small>or</small> <Link to={`/${language}/explore`} className='button button--xlarge button--primary-raised-dark'><T>Explore on map</T></Link>
         </div>
       </div>
     </div>
