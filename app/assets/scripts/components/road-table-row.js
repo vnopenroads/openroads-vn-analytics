@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router';
+import c from 'classnames';
 import { api } from '../config';
-import T, {
-  translate
-} from './t';
+import T from './t';
 
 
 const RowReadView = ({
@@ -14,14 +13,14 @@ const RowReadView = ({
     <tr>
       <td><Link to={`/${language}/assets/road/${vpromm}/`}><strong>{vpromm}</strong></Link></td>
       <td className={hasOSMData ? 'added' : 'not-added'}>
-        {hasOSMData &&
-          <div className='a-table-actions'>
-            <Link className='a-table-action' to={`/${language}/assets/road/${vpromm}/`}><T>View</T></Link>
-            <a className='a-table-action' href={`${api}/properties/roads/${vpromm}.geojson?download`}>
-              <T>Download</T>
-            </a>
-          </div>
-        }
+        <div className='a-table-actions'>
+          <Link className='a-table-action' to={`/${language}/assets/road/${vpromm}/`}>
+            <T>View</T>
+          </Link>
+          <a className={c('a-table-action', {disabled: !hasOSMData})} href={`${api}/properties/roads/${vpromm}.geojson?download`} disabled={!hasOSMData}>
+            <T>Download</T>
+          </a>
+        </div>
       </td>
     </tr>
   );
