@@ -4,6 +4,7 @@
 
  .task-panel {
    height: 100%;
+   width: 20rem !important;
 
    .panel__sectitle {
      margin-bottom: $global-spacing;
@@ -100,8 +101,8 @@
    flex-flow: row nowrap;
    justify-content: space-between;
    align-items: center;
-   padding: $global-spacing;
-   min-height: 4.5rem;
+   padding: ($global-spacing / 2) ($global-spacing);
+   min-height: 3.25rem;
 
    > *:last-child:not(:first-child) {
      margin-left: auto;
@@ -117,15 +118,15 @@
  }
 
  .road__title {
-   @include heading(1rem);
-   line-height: 1.25rem;
+   @include heading(0.875rem);
+   line-height: 1rem;
    margin: 0;
  }
 
  .road__subtitle {
    @extend .heading-alt;
    color: rgba($base-font-color, 0.64);
-   font-size: 0.875rem;
+   font-size: 0.75rem;
    line-height: 1rem;
    margin: 0.25rem 0 0 0;
    text-transform: none;
