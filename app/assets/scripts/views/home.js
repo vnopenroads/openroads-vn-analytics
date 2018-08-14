@@ -24,8 +24,9 @@ const Home = ({ language }) => (
       <div className='inner'>
         <h2><T>Access and improve Road Networks</T></h2>
         <p className='description'><T>Work with the OpenRoads project to close this critical information gap and create a comprehensive road network of Vietnam</T></p>
-        <Link to={`/${language}/assets`} className='button-explore'><T>View assets</T></Link>
-        <Link to={`/${language}/explore`} className='button-explore'><T>Explore on map</T></Link>
+        <div className='cta-block'>
+          <Link to={`/${language}/assets`} className='button button--xlarge button--base-raised-light'><T>View assets</T></Link> <small>or</small> <Link to={`/${language}/explore`} className='button button--xlarge button--primary-raised-dark'><T>Explore on map</T></Link>
+        </div>
       </div>
     </div>
   </section>

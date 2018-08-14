@@ -3,7 +3,7 @@ import React from 'react';
 import T from '../components/t';
 
 const Assets = ({ children }) => (
-  <section className='inpage inpage--alt'>
+  <section className='inpage'>
     <header className='inpage__header'>
       <div className='inner'>
         <div className='inpage__headline'>
@@ -13,9 +13,7 @@ const Assets = ({ children }) => (
     </header>
     <div className='inpage__body'>
       <div className='inner'>
-        <div className='aa-main'>
-          {children}
-        </div>
+        {children}
       </div>
     </div>
   </section>

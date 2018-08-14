@@ -9,6 +9,7 @@ const TaskListItem = React.createClass({
   propTypes: {
     _id: React.PropTypes.string,
     vpromm: React.PropTypes.string,
+    province: React.PropTypes.object,
     mode: React.PropTypes.string,
     type: React.PropTypes.string,
     language: React.PropTypes.string,
@@ -71,16 +72,15 @@ const TaskListItem = React.createClass({
   },
 
   render: function () {
-    const { vpromm, language, type, isHighlighted } = this.props;
+    const { vpromm, language, type, isHighlighted, province } = this.props;
+
     return (
       <li className='road-list__item' onMouseOver={ this.handleMouseOver } onMouseOut={ this.handleMouseOut }>
         <article className={`road ${isHighlighted ? 'road--highlight' : ''}`} id='road-{_id}'>
           <header className='road__header'>
             <div className='road__headline'>
               <h1 className='road__title'>{ vpromm || translate(language, 'No ID')}</h1>
-              { vpromm &&
-              <p className='road__subtitle'>Fixme: Get Province</p>
-              }
+              { vpromm && <p className='road__subtitle'>{province.name_en}</p> }
             </div>
             <div className='road__h-actions'>
               { type === 'checkbox' && this.renderCheckbox() }

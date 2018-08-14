@@ -5,6 +5,24 @@ import { CSSTransition } from 'react-transition-group';
 
 let activeDropdowns = [];
 
+/*
+<Dropdown
+  className='browse-menu'
+  triggerClassName='browse-button'
+  triggerActiveClassName='button--active'
+  triggerText='Menu'
+  triggerTitle='Toggle menu options'
+  direction='down'
+  alignment='right' >
+
+  <h6 className='drop__title'>Browse</h6>
+  <ul className='drop__menu drop__menu--select'>
+    <li><Link to='' className='drop__menu-item' activeClassName='drop__menu-item--active'>Label</Link></li>
+  </ul>
+
+</Dropdown>
+*/
+
 export default class Dropdown extends React.Component {
   constructor (props) {
     super(props);

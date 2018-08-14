@@ -49,7 +49,8 @@
 }
 
 .panel__title {
-  @include heading(1.25rem);
+  @include heading(1rem);
+  line-height: 1.25rem;
   margin: 0;
 
   a.panel__contents & {
@@ -58,8 +59,8 @@
 }
 
 .panel__sectitle {
-  @include heading(1rem);
-  line-height: 1.25rem;
+  @include heading(0.875rem);
+  line-height: 1rem;
   margin: 0;
 }
 
@@ -230,11 +231,11 @@
 [class^="pfa-"],
 [class*=" pfa-"] {
   @extend .button, .button--medium;
-  min-width: 7rem;
+  min-width: 8rem;
 }
 
 .pfa-primary {
-  @extend .button--secondary-raised-dark;
+  @extend .button--primary-raised-dark;
 
 }
 

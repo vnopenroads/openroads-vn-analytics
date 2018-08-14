@@ -71,7 +71,7 @@ const ConfirmationPrompt = React.createClass({
         </ModalBody>
         <ModalFooter>
           <button className='mfa-xmark' type='button' onClick={this.onCancel}><span>Cancel</span></button>
-          <button className='mfa-tick' type='submit' onClick={this.onConfirm}><span>Confirm</span></button>
+          <button className='mfa-main mfa-tick' type='submit' onClick={this.onConfirm}><span>Confirm</span></button>
         </ModalFooter>
       </Modal>
     );

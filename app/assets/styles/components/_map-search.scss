@@ -29,7 +29,7 @@
 }
 
 .search__button {
-  @extend .button, .button--secondary-raised-dark, .button--text-hidden;
+  @extend .button, .button--primary-raised-dark, .button--text-hidden;
 
   &::before {
     @extend %collecticon-magnifier-right;

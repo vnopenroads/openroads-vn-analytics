@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import mapboxgl from 'mapbox-gl';
 import config from '../config';
 import getExtent from 'turf-extent';
+import { Link } from 'react-router';
 import intersect from '@turf/line-intersect';
 import pointOnLine from '@turf/point-on-line';
 import point from 'turf-point';
@@ -41,6 +42,7 @@ import _ from 'lodash';
 const source = 'collisions';
 const roadHoverId = 'road-hover';
 const roadSelected = 'road-selected';
+const roadSelectedStep1 = 'road-selected-step1';
 const layers = [{
   id: 'road',
   type: 'line',
@@ -68,6 +70,17 @@ const layers = [{
     'line-width': 6,
     'line-opacity': 0.9,
     'line-color': '#FF0000'
+  },
+  layout: { 'line-cap': 'round' },
+  filter: ['==', '_id', '']
+}, {
+  id: roadSelectedStep1,
+  type: 'line',
+  source,
+  paint: {
+    'line-width': 6,
+    'line-opacity': 0.9,
+    'line-color': '#8F1812'
   },
   layout: { 'line-cap': 'round' },
   filter: ['==', '_id', '']
@@ -121,7 +134,16 @@ var Tasks = React.createClass({
       style: 'mapbox://styles/mapbox/light-v9',
       failIfMajorPerformanceCaveat: false,
       zoom: 12
-    }).addControl(new mapboxgl.NavigationControl(), 'bottom-left');
+    }).addControl(new mapboxgl.NavigationControl(), 'top-left');
+
+    // Disable map rotation using right click + drag.
+    this.map.dragRotate.disable();
+
+    // Disable map rotation using touch rotation gesture.
+    this.map.touchZoomRotate.disableRotation();
+
+    // Remove compass.
+    document.querySelector('.mapboxgl-ctrl .mapboxgl-ctrl-compass').remove();
 
     this.onMapLoaded(() => {
       map.on('mousemove', (e) => {
@@ -189,9 +211,7 @@ var Tasks = React.createClass({
     const { map } = this;
     const existingSource = map.getSource(source);
     const selectedIds = [].concat(this.state.selectedStep0);
-    if (this.state.selectedStep1) {
-      selectedIds.push(this.state.selectedStep1);
-    }
+    const selectedStep1 = this.state.selectedStep1 || '';
     const hoverId = this.state.hoverId;
     if (!existingSource) {
       map.addSource(source, {
@@ -210,16 +230,19 @@ var Tasks = React.createClass({
     });
     map.setFilter(roadSelected, ['in', '_id'].concat(selectedIds));
     map.setFilter(roadHoverId, ['==', '_id', hoverId]);
+    map.setFilter(roadSelectedStep1, ['==', '_id', selectedStep1]);
   },
 
   renderPropertiesOverlay: function () {
     const { hoverId } = this.state;
     const { task } = this.props;
     const properties = task.features.find(c => hoverId === c.properties._id).properties;
-    const displayList = Object.keys(properties).map(key => key.charAt(0) === '_' ? null : [
-      <dt key={`${key}-key`}><strong>{key}</strong></dt>,
-      <dd key={`${key}-value`}>{properties[key] ? properties[key] : '--'}</dd>
-    ]).filter(Boolean);
+    const displayList = Object.keys(properties)
+      .filter(key => key.charAt(0) !== '_' && typeof properties[key] === 'string')
+      .map(key => [
+        <dt key={`${key}-key`}><strong>{key}</strong></dt>,
+        <dd key={`${key}-value`}>{properties[key] ? properties[key] : '--'}</dd>
+      ]);
     return (
       <div className='map__controls map__controls--top-left'>
         <figcaption className='panel properties-panel'>
@@ -371,6 +394,7 @@ var Tasks = React.createClass({
                 renderedFeatures.features.map(road =>
                   <TaskListItem
                     vpromm={ road.properties.or_vpromms }
+                    province={ road.properties.province }
                     _id={ road.properties._id }
                     mode={ mode }
                     type={ type }
@@ -493,6 +517,7 @@ var Tasks = React.createClass({
                 step1Features.map(road =>
                   <TaskListItem
                     vpromm={ road.properties.or_vpromms }
+                    province={ road.properties.province }
                     _id={ road.properties._id }
                     mode={ mode }
                     type='radio'
@@ -536,6 +561,7 @@ var Tasks = React.createClass({
   renderStep2: function () {
     const { mode, selectedStep0 } = this.state;
     const { language } = this.props;
+
     const numRoads = mode === 'dedupe' ? selectedStep0.length - 1 : 2;
     const roadStr = numRoads === 1 ? translate(language, 'road was') : translate(language, 'roads were');
     const actionStr = mode === 'dedupe' ? translate(language, 'removed') : translate(language, 'intersected');
@@ -694,8 +720,8 @@ var Tasks = React.createClass({
             </div>
             <nav className='inpage__nav'>
               <ul className='inpage__menu'>
-                <li><a className='inpage__menu-link inpage__menu-link--active' href='#' title='View'><span><T>Solve</T> <small className='label'>{ taskCount }</small></span></a></li>
-                <li><a className='inpage__menu-link' href='#' title='View'><span><T>Stats</T></span></a></li>
+                <li><Link to={`/${this.props.language}/tasks`} className='inpage__menu-link' activeClassName='inpage__menu-link--active' title='View'><span><T>Solve</T> <small className='label'>{ taskCount }</small></span></Link></li>
+                <li><a className='inpage__menu-link disabled' href='#' title='View'><span><T>Stats</T></span></a></li>
               </ul>
             </nav>
             <div className='inpage__actions'>
