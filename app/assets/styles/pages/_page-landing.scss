@@ -7,14 +7,11 @@
     &__header--landing {
       @extend .antialiased;
       text-align: center;
-      background: url(../graphics/layout/hero-bg.png);
+      background-color: shade($primary-color, 48%);
+      background-image: url(../graphics/layout/hero-bg.png);
       background-size: cover;
       position: relative;
-      padding: 6rem 0;
-
-      @include media(small-up) {
-        padding: 10rem 0;
-      }
+      padding: 10rem 0;
     }
 
     &__headline--landing {
@@ -25,15 +22,11 @@
 
     &__title--landing {
       position: relative;
-      margin-bottom: 1.25rem;
+      margin-bottom: 2rem;
 
       img {
         width: auto;
-        height: 2rem;
-
-        @include media(small-up) {
-          height: 4rem;
-        }
+        height: 4rem;
       }
 
       span {
@@ -45,35 +38,24 @@
         top: -0.75rem;
         left: 50%;
         display: inline-block;
-        font-size: 1rem;
         text-transform: uppercase;
         padding: 0 0.75rem;
-        background: rgba($primary-color, 0.64);
+        background: $primary-color;
         border-radius: $base-border-radius;
         transform: translate(-50%, -100%);
-
-        @include media(medium-up) {
-          font-size: 1.5rem;
-        }
+        font-size: 1.5rem;
       }
 
-      @include media(medium-up) {
-        margin-bottom: 2rem;
-      }
+
     }
 
     &__description--landing {
       width: 100%;
-
       padding: 0 $global-spacing;
       margin: 0 auto;
       font-weight: $base-font-bold;
-      font-size: 1rem;
-
-      @include media(medium-up) {
-        font-size: 1.5rem;
-        max-width: 48rem;
-      }
+      font-size: 1.5rem;
+      max-width: 48rem;
     }
 
     &__body--landing {
@@ -81,26 +63,19 @@
       padding: 3rem 0;
 
       h2 {
-        font-size: 1.5rem;
         font-weight: $base-font-light;
         color: tint($base-color, 48%);
-        @include media(small-up) {
-          font-size: 2rem;
-        }
+        font-size: 2rem;
 
         &:before {
           content: "";
           background: url(../graphics/layout/map_icon.png);
           background-size: 100%;
           display: block;
-          width: 4rem;
-          height: 4rem;
           margin: 0 auto 1rem auto;
           z-index: 1;
-          @include media(small-up) {
-            width: 5rem;
-            height: 5rem;
-          }
+          width: 5rem;
+          height: 5rem;
         }
       }
 
@@ -109,25 +84,18 @@
         max-width: 40rem;
         margin: 0 auto 2rem auto;
       }
-
-      .button-explore {
-        @extend .button, .button--large;
-        text-decoration: none;
-        box-shadow: 0 0 0 2px $secondary-color;
-        border-radius: 0;
-        width: 12rem;
-        border-radius: $base-border-radius;
-        margin: 0 1rem;
-        transition: all 0.24s ease 0s;
-
-        &:hover,
-        &:active {
-          @extend .antialiased;
-          color: #fff;
-          background: $link-color;
-          opacity: 1;
-        }
-      }
     }
+  }
+}
+
+.cta-block {
+  small {
+    font-size: inherit;
+    font-weight: inherit;
+    margin: 0 ($global-spacing / 2);
+  }
+
+  .button {
+    min-width: 12rem;
   }
 }

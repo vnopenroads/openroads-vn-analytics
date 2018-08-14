@@ -6,19 +6,20 @@
    ========================================================================== */
 
 $base-color: #252525;                   // Asphalt
-$primary-color: #3d0a08;                // Aubergine
-$secondary-color: #da251d;              // Red
+$primary-color: #da251d;                // Red
+$secondary-color: #3d0a08;              // Aubergine
+
 
 /* State colors */
 
-$danger-color: #E74C3C;                 // Alizarin
+$danger-color: $primary-color;          // Primary
 $success-color: #2ECC71;                // Emerald
 $warning-color: #F1C40F;                // Sunflower
 $info-color: #3498DB;                   // Peter River
 
 /* Helper colors */
 
-$link-color: $secondary-color;
+$link-color: $primary-color;
 $base-alpha-color: rgba($base-color, 0.12);
 
 
@@ -54,7 +55,7 @@ $heading-font-weight: $heading-font-bold;
 $base-border-radius: 0.25rem;
 $full-border-radius: 100vh;
 
-$base-border-width: 2px;
+$base-border-width: 1px;
 
 
 /* Sizing, spacing and media queries
@@ -70,7 +71,7 @@ $global-spacing: 1rem;
 
 /* Rows */
 
-$row-min-width: 320px;
+$row-min-width: 768px;
 $row-max-width: 1280px;
 $jeet-max-width: $row-max-width; // reset jeet.gs max width
 

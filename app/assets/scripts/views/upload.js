@@ -23,7 +23,7 @@ var Upload = React.createClass({
                 <label className='form__label' htmlFor='rlp-zip-properties'><T>Road properties</T></label>
                 <div className='form__input-group form__input-group--medium'>
                   <input type='file' className='form__control' id='rlp-zip-properties' name='rlp-zip-properties' accept='.zip' />
-                  <button type='Submit' className='button button--secondary-raised-dark' title='Submit'><span><T>Upload</T></span></button>
+                  <button type='Submit' className='button button--primary-raised-dark' title='Submit'><span><T>Upload</T></span></button>
                 </div>
               </div>
             </form>
@@ -33,7 +33,7 @@ var Upload = React.createClass({
                 <label className='form__label' htmlFor='rlp-zip-geometries'><T>Road geometries</T></label>
                 <div className='form__input-group form__input-group--medium'>
                   <input type='file' className='form__control' id='rlp-zip-geometries' name='rlp-zip-geometries' accept='.zip' />
-                  <button type='Submit' className='button button--secondary-raised-dark' title='Submit'><span><T>Upload</T></span></button>
+                  <button type='Submit' className='button button--primary-raised-dark' title='Submit'><span><T>Upload</T></span></button>
                 </div>
               </div>
             </form>

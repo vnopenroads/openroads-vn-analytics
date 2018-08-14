@@ -7,7 +7,9 @@ import {
   withContext
 } from 'recompose';
 import { fetchSearchResults, cleanSearchResults } from '../actions/action-creators';
+
 import SiteHeader from '../components/site-header';
+import ConfirmationPrompt from '../components/confirmation-prompt';
 
 
 var App = React.createClass({
@@ -31,6 +33,8 @@ var App = React.createClass({
         <main className='site-body'>
           {this.props.children}
         </main>
+
+        <ConfirmationPrompt />
       </div>
     );
   }

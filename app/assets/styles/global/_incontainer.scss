@@ -1,0 +1,121 @@
+/* ==========================================================================
+   Global: Incontainer
+   ========================================================================== */
+
+.incontainer__header {
+  display: flex;
+  margin-bottom: $global-spacing * 2;
+}
+
+.incontainer__headline {
+  position: relative;
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.incontainer__title {
+  @include heading(1.75rem);
+  margin: 0;
+}
+
+.incontainer__subtitle {
+  @extend .heading-alt;
+  position: relative;
+  color: rgba($base-font-color, 0.64);
+  font-size: 1rem;
+  line-height: 1.25rem;
+  margin: ($global-spacing / 4) 0;
+
+  &:first-child {
+    margin-top: -1.25rem;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.incontainer__hactions {
+  flex: 1 0 auto;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  margin-left: $global-spacing;
+
+  > *:not(:last-child) {
+    margin-right: $global-spacing / 4;
+  }
+
+  .button {
+    min-width: 8rem;
+  }
+}
+
+.incontainer__breadcrumb {
+  position: absolute;
+  top: -$global-spacing * 1.5;
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.875rem;
+  line-height: 1rem;
+  text-transform: uppercase;
+  width: 80vw;
+  color: rgba($base-font-color, 0.32);
+
+  a {
+    @extend .truncated;
+    max-width: 14rem;
+  }
+
+  li {
+    &:not(:last-child)::after {
+      content: '/';
+      margin: 0 ($global-spacing / 4);
+    }
+  }
+}
+
+
+/* Incontainer actions
+   ========================================================================== */
+
+/**
+ * "ica-" prefix stands for "incontainer action"
+ */
+
+[class^="ica-"],
+[class*=" ica-"] {
+  @extend .button;
+  min-width: 8rem;
+}
+
+.ica-main {
+  @extend .button--primary-raised-dark;
+}
+
+.ica-download,
+.ica-pencil,
+.ica-export {
+   @extend .button--base-raised-light;
+}
+
+.ica-download::before {
+  @extend %collecticon-download-2;
+}
+
+.ica-pencil::before {
+  @extend %collecticon-pencil;
+}
+
+.ica-export::before {
+  @extend %collecticon-share;
+}
+
+.ica-plus::before {
+  @extend %collecticon-plus;
+}

@@ -51,9 +51,15 @@ export const CREATE_ROAD_PROPERTY_ERROR = 'CREATE_ROAD_PROPERTY_ERROR';
 export const EDIT_ROAD_PROPERTY = 'EDIT_ROAD_PROPERTY';
 export const EDIT_ROAD_PROPERTY_SUCCESS = 'EDIT_ROAD_PROPERTY_SUCCESS';
 export const EDIT_ROAD_PROPERTY_ERROR = 'EDIT_ROAD_PROPERTY_ERROR';
+export const EDIT_ROAD_STATUS = 'EDIT_ROAD_STATUS';
+export const EDIT_ROAD_STATUS_SUCCESS = 'EDIT_ROAD_STATUS_SUCCESS';
+export const EDIT_ROAD_STATUS_ERROR = 'EDIT_ROAD_STATUS_ERROR';
 export const DELETE_ROAD_PROPERTY = 'DELETE_ROAD_PROPERTY';
 export const DELETE_ROAD_PROPERTY_SUCCESS = 'DELETE_ROAD_PROPERTY_SUCCESS';
 export const DELETE_ROAD_PROPERTY_ERROR = 'DELETE_ROAD_PROPERTY_ERROR';
+export const OP_ON_ROAD_PROPERTY = 'OP_ON_ROAD_PROPERTY';
+export const OP_ON_ROAD_PROPERTY_SUCCESS = 'OP_ON_ROAD_PROPERTY_SUCCESS';
+export const OP_ON_ROAD_PROPERTY_ERROR = 'OP_ON_ROAD_PROPERTY_ERROR';
 export const FETCH_ROAD_BBOX = 'FETCH_ROAD_BBOX';
 export const FETCH_ROAD_BBOX_SUCCESS = 'FETCH_ROAD_BBOX_SUCCESS';
 export const FETCH_ROAD_BBOX_ERROR = 'FETCH_ROAD_BBOX_ERROR';
@@ -99,9 +105,17 @@ export const editRoadProperty = (id, key, value) => ({ type: EDIT_ROAD_PROPERTY,
 export const editRoadPropertySuccess = (id, key, value) => ({ type: EDIT_ROAD_PROPERTY_SUCCESS, id, key, value });
 export const editRoadPropertyError = (id, key, value, error) => ({ type: EDIT_ROAD_PROPERTY_ERROR, id, key, value, error });
 
+export const editRoadStatus = (id, value) => ({ type: EDIT_ROAD_STATUS, id, value });
+export const editRoadStatusSuccess = (id, value) => ({ type: EDIT_ROAD_STATUS_SUCCESS, id, value });
+export const editRoadStatusError = (id, value, error) => ({ type: EDIT_ROAD_STATUS_ERROR, id, value, error });
+
 export const deleteRoadProperty = (id, key) => ({ type: DELETE_ROAD_PROPERTY, id, key });
 export const deleteRoadPropertySuccess = (id, key) => ({ type: DELETE_ROAD_PROPERTY_SUCCESS, id, key });
 export const deleteRoadPropertyError = (id, key, error) => ({ type: DELETE_ROAD_PROPERTY_ERROR, id, key, error });
+
+export const opOnRoadProperty = () => ({ type: OP_ON_ROAD_PROPERTY });
+export const opOnRoadPropertySuccess = (data) => ({ type: OP_ON_ROAD_PROPERTY_SUCCESS, data });
+export const opOnRoadPropertyError = (error) => ({ type: OP_ON_ROAD_PROPERTY_ERROR, error });
 
 export const fetchRoadBbox = (roadId) => ({ type: FETCH_ROAD_BBOX, roadId });
 export const fetchRoadBboxSuccess = (roadId, bbox) => ({ type: FETCH_ROAD_BBOX_SUCCESS, roadId, bbox });
@@ -172,11 +186,12 @@ export const createRoadEpic = (id) => (dispatch) => {
       return response.json();
     })
     .then((id) => {
-      dispatch(createRoadSuccess(id));
-      dispatch(clearRoadsPages());
-      dispatch(clearRoadCount());
-    })
-    .catch((err) => dispatch(createRoadError(err.message)));
+      return Promise.all([
+        dispatch(createRoadSuccess(id)),
+        dispatch(clearRoadsPages()),
+        dispatch(clearRoadCount())
+      ]);
+    }, (err) => dispatch(createRoadError(err.message)));
 };
 
 
@@ -198,11 +213,39 @@ export const editRoadEpic = (id, newId) => (dispatch) => {
       return response.json();
     })
     .then(({ id: newId }) => {
-      dispatch(editRoadSuccess(id, newId));
-      dispatch(clearRoadsPages());
-      dispatch(clearRoadCount());
+      return Promise.all([
+        dispatch(editRoadSuccess(id, newId)),
+        dispatch(clearRoadsPages()),
+        dispatch(clearRoadCount())
+      ]);
+    }, (err) => dispatch(editRoadError(id, newId, err.message)));
+};
+
+
+export const editRoadStatusEpic = (id, status) => (dispatch) => {
+  dispatch(editRoad(id, status));
+
+  return fetch(`${config.api}/properties/roads/${id}/status`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ status })
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+
+      return response.json();
     })
-    .catch((err) => dispatch(editRoadError(id, newId, err.message)));
+    .then(() => {
+      return Promise.all([
+        dispatch(editRoadStatusSuccess(id, status)),
+        dispatch(clearRoadsPages()),
+        dispatch(clearRoadCount())
+      ]);
+    }, (err) => dispatch(editRoadStatusError(id, status, err.message)));
 };
 
 
@@ -243,6 +286,35 @@ export const createRoadPropertyEpic = (id, key, value) => (dispatch) => {
       dispatch(createRoadPropertySuccess(id, key, value));
     })
     .catch((err) => dispatch(createRoadPropertyError(id, key, value, err)));
+};
+
+
+export const opOnRoadPropertyEpic = (id, operations) => (dispatch) => {
+  dispatch(opOnRoadProperty());
+
+  const computeOps = (type, ops) => (ops[type] || []).map(field => {
+    const path = field.key.replace(/~/g, '~0').replace(/\//g, '~1');
+    return {op: type, path: `/${path}`, value: field.value};
+  });
+  const ops = computeOps('add', operations)
+    .concat(computeOps('replace', operations))
+    .concat(computeOps('remove', operations));
+
+  return fetch(`${config.api}/properties/roads/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json-patch+json'
+    },
+    body: JSON.stringify(ops)
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+
+      return {ok: true};
+    })
+    .then(res => dispatch(opOnRoadPropertySuccess(res)), (err) => dispatch(opOnRoadPropertyError(err)));
 };
 
 
@@ -423,6 +495,14 @@ export default (
       roadsById: Object.assign({}, state.roadsById, {
         [action.id]: Object.assign({}, state.roadsById[action.id], {
           properties: omit(state.roadsById[action.id].properties, [action.key])
+        })
+      })
+    });
+  } else if (action.type === EDIT_ROAD_STATUS_SUCCESS) {
+    return Object.assign({}, state, {
+      roadsById: Object.assign({}, state.roadsById, {
+        [action.id]: Object.assign({}, state.roadsById[action.id], {
+          status: action.value
         })
       })
     });

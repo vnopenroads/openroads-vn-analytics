@@ -21,19 +21,23 @@ import ProvinceTable from '../containers/province-table-container';
 import {
   ADMIN_MAP
 } from '../constants';
+import AssetsCreate from '../components/assets-create';
 
 
 const AssetsIndex = ({
   provinces, provincesFetched, provincesRoadCount, totalRoadCount, osmRoadCount, provincesRoadCountStatus
 }) => {
   return (
-    <div>
-      <div className='a-header'>
-        <div className='a-headline'>
-          <h1><T>VPRoMMS Assets By Province</T></h1>
+    <div className='incontainer'>
+      <div className='incontainer__header'>
+        <div className='incontainer__headline'>
+          <h2 className='incontainer__title'><T>Overview</T></h2>
+        </div>
+
+        <div className='incontainer__hactions'>
+          <AssetsCreate />
         </div>
       </div>
-
       {
         provincesRoadCountStatus === 'complete' &&
         <div className='a-main__status'>
@@ -46,15 +50,13 @@ const AssetsIndex = ({
           </div>
         </div>
       }
-
-      <div>
-        {provincesFetched && provincesRoadCountStatus === 'complete' &&
-          <ProvinceTable
-            provinces={provinces.filter(province => ADMIN_MAP.province[province.id])}
-            provincesRoadCount={provincesRoadCount}
-          />
-        }
-      </div>
+      {
+        provincesFetched && provincesRoadCountStatus === 'complete' &&
+        <ProvinceTable
+          provinces={provinces.filter(province => ADMIN_MAP.province[province.id])}
+          provincesRoadCount={provincesRoadCount}
+        />
+      }
     </div>
   );
 };
