@@ -78,7 +78,7 @@ var Editor = React.createClass({
   componentWillUnmount: function () {
     window.removeEventListener('message', this.messageListener, false);
 
-    const mapPositionHash = /[0-9\.]+\/[0-9\.]+\/[0-9\.]+$/.exec(this.hash);
+    const mapPositionHash = /[0-9.]+\/[0-9.]+\/[0-9.]+$/.exec(this.hash);
     if (mapPositionHash && mapPositionHash[0] && mapPositionHash[0].split('/').length === 3) {
       const [zoom, lng, lat] = mapPositionHash[0]
         .split('/')

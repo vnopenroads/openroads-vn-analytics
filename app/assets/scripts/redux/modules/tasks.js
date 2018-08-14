@@ -25,9 +25,10 @@ export const DEDUPE_WAY_TASK_ERROR = 'DEDUPE_WAY_TASK_ERROR';
  */
 export const fetchWayTask = (id) => ({ type: FETCH_WAY_TASK, id });
 export const fetchNextWayTask = () => ({ type: FETCH_NEXT_WAY_TASK });
-export const fetchWayTaskSuccess = (id, geoJSON) => ({
+export const fetchWayTaskSuccess = (id, updatedAt, geoJSON) => ({
   type: FETCH_WAY_TASK_SUCCESS,
   id,
+  updatedAt,
   geoJSON
 });
 export const fetchWayTaskError = (error) => ({ type: FETCH_WAY_TASK_ERROR, error: error });
@@ -72,7 +73,7 @@ export const fetchNextWayTaskEpic = () => (dispatch, getState) => {
         feature.properties._id = feature.meta.id;
       });
       dispatch(fetchWayTaskCountEpic());
-      return dispatch(fetchWayTaskSuccess(json.id, json.data));
+      return dispatch(fetchWayTaskSuccess(json.id, json.updated_at, json.data));
     }, e => {
       console.error('Error requesting task', e);
       return dispatch(fetchWayTaskError(e));
@@ -123,12 +124,12 @@ export const fetchWayTaskCountEpic = () => (dispatch, getState) => {
 };
 
 
-export const markWayTaskPendingEpic = way_ids => dispatch => {
+export const markWayTaskPendingEpic = wayIds => dispatch => {
   dispatch(markWayTaskPending());
 
   return fetch(`${config.api}/tasks/pending`, {
     method: 'PUT',
-    body: new Blob([JSON.stringify({ way_ids: way_ids })], { type: 'application/json' })
+    body: new Blob([JSON.stringify({ way_ids: wayIds })], { type: 'application/json' })
   })
     .then(response => {
       if (response.status >= 400) {
@@ -144,11 +145,11 @@ export const dedupeWayTaskEpic = (taskId, wayIds, wayIdToKeep, dedupeId) => (dis
   dispatch(dedupeWayTask(taskId, wayIds, wayIdToKeep, dedupeId));
   // delete ways
   dispatch(deleteEntireWaysEpic(taskId, wayIds))
-  .then(() => {
-    dispatch(editRoadIdEpic(wayIdToKeep, dedupeId))
-    .then(() => { dispatch(dedupeWayTaskSuccess); })
-    .catch((err) => { dispatch(dedupeWayTaskError(err)); });
-  });
+    .then(() => {
+      dispatch(editRoadIdEpic(wayIdToKeep, dedupeId))
+        .then(() => { dispatch(dedupeWayTaskSuccess); })
+        .catch((err) => { dispatch(dedupeWayTaskError(err)); });
+    });
 };
 /**
  * reducer
@@ -182,6 +183,7 @@ export default (
     return Object.assign({}, state, {
       geoJSON: action.geoJSON,
       id: action.id,
+      updatedAt: action.updatedAt,
       status: 'complete'
     });
   } else if (action.type === FETCH_WAY_TASK_ERROR) {

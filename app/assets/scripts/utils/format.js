@@ -1,5 +1,5 @@
 export function formatPercent (n, upperLimit) {
-  if (n !== 0 && !n || isNaN(n)) {
+  if ((n !== 0 && !n) || isNaN(n)) {
     return '-';
   }
   let pct = Math.round(parseFloat(n) * 100);

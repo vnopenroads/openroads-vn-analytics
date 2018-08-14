@@ -48,9 +48,9 @@ const CreateRoadForm = ({
         {
           status === 'error' && error === '409' ?
             <p className="invalid"><strong><T>Error</T></strong>: <T>Road</T> {newRoadId} <T>Already Exists</T></p> :
-          status === 'error' && error === 'Failed to fetch' ?
-            <p className="invalid"><strong><T>Error</T></strong>: <T>Connection Error</T></p> :
-          status === 'error' &&
+            status === 'error' && error === 'Failed to fetch' ?
+              <p className="invalid"><strong><T>Error</T></strong>: <T>Connection Error</T></p> :
+              status === 'error' &&
             <p className="invalid"><strong><T>Error</T></strong></p>
         }
       </div> :

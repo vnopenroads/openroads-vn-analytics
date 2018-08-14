@@ -21,6 +21,11 @@
 .map__controls {
   position: absolute;
   z-index: 10;
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
 
   .panel {
     width: 18rem;
@@ -58,27 +63,43 @@
     top: $global-spacing;
     left: 50%;
     transform: translate(-50%, 0);
+    height: auto;
 
     @include media(xlarge-up) {
       top: $global-spacing * 2;
+      height: auto;
     }
   }
 
   &--bottom-right {
-    bottom: $global-spacing * 2.5;
+    bottom: $global-spacing;
     right: $global-spacing;
 
     @include media(xlarge-up) {
+      bottom: $global-spacing * 2;
       right: $global-spacing * 2;
     }
   }
 
   &--bottom-left {
-    bottom: $global-spacing * 2.5;
+    bottom: $global-spacing;
     left: $global-spacing;
 
     @include media(xlarge-up) {
+      bottom: $global-spacing * 2;
       left: $global-spacing * 2;
+    }
+  }
+
+  &--column-right {
+    top: $global-spacing;
+    right: $global-spacing;
+    height: calc(100% - #{$global-spacing} * 2);
+
+    @include media(xlarge-up) {
+      top: $global-spacing * 2;
+      right: $global-spacing * 2;
+      height: calc(100% - #{$global-spacing} * 4);
     }
   }
 }

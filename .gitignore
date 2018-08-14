@@ -26,3 +26,4 @@ env
 .transifexrc
 ## pyenv
 .python-version
+yarn-error.log

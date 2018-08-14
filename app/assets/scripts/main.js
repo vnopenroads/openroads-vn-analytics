@@ -26,7 +26,6 @@ const validateLanguage = ({ params: { lang } }, replace) => {
   }
 };
 
-
 render((
   <Provider store={store}>
     <Router history={hashHistory}>

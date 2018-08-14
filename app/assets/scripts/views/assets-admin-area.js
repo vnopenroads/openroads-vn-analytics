@@ -20,8 +20,8 @@ import {
 
 const renderAdminName = (children, aaId, aaIdSub) => {
   const adminName = aaIdSub ?
-  children.find(child => child.id === Number(aaIdSub)).name_en :
-  ADMIN_MAP.province[aaId].name;
+    children.find(child => child.id === Number(aaIdSub)).name_en :
+    ADMIN_MAP.province[aaId].name;
 
   return (
     <div className='a-headline'>

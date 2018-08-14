@@ -7,7 +7,7 @@ import {
 import {
   FETCH_ROAD_BBOX_SUCCESS,
   FETCH_ROAD_PROPERTY_SUCCESS
- } from './roads';
+} from './roads';
 
 
 /**
