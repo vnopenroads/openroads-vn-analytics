@@ -348,11 +348,11 @@ var Tasks = React.createClass({
   },
 
   hoverItemOver: function (id) {
-    this.setState({ hoverId: id }, this.syncMap);
+    this.setState({ hoverId: id }, _.debounce(this.syncMap.bind(this), 150));
   },
 
   hoverItemOut: function (id) {
-    this.setState({ hoverId: '' }, this.syncMap);
+    this.setState({ hoverId: '' }, _.debounce(this.syncMap.bind(this), 150));
   },
 
   renderStep0: function () {
