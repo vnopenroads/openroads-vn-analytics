@@ -96,7 +96,7 @@ export const fetchWayTaskEpic = taskId => (dispatch, getState) => {
       data.features.forEach(feature => {
         feature.properties._id = feature.meta.id;
       });
-      return dispatch(fetchWayTaskSuccess(id, data));
+      return dispatch(fetchWayTaskSuccess(id, data.updated_at, data));
     }, e => {
       console.error('Error reloading task', e);
       return dispatch(fetchWayTaskError());
