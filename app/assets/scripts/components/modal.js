@@ -84,10 +84,10 @@ export class Modal extends React.Component {
     this.props.onCloseClick(e);
   }
 
-  getChild (name) {
+  getChild (klass) {
     let c = null;
     React.Children.forEach(this.props.children, o => {
-      if (!c && o.type.name === name) {
+      if (!c && o.type === klass) {
         c = o;
       }
     });
@@ -111,9 +111,9 @@ export class Modal extends React.Component {
 
           <section className={klasses.join(' ')} key={'modal-' + this.props.id} onClick={this.onOverlayClick} id={this.props.id}>
             <div className='modal__inner'>
-              {this.getChild('ModalHeader')}
-              {this.getChild('ModalBody')}
-              {this.getChild('ModalFooter')}
+              {this.getChild(ModalHeader)}
+              {this.getChild(ModalBody)}
+              {this.getChild(ModalFooter)}
             </div>
             <button className='modal__button-dismiss' title='Close' onClick={this.onCloseClick}><span>Dismiss</span></button>
           </section>
