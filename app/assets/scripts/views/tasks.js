@@ -681,7 +681,7 @@ var Tasks = React.createClass({
   next: function () {
     this.map.setFilter(roadSelected, ['all', ['in', '_id', '']]);
     this.props.skipTask(this.props.taskId);
-    this.setState({ selectedStep0: [], selectedStep1: null, mode: 'dedupe', selectedVpromm: null, step: 0 }, this.props.fetchNextTask);
+    this.setState({ selectedStep0: [], selectedStep1: null, mode: 'dedupe', selectedVpromm: null, step: 0, renderedFeatures: null }, this.props.fetchNextTask);
   },
 
   handleProvinceChange: function (selectedProvince) {
