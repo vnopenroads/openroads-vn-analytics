@@ -35,6 +35,7 @@ import { createModifyLineString } from '../utils/to-osm';
 import T, {
   translate
 } from '../components/t';
+import Dropdown from '../components/dropdown';
 import TaskListItem from '../components/task-list-item';
 import Select from 'react-select';
 import _ from 'lodash';
@@ -425,9 +426,26 @@ var Tasks = React.createClass({
     }
     return (
       <div className='panel__f-actions'>
-        <button type='button' className='pfa-secondary' onClick={ this.next }>
-          <span><T>Skip task</T></span>
-        </button>
+        <div className='button-group button-group--horizontal'>
+          <button type='button' className='pfa-secondary' onClick={ this.next }>
+            <span><T>Skip task</T></span>
+          </button>
+          <Dropdown
+            className='task-skip-menu'
+            triggerClassName='pfa-skip-options'
+            triggerActiveClassName='button--active'
+            triggerText='Marked as'
+            triggerTitle='Choose option'
+            direction='up'
+            alignment='right' >
+            <h3 className='drop__title'><T>Marked as</T></h3>
+            <ul className='drop__menu drop__menu--select'>
+              <li><a href='#' className='drop__menu-item drop__menu-item--active'><T>Not an error</T></a></li>
+              <li><a href='#' className='drop__menu-item'><T>An error</T></a></li>
+            </ul>
+          </Dropdown>
+        </div>
+
         <button
           type='button'
           className={`pfa-primary ${isDisabled ? 'disabled' : ''}`}
