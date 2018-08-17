@@ -40,18 +40,17 @@ if (typeof module !== 'undefined') {
 }
 
 /*
+<script src='//localhost:3000/OR_frame_notifier.js'></script>
 <script>
-(function(r, o, a, d, s){
-    d = o.createElement(a);
-    d.src = '//localhost:3000/OR_frame_notifier.js';
-    d.onload = () => r.onORFrameNotifierLoaded();
-    s = o.getElementsByTagName(a)[0];
-    s.parentNode.insertBefore(d, s);
-})(window, document, 'script');
-
-function onORFrameNotifierLoaded () {
-    console.log('loaded');
-    const orFrame = new ORFrameNotifier('id', window, window.parent);
-}
+    if (window === window.parent) {
+        console.warn('Not inside an iframe. ORFrameNotifier won\'t be initialized.');
+    } else {
+        const orFrame = new ORFrameNotifier('id', window.parent);
+        orFrame
+        .send('loaded')
+        .on('settings', data => {
+            console.log('Settings received. Init');
+        });
+    }
 </script>
  */
