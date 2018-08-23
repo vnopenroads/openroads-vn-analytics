@@ -35,6 +35,7 @@ import { createModifyLineString } from '../utils/to-osm';
 import T, {
   translate
 } from '../components/t';
+import Dropdown from '../components/dropdown';
 import TaskListItem from '../components/task-list-item';
 import Select from 'react-select';
 import _ from 'lodash';
@@ -101,7 +102,8 @@ var Tasks = React.createClass({
       selectedStep0: [], // ids of selected features in step 0
       selectedStep1: null, // in step "1", there can only ever be one id selected
       selectedProvince: null,
-      selectedVpromm: null
+      selectedVpromm: null,
+      skipType: 'noterror' // can be either 'error' or 'noterror' to indicate state of Skip dropdown
     };
   },
 
@@ -415,8 +417,28 @@ var Tasks = React.createClass({
     );
   },
 
+  setSkipError: function (e) {
+    e.preventDefault();
+    this.setState({'skipType': 'error'});
+  },
+
+  setSkipNotError: function (e) {
+    e.preventDefault();
+    this.setState({'skipType': 'noterror'});
+  },
+
+  clickSkipTask: function (e) {
+    const { skipType } = this.state;
+    e.preventDefault();
+    if (skipType === 'noterror') {
+      this.markAsDone();
+    } else {
+      this.next();
+    }
+  },
+
   renderActionsStep0: function () {
-    const { mode, selectedStep0 } = this.state;
+    const { mode, selectedStep0, skipType } = this.state;
     let isDisabled;
     if (mode === 'dedupe') {
       isDisabled = selectedStep0.length < 2;
@@ -425,9 +447,26 @@ var Tasks = React.createClass({
     }
     return (
       <div className='panel__f-actions'>
-        <button type='button' className='pfa-secondary' onClick={ this.next }>
-          <span><T>Skip task</T></span>
-        </button>
+        <div className='button-group button-group--horizontal'>
+          <button type='button' className='pfa-secondary' onClick={ this.clickSkipTask }>
+            <span><T>Skip task</T></span>
+          </button>
+          <Dropdown
+            className='task-skip-menu'
+            triggerClassName='pfa-skip-options'
+            triggerActiveClassName='button--active'
+            triggerText='Marked as'
+            triggerTitle='Choose option'
+            direction='up'
+            alignment='right' >
+            <h3 className='drop__title'><T>Marked as</T></h3>
+            <ul className='drop__menu drop__menu--select'>
+              <li><a href='#' onClick={this.setSkipNotError} className={`drop__menu-item  ${skipType === 'noterror' ? 'drop__menu-item--active' : ''}` }><T>Not an error</T></a></li>
+              <li><a href='#' onClick={this.setSkipError} className={ `drop__menu-item ${skipType === 'error' ? 'drop__menu-item--active' : ''}` }><T>An error</T></a></li>
+            </ul>
+          </Dropdown>
+        </div>
+
         <button
           type='button'
           className={`pfa-primary ${isDisabled ? 'disabled' : ''}`}
