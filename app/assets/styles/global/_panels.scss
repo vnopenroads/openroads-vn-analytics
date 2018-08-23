@@ -231,14 +231,22 @@
 [class^="pfa-"],
 [class*=" pfa-"] {
   @extend .button, .button--medium;
-  min-width: 8rem;
+  min-width: 6rem;
 }
 
 .pfa-primary {
   @extend .button--primary-raised-dark;
-
 }
 
 .pfa-secondary {
   @extend .button--base-raised-light;
+}
+
+.pfa-skip-options {
+  @extend .button--base-raised-light, .button--text-hidden;
+  min-width: 2rem;
+
+  &::before {
+    @extend %collecticon-sm-chevron-down;
+  }
 }
