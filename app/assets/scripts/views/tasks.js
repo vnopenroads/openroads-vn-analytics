@@ -417,17 +417,17 @@ var Tasks = React.createClass({
     );
   },
 
-  setSkipError: function(e) {
+  setSkipError: function (e) {
     e.preventDefault();
-    this.setState({ 'skipType': 'error'});
+    this.setState({'skipType': 'error'});
   },
 
-  setSkipNotError: function(e) {
+  setSkipNotError: function (e) {
     e.preventDefault();
-    this.setState({ 'skipType': 'noterror'});
+    this.setState({'skipType': 'noterror'});
   },
 
-  clickSkipTask: function(e) {
+  clickSkipTask: function (e) {
     const { skipType } = this.state;
     e.preventDefault();
     if (skipType === 'noterror') {
@@ -462,7 +462,7 @@ var Tasks = React.createClass({
             <h3 className='drop__title'><T>Marked as</T></h3>
             <ul className='drop__menu drop__menu--select'>
               <li><a href='#' onClick={this.setSkipNotError} className={`drop__menu-item  ${skipType === 'noterror' ? 'drop__menu-item--active' : ''}` }><T>Not an error</T></a></li>
-              <li><a href='#' onClick={this.setSkipError} className={ `drop__menu-item ${ skipType === 'error' ? 'drop__menu-item--active': ''}` }><T>An error</T></a></li>
+              <li><a href='#' onClick={this.setSkipError} className={ `drop__menu-item ${skipType === 'error' ? 'drop__menu-item--active' : ''}` }><T>An error</T></a></li>
             </ul>
           </Dropdown>
         </div>
