@@ -1,14 +1,13 @@
 import React from 'react';
 import {
   compose,
-  lifecycle,
-  getContext
+  lifecycle
 } from 'recompose';
 import {
   fetchJob
 } from '../redux/modules/jobs';
 import { connect } from 'react-redux';
-import T, {
+import {
   translate
 } from '../components/t';
 
@@ -24,15 +23,16 @@ var Job = React.createClass({
       job: null
     };
   },
-  componentWillReceiveProps(nextProps) {
+
+  componentWillReceiveProps (nextProps) {
     if (this.props.job !== nextProps.job) {
       this.setState({
-        job: nextProps.job,
+        job: nextProps.job
       });
     }
 
     // if job does not have a return value yet, keep polling backend for status
-    if (!nextProps.job.returnValue) {
+    if (!nextProps.job.returnvalue) {
       setTimeout(() => {
         this.props.fetchJob(this.props.params.id);
       }, STATUS_POLL_INTERVAL);
@@ -74,7 +74,7 @@ export default compose(
     })
   ),
   lifecycle({
-    componentDidMount: function() {
+    componentDidMount: function () {
       this.props.fetchJob(this.props.params.id);
     }
   })

@@ -18,7 +18,7 @@ import AssetsAA from './views/assets-admin-area';
 import AssetsDetail from './views/assets-detail';
 import Upload from './views/upload';
 import Faq from './views/faq';
-import Job  from './views/job';
+import Job from './views/job';
 
 
 const validateLanguage = ({ params: { lang } }, replace) => {
