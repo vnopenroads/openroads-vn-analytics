@@ -38,6 +38,15 @@ var Job = React.createClass({
       }, STATUS_POLL_INTERVAL);
     }
   },
+  getMessage: function(value) {
+    if (typeof(value) === 'string') {
+      return value;
+    }
+    if (value.changeset) {
+      const numRoads = Object.keys(value.created.way).length;
+      return `Created ${numRoads} new road geometries.`;
+    }
+  },
   render: function () {
     const { params, language } = this.props;
     const { job } = this.state;
@@ -46,7 +55,7 @@ var Job = React.createClass({
     let msg = '';
     if (job && job.returnvalue) {
       status = translate(language, 'Finished');
-      msg = job.returnvalue;
+      msg = this.getMessage(job.returnvalue);
     } else {
       status = translate(language, 'Processing upload...');
     }
