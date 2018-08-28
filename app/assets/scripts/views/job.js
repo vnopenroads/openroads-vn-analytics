@@ -1,15 +1,18 @@
 import React from 'react';
 import {
   compose,
+  getContext,
   lifecycle
 } from 'recompose';
+import {
+  Link,
+  withRouter
+} from 'react-router';
 import {
   fetchJob
 } from '../redux/modules/jobs';
 import { connect } from 'react-redux';
-import {
-  translate
-} from '../components/t';
+import T, { translate } from '../components/t';
 
 const STATUS_POLL_INTERVAL = 2000; // in ms
 
@@ -59,21 +62,73 @@ var Job = React.createClass({
     } else {
       status = translate(language, 'Processing upload...');
     }
+    console.log(language);
     return (
-      <div className='inpage__body'>
-        <div className='inner'>
-          <h2>Job page - #{ id }</h2>
-          <p>
-            Status: { status }
-          </p>
-          { msg && <p> { msg } </p> }
+      <section className='inpage'>
+        <header className='inpage__header'>
+          <div className='inner'>
+            <div className='inpage__headline'>
+              <h1 className='inpage__title'><T>Upload status</T></h1>
+            </div>
+          </div>
+        </header>
+        <div className='inpage__body'>
+          <div className='inner'>
+
+            <div className='incontainer'>
+              <div className='incontainer__header'>
+                <div className='incontainer__headline'>
+                  <h2 className='incontainer__title'><T>Job</T> #{ id }</h2>
+                </div>
+                <div className='incontainer__hactions'>
+                  <Link to={`/${language}/upload`} className='ica-upload ica-main' title='Upload'><span><T>Upload</T></span></Link>
+                </div>
+              </div>
+
+              <div className='incontainer__body'>
+
+                <div className='status-card status-card--success'>
+                  <h3>Success</h3>
+                  { msg && <p> { msg } </p> }
+                </div>
+
+                <div className='status-card status-card--error'>
+                  <h3>Failed</h3>
+                  { msg && <p> { msg } </p> }
+                </div>
+
+                <div className='status-card status-card--pending'>
+                  <h3>Processing</h3>
+                  { msg && <p> { msg } </p> }
+                </div>
+
+                <form className='form'>
+                  <div className='form__group'>
+                    <div className='form__inner-header'>
+                      <div className='form__inner-headline'>
+                        <label className='form__label' htmlFor='api-response'><T>API response</T></label>
+                      </div>
+                      <div className='form__inner-actions'>
+                        <button type='button' className='fia-clipboard' title='Copy to clipboard'><span><T>Copy</T></span></button>
+                      </div>
+                    </div>
+                    <textarea className='form__control' id='api-response' rows='8' readOnly value={ JSON.stringify(job, null, '  ') } />
+                    <p className='form__help'><T>Help text.</T></p>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+
+          </div>
         </div>
-      </div>
+      </section>
     );
   }
 });
 
 export default compose(
+  getContext({ language: React.PropTypes.string }),
   connect(
     state => ({
       job: state.jobs.data

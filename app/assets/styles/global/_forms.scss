@@ -759,6 +759,14 @@ label[for] {
   @extend .button--primary-plain;
 }
 
+.fia-clipboard {
+  @extend .button--primary-plain, .button--text-hidden;
+
+  &::before {
+    @extend %collecticon-clipboard-list;
+  }
+}
+
 .form__options-menu {
   display: inline-block;
   margin: 0 0 ($global-spacing / 2) 0;

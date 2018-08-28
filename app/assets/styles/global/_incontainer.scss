@@ -108,6 +108,10 @@
   @extend %collecticon-download-2;
 }
 
+.ica-upload::before {
+  @extend %collecticon-upload-2;
+}
+
 .ica-pencil::before {
   @extend %collecticon-pencil;
 }
