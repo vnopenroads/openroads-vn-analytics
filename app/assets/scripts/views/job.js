@@ -81,7 +81,7 @@ var Job = React.createClass({
                   <h2 className='incontainer__title'><T>Job</T> #{ id }</h2>
                 </div>
                 <div className='incontainer__hactions'>
-                  <Link to={`/${language}/upload`} className='ica-upload ica-main' title='Upload'><span><T>Upload</T></span></Link>
+                  <Link to={`/${language}/upload`} className='ica-upload ica-main' title='Upload'><span><T>New upload</T></span></Link>
                 </div>
               </div>
 
