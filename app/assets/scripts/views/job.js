@@ -49,20 +49,39 @@ var Job = React.createClass({
       const numRoads = Object.keys(value.created.way).length;
       return `Created ${numRoads} new road geometries.`;
     }
+    if (value.message) {
+      return value.message;
+    }
+    return '';
+  },
+  getStatusType: function(value) {
+    if (value.changeset) {
+      return 'success';
+    } else if (value.type) {
+      return value.type;
+    } else {
+      return 'error';
+    }
   },
   render: function () {
+    const STATUS_MESSAGES = {
+      'success': translate(language, 'Success'),
+      'error': translate(language, 'Failed'),
+      'inprocess': translate(language, 'Processing')
+    };
     const { params, language } = this.props;
     const { job } = this.state;
     const id = params.id;
-    let status;
+    let statusType;
     let msg = '';
     if (job && job.returnvalue) {
-      status = translate(language, 'Finished');
+      statusType = this.getStatusType(job.returnvalue);
       msg = this.getMessage(job.returnvalue);
+
     } else {
-      status = translate(language, 'Processing upload...');
+      statusType = 'inprocess';
     }
-    console.log(language);
+    const status = STATUS_MESSAGES[statusType];
     return (
       <section className='inpage'>
         <header className='inpage__header'>
@@ -87,20 +106,26 @@ var Job = React.createClass({
 
               <div className='incontainer__body'>
 
+                { statusType === 'success' &&
                 <div className='status-card status-card--success'>
                   <h3>Success</h3>
                   { msg && <p> { msg } </p> }
                 </div>
+                }
 
+                { statusType === 'error' &&
                 <div className='status-card status-card--error'>
                   <h3>Failed</h3>
                   { msg && <p> { msg } </p> }
                 </div>
+                }
 
+                { statusType === 'inprocess' &&
                 <div className='status-card status-card--pending'>
                   <h3>Processing</h3>
                   { msg && <p> { msg } </p> }
                 </div>
+                }
 
                 <form className='form'>
                   <div className='form__group'>
@@ -113,7 +138,7 @@ var Job = React.createClass({
                       </div>
                     </div>
                     <textarea className='form__control' id='api-response' rows='8' readOnly value={ JSON.stringify(job, null, '  ') } />
-                    <p className='form__help'><T>Help text.</T></p>
+                    <p className='form__help'><T>Details of upload job</T></p>
                   </div>
                 </form>
 
