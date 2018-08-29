@@ -41,6 +41,11 @@ var Job = React.createClass({
       }, STATUS_POLL_INTERVAL);
     }
   },
+  copyToClipboard () {
+    const textarea = document.getElementById('api-response');
+    textarea.select();
+    document.execCommand('copy');
+  },
   getMessage: function(value) {
     if (typeof(value) === 'string') {
       return value;
@@ -134,7 +139,7 @@ var Job = React.createClass({
                         <label className='form__label' htmlFor='api-response'><T>API response</T></label>
                       </div>
                       <div className='form__inner-actions'>
-                        <button type='button' className='fia-clipboard' title='Copy to clipboard'><span><T>Copy</T></span></button>
+                        <button type='button' className='fia-clipboard' onClick={ this.copyToClipboard } title='Copy to clipboard'><span><T>Copy</T></span></button>
                       </div>
                     </div>
                     <textarea className='form__control' id='api-response' rows='8' readOnly value={ JSON.stringify(job, null, '  ') } />
