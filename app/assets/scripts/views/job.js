@@ -5,8 +5,7 @@ import {
   lifecycle
 } from 'recompose';
 import {
-  Link,
-  withRouter
+  Link
 } from 'react-router';
 import {
   fetchJob
@@ -46,8 +45,8 @@ var Job = React.createClass({
     textarea.select();
     document.execCommand('copy');
   },
-  getMessage: function(value) {
-    if (typeof(value) === 'string') {
+  getMessage: function (value) {
+    if (typeof (value) === 'string') {
       return value;
     }
     if (value.changeset) {
@@ -59,7 +58,7 @@ var Job = React.createClass({
     }
     return '';
   },
-  getStatusType: function(value) {
+  getStatusType: function (value) {
     if (value.changeset) {
       return 'success';
     } else if (value.type) {
@@ -69,12 +68,12 @@ var Job = React.createClass({
     }
   },
   render: function () {
+    const { params, language } = this.props;
     const STATUS_MESSAGES = {
       'success': translate(language, 'Success'),
       'error': translate(language, 'Failed'),
       'inprocess': translate(language, 'Processing')
     };
-    const { params, language } = this.props;
     const { job } = this.state;
     const id = params.id;
     let statusType;
@@ -82,7 +81,6 @@ var Job = React.createClass({
     if (job && job.returnvalue) {
       statusType = this.getStatusType(job.returnvalue);
       msg = this.getMessage(job.returnvalue);
-
     } else {
       statusType = 'inprocess';
     }
@@ -113,21 +111,21 @@ var Job = React.createClass({
 
                 { statusType === 'success' &&
                 <div className='status-card status-card--success'>
-                  <h3>Success</h3>
+                  <h3>{ status }</h3>
                   { msg && <p> { msg } </p> }
                 </div>
                 }
 
                 { statusType === 'error' &&
                 <div className='status-card status-card--error'>
-                  <h3>Failed</h3>
+                  <h3>{ status }</h3>
                   { msg && <p> { msg } </p> }
                 </div>
                 }
 
                 { statusType === 'inprocess' &&
                 <div className='status-card status-card--pending'>
-                  <h3>Processing</h3>
+                  <h3>{ status }</h3>
                   { msg && <p> { msg } </p> }
                 </div>
                 }
