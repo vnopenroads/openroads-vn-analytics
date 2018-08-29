@@ -6,6 +6,7 @@ import {
   getContext
 } from 'recompose';
 import mapboxgl from 'mapbox-gl';
+import _ from 'lodash';
 import T from '../components/t';
 import config from '../config';
 import lineColors from '../utils/line-colors';
@@ -43,7 +44,7 @@ var Explore = React.createClass({
   componentDidMount: function () {
     mapboxgl.accessToken = config.mbToken;
 
-    const { lng, lat, zoom, activeRoad } = this.props;
+    const { lng, lat, zoom, activeRoad, language } = this.props;
 
     if (activeRoad) {
       this.props.fetchActiveRoad(activeRoad);
@@ -143,6 +144,25 @@ var Explore = React.createClass({
           layout: {'line-cap': 'round'},
           filter: ['has', 'or_vpromms']
         })
+        .addLayer({
+          id: 'vpromm-interaction',
+          type: 'line',
+          source: {
+            type: 'vector',
+            url: 'mapbox://openroads.vietnam-conflated-1'
+          },
+          'source-layer': 'conflated',
+          paint: {
+            'line-width': [
+              'interpolate', ['linear'], ['zoom'],
+              0, 3,
+              10, 8
+            ],
+            'line-opacity': 0
+          },
+          layout: {'line-cap': 'round'},
+          filter: ['has', 'or_vpromms']
+        })
         .setPaintProperty(
           'novpromm',
           'line-color',
@@ -158,6 +178,18 @@ var Explore = React.createClass({
           'line-color',
           lineColors['iri']
         );
+
+      this.map.on('mousemove', (e) => {
+        const features = this.map.queryRenderedFeatures(e.point, {layers: ['vpromm-interaction']});
+        this.map.getCanvas().style.cursor = features.length ? 'pointer' : '';
+      });
+
+      this.map.on('click', 'vpromm-interaction', (e) => {
+        const vpromm = _.get(e, 'features[0].properties.or_vpromms', null);
+        if (vpromm) {
+          this.props.router.push(`/${language}/assets/road/${vpromm}`);
+        }
+      });
     });
   },
 
