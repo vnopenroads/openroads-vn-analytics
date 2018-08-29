@@ -21,18 +21,10 @@ var Job = React.createClass({
   //   language: React.PropTypes.string
   // },
   getInitialState: function () {
-    return {
-      job: null
-    };
+    return {};
   },
 
   componentWillReceiveProps (nextProps) {
-    if (this.props.job !== nextProps.job) {
-      this.setState({
-        job: nextProps.job
-      });
-    }
-
     // if job does not have a return value yet, keep polling backend for status
     if (!nextProps.job.returnvalue) {
       setTimeout(() => {
@@ -68,13 +60,12 @@ var Job = React.createClass({
     }
   },
   render: function () {
-    const { params, language } = this.props;
+    const { params, language, job } = this.props;
     const STATUS_MESSAGES = {
       'success': translate(language, 'Success'),
       'error': translate(language, 'Failed'),
       'inprocess': translate(language, 'Processing')
     };
-    const { job } = this.state;
     const id = params.id;
     let statusType;
     let msg = '';
