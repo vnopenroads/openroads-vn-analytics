@@ -79,8 +79,7 @@ const SiteHeader = ({language, pathname}) => (
           <li>
             <Link
               to={`/${language}/upload`}
-              className='site__menu-global-item'
-              activeClassName='site__menu-global-item--active'>
+              className={c('site__menu-global-item', {'site__menu-global-item--active': pathname.match(new RegExp(`^/${language}/(jobs|upload)`))})}>
               <T>Upload</T>
             </Link>
           </li>

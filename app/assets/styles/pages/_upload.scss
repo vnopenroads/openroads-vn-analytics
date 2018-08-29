@@ -6,3 +6,57 @@
 .upload-form {
   max-width: 48rem;
 }
+
+
+/* Status card
+   ========================================================================== */
+
+.status-card {
+  @extend .antialiased;
+  background: $base-color;
+  color: #fff;
+  padding: ($global-spacing * 2) ($global-spacing * 4) ($global-spacing * 2) ($global-spacing * 2);
+  position: relative;
+  border-radius: $base-border-radius;
+  margin-bottom: $global-spacing * 2;
+  box-shadow: inset 0 0 0 1px $base-alpha-color;
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+
+  &::before {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-size: 2rem;
+    line-height: 3rem;
+    width: 3rem;
+    text-align: center;
+    color: #fff;
+  }
+}
+
+.status-card--success {
+  background: $success-color;
+
+  &::before {
+    @extend %collecticon-circle-tick;
+  }
+}
+
+.status-card--error {
+  background: $danger-color;
+
+  &::before {
+    @extend %collecticon-circle-xmark;
+  }
+}
+
+.status-card--pending {
+  background: $warning-color;
+
+  &::before {
+    @extend %collecticon-circle-exclamation;
+  }
+}
