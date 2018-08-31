@@ -153,6 +153,33 @@
   }
 }
 
+.table-details {
+  height: 0 !important;
+
+  & > td {
+    padding: 0 !important;
+  }
+
+  .table-details-wrapper {
+    max-height: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  thead {
+    @extend .visually-hidden;
+  }
+
+  &.table-details--expanded {
+    height: auto !important;
+    
+    .table-details-wrapper {
+      max-height: 1000px;
+      height: auto;
+    }
+  }
+}
+
 
 /* Assets: Single
    ========================================================================== */
