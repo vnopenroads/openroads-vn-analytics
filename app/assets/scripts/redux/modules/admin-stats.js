@@ -1,4 +1,8 @@
+import { combineReducers } from 'redux';
 import config from '../../config';
+
+//
+// Index reducer and actions
 
 export const FETCH_ADMIN_STATS = 'FETCH_ADMIN_STATS';
 export const FETCH_ADMIN_STATS_SUCCESS = 'FETCH_ADMIN_STATS_SUCCESS';
@@ -8,15 +12,12 @@ export const fetchAdminStatsStart = () => ({ type: FETCH_ADMIN_STATS });
 export const fetchAdminStatsSucess = (data) => ({ type: FETCH_ADMIN_STATS_SUCCESS, data });
 export const fetchAdminStatsError = (error) => ({ type: FETCH_ADMIN_STATS_ERROR, error });
 
-export const fetchAdminStats = (id, newId) => (dispatch) => {
+export const fetchAdminStats = () => (dispatch) => {
   dispatch(fetchAdminStatsStart());
 
   return fetch(`${config.api}/admin/stats`, { method: 'GET' })
     .then(response => {
-      if (!response.ok) {
-        throw new Error(response.status);
-      }
-
+      if (!response.ok) throw new Error(response.status);
       return response.json();
     })
     .then((data) => dispatch(fetchAdminStatsSucess(data)), (err) => dispatch(fetchAdminStatsError(err.message)));
@@ -25,7 +26,7 @@ export const fetchAdminStats = (id, newId) => (dispatch) => {
 /**
  * reducer
  */
-export default (
+const index = (
   state = {
     fetching: false,
     fetched: false,
@@ -49,3 +50,7 @@ export default (
   }
   return state;
 };
+
+export default combineReducers({
+  index,
+});
