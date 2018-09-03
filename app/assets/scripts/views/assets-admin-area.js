@@ -5,29 +5,16 @@ import {
   compose,
   getContext
 } from 'recompose';
-import T from '../components/t';
 import { Link } from 'react-router';
-import RoadTable from '../containers/road-table-container';
-import DistrictList from '../components/district-list';
-import {
-  fetchAdminInfo
-} from '../actions/action-creators';
-import config from '../config';
-import {
-  ADMIN_MAP
-} from '../constants';
+import _ from 'lodash';
+import c from 'classnames';
+
 import AssetsCreate from '../components/assets-create';
+import T, { translate } from '../components/t';
+import { StatsTableHeader, StatsTableRow } from '../components/admin-stats-tables';
 
-
-const renderAdminName = (children, aaId, aaIdSub) => {
-  const adminName = aaIdSub ?
-    children.find(child => child.id === Number(aaIdSub)).name_en :
-    ADMIN_MAP.province[aaId].name;
-
-  return (
-    <h2 className='incontainer__title'>{adminName}</h2>
-  );
-};
+import { fetchAdminStatsAA } from '../redux/modules/admin-stats';
+import config from '../config';
 
 class AssetsAA extends React.Component {
   constructor (props) {
@@ -36,17 +23,30 @@ class AssetsAA extends React.Component {
     this.onCreateAssetClick = this.onCreateAssetClick.bind(this);
 
     this.state = {
-      createModalOpen: false
+      createModalOpen: false,
+      activeTab: 'assets'
     };
   }
 
-  componentWillMount () {
-    this.props._fetchAdminInfo(this.props.params.aaId);
+  fetchData (props) {
+    const {aaId, aaIdSub} = props.params;
+
+    if (aaIdSub) {
+      props.fetchAdminStatsAA('district', aaId, aaIdSub);
+    } else {
+      props.fetchAdminStatsAA('province', aaId);
+    }
+  }
+
+  componentDidMount () {
+    this.fetchData(this.props);
   }
 
   componentWillReceiveProps (nextProps) {
-    if (this.props.params.aaId !== nextProps.params.aaId) {
-      this.props._fetchAdminInfo(nextProps.params.aaId);
+    if (this.props.params.aaId !== nextProps.params.aaId || this.props.params.aaIdSub !== nextProps.params.aaIdSub) {
+      // Reset tab.
+      this.setState({activeTab: 'assets'});
+      this.fetchData(nextProps);
     }
   }
 
@@ -59,41 +59,99 @@ class AssetsAA extends React.Component {
     this.setState({ createModalOpen: true });
   }
 
+  onTabClick (tab, e) {
+    e.preventDefault();
+    this.setState({ activeTab: tab });
+  }
+
+  renderHeadline () {
+    const {language, params: { aaId, aaIdSub }, aa: { data }} = this.props;
+    const type = aaIdSub ? translate(language, 'District') : translate(language, 'Province');
+    const nameVar = language === 'en' ? 'name_en' : 'name_vn';
+
+    return (
+      <div className='incontainer__headline'>
+        <ol className='incontainer__breadcrumb'>
+          <li><Link title='View' to={`${language}/assets`}>Overview</Link></li>
+          {aaIdSub && <li><Link title='View' to={`${language}/assets/${aaId}`}>{data.province[nameVar]}</Link></li>}
+        </ol>
+        <h2 className='incontainer__title'>{type}: {data[nameVar]}</h2>
+      </div>
+
+    );
+  }
+
+  renderTabs () {
+    // If it is a district there's no need to have tabs.
+    if (this.props.params.aaIdSub) return null;
+
+    const tabs = [
+      {key: 'assets', label: 'Assets'},
+      {key: 'districts', label: 'Districts'}
+    ];
+
+    return (
+      <ul>
+        {tabs.map(t => (
+          <li key={t.key}>
+            <a href='#' className={c({'tab--active': this.state.activeTab === t.key})} title={translate(this.props.language, 'Switch tab')} onClick={this.onTabClick.bind(this, t.key)}><T>{t.label}</T></a>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
+  renderAssetsTable () {
+    return null;
+  }
+
+  renderDistrictsTable () {
+    const { language, aa: { data } } = this.props;
+    const nameVar = language === 'en' ? 'name_en' : 'name_vn';
+
+    return (
+      <div className='table'>
+        <table>
+          <StatsTableHeader type='district'/>
+          <tbody>
+            {data.districts.map(d => (
+              <StatsTableRow
+                key={d.id}
+                type='district'
+                data={d}
+                lang={language}
+                provinceId={data.id}
+                districtId={d.id}
+                districtName={d[nameVar]} />
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
   render () {
-    const { adminInfoFetched, language, adminInfo: { children }, params: { aaId, aaIdSub } } = this.props;
+    const { language, params: { aaId, aaIdSub }, aa: { fetched, fetching, data } } = this.props;
+    const isDistrict = !!aaIdSub;
+
+    if (!fetched || fetching) return null;
 
     return (
       <div className='incontainer'>
         <div className='incontainer__header'>
-          <div className='incontainer__headline'>
-            {children && renderAdminName(children, aaId, aaIdSub)}
-
-            <ol className='incontainer__breadcrumb'>
-              <li><Link title='View' to={`${language}/assets`}>Overview</Link></li>
-              {aaIdSub && <li><Link title='View' to={`${language}/assets/${aaId}`}>{ADMIN_MAP.province[aaId].name}</Link></li>}
-            </ol>
-          </div>
+          {this.renderHeadline()}
 
           <div className='incontainer__hactions'>
             {!aaIdSub && aaId && <a href={`${config.provinceDumpBaseUrl}${aaId}.csv`} className='ica-download'><T>Download</T></a>}
             <AssetsCreate />
           </div>
-
         </div>
 
         <div>
-          {
-            !aaIdSub && adminInfoFetched &&
-              <DistrictList
-                districts={children}
-                aaId={aaId}
-                language={language}
-              />
-          }
+          {this.renderTabs()}
+          {this.state.activeTab === 'assets' && this.renderAssetsTable()}
+          {this.state.activeTab === 'districts' && this.renderDistrictsTable()}
         </div>
-
-        <RoadTable />
-
       </div>
     );
   }
@@ -101,11 +159,10 @@ class AssetsAA extends React.Component {
 
 if (config.environment !== 'production') {
   AssetsAA.propTypes = {
-    _fetchAdminInfo: React.PropTypes.func,
+    fetchAdminStatsAA: React.PropTypes.func,
     params: React.PropTypes.object,
     language: React.PropTypes.string,
-    adminInfo: React.PropTypes.object,
-    adminInfoFetched: React.PropTypes.bool
+    aa: React.PropTypes.object
   };
 }
 
@@ -116,12 +173,15 @@ if (config.environment !== 'production') {
 export default compose(
   getContext({ language: React.PropTypes.string }),
   connect(
-    state => ({
-      adminInfo: state.adminInfo.data,
-      adminInfoFetched: state.adminInfo.fetched
-    }),
+    (state, props) => {
+      const {aaId, aaIdSub} = props.params;
+      const id = aaIdSub ? `${aaId}-${aaIdSub}` : aaId;
+      return {
+        aa: _.get(state.adminStats.aa, id, {fetched: false, fetching: false, data: {}})
+      };
+    },
     dispatch => ({
-      _fetchAdminInfo: (id, level) => dispatch(fetchAdminInfo(id, level))
+      fetchAdminStatsAA: (...args) => dispatch(fetchAdminStatsAA(...args))
     })
   )
 )(AssetsAA);
