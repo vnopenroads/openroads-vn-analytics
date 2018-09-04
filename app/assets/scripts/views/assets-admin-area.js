@@ -95,6 +95,20 @@ class AssetsAA extends React.Component {
     this.props.fetchRoadsEpic(codes.province, codes.district, newPage, sortField, sortOrder);
   }
 
+  handleRoadsSortChange (field, e) {
+    e.preventDefault();
+    const {sortField, sortOrder, aa} = this.props;
+    const codes = getAACodes(aa.data);
+
+    const newOrder = field !== sortField ? 'asc' : sortOrder === 'asc' ? 'desc' : 'asc';
+    this.props.sortColumn(field, newOrder);
+    // Changing the sort resets the page.
+    const newPage = 1;
+    this.props.setPage(newPage);
+
+    this.props.fetchRoadsEpic(codes.province, codes.district, newPage, field, newOrder);
+  }
+
   renderHeadline () {
     const {language, params: { aaId, aaIdSub }, aa: { data }} = this.props;
     const type = aaIdSub ? translate(language, 'District') : translate(language, 'Province');
@@ -133,7 +147,15 @@ class AssetsAA extends React.Component {
   }
 
   renderAssetsTable () {
-    const {roadsPageStatus, roadsPage, language, aa: {data: aaData}, page} = this.props;
+    const {
+      roadsPageStatus,
+      roadsPage,
+      language,
+      aa: {data: aaData},
+      page,
+      sortField,
+      sortOrder
+    } = this.props;
 
     if (roadsPageStatus !== 'complete') return null;
 
@@ -151,6 +173,7 @@ class AssetsAA extends React.Component {
       {
         accessor: 'id',
         label: 'Vpromm Id',
+        sortable: true,
         render: (r) => <Link to={`/${language}/assets/road/${r.id}`} title={translate(language, 'View asset page')}>{r.id}</Link>
       },
       {accessor: 'status', label: 'Review Status'},
@@ -166,7 +189,23 @@ class AssetsAA extends React.Component {
         <table className='table'>
           <thead>
             <tr>
-              {columns.map(({accessor, label}) => <th key={accessor}>{label}</th>)}
+              {columns.map(({accessor, label, sortable}) => {
+                const sortClasses = c('table__sort', {
+                  'table__sort--none': sortField !== accessor,
+                  'table__sort--asc': sortField === accessor && sortOrder === 'asc',
+                  'table__sort--desc': sortField === accessor && sortOrder === 'desc'
+                });
+                return sortable
+                  ? (
+                    <th key={accessor}>
+                      <a
+                        href='#'
+                        className={sortClasses}
+                        title={translate(language, 'Sort by this field')}
+                        onClick={this.handleRoadsSortChange.bind(this, accessor)}>{label}</a>
+                    </th>
+                  ) : <th key={accessor}>{label}</th>;
+              })}
             </tr>
           </thead>
           <tbody>
@@ -204,19 +243,19 @@ class AssetsAA extends React.Component {
 
     return (
       <table className='table'>
-          <StatsTableHeader type='district'/>
-          <tbody>
-            {data.districts.map(d => (
-              <StatsTableRow
-                key={d.id}
-                type='district'
-                data={d}
-                lang={language}
-                provinceId={data.id}
-                districtId={d.id}
-                districtName={d[nameVar]} />
-            ))}
-          </tbody>
+        <StatsTableHeader type='district'/>
+        <tbody>
+          {data.districts.map(d => (
+            <StatsTableRow
+              key={d.id}
+              type='district'
+              data={d}
+              lang={language}
+              provinceId={data.id}
+              districtId={d.id}
+              districtName={d[nameVar]} />
+          ))}
+        </tbody>
       </table>
     );
   }
@@ -253,6 +292,7 @@ if (config.environment !== 'production') {
     fetchRoadsEpic: React.PropTypes.func,
     fetchAARoadCountEpic: React.PropTypes.func,
     setPage: React.PropTypes.func,
+    sortColumn: React.PropTypes.func,
     page: React.PropTypes.number,
     sortField: React.PropTypes.string,
     sortOrder: React.PropTypes.string,

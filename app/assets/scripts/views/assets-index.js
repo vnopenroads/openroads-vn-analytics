@@ -57,49 +57,49 @@ export class AssetsIndex extends React.Component {
 
     return (
       <table className='table'>
-          <StatsTableHeader type='province'/>
+        <StatsTableHeader type='province'/>
 
-          {_.sortBy(data.provinces, nameVar).map(province => {
-            const pId = province.id;
-            const { districts } = province;
-            if (!pId) return null;
+        {_.sortBy(data.provinces, nameVar).map(province => {
+          const pId = province.id;
+          const { districts } = province;
+          if (!pId) return null;
 
-            return (
-              <StatsTableExpandableTbody
-                key={pId}
-                lang={lang}
-                provinceId={pId}
-                provName={province[nameVar]}
-                data={province}
-                disctrictCount={districts.length}
-                isExpanded={this.isExpanded(pId)}
-                onExpandToggle={this.onExpandToggle.bind(this, pId)} >
+          return (
+            <StatsTableExpandableTbody
+              key={pId}
+              lang={lang}
+              provinceId={pId}
+              provName={province[nameVar]}
+              data={province}
+              disctrictCount={districts.length}
+              isExpanded={this.isExpanded(pId)}
+              onExpandToggle={this.onExpandToggle.bind(this, pId)} >
 
-                <div className='table-details-wrapper'>
+              <div className='table-details-wrapper'>
                 <table className='table'>
-                    <StatsTableHeader type='province-district'/>
-                    <tbody>
-                      {districts.map(district => {
-                        const dId = district.id;
-                        if (!dId) return null;
-                        return (
-                          <StatsTableRow
-                            key={dId}
-                            type='province-district'
-                            data={district}
-                            lang={lang}
-                            provinceId={pId}
-                            provinceName={province[nameVar]}
-                            districtId={dId}
-                            districtName={district[nameVar]} />
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </StatsTableExpandableTbody>
-            );
-          })}
+                  <StatsTableHeader type='province-district'/>
+                  <tbody>
+                    {districts.map(district => {
+                      const dId = district.id;
+                      if (!dId) return null;
+                      return (
+                        <StatsTableRow
+                          key={dId}
+                          type='province-district'
+                          data={district}
+                          lang={lang}
+                          provinceId={pId}
+                          provinceName={province[nameVar]}
+                          districtId={dId}
+                          districtName={district[nameVar]} />
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </StatsTableExpandableTbody>
+          );
+        })}
       </table>
     );
   }
