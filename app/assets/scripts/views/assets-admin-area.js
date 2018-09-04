@@ -162,8 +162,8 @@ class AssetsAA extends React.Component {
     ];
 
     return (
-      <div className='table'>
-        <table>
+      <div>
+        <table className='table'>
           <thead>
             <tr>
               {columns.map(({accessor, label}) => <th key={accessor}>{label}</th>)}
@@ -203,8 +203,7 @@ class AssetsAA extends React.Component {
     const nameVar = language === 'en' ? 'name_en' : 'name_vn';
 
     return (
-      <div className='table'>
-        <table>
+      <table className='table'>
           <StatsTableHeader type='district'/>
           <tbody>
             {data.districts.map(d => (
@@ -218,8 +217,7 @@ class AssetsAA extends React.Component {
                 districtName={d[nameVar]} />
             ))}
           </tbody>
-        </table>
-      </div>
+      </table>
     );
   }
 

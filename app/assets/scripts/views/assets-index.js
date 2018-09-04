@@ -56,8 +56,7 @@ export class AssetsIndex extends React.Component {
     console.log('this.props', this.props);
 
     return (
-      <div className='table'>
-        <table>
+      <table className='table'>
           <StatsTableHeader type='province'/>
 
           {_.sortBy(data.provinces, nameVar).map(province => {
@@ -77,7 +76,7 @@ export class AssetsIndex extends React.Component {
                 onExpandToggle={this.onExpandToggle.bind(this, pId)} >
 
                 <div className='table-details-wrapper'>
-                  <table>
+                <table className='table'>
                     <StatsTableHeader type='province-district'/>
                     <tbody>
                       {districts.map(district => {
@@ -101,8 +100,7 @@ export class AssetsIndex extends React.Component {
               </StatsTableExpandableTbody>
             );
           })}
-        </table>
-      </div>
+      </table>
     );
   }
 
