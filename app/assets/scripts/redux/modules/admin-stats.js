@@ -83,6 +83,7 @@ export const fetchAdminStatsAA = (aaType, pId, dId) => (dispatch) => {
           ...province.districts[0],
           province: {
             id: province.id,
+            code: province.code,
             name_en: province.name_en,
             name_vn: province.name_vn
           }

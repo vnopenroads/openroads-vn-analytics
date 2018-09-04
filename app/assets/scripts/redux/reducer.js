@@ -7,7 +7,7 @@ import waytasks from './modules/tasks';
 import jobs from './modules/jobs';
 import osmChange from './modules/osm';
 import roads from './modules/roads';
-import roadCount from './modules/roadCount';
+import roadCount from './modules/road-count';
 import map from './modules/map';
 import adminStats from './modules/admin-stats';
 

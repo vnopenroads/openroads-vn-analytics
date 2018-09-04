@@ -9,11 +9,11 @@ import { environment } from '../config';
 
 export const statsColumns = [
   {
-    key: 'total',
+    key: 'totalRoads',
     label: 'Total'
   },
   {
-    key: 'field',
+    key: 'osmRoads',
     label: 'Field'
   },
   {
@@ -44,11 +44,13 @@ if (environment !== 'production') {
   };
 }
 
+const getPrintValue = (v) => (v === 0 || v) && v !== ' ' ? v : 'n/a';
+
 export const StatsTableRow = ({type, data, lang, provinceId, provinceName, districtId, districtName}) => (
   <tr>
     {type === 'province-district' && <td><Link to={`/${lang}/assets/${provinceId}`} title={translate(lang, 'View province page')}>{provinceName}</Link></td>}
     <td><Link to={`/${lang}/assets/${provinceId}/${districtId}`} title={translate(lang, 'View district page')}>{districtName}</Link></td>
-    {statsColumns.map(({key}) => <th key={key}>{data[key] || 'n/a'}</th>)}
+    {statsColumns.map(({key}) => <th key={key}>{getPrintValue(data[key])}</th>)}
   </tr>
 );
 
@@ -69,7 +71,7 @@ export const StatsTableExpandableTbody = ({lang, provinceId, provName, disctrict
     <tr>
       <td><Link to={`/${lang}/assets/${provinceId}`} title={translate(lang, 'View province page')}>{provName}</Link></td>
       <td><a href='#' title={translate(lang, 'Expand districts')} onClick={onExpandToggle}>{disctrictCount}</a></td>
-      {statsColumns.map(({key}) => <th key={key}>{data[key] || 'n/a'}</th>)}
+      {statsColumns.map(({key}) => <th key={key}>{getPrintValue(data[key])}</th>)}
     </tr>
     <tr className={c('table-details', {'table-details--expanded': isExpanded})}>
       <td colSpan={6}>
