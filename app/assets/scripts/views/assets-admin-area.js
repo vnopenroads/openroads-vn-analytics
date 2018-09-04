@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { local } from 'redux-fractal';
 import { createStore } from 'redux';
+import ReactPaginate from 'react-paginate';
 import {
   compose,
   getContext
@@ -21,11 +22,24 @@ import { getRoadCountKey, fetchAARoadCountEpic, mergeAA } from '../redux/modules
 import { round } from '../utils/format';
 import config from '../config';
 
+const getAACodes = (data) => {
+  let province = null;
+  let district = null;
+  if (data.type === 'province') {
+    province = _.get(data, 'code', null);
+  } else {
+    province = _.get(data, 'province.code', null);
+    district = _.get(data, 'code', null);
+  }
+  return { province, district };
+};
+
 class AssetsAA extends React.Component {
   constructor (props) {
     super(props);
 
     this.onCreateAssetClick = this.onCreateAssetClick.bind(this);
+    this.handleRoadsPageChange = this.handleRoadsPageChange.bind(this);
 
     this.state = {
       createModalOpen: false,
@@ -38,18 +52,10 @@ class AssetsAA extends React.Component {
 
     (aaIdSub ? props.fetchAdminStatsAA('district', aaId, aaIdSub) : props.fetchAdminStatsAA('province', aaId))
       .then(res => {
-        const adminArea = this.props.aa.data;
-        let provCode;
-        let districtCode;
-        if (adminArea.type === 'province') {
-          provCode = adminArea.code;
-        } else {
-          provCode = adminArea.province.code;
-          districtCode = adminArea.code;
-        }
+        const codes = getAACodes(this.props.aa.data);
         return Promise.all([
-          props.fetchRoadsEpic(provCode, districtCode, page, sortField, sortOrder),
-          props.fetchAARoadCountEpic(provCode, districtCode)
+          props.fetchRoadsEpic(codes.province, codes.district, page, sortField, sortOrder),
+          props.fetchAARoadCountEpic(codes.province, codes.district)
         ]);
       })
       .catch(e => console.log('e', e));
@@ -79,6 +85,14 @@ class AssetsAA extends React.Component {
   onTabClick (tab, e) {
     e.preventDefault();
     this.setState({ activeTab: tab });
+  }
+
+  handleRoadsPageChange ({selected}) {
+    const {sortField, sortOrder, aa} = this.props;
+    const codes = getAACodes(aa.data);
+    const newPage = selected + 1;
+    this.props.setPage(newPage);
+    this.props.fetchRoadsEpic(codes.province, codes.district, newPage, sortField, sortOrder);
   }
 
   renderHeadline () {
@@ -119,9 +133,13 @@ class AssetsAA extends React.Component {
   }
 
   renderAssetsTable () {
-    const {roadsPageStatus, roadsPage, language} = this.props;
+    const {roadsPageStatus, roadsPage, language, aa: {data: aaData}, page} = this.props;
 
     if (roadsPageStatus !== 'complete') return null;
+
+    // Pagination variables.
+    const perPage = 20;
+    const totalItems = aaData.totalRoads;
 
     const renderRound = (r, accessor) => {
       const val = _.get(r, accessor, null);
@@ -159,6 +177,23 @@ class AssetsAA extends React.Component {
             ))}
           </tbody>
         </table>
+
+        <div className='pagination-wrapper'>
+          <ReactPaginate
+            previousLabel={<span>{translate(language, 'previous')}</span>}
+            nextLabel={<span>{translate(language, 'next')}</span>}
+            breakLabel={<span className='pages__page'>...</span>}
+            pageCount={Math.ceil(totalItems / perPage)}
+            forcePage={page - 1}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={this.handleRoadsPageChange}
+            containerClassName={'pagination'}
+            subContainerClassName={'pages'}
+            pageClassName={'pages__wrapper'}
+            pageLinkClassName={'pages__page'}
+            activeClassName={'active'} />
+        </div>
       </div>
     );
   }
@@ -217,6 +252,12 @@ class AssetsAA extends React.Component {
 if (config.environment !== 'production') {
   AssetsAA.propTypes = {
     fetchAdminStatsAA: React.PropTypes.func,
+    fetchRoadsEpic: React.PropTypes.func,
+    fetchAARoadCountEpic: React.PropTypes.func,
+    setPage: React.PropTypes.func,
+    page: React.PropTypes.number,
+    sortField: React.PropTypes.string,
+    sortOrder: React.PropTypes.string,
     params: React.PropTypes.object,
     language: React.PropTypes.string,
     aa: React.PropTypes.object,
@@ -268,23 +309,16 @@ export default compose(
       // Get the district and province code for the RoadPageKey.
       // Depending on whether it is a district or province the keys differ.
       const aaType = _.get(aaData, 'type', null);
-      let provCode;
-      let districtCode;
-      if (aaType === 'province') {
-        provCode = _.get(aaData, 'code', null);
-      } else if (aaType === 'district') {
-        provCode = _.get(aaData, 'province.code', null);
-        districtCode = _.get(aaData, 'code', null);
-      }
+      const codes = getAACodes(aaData);
 
       // Get the road data by computing the road page key.
       // The road data uses the province and district code instead of the id.
-      const roadPageKey = getRoadPageKey(provCode, districtCode, page, sortField, sortOrder);
+      const roadPageKey = getRoadPageKey(codes.province, codes.district, page, sortField, sortOrder);
       const roadsPage = state.roads.roadsByPage[roadPageKey] && state.roads.roadsByPage[roadPageKey].roads;
       const roadsPageStatus = state.roads.roadsByPage[roadPageKey] && state.roads.roadsByPage[roadPageKey].status;
 
       // Get the road count key, which uses the province and district code.
-      const roadCountKey = getRoadCountKey(provCode, districtCode);
+      const roadCountKey = getRoadCountKey(codes.province, codes.district);
 
       let aaWithCounts;
       if (roadCountKey === null) {

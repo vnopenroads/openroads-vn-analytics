@@ -110,7 +110,7 @@ const aa = (state = aaState, action) => {
     case FETCH_ADMIN_STATS_AA:
       id = action.aaType === 'province' ? action.pId : `${action.pId}-${action.dId}`;
       return Object.assign({}, state, {
-        [id]: {fetching: true, fetched: false}
+        [id]: {fetching: true, fetched: false, data: {}}
       });
     case FETCH_ADMIN_STATS_AA_SUCCESS:
       id = action.aaType === 'province' ? action.pId : `${action.pId}-${action.dId}`;
@@ -120,7 +120,7 @@ const aa = (state = aaState, action) => {
     case FETCH_ADMIN_STATS_AA_ERROR:
       id = action.aaType === 'province' ? action.pId : `${action.pId}-${action.dId}`;
       return Object.assign({}, state, {
-        [id]: {fetching: false, fetched: true, error: action.error}
+        [id]: {fetching: false, fetched: true, data: {}, error: action.error}
       });
   }
   return state;

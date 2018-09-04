@@ -127,7 +127,15 @@ export const editRoadId = (wayId, vprommId) => ({ type: EDIT_ROAD_ID, wayId, vpr
 export const editRoadIdSucess = (wayId, vprommId) => ({ type: EDIT_ROAD_ID_SUCCESS, wayId });
 export const editRoadIdError = (wayId, error) => ({ type: EDIT_ROAD_ID_ERROR, wayId, error });
 
-export const fetchRoadsEpic = (province, district, page, sortField, sortOrder) => (dispatch) => {
+export const fetchRoadsEpic = (province, district, page, sortField, sortOrder) => (dispatch, getState) => {
+  const state = getState();
+  const roadPageKey = getRoadPageKey(province, district, page, sortField, sortOrder);
+  const roads = state.roads.roadsByPage[roadPageKey];
+  // Some caching.
+  if (roads && roads.status === 'complete') {
+    return dispatch(fetchRoadsSuccess({}, roads.roads, province, district, page, sortField, sortOrder));
+  }
+
   dispatch(fetchRoads(province, district, page, sortField, sortOrder));
 
   return fetch(
