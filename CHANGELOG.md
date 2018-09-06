@@ -7,34 +7,40 @@ All notable changes to this project will be documented in this file. Dates are d
 
 > 5 September 2018
 
+Better statistics for lengths of WON and GPROMM
 - migration for adding new length columns [`#132`](https://github.com/orma/openroads-vn-api/pull/132)
 - convert to materialized views, do spatial join, update lengths [`#48`](https://github.com/orma/openroads-vn-tiler/pull/48)
 
 > 29 August 2018
 
+RLP uploads get a better front-end to keep track of progress as well report errors.
 - [wip] Upload job status page [`#458`](https://github.com/orma/openroads-vn-analytics/pull/458)
 - show banners / status text correctly based on response [`8550895`](https://github.com/orma/openroads-vn-analytics/commit/8550895da35f70d30b31f98e4ecb703cbab3ba5b)
-- fix lint errors [`0cb1fa4`](https://github.com/orma/openroads-vn-analytics/commit/0cb1fa4774a49201974cdb67ce5e909f3fca8306)
 - get copy to clipboard button to work [`406625a`](https://github.com/orma/openroads-vn-analytics/commit/406625a6497f257082e7bd0d1495d9f041b24c15)
 
 #### [v2.4.0](https://github.com/orma/openroads-vn-analytics/compare/v2.3.0...v2.4.0)
 
 > 23 August 2018
 
+New task workflow allows users to skip tasks if it's a wrong detection
 - Skip task options [`#461`](https://github.com/orma/openroads-vn-analytics/pull/461)
 - implement error / not error states for Skip Task buton [`0bf4851`](https://github.com/orma/openroads-vn-analytics/commit/0bf4851b65eb4328a51c0f139e8ee9e26284a64b)
-- fix lint errors [`5445cf1`](https://github.com/orma/openroads-vn-analytics/commit/5445cf12299015fb243df7f7ccd45c200e010976)
 - update job state on receiveProps [`4be6557`](https://github.com/orma/openroads-vn-analytics/commit/4be6557249f1d6ab8a193f7ecd134a56c065d3a7)
 
 #### [v2.3.0](https://github.com/orma/openroads-vn-analytics/compare/v2.2.0...v2.3.0)
 
 > 22 August 2018
 
+User can go to the Editor for a GPROMM without losing track of the location
 - User new ORFrameNotifier [`#454`](https://github.com/orma/openroads-vn-analytics/pull/454)
-- bug fixes to tasks and assets [`#453`](https://github.com/orma/openroads-vn-analytics/pull/453)
-- Included skip task options UI element [`fe53050`](https://github.com/orma/openroads-vn-analytics/commit/fe53050937dabe5768a4455a14a7018de7d47b26)
 - Use center of all features [`d303a45`](https://github.com/orma/openroads-vn-analytics/commit/d303a455b842dc5acf482759996cd3d93f4c6db3)
 - turfCenter takes a featurecollection [`78cf7dd`](https://github.com/orma/openroads-vn-analytics/commit/78cf7dd2db0b6b7933abb8b00961783e18f6d5fc)
+
+Fixing reported bugs from August 17 training in Tasks and Assets
+- bug fixes to tasks and assets [`#453`](https://github.com/orma/openroads-vn-analytics/pull/453)
+- Included skip task options UI element [`fe53050`](https://github.com/orma/openroads-vn-analytics/commit/fe53050937dabe5768a4455a14a7018de7d47b26)
+
+Finalise RLP conflation process
 - RLP conflation [`#127`](https://github.com/orma/openroads-vn-api/pull/127)
 - Feature/rlp refactor [`#125`](https://github.com/orma/openroads-vn-api/pull/125)
 
@@ -42,42 +48,50 @@ All notable changes to this project will be documented in this file. Dates are d
 
 > 16 August 2018
 
+Fix bugs reported during training
 - Fix blank modal [`#452`](https://github.com/orma/openroads-vn-analytics/pull/452)
 - fix bug where panel shows blank post fixing a task [`#451`](https://github.com/orma/openroads-vn-analytics/pull/451)
-- New Assets workflow [`#450`](https://github.com/orma/openroads-vn-analytics/pull/450)
-- Fix modal getChild function [`05ae0b0`](https://github.com/orma/openroads-vn-analytics/commit/05ae0b04d8a6b0a6276fdf0a011c091c55e69b81)
-- set renderedFeatures to null when fetching new tasks so list rendering does not fail [`753a5da`](https://github.com/orma/openroads-vn-analytics/commit/753a5da80e01c138d961a55f080062c2d71bf003)
 - fix bug where panel shows blank post fixing a task due to bad order of parameters [`f31cbba`](https://github.com/orma/openroads-vn-analytics/commit/f31cbba5e4d77ea60a008f0e32cb3b0da0358526)
 - fix won import [`#121`](https://github.com/orma/openroads-vn-api/pull/121)
-- [wip] use bull to perform geometries update as a backgrund job [`89e38cc`](https://github.com/orma/openroads-vn-api/commit/89e38cc059346e47d250b9d7a713f9ff0254e1fe)
 - create tasks for at least one way with vprommid. [`#46`](https://github.com/orma/openroads-vn-tiler/pull/46)
+
+Make Tasks less overwhelming
 - Persistant tasks [`#45`](https://github.com/orma/openroads-vn-tiler/pull/45)
+
+Implement back-end for new RLP process
+- [wip] use bull to perform geometries update as a backgrund job [`89e38cc`](https://github.com/orma/openroads-vn-api/commit/89e38cc059346e47d250b9d7a713f9ff0254e1fe)
 
 
 ### [v2.1.0](https://github.com/orma/openroads-vn-analytics/compare/v3.0.0...v2.1.0)
 
 > 14 August 2018
 
+Tasks are now updated once a day
 - Add updated_at to Tasks [`#112`](https://github.com/orma/openroads-vn-api/pull/112)
-- WON import [`#111`](https://github.com/orma/openroads-vn-api/pull/111)
 - return updated_at timestamp in getTask and nextTask endpoints [`149caeb`](https://github.com/orma/openroads-vn-api/commit/149caebb8b40d671c144297bf15c5a0e7b617f46)
 - insert task timestamp [`#43`](https://github.com/orma/openroads-vn-tiler/pull/43)
 - dedupe task that involves the same way ids [`#41`](https://github.com/orma/openroads-vn-tiler/pull/41)
-- Province membership for tasks [`#39`](https://github.com/orma/openroads-vn-tiler/pull/39)
 
-#### v2.0.0
+WON import process and documentation
+- WON import [`#111`](https://github.com/orma/openroads-vn-api/pull/111)
 
-> 14 August 2018
-
+New Task workflow
 - v2.0.0. New tasks workflow [`#449`](https://github.com/orma/openroads-vn-analytics/pull/449)
 - Tasks workflow redesign [`#445`](https://github.com/orma/openroads-vn-analytics/pull/445)
+
+Fix a problem with invalid intersections
 - Calculate closest point between two linestrings for non-intersecting ways [`#432`](https://github.com/orma/openroads-vn-analytics/pull/432)
+
+
+Publish new Asset workflow
+- New Assets workflow [`#450`](https://github.com/orma/openroads-vn-analytics/pull/450)
 - Asset page [`#441`](https://github.com/orma/openroads-vn-analytics/pull/441)
 
 ### v2.0.0
 #### openroads-vn-cvts
 > June 1 - July 12
 
+Pipeline to handle large CSV data into a traffic map
 - Sorting [`#8`](https://github.com/developmentseed/openroads-vn-cvts/pull/8)
 - Bashit [`#4`](https://github.com/developmentseed/openroads-vn-cvts/pull/4)
 - Stream each line as geojson [`#1`](https://github.com/developmentseed/openroads-vn-cvts/pull/1)
