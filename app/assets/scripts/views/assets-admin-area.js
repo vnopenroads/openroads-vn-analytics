@@ -14,7 +14,7 @@ import c from 'classnames';
 
 import AssetsCreate from '../components/assets-create';
 import T, { translate } from '../components/t';
-import { StatsTableHeader, StatsTableRow } from '../components/admin-stats-tables';
+import { StatsTableHeader, StatsTableRow, StatsBlock } from '../components/admin-stats-tables';
 
 import { fetchAdminStatsAA } from '../redux/modules/admin-stats';
 import { getRoadPageKey, fetchRoadsEpic } from '../redux/modules/roads';
@@ -260,6 +260,44 @@ class AssetsAA extends React.Component {
     );
   }
 
+  renderStats () {
+    const lang = this.props.language;
+    const { fetched, fetching, data } = this.props.aa;
+
+    if (!fetched || fetching) {
+      return null;
+    }
+
+    const totalRoads = _.get(data, 'totalRoads', 0);
+    const totalOSMRoads = _.get(data, 'osmRoads', 0);
+    const statusPending = _.get(data, 'status.pending', 0);
+    const statusReviewed = _.get(data, 'status.reviewed', 0);
+
+    const progressIndicators = [
+      { label: translate(lang, 'Total'), value: totalRoads },
+      { label: translate(lang, 'Field data'), value: totalOSMRoads }
+    ];
+    const statusIndicators = [
+      { label: translate(lang, 'Pending'), value: statusPending },
+      { label: translate(lang, 'Reviewed'), value: statusReviewed }
+    ];
+
+    return (
+      <div className='stats-container'>
+        <StatsBlock
+          title={translate(lang, 'Progress')}
+          total={totalRoads}
+          completed={totalOSMRoads}
+          list={progressIndicators} />
+        <StatsBlock
+          title={translate(lang, 'Status')}
+          total={statusReviewed + statusPending}
+          completed={statusReviewed}
+          list={statusIndicators} />
+      </div>
+    );
+  }
+
   render () {
     const { params: { aaId, aaIdSub }, aa: { fetched, fetching } } = this.props;
 
@@ -277,7 +315,9 @@ class AssetsAA extends React.Component {
         </div>
 
         <div>
+          {this.renderStats()}
           {this.renderTabs()}
+          {this.props.params.aaIdSub && <h3>Assets</h3>}
           {this.state.activeTab === 'assets' && this.renderAssetsTable()}
           {this.state.activeTab === 'districts' && this.renderDistrictsTable()}
         </div>

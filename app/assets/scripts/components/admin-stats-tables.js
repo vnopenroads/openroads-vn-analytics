@@ -102,3 +102,41 @@ if (environment !== 'production') {
     children: PropTypes.node
   };
 }
+
+export const StatsBar = ({total, completed}) => (
+  <div className='stats-bar'>
+    <span className='stats-bar__complete' style={{width: ((completed / total) || 0) * 100 + '%'}}></span>
+  </div>
+);
+
+if (environment !== 'production') {
+  StatsBar.propTypes = {
+    total: PropTypes.number,
+    completed: PropTypes.number
+  };
+}
+
+export const StatsBlock = ({title, total, completed, list}) => (
+  <div className='stats-block'>
+    <h3>{title}</h3>
+    <figure>
+      <StatsBar total={total} completed={completed} />
+      <figcaption>
+        <ul className='stats-list'>
+          {list.map(({label, value}) => (
+            <li key={label} className='stats-list__item'><span className='value'>{value}</span><small>{label}</small></li>
+          ))}
+        </ul>
+      </figcaption>
+    </figure>
+  </div>
+);
+
+if (environment !== 'production') {
+  StatsBlock.propTypes = {
+    title: PropTypes.string,
+    total: PropTypes.number,
+    completed: PropTypes.number,
+    list: PropTypes.array
+  };
+}

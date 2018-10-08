@@ -7,8 +7,8 @@ import {
 } from 'recompose';
 import _ from 'lodash';
 
-import T from '../components/t';
-import { StatsTableHeader, StatsTableRow, StatsTableExpandableTbody } from '../components/admin-stats-tables';
+import T, { translate } from '../components/t';
+import { StatsTableHeader, StatsTableRow, StatsTableExpandableTbody, StatsBlock } from '../components/admin-stats-tables';
 import AssetsCreate from '../components/assets-create';
 
 import { environment } from '../config';
@@ -42,6 +42,54 @@ export class AssetsIndex extends React.Component {
 
   isExpanded (id) {
     return this.state.expanded.indexOf(id) !== -1;
+  }
+
+  renderStats () {
+    const lang = this.props.language;
+    const { fetching, fetched, data } = this.props.adminStats;
+
+    if (!fetched || fetching) {
+      return null;
+    }
+
+    const statData = data.provinces.reduce((acc, province) => {
+      return {
+        totalRoads: acc.totalRoads + _.get(province, 'totalRoads', 0),
+        totalOSMRoads: acc.totalOSMRoads + _.get(province, 'osmRoads', 0),
+        statusPending: acc.statusPending + _.get(province, 'status.pending', 0),
+        statusReviewed: acc.statusReviewed + _.get(province, 'status.reviewed', 0)
+      };
+    }, {
+      totalRoads: 0,
+      totalOSMRoads: 0,
+      statusPending: 0,
+      statusReviewed: 0
+    });
+
+    const progressIndicators = [
+      { label: translate(lang, 'Total'), value: statData.totalRoads },
+      { label: translate(lang, 'Field data'), value: statData.totalOSMRoads }
+    ];
+
+    const statusIndicators = [
+      { label: translate(lang, 'Pending'), value: statData.statusPending },
+      { label: translate(lang, 'Reviewed'), value: statData.statusReviewed }
+    ];
+
+    return (
+      <div className='stats-container'>
+        <StatsBlock
+          title={translate(lang, 'Progress')}
+          total={statData.totalRoads}
+          completed={statData.totalOSMRoads}
+          list={progressIndicators} />
+        <StatsBlock
+          title={translate(lang, 'Status')}
+          total={statData.statusReviewed + statData.statusPending}
+          completed={statData.statusReviewed}
+          list={statusIndicators} />
+      </div>
+    );
   }
 
   renderTable () {
@@ -118,6 +166,9 @@ export class AssetsIndex extends React.Component {
             <AssetsCreate />
           </div>
         </div>
+        {this.renderStats()}
+
+        <h3><T>Admin</T></h3>
         {this.renderTable()}
       </div>
     );

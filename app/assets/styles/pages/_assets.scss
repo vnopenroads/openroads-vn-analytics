@@ -209,7 +209,59 @@
   }
 }
 
+
+/* Assets: Stats
+   ========================================================================== */
+.stats-container {
+  overflow: hidden;
+  margin-bottom: $global-spacing * 2;
 }
+
+.stats-block {
+  @include column(6/12);
+
+  figure {
+    margin: 0;
+  }
+}
+
+.stats-bar,
+.stats-bar__complete {
+  display: block;
+  height: 0.75rem;
+  border-radius: $full-border-radius;
+}
+
+.stats-bar {
+  overflow: hidden;
+  background: rgba($primary-color, 0.12);
+  margin-bottom: ($global-spacing / 2); 
+
+  .stats-bar__complete {
+    background: $primary-color;
+  }
+}
+
+.stats-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+
+  .stats-list__item {
+    float: left;
+    margin-right: $global-spacing * 2;
+
+    .value {
+      font-weight: $base-font-bold;
+    }
+
+    small {
+      display: block;
+      text-transform: uppercase;
+      color: rgba($base-color, 0.48);
+    }
+  }
 }
 
 
