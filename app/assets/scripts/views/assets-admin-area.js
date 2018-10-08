@@ -245,7 +245,7 @@ class AssetsAA extends React.Component {
       <table className='table'>
         <StatsTableHeader type='district'/>
         <tbody>
-          {data.districts.map(d => (
+          {_.sortBy(data.districts, nameVar).map(d => (
             <StatsTableRow
               key={d.id}
               type='district'
@@ -370,7 +370,11 @@ export default compose(
         if (aa.fetched && !aa.error && roadCountStatus === 'complete') {
           if (aaType === 'province') {
             const districts = aaData.districts.map(district => mergeAA(district, roadCount, [aaData.code, 'district', district.code]));
-            aaWithCounts = mergeAA(aaData, roadCount, [aaData.code], {districts});
+            const status = {
+              pending: districts.reduce((acc, d) => acc + _.get(d, 'status.pending', 0), 0),
+              reviewed: districts.reduce((acc, d) => acc + _.get(d, 'status.reviewed', 0), 0)
+            };
+            aaWithCounts = mergeAA(aaData, roadCount, [aaData.code], {districts, status});
           } else {
             aaWithCounts = mergeAA(aaData, roadCount, [aaData.province.code, 'district', aaData.code]);
           }

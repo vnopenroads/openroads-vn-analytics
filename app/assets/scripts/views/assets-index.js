@@ -53,8 +53,6 @@ export class AssetsIndex extends React.Component {
       return null;
     }
 
-    console.log('this.props', this.props);
-
     return (
       <table className='table'>
         <StatsTableHeader type='province'/>
@@ -76,26 +74,30 @@ export class AssetsIndex extends React.Component {
               onExpandToggle={this.onExpandToggle.bind(this, pId)} >
 
               <div className='table-details-wrapper'>
-                <table className='table'>
-                  <StatsTableHeader type='province-district'/>
-                  <tbody>
-                    {districts.map(district => {
-                      const dId = district.id;
-                      if (!dId) return null;
-                      return (
-                        <StatsTableRow
-                          key={dId}
-                          type='province-district'
-                          data={district}
-                          lang={lang}
-                          provinceId={pId}
-                          provinceName={province[nameVar]}
-                          districtId={dId}
-                          districtName={district[nameVar]} />
-                      );
-                    })}
-                  </tbody>
-                </table>
+                {districts.length ? (
+                  <table className='table'>
+                    <StatsTableHeader type='province-district'/>
+                    <tbody>
+                      {_.sortBy(districts, nameVar).map(district => {
+                        const dId = district.id;
+                        if (!dId) return null;
+                        return (
+                          <StatsTableRow
+                            key={dId}
+                            type='province-district'
+                            data={district}
+                            lang={lang}
+                            provinceId={pId}
+                            provinceName={province[nameVar]}
+                            districtId={dId}
+                            districtName={district[nameVar]} />
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                ) : (
+                  <T>There are no districts for this province</T>
+                )}
               </div>
             </StatsTableExpandableTbody>
           );
@@ -144,7 +146,11 @@ export default compose(
             data: {
               provinces: state.adminStats.index.data.provinces.map(prov => {
                 const districts = prov.districts.map(district => mergeAA(district, countData, [prov.code, 'district', district.code]));
-                return mergeAA(prov, countData, [prov.code], {districts});
+                const status = {
+                  pending: districts.reduce((acc, d) => acc + _.get(d, 'status.pending', 0), 0),
+                  reviewed: districts.reduce((acc, d) => acc + _.get(d, 'status.reviewed', 0), 0)
+                };
+                return mergeAA(prov, countData, [prov.code], {districts, status});
               })
             }
           }

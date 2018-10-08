@@ -2,26 +2,35 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import c from 'classnames';
+import _ from 'lodash';
 
 import T, {translate} from '../components/t';
 
 import { environment } from '../config';
 
+// Curry lodash's get function to construct the value accessor.
+// _.get(obj, path, default) => fn(default)(path)(data)
+const createAcessor = _.curryRight(_.get)(null);
+
 export const statsColumns = [
   {
     key: 'totalRoads',
+    accessor: createAcessor('totalRoads'),
     label: 'Total'
   },
   {
     key: 'osmRoads',
+    accessor: createAcessor('osmRoads'),
     label: 'Field'
   },
   {
     key: 'pending',
+    accessor: createAcessor('status.pending'),
     label: 'Pending'
   },
   {
     key: 'done',
+    accessor: createAcessor('status.reviewed'),
     label: 'Done'
   }
 ];
@@ -50,7 +59,7 @@ export const StatsTableRow = ({type, data, lang, provinceId, provinceName, distr
   <tr>
     {type === 'province-district' && <td><Link to={`/${lang}/assets/${provinceId}`} title={translate(lang, 'View province page')}>{provinceName}</Link></td>}
     <td><Link to={`/${lang}/assets/${provinceId}/${districtId}`} title={translate(lang, 'View district page')}>{districtName}</Link></td>
-    {statsColumns.map(({key}) => <th key={key}>{getPrintValue(data[key])}</th>)}
+    {statsColumns.map(({key, accessor}) => <th key={key}>{getPrintValue(accessor(data))}</th>)}
   </tr>
 );
 
@@ -71,7 +80,7 @@ export const StatsTableExpandableTbody = ({lang, provinceId, provName, disctrict
     <tr>
       <td><Link to={`/${lang}/assets/${provinceId}`} title={translate(lang, 'View province page')}>{provName}</Link></td>
       <td><a href='#' className='button-expand-collapse' title={translate(lang, 'Expand districts')} onClick={onExpandToggle}>{disctrictCount}</a></td>
-      {statsColumns.map(({key}) => <th key={key}>{getPrintValue(data[key])}</th>)}
+      {statsColumns.map(({key, accessor}) => <th key={key}>{getPrintValue(accessor(data))}</th>)}
     </tr>
     <tr className={c('table-details')}>
       <td colSpan={6}>
