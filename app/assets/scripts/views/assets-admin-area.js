@@ -244,7 +244,7 @@ class AssetsAA extends React.Component {
     if (!data.districts.length) return <p className='empty'><T>There are no districts for this province</T></p>;
 
     return (
-      <table className='table'>
+      <table className='table table--aa'>
         <StatsTableHeader type='district'/>
         <tbody>
           {_.sortBy(data.districts, nameVar).map(d => (

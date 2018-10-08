@@ -102,7 +102,7 @@ export class AssetsIndex extends React.Component {
     }
 
     return (
-      <table className='table'>
+      <table className='table table--aa'>
         <StatsTableHeader type='province'/>
 
         {_.sortBy(data.provinces, nameVar).map(province => {
@@ -123,7 +123,7 @@ export class AssetsIndex extends React.Component {
 
               <div className='table-details-wrapper'>
                 {districts.length ? (
-                  <table className='table'>
+                  <table className='table table--aa'>
                     <StatsTableHeader type='province-district'/>
                     <tbody>
                       {_.sortBy(districts, nameVar).map(district => {

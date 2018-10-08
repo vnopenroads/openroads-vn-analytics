@@ -59,7 +59,7 @@ export const StatsTableRow = ({type, data, lang, provinceId, provinceName, distr
   <tr>
     {type === 'province-district' && <td><Link to={`/${lang}/assets/${provinceId}`} title={translate(lang, 'View province page')}>{provinceName}</Link></td>}
     <td><Link to={`/${lang}/assets/${provinceId}/${districtId}`} title={translate(lang, 'View district page')}>{districtName}</Link></td>
-    {statsColumns.map(({key, accessor}) => <th key={key}>{getPrintValue(accessor(data))}</th>)}
+    {statsColumns.map(({key, accessor}) => <td key={key}>{getPrintValue(accessor(data))}</td>)}
   </tr>
 );
 
@@ -80,7 +80,7 @@ export const StatsTableExpandableTbody = ({lang, provinceId, provName, disctrict
     <tr>
       <td><Link to={`/${lang}/assets/${provinceId}`} title={translate(lang, 'View province page')}>{provName}</Link></td>
       <td><a href='#' className='button-expand-collapse' title={translate(lang, 'Expand districts')} onClick={onExpandToggle}>{disctrictCount}</a></td>
-      {statsColumns.map(({key, accessor}) => <th key={key}>{getPrintValue(accessor(data))}</th>)}
+      {statsColumns.map(({key, accessor}) => <td key={key}>{getPrintValue(accessor(data))}</td>)}
     </tr>
     <tr className={c('table-details')}>
       <td colSpan={6}>

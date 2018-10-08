@@ -153,6 +153,21 @@
   }
 }
 
+.table--aa {
+  @for $i from 1 through 2 {
+    th:nth-child(#{$i}),
+    td:nth-child(#{$i}) {
+      width: 20%;
+    }
+  }
+  @for $i from 3 through 6 {
+    th:nth-child(#{$i}),
+    td:nth-child(#{$i}) {
+      width: 15%;
+    }
+  }
+}
+
 .table-details {
   height: 0 !important;
 
@@ -165,6 +180,15 @@
   }
 
   thead {
+    @extend .visually-hidden;
+  }
+
+  .table {
+    background: tint($base-color, 90%);
+    margin-bottom: 0;
+  }
+
+  .table--aa td:first-child() > * {
     @extend .visually-hidden;
   }
 }
