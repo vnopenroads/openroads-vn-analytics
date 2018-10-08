@@ -18,6 +18,7 @@ var Upload = React.createClass({
         <div className='inpage__body'>
           <div className='inner'>
             <h2><T>Upload RoadLabPro ZIP files</T></h2>
+            <p>Currently supports RLP v1, v2, and v2.1</p>
             <form className='form upload-form' method='post' encType='multipart/form-data' action={config.api + '/fielddata/properties/rlp'}>
               <div className='form__group'>
                 <label className='form__label' htmlFor='rlp-zip-properties'><T>Road properties</T></label>
