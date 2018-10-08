@@ -241,6 +241,8 @@ class AssetsAA extends React.Component {
     const { language, aa: { data } } = this.props;
     const nameVar = language === 'en' ? 'name_en' : 'name_vn';
 
+    if (!data.districts.length) return <p className='empty'><T>There are no districts for this province</T></p>;
+
     return (
       <table className='table'>
         <StatsTableHeader type='district'/>

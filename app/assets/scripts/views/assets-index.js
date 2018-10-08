@@ -144,7 +144,7 @@ export class AssetsIndex extends React.Component {
                     </tbody>
                   </table>
                 ) : (
-                  <T>There are no districts for this province</T>
+                  <p className='empty'><T>There are no districts for this province</T></p>
                 )}
               </div>
             </StatsTableExpandableTbody>

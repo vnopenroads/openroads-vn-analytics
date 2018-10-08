@@ -169,6 +169,11 @@
   }
 }
 
+.empty {
+  padding: $global-spacing * 2;
+  text-align: center;
+}
+
 /* Fieldset expand/collapse states
    ========================================================================== */
 
