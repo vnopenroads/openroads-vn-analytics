@@ -136,7 +136,7 @@ class AssetsAA extends React.Component {
     ];
 
     return (
-      <ul>
+      <ul className='nav-tabs'>
         {tabs.map(t => (
           <li key={t.key}>
             <a href='#' className={c({'tab--active': this.state.activeTab === t.key})} title={translate(this.props.language, 'Switch tab')} onClick={this.onTabClick.bind(this, t.key)}><T>{t.label}</T></a>

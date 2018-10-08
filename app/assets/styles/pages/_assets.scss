@@ -264,6 +264,33 @@
   }
 }
 
+.nav-tabs {
+  @extend .clearfix;
+  padding: 0;
+  margin: 0 0 $global-spacing 0;
+  list-style: none;
+  border-bottom: 2px solid $base-alpha-color;
+
+  li {
+    float: left;
+    margin-bottom: -2px;
+
+    a {
+      display: block;
+      padding: ($global-spacing / 2 ) $global-spacing;
+      color: inherit;
+      border-radius: $base-border-radius $base-border-radius 0 0;
+      border: 2px solid transparent;
+      font-weight: $base-font-bold;
+    }
+
+    a.tab--active {
+      background: tint($base-color, 96%);
+      border-color: $base-alpha-color;
+      border-bottom-color: transparent;
+    }
+  }
+}
 
 /* Assets: Single
    ========================================================================== */
