@@ -161,23 +161,55 @@
   }
 
   .table-details-wrapper {
-    max-height: 0;
-    height: 0;
-    overflow: hidden;
+    transition: all 0.24s ease 0s;
   }
 
   thead {
     @extend .visually-hidden;
   }
+}
 
-  &.table-details--expanded {
-    height: auto !important;
-    
-    .table-details-wrapper {
-      max-height: 1000px;
-      height: auto;
-    }
+/* Fieldset expand/collapse states
+   ========================================================================== */
+
+.table-details--expanded {
+  .button-expand-collapse::after {
+    transform: translate(0, -50%) rotate(180deg);
   }
+}
+
+.table-details--collapsed {
+  .table-details-wrapper {
+    opacity: 0;
+    overflow-y: hidden;
+    max-height: 0;
+  }
+}
+
+.table-details--expanded {
+  .table-details-wrapper {
+    opacity: 1;
+    max-height: calc(100vh * 100);
+    overflow: visible;
+  }
+}
+
+.button-expand-collapse {
+  position: relative;
+
+  &::after {
+    @extend %collecticon-sm-chevron-down;
+    transition: all 0.16s ease 0s;
+    font-size: 1rem;
+    position: absolute;
+    top: 50%;
+    left: $global-spacing * 2;
+    transform: translate(0, -50%);
+    color: $link-color;
+  }
+}
+
+}
 }
 
 

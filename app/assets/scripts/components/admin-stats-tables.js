@@ -67,13 +67,13 @@ if (environment !== 'production') {
 }
 
 export const StatsTableExpandableTbody = ({lang, provinceId, provName, disctrictCount, isExpanded, onExpandToggle, data, children}) => (
-  <tbody>
+  <tbody className={c({'table-details--expanded': isExpanded, 'table-details--collapsed': !isExpanded})}>
     <tr>
       <td><Link to={`/${lang}/assets/${provinceId}`} title={translate(lang, 'View province page')}>{provName}</Link></td>
-      <td><a href='#' title={translate(lang, 'Expand districts')} onClick={onExpandToggle}>{disctrictCount}</a></td>
+      <td><a href='#' className='button-expand-collapse' title={translate(lang, 'Expand districts')} onClick={onExpandToggle}>{disctrictCount}</a></td>
       {statsColumns.map(({key}) => <th key={key}>{getPrintValue(data[key])}</th>)}
     </tr>
-    <tr className={c('table-details', {'table-details--expanded': isExpanded})}>
+    <tr className={c('table-details')}>
       <td colSpan={6}>
         {children}
       </td>
