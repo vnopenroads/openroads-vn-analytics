@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+### 2.5.1
+
+> 6 September 2018
+
+- [RLPv2 support](https://github.com/orma/openroads-vn-api/pull/143)
 
 #### [v2.5.0](https://github.com/orma/openroads-vn-analytics/compare/v2.4.0...v2.5.0)
 
@@ -10,6 +15,7 @@ All notable changes to this project will be documented in this file. Dates are d
 Better statistics for lengths of WON and GPROMM
 - migration for adding new length columns [`#132`](https://github.com/orma/openroads-vn-api/pull/132)
 - convert to materialized views, do spatial join, update lengths [`#48`](https://github.com/orma/openroads-vn-tiler/pull/48)
+- Add navigation to explore map roads https://github.com/orma/openroads-vn-analytics/issues/390
 
 > 29 August 2018
 
