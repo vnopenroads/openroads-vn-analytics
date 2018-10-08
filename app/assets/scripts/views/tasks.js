@@ -50,7 +50,8 @@ const layers = [{
   source,
   paint: {
     'line-width': 4,
-    'line-opacity': 0.2
+    'line-opacity': 0.8,
+    'line-color': '#444'
   },
   layout: { 'line-cap': 'round' }
 }, {
