@@ -44,6 +44,32 @@ const source = 'collisions';
 const roadHoverId = 'road-hover';
 const roadSelected = 'road-selected';
 const roadSelectedStep1 = 'road-selected-step1';
+const satelliteStyle = {
+  version: 8,
+  sprite: 'https://maps.tilehosting.com/styles/basic/sprite',
+  glyphs: 'https://maps.tilehosting.com/fonts/{fontstack}/{range}.pbf.pict?key=alS7XjesrAd6uvek9nRE',
+  sources: {
+    'raster-tiles': {
+      type: 'raster',
+      tiles: [
+        'https://ecn.t0.tiles.virtualearth.net/tiles/a{quadkey}.jpeg?g=587&mkt=en-gb&n=z',
+        'https://ecn.t1.tiles.virtualearth.net/tiles/a{quadkey}.jpeg?g=587&mkt=en-gb&n=z',
+        'https://ecn.t2.tiles.virtualearth.net/tiles/a{quadkey}.jpeg?g=587&mkt=en-gb&n=z',
+        'https://ecn.t3.tiles.virtualearth.net/tiles/a{quadkey}.jpeg?g=587&mkt=en-gb&n=z'
+      ]
+    }
+  },
+  layers: [
+    {
+      id: 'simple-tiles',
+      type: 'raster',
+      source: 'raster-tiles',
+      minzoom: 0,
+      maxzoom: 22
+    }
+  ]
+};
+
 const layers = [{
   id: 'road',
   type: 'line',
@@ -95,7 +121,7 @@ var Tasks = React.createClass({
     return {
       renderedFeatures: null,
       mode: 'dedupe',
-
+      satelliteState: false,
       // Steps are 0, 1 and 2 in accordance with new step workflow
       step: 0,
       hoverId: '',
@@ -324,6 +350,17 @@ var Tasks = React.createClass({
   // reset selected items when user changes mode, user can only change mode in step 0
   handleChangeMode: function (event) {
     this.setState({mode: event.target.value, selectedStep0: []}, this.syncMap);
+  },
+
+  showSatellite: function (state) {
+    const satelliteState = this.state.satelliteState;
+    if (!satelliteState) {
+      this.map.setStyle(satelliteStyle);
+      this.setState({satelliteState: true}, this.syncMap);
+    } else {
+      this.map.setStyle('mapbox://styles/mapbox/light-v9');
+      this.setState({satelliteState: false}, this.syncMap);
+    }
   },
 
   // trigger when an item is selected during step 0
@@ -575,24 +612,24 @@ var Tasks = React.createClass({
           </div>
         </section>
         { mode === 'dedupe' &&
-        <section className='task-group'>
-          <header className='task-group__header'>
-            <h1 className='task-group__title'><T>Select VPROMMID to Apply</T></h1>
-          </header>
-          <div className='task-group__body'>
-            <form className='form task-group__actions'>
-              <div className='form__group'>
-                <label className='form__label visually-hidden'><T>VPROMMIDs</T></label>
-                <select className='form__control' onChange={ this.selectVpromm }>
-                  { vpromms.map(id =>
-                    <option key={ id } value={ id }>{ id }</option>
-                  )
-                  }
-                </select>
-              </div>
-            </form>
-          </div>
-        </section>
+                        <section className='task-group'>
+                          <header className='task-group__header'>
+                            <h1 className='task-group__title'><T>Select VPROMMID to Apply</T></h1>
+                          </header>
+                          <div className='task-group__body'>
+                            <form className='form task-group__actions'>
+                              <div className='form__group'>
+                                <label className='form__label visually-hidden'><T>VPROMMIDs</T></label>
+                                <select className='form__control' onChange={ this.selectVpromm }>
+                                  { vpromms.map(id =>
+                                    <option key={ id } value={ id }>{ id }</option>
+                                  )
+                                  }
+                                </select>
+                              </div>
+                            </form>
+                          </div>
+                        </section>
         }
       </div>
     );
@@ -685,10 +722,10 @@ var Tasks = React.createClass({
       const line2Point = pointOnLine(line2, point(closestPoints.line2Point));
 
       if (line1Point.properties.index === 0
-        || line1Point.properties.index === line1.geometry.coordinates.length - 1) {
+                            || line1Point.properties.index === line1.geometry.coordinates.length - 1) {
         changes.push(insertPointOnLine(line1, line2Point));
       } else if (line2Point.properties.index === 0
-        || line2Point.properties.index === line2.geometry.coordinates.length - 1) {
+                              || line2Point.properties.index === line2.geometry.coordinates.length - 1) {
         changes.push(insertPointOnLine(line2, line1Point));
       } else {
         changes.push(insertPointOnLine(line1, point(closestPoints.line2Point)));
@@ -749,7 +786,7 @@ var Tasks = React.createClass({
     const { taskId, taskCount, taskStatus } = this.props;
     const { hoverId } = this.state;
     const renderPanel = !((taskStatus === 'error' || taskStatus === 'No tasks remaining') ||
-      (!taskId && taskStatus === 'pending'));
+                              (!taskId && taskStatus === 'pending'));
 
     return (
       <section className='inpage inpage--alt'>
@@ -776,27 +813,32 @@ var Tasks = React.createClass({
           <div className='inner'>
 
             <figure className='map'>
-              <div className='map__media' id='map'></div>
+              <div className='map__media' id='map'>
+                <form>
+                  <input type='checkbox' value='satellite' onChange={ this.showSatellite }></input>
+                  <label>Show Satellite</label>
+                </form>
+              </div>
               {
                 hoverId && this.renderPropertiesOverlay()
               }
               {
                 taskStatus === 'error' &&
-                <div className='placeholder__fullscreen'>
-                  <h3 className='placeholder__message'><T>Error</T></h3>
-                </div>
+                                  <div className='placeholder__fullscreen'>
+                                    <h3 className='placeholder__message'><T>Error</T></h3>
+                                  </div>
               }
               {
                 taskStatus === 'No tasks remaining' &&
-                <div className='placeholder__fullscreen'>
-                  <h3 className='placeholder__message'><T>No tasks remaining</T></h3>
-                </div>
+                                  <div className='placeholder__fullscreen'>
+                                    <h3 className='placeholder__message'><T>No tasks remaining</T></h3>
+                                  </div>
               }
               {
                 !taskId && taskStatus === 'pending' &&
-                <div className='placeholder__fullscreen'>
-                  <h3 className='placeholder__message'><T>Loading</T></h3>
-                </div>
+                                  <div className='placeholder__fullscreen'>
+                                    <h3 className='placeholder__message'><T>Loading</T></h3>
+                                  </div>
               }
               {
                 renderPanel && this.renderInstrumentPanel()
@@ -864,3 +906,4 @@ function insertPointOnLine (feature, point) {
     }
   });
 }
+
