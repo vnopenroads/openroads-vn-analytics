@@ -247,7 +247,7 @@
 }
 
 .stats-block {
-  @include column(6/12);
+  @include column(4/12);
 
   figure {
     margin: 0;
@@ -307,6 +307,8 @@
     a {
       display: block;
       padding: ($global-spacing / 2 ) $global-spacing;
+      min-width: 8rem;
+      text-align: center;
       color: inherit;
       border-radius: $base-border-radius $base-border-radius 0 0;
       border: 2px solid transparent;

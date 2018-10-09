@@ -277,6 +277,8 @@ class AssetsAA extends React.Component {
       return null;
     }
 
+    const totalLength = _.get(data, 'total', 0);
+    const totalVprommLength = _.get(data, 'vpromm', 0);
     const totalRoads = _.get(data, 'totalRoads', 0);
     const totalOSMRoads = _.get(data, 'osmRoads', 0);
     const statusPending = _.get(data, 'status.pending', 0);
@@ -291,6 +293,11 @@ class AssetsAA extends React.Component {
       { label: translate(lang, 'Pending'), value: statusPending },
       { label: translate(lang, 'Reviewed'), value: statusReviewed }
     ];
+    const lengthPercent = round(Math.min(totalVprommLength / totalLength * 100, 100) || 0);
+    const lengthIndicators = [
+      { label: translate(lang, 'WoN Length'), value: `${round(totalLength)}Km` },
+      { label: translate(lang, 'GProMMS Length'), value: `${round(totalVprommLength)}Km (${lengthPercent}%)` }
+    ];
 
     return (
       <div className='stats-container'>
@@ -304,6 +311,11 @@ class AssetsAA extends React.Component {
           total={statusReviewed + statusPending}
           completed={statusReviewed}
           list={statusIndicators} />
+        <StatsBlock
+          title={translate(lang, 'Road length')}
+          total={totalLength}
+          completed={totalVprommLength}
+          list={lengthIndicators} />
       </div>
     );
   }

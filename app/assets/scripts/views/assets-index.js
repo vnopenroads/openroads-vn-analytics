@@ -55,12 +55,16 @@ export class AssetsIndex extends React.Component {
 
     const statData = data.provinces.reduce((acc, province) => {
       return {
+        totalLength: acc.totalLength + _.get(province, 'total', 0),
+        totalVprommLength: acc.totalVprommLength + _.get(province, 'vpromm', 0),
         totalRoads: acc.totalRoads + _.get(province, 'totalRoads', 0),
         totalOSMRoads: acc.totalOSMRoads + _.get(province, 'osmRoads', 0),
         statusPending: acc.statusPending + _.get(province, 'status.pending', 0),
         statusReviewed: acc.statusReviewed + _.get(province, 'status.reviewed', 0)
       };
     }, {
+      totalLength: 0,
+      totalVprommLength: 0,
       totalRoads: 0,
       totalOSMRoads: 0,
       statusPending: 0,
@@ -78,6 +82,12 @@ export class AssetsIndex extends React.Component {
       { label: translate(lang, 'Reviewed'), value: statData.statusReviewed }
     ];
 
+    const lengthPercent = round(Math.min(statData.totalVprommLength / statData.totalLength * 100, 100) || 0);
+    const lengthIndicators = [
+      { label: translate(lang, 'WoN Length'), value: `${round(statData.totalLength)}Km` },
+      { label: translate(lang, 'GProMMS Length'), value: `${round(statData.totalVprommLength)}Km (${lengthPercent}%)` }
+    ];
+
     return (
       <div className='stats-container'>
         <StatsBlock
@@ -90,6 +100,11 @@ export class AssetsIndex extends React.Component {
           total={statData.statusReviewed + statData.statusPending}
           completed={statData.statusReviewed}
           list={statusIndicators} />
+        <StatsBlock
+          title={translate(lang, 'Road length')}
+          total={statData.totalLength}
+          completed={statData.totalVprommLength}
+          list={lengthIndicators} />
       </div>
     );
   }
