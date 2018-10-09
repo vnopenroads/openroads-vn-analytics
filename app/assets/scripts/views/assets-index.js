@@ -98,7 +98,7 @@ export class AssetsIndex extends React.Component {
     const nameVar = lang === 'en' ? 'name_en' : 'name_vn';
 
     if (!fetched || fetching) {
-      return null;
+      return <p>Data is loading...</p>;
     }
 
     return (
@@ -155,6 +155,22 @@ export class AssetsIndex extends React.Component {
   }
 
   render () {
+    const { fetched, error } = this.props.adminStats;
+
+    if (fetched && error) {
+      return (
+        <div className='incontainer'>
+          <div className='incontainer__header'>
+            <div className='incontainer__headline'>
+              <h2 className='incontainer__title'><T>Error</T></h2>
+            </div>
+          </div>
+
+          <p>Something went wrong with the request. Please try again later.</p>
+        </div>
+      );
+    }
+
     return (
       <div className='incontainer'>
         <div className='incontainer__header'>

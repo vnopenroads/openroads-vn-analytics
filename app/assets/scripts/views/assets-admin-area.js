@@ -305,9 +305,34 @@ class AssetsAA extends React.Component {
   }
 
   render () {
-    const { params: { aaId, aaIdSub }, aa: { fetched, fetching } } = this.props;
+    const { params: { aaId, aaIdSub }, aa: { fetched, fetching, error } } = this.props;
 
-    if (!fetched || fetching) return null;
+    const Barebones = ({title, children}) => (
+      <div className='incontainer'>
+        <div className='incontainer__header'>
+          <div className='incontainer__headline'>
+            <h2 className='incontainer__title'><T>{title}</T></h2>
+          </div>
+        </div>
+        {children}
+      </div>
+    );
+
+    if (!fetched || fetching) {
+      return (
+        <Barebones title='Loading'>
+          <p>Data is loading...</p>
+        </Barebones>
+      );
+    }
+
+    if (fetched && error) {
+      return (
+        <Barebones title='Error'>
+          <p>Something went wrong with the request. Please try again later.</p>
+        </Barebones>
+      );
+    }
 
     return (
       <div className='incontainer'>
