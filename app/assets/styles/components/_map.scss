@@ -253,3 +253,12 @@
     white-space: pre;
   }
 }
+
+.satellite-toggle.mapboxgl-ctrl-top-left {
+  position: absolute;
+  pointer-events: auto;
+  top: auto;
+  margin-top: 10px;
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+}

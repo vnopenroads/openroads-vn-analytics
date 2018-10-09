@@ -814,9 +814,9 @@ var Tasks = React.createClass({
 
             <figure className='map'>
               <div className='map__media' id='map'>
-                <form>
+                <form className='satellite-toggle mapboxgl-ctrl-top-left'>
                   <input type='checkbox' value='satellite' onChange={ this.showSatellite }></input>
-                  <label>Show Satellite</label>
+                  <label> Show Bing Satellite</label>
                 </form>
               </div>
               {
