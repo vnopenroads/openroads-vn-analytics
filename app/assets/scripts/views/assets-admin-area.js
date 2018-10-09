@@ -176,7 +176,11 @@ class AssetsAA extends React.Component {
         sortable: true,
         render: (r) => <Link to={`/${language}/assets/road/${r.id}`} title={translate(language, 'View asset page')}>{r.id}</Link>
       },
-      {accessor: 'status', label: 'Review Status'},
+      {
+        accessor: 'status',
+        label: 'Review Status',
+        render: (r) => r.status || 'pending'
+      },
       {accessor: 'properties.iri_mean', label: 'IRI', render: renderRound},
       {accessor: 'properties.Road Type', label: 'Type'},
       {accessor: 'properties.width', label: 'Width'},
