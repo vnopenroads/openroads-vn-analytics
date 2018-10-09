@@ -57,8 +57,8 @@ const getPrintValue = (v) => (v === 0 || v) && v !== ' ' ? v : 'n/a';
 
 export const StatsTableRow = ({type, data, lang, provinceId, provinceName, districtId, districtName}) => (
   <tr>
-    {type === 'province-district' && <td><Link to={`/${lang}/assets/${provinceId}`} title={translate(lang, 'View province page')}>{provinceName}</Link></td>}
-    <td><Link to={`/${lang}/assets/${provinceId}/${districtId}`} title={translate(lang, 'View district page')}>{districtName}</Link></td>
+    {type === 'province-district' && <th><Link to={`/${lang}/assets/${provinceId}`} title={translate(lang, 'View province page')}>{provinceName}</Link></th>}
+    <th><Link to={`/${lang}/assets/${provinceId}/${districtId}`} title={translate(lang, 'View district page')}>{districtName}</Link></th>
     {statsColumns.map(({key, accessor}) => <td key={key}>{getPrintValue(accessor(data))}</td>)}
   </tr>
 );
@@ -78,7 +78,7 @@ if (environment !== 'production') {
 export const StatsTableExpandableTbody = ({lang, provinceId, provName, disctrictCount, isExpanded, onExpandToggle, data, children}) => (
   <tbody className={c({'table-details--expanded': isExpanded, 'table-details--collapsed': !isExpanded})}>
     <tr>
-      <td><Link to={`/${lang}/assets/${provinceId}`} title={translate(lang, 'View province page')}>{provName}</Link></td>
+      <th><Link to={`/${lang}/assets/${provinceId}`} title={translate(lang, 'View province page')}>{provName}</Link></th>
       <td><a href='#' className='button-expand-collapse' title={translate(lang, 'Expand districts')} onClick={onExpandToggle}>{disctrictCount}</a></td>
       {statsColumns.map(({key, accessor}) => <td key={key}>{getPrintValue(accessor(data))}</td>)}
     </tr>

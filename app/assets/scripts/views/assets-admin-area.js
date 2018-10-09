@@ -215,7 +215,10 @@ class AssetsAA extends React.Component {
           <tbody>
             {roadsPage.map(r => (
               <tr key={r.id}>
-                {columns.map(({accessor, render}) => <td key={accessor}>{render ? render(r, accessor) : (_.get(r, accessor) || 'n/a')}</td>)}
+                {columns.map(({accessor, render}, i) => {
+                  const El = i === 0 ? 'th' : 'td';
+                  return <El key={accessor}>{render ? render(r, accessor) : (_.get(r, accessor) || 'n/a')}</El>;
+                })}
               </tr>
             ))}
           </tbody>
