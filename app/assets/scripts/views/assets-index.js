@@ -14,6 +14,7 @@ import AssetsCreate from '../components/assets-create';
 import { environment } from '../config';
 import { fetchAdminStats } from '../redux/modules/admin-stats';
 import { fetchRoadCountEpic, mergeAA } from '../redux/modules/road-count';
+import { round } from '../utils/format';
 
 export class AssetsIndex extends React.Component {
   constructor (props) {
@@ -66,9 +67,10 @@ export class AssetsIndex extends React.Component {
       statusReviewed: 0
     });
 
+    const progressPercent = round(statData.totalOSMRoads / statData.totalRoads * 100) || 0;
     const progressIndicators = [
       { label: translate(lang, 'Total'), value: statData.totalRoads },
-      { label: translate(lang, 'Field data'), value: statData.totalOSMRoads }
+      { label: translate(lang, 'Field data'), value: `${statData.totalOSMRoads} (${progressPercent}%)` }
     ];
 
     const statusIndicators = [

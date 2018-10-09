@@ -279,9 +279,10 @@ class AssetsAA extends React.Component {
     const statusPending = _.get(data, 'status.pending', 0);
     const statusReviewed = _.get(data, 'status.reviewed', 0);
 
+    const progressPercent = round(totalOSMRoads / totalRoads * 100) || 0;
     const progressIndicators = [
       { label: translate(lang, 'Total'), value: totalRoads },
-      { label: translate(lang, 'Field data'), value: totalOSMRoads }
+      { label: translate(lang, 'Field data'), value: `${totalOSMRoads} (${progressPercent}%)` }
     ];
     const statusIndicators = [
       { label: translate(lang, 'Pending'), value: statusPending },
