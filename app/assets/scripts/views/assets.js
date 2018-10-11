@@ -11,7 +11,7 @@ const Assets = ({ children }) => (
           <h1 className='inpage__title'><T>Assets</T></h1>
         </div>
         <div className='inpage__actions'>
-          <AssetsSearch />
+          <AssetsSearch page='assets' />
         </div>
       </div>
     </header>

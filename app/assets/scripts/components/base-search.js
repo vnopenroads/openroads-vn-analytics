@@ -5,7 +5,7 @@ import _ from 'lodash';
 import T, {
   translate
 } from './t';
-
+import config from '../config';
 
 
 var BaseSearch = React.createClass({
@@ -13,6 +13,7 @@ var BaseSearch = React.createClass({
 
   propTypes: {
     searchType: React.PropTypes.string,
+    page: React.PropTypes.string,
     fetching: React.PropTypes.bool,
     vpromms: React.PropTypes.array,
     admins: React.PropTypes.array,
@@ -74,19 +75,45 @@ var BaseSearch = React.createClass({
   },
 
   onSearchSubmit: function (e) {
+    console.log('onSearchSubmit called');
     e.preventDefault();
     this.setState({ showResults: true });
+    const { page } = this.props;
+    console.log('submitAction', submitAction);
     // On enter, use the first value. Feeling lucky!
     var searchVal = this.state.searchVal;
     if (searchVal.length) {
       if (this.props.searchType === 'Admin' && this.props.admins[0]) {
-        this.searchAdminArea(this.props.admins[0].id);
+        const admin = this.props.admins[0];
+        page === 'explore' ? this.searchAdminArea(admin.id) : this.navigateToAdmin(admin);
         this.setState({ searchVal: this.props.admins[0].name_en });
       } else if (this.props.filteredVProMMs[0]) {
-        this.searchVProMMsID(this.props.filteredVProMMs[0]);
+        const vpromm = this.props.filteredVProMMs[0];
+        page === 'explore' ? this.searchVProMMsID(vpromm) : this.navigateToVProMM(vpromm);
         this.setState({ searchVal: this.props.filteredVProMMs[0] });
       }
     }
+  },
+
+  navigateToAdmin: function(admin) {
+    if (admin.level === 'province') {
+      const url = `${this.props.language}/assets/${admin.id}`;
+      this.props.router.push(url);
+    } else if (admin.level === 'district') {
+      const apiUrl = `${config.api}/admin/${admin.id}/info`;
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          const parentId = data.parent.id;
+          const url = `${this.props.language}/assets/${parentId}/${admin.id}`;
+          this.props.router.push(url);
+        });
+    }
+  },
+
+  navigateToVProMM: function(vpromm) {
+    const url = `${this.props.language}/assets/road/${vpromm}`;
+    this.props.router.push(url);
   },
 
   search: function (searchVal) {
@@ -129,18 +156,23 @@ var BaseSearch = React.createClass({
   },
 
   onAAClick: function (aa, e) {
+    // console.log('onAAClick called');
+    const { page } = this.props;
     e.preventDefault();
-    this.searchAdminArea(aa.id);
+    page === 'explore' ? this.searchAdminArea(aa.id) : this.navigateToAdmin(aa);
     this.setState({ searchVal: this.props.language === 'en' ? aa.name_en : aa.name_vn });
   },
 
   onVprommClick: function (id, e) {
+    // console.log('onVprommClick called');
+    const { page } = this.props;
     e.preventDefault();
-    this.searchVProMMsID(id);
+    page === 'explore' ? this.searchVProMMsID(id) : this.navigateToVProMM(id);
     this.setState({ searchVal: id });
   },
 
   renderResults: function () {
+
     if (!this.state.showResults) {
       return null;
     }
@@ -158,7 +190,13 @@ var BaseSearch = React.createClass({
     let contents = null;
 
     if (this.props.searchType === 'Admin') {
+      
+      // on the assets page, we don't want to show communes in the admin results
+      if (this.props.page === 'assets') {
+        data = data.filter(o => o.level !== 'commune');
+      }
       if (data.length) {
+
         contents = _(data)
           .groupBy(o => o.level)
           .reduce((acc, level, key) => {
