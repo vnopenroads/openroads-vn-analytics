@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 
 import {
   setSearchType,
-  fetchFieldVProMMsIds,
+  fetchAllVProMMsIds,
   setFilteredVProMMs,
   fetchAdmins,
   clearAdmins,
@@ -42,7 +42,7 @@ export default compose(
       fetching: state.admins.fetching
     }),
     (dispatch, { location }) => ({
-      _fetchFieldVProMMsIds: (...args) => dispatch(fetchFieldVProMMsIds(...args)),
+      _fetchFieldVProMMsIds: (...args) => dispatch(fetchAllVProMMsIds(...args)),
       _setSearchType: (...args) => dispatch(setSearchType(...args)),
       _setFilteredVProMMs: (filteredVProMMs) => dispatch(setFilteredVProMMs(filteredVProMMs)),
       _clearAdmins: () => dispatch(clearAdmins()),
