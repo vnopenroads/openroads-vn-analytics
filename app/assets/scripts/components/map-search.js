@@ -1,6 +1,5 @@
 'use strict';
 import React from 'react';
-import _ from 'lodash';
 import {
   compose,
   getContext

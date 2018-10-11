@@ -79,7 +79,6 @@ var BaseSearch = React.createClass({
     e.preventDefault();
     this.setState({ showResults: true });
     const { page } = this.props;
-    console.log('submitAction', submitAction);
     // On enter, use the first value. Feeling lucky!
     var searchVal = this.state.searchVal;
     if (searchVal.length) {
@@ -95,7 +94,7 @@ var BaseSearch = React.createClass({
     }
   },
 
-  navigateToAdmin: function(admin) {
+  navigateToAdmin: function (admin) {
     if (admin.level === 'province') {
       const url = `${this.props.language}/assets/${admin.id}`;
       this.props.router.push(url);
@@ -111,7 +110,7 @@ var BaseSearch = React.createClass({
     }
   },
 
-  navigateToVProMM: function(vpromm) {
+  navigateToVProMM: function (vpromm) {
     const url = `${this.props.language}/assets/road/${vpromm}`;
     this.props.router.push(url);
   },
@@ -172,11 +171,9 @@ var BaseSearch = React.createClass({
   },
 
   renderResults: function () {
-
     if (!this.state.showResults) {
       return null;
     }
-
     if (this.props.fetching) {
       return (
         <div className='search-results'>
@@ -190,24 +187,19 @@ var BaseSearch = React.createClass({
     let contents = null;
 
     if (this.props.searchType === 'Admin') {
-      
       // on the assets page, we don't want to show communes in the admin results
       if (this.props.page === 'assets') {
         data = data.filter(o => o.level !== 'commune');
       }
       if (data.length) {
-
         contents = _(data)
           .groupBy(o => o.level)
           .reduce((acc, level, key) => {
             acc.push(<h4 key={`aa-type-admin-${key}`}><T>Admin Level</T> - <T>{key}</T></h4>);
-
             let adminAreas = level.reduce((_acc, o) => {
               return _acc.concat(<li key={o.id}><a href='#' onClick={this.onAAClick.bind(null, o)}>{this.props.language === 'en' ? o.name_en : o.name_vn}</a></li>);
             }, []);
-
             acc.push(<ul key={`aa-admins-${key}`}>{adminAreas}</ul>);
-
             return acc;
           }, []);
       } else {
