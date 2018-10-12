@@ -174,6 +174,10 @@ var Tasks = React.createClass({
     // Remove compass.
     document.querySelector('.mapboxgl-ctrl .mapboxgl-ctrl-compass').remove();
 
+    this.map.on('style.load', () => {
+      this.syncMap();
+    });
+
     this.onMapLoaded(() => {
       map.on('mousemove', (e) => {
         // toggle cursor and hover filters on mouseover
@@ -356,10 +360,10 @@ var Tasks = React.createClass({
     const satelliteState = this.state.satelliteState;
     if (!satelliteState) {
       this.map.setStyle(satelliteStyle);
-      this.setState({satelliteState: true}, this.syncMap);
+      this.setState({satelliteState: true});
     } else {
       this.map.setStyle('mapbox://styles/mapbox/light-v9');
-      this.setState({satelliteState: false}, this.syncMap);
+      this.setState({satelliteState: false});
     }
   },
 
