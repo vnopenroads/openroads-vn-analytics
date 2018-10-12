@@ -71,6 +71,16 @@ const satelliteStyle = {
 };
 
 const layers = [{
+  id: 'roadOutline',
+  type: 'line',
+  source,
+  paint: {
+    'line-width': 5,
+    'line-opacity': 1,
+    'line-color': 'white'
+  },
+  layout: { 'line-cap': 'round' }
+}, {
   id: 'road',
   type: 'line',
   source,
@@ -80,7 +90,8 @@ const layers = [{
     'line-color': '#444'
   },
   layout: { 'line-cap': 'round' }
-}, {
+},
+{
   id: roadHoverId,
   type: 'line',
   source,
