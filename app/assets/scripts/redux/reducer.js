@@ -7,8 +7,9 @@ import waytasks from './modules/tasks';
 import jobs from './modules/jobs';
 import osmChange from './modules/osm';
 import roads from './modules/roads';
-import roadCount from './modules/roadCount';
+import roadCount from './modules/road-count';
 import map from './modules/map';
+import adminStats from './modules/admin-stats';
 
 
 const admins = function (state = {units: [], fetching: false, fetched: false}, action) {
@@ -194,5 +195,6 @@ export default combineReducers({
   provinces,
   setSearchType,
   setFilteredVProMMs,
-  fieldVProMMsids // TODO - delete
+  fieldVProMMsids, // TODO - delete
+  adminStats
 });

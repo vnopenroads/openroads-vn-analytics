@@ -48,40 +48,6 @@ export function clearAdmins () {
   };
 }
 
-function requestAdminInfo () {
-  return {
-    type: actions.REQUEST_ADMIN_INFO
-  };
-}
-
-function receiveAdminInfo (json) {
-  return {
-    type: actions.RECEIVE_ADMIN_INFO,
-    json: json
-  };
-}
-
-export function fetchAdminInfo (id) {
-  return function (dispatch) {
-    dispatch(requestAdminInfo());
-    const url = `${config.api}/admin/${id}/info`;
-    return fetch(url)
-      .then(response => response.json())
-      .then(json => {
-        if (json.statusCode >= 400) {
-          throw new Error('Bad Request');
-        }
-        dispatch(receiveAdminInfo(json));
-      });
-  };
-}
-
-export function removeAdminInfo () {
-  return {
-    type: actions.REMOVE_ADMIN_INFO
-  };
-}
-
 // ////////////////////////////////////////////////////////////////
 //                        SEARCH RESULTS                         //
 // ////////////////////////////////////////////////////////////////
