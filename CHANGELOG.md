@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+#### [v2.6.1](https://github.com/orma/openroads-vn-analytics/compare/v2.6.0...v2.6.1)
+
+> 12 October 2018
+
+- Base map improvements [`#479`](https://github.com/orma/openroads-vn-analytics/pull/479)
+
+#### v2.6.0
+
+> 12 October 2018
+
+- Assets Index and Admin Areas pages [`#471`](https://github.com/orma/openroads-vn-analytics/pull/471)
+- asset page stats [`#483`](https://github.com/orma/openroads-vn-analytics/pull/483)
+
 ### 2.5.1
 
 > 6 September 2018
