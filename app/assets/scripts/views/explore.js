@@ -52,7 +52,7 @@ var Explore = React.createClass({
 
     this.map = new mapboxgl.Map({
       container: 'map',
-      style: 'mapbox://styles/mapbox/light-v9',
+      style: 'mapbox://styles/openroads/cjdvlo06e68g22rmt6tme34xg',
       failIfMajorPerformanceCaveat: false,
       center: [lng, lat],
       zoom: zoom
@@ -141,8 +141,26 @@ var Explore = React.createClass({
               10, 2
             ]
           },
-          layout: {'line-cap': 'round'},
+          layout: {
+            'line-cap': 'round'
+          },
           filter: ['has', 'or_vpromms']
+        })
+        .addLayer({
+          id: 'vpromm-label',
+          type: 'symbol',
+          source: {
+            type: 'vector',
+            url: 'mapbox://openroads.vietnam-conflated-1'
+          },
+          'source-layer': 'conflated',
+          layout: {
+            'symbol-placement': 'line',
+            'text-anchor': 'top',
+            'text-field': ['get', 'or_vpromms'],
+            'text-font': ['DIN Offc Pro Regular', 'Open Sans Semibold'],
+            'text-size': 10
+          }
         })
         .addLayer({
           id: 'vpromm-interaction',
