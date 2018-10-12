@@ -1,6 +1,6 @@
 {
   "name": "openroads-analytics",
-  "version": "2.5.1",
+  "version": "2.6.0",
   "description": "Analytics dashboards for OpenRoads",
   "repository": {
     "type": "git",
@@ -109,6 +109,7 @@
     "moment": "^2.22.2",
     "react": "^15.6.2",
     "react-dom": "^15.6.2",
+    "react-paginate": "^5.2.4",
     "react-portal": "^4.1.5",
     "react-redux": "^5.0.7",
     "react-router": "3.2.0",

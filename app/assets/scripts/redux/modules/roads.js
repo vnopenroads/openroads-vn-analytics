@@ -3,14 +3,12 @@ import {
 } from 'url';
 import {
   reduce,
-  map,
-  property,
   omit,
   merge
 } from 'lodash';
 import {
   clearRoadCount
-} from './roadCount';
+} from './road-count';
 import config from '../../config';
 
 
@@ -129,7 +127,15 @@ export const editRoadId = (wayId, vprommId) => ({ type: EDIT_ROAD_ID, wayId, vpr
 export const editRoadIdSucess = (wayId, vprommId) => ({ type: EDIT_ROAD_ID_SUCCESS, wayId });
 export const editRoadIdError = (wayId, error) => ({ type: EDIT_ROAD_ID_ERROR, wayId, error });
 
-export const fetchRoadsEpic = (province, district, page, sortField, sortOrder) => (dispatch) => {
+export const fetchRoadsEpic = (province, district, page, sortField, sortOrder) => (dispatch, getState) => {
+  const state = getState();
+  const roadPageKey = getRoadPageKey(province, district, page, sortField, sortOrder);
+  const roads = state.roads.roadsByPage[roadPageKey];
+  // Some caching.
+  if (roads && roads.status === 'complete') {
+    return dispatch(fetchRoadsSuccess({}, roads.roads, province, district, page, sortField, sortOrder));
+  }
+
   dispatch(fetchRoads(province, district, page, sortField, sortOrder));
 
   return fetch(
@@ -148,9 +154,8 @@ export const fetchRoadsEpic = (province, district, page, sortField, sortOrder) =
         roadMap[road.id] = omit(road, ['id']);
         return roadMap;
       }, {});
-      const roadsByPage = map(roads, property('id'));
 
-      dispatch(fetchRoadsSuccess(roadsById, roadsByPage, province, district, page, sortField, sortOrder));
+      dispatch(fetchRoadsSuccess(roadsById, roads, province, district, page, sortField, sortOrder));
     })
     .catch((err) => dispatch(fetchRoadsError(err, province, district, page, sortField, sortOrder)));
 };
