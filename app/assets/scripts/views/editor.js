@@ -3,9 +3,14 @@ import {
   compose,
   getContext
 } from 'recompose';
+import { connect } from 'react-redux';
 import MapSearch from '../components/map-search';
 import T from '../components/t';
 import config from '../config';
+
+import {
+  setMapPosition
+} from '../redux/modules/map';
 
 import ORFrameNotifier from '../../../OR_frame_notifier';
 
@@ -13,7 +18,12 @@ var Editor = React.createClass({
   displayName: 'Editor',
 
   propTypes: {
-    language: React.PropTypes.string.isRequired
+    setMapPosition: React.PropTypes.func,
+    lng: React.PropTypes.number,
+    lat: React.PropTypes.number,
+    zoom: React.PropTypes.number,
+    language: React.PropTypes.string.isRequired,
+    way: React.PropTypes.string
   },
 
   // /////////////////////////////////////////////////////////////////////////////
@@ -58,6 +68,18 @@ var Editor = React.createClass({
           break;
       }
     }
+  },
+
+  componentWillReceiveProps: function ({ lng, lat, zoom, way }) {
+    console.log('component will receive props', lng, lat, zoom, way);
+    this.props.setMapPosition(lng, lat, zoom, way);
+    const mapCenter = [0, 0];
+    console.log('orFrame', this.orFrame);
+    window.orFrame = this.orFrame;
+    this.orFrame.send('settings', {
+      center: mapCenter,
+      zoom
+    });
   },
 
   componentDidMount: function () {
@@ -116,5 +138,16 @@ var Editor = React.createClass({
 
 
 module.exports = compose(
-  getContext({ language: React.PropTypes.string })
+  getContext({ language: React.PropTypes.string }),
+  connect(
+    state => ({
+      lng: state.map.lng || 108.239,
+      lat: state.map.lat || 15.930,
+      zoom: state.map.zoom || 6,
+      way: state.map.waySlug
+    }),
+    dispatch => ({
+      setMapPosition: (lng, lat, zoom, way) => dispatch(setMapPosition(lng, lat, zoom, way))
+    })
+  )
 )(Editor);
