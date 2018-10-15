@@ -84,11 +84,11 @@ var BaseSearch = React.createClass({
     if (searchVal.length) {
       if (this.props.searchType === 'Admin' && this.props.admins[0]) {
         const admin = this.props.admins[0];
-        page === 'explore' ? this.searchAdminArea(admin.id) : this.navigateToAdmin(admin);
+        page === 'assets' ? this.navigateToAdmin(admin) : this.searchAdminArea(admin.id);
         this.setState({ searchVal: this.props.admins[0].name_en });
       } else if (this.props.filteredVProMMs[0]) {
         const vpromm = this.props.filteredVProMMs[0];
-        page === 'explore' ? this.searchVProMMsID(vpromm) : this.navigateToVProMM(vpromm);
+        page === 'assets' ? this.navigateToVProMM(vpromm) : this.searchVProMMsID(vpromm);
         this.setState({ searchVal: this.props.filteredVProMMs[0] });
       }
     }
@@ -158,7 +158,7 @@ var BaseSearch = React.createClass({
     // console.log('onAAClick called');
     const { page } = this.props;
     e.preventDefault();
-    page === 'explore' ? this.searchAdminArea(aa.id) : this.navigateToAdmin(aa);
+    page === 'assets' ? this.navigateToAdmin(aa) : this.searchAdminArea(aa.id);
     this.setState({ searchVal: this.props.language === 'en' ? aa.name_en : aa.name_vn });
   },
 
@@ -166,7 +166,7 @@ var BaseSearch = React.createClass({
     // console.log('onVprommClick called');
     const { page } = this.props;
     e.preventDefault();
-    page === 'explore' ? this.searchVProMMsID(id) : this.navigateToVProMM(id);
+    page === 'assets' ? this.navigateToVProMM(id) : this.searchVProMMsID(id);
     this.setState({ searchVal: id });
   },
 
