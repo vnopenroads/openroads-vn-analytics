@@ -140,6 +140,20 @@ export function fetchFieldVProMMsIds (json) {
   };
 }
 
+export function fetchAllVProMMsIds (json) {
+  return function (dispatch) {
+    dispatch(requestFieldVProMMsids());
+    const url = `${config.api}/field/ids/all`;
+    return fetch(url)
+      .then(response => response.json())
+      .then(json => {
+        if (json.statusCode >= 400) {
+          throw new Error('Bad Response');
+        }
+        dispatch(receiveFieldVProMMsids(json));
+      });
+  };
+}
 
 // ////////////////////////////////////////////////////////////////
 //                             Search                            //

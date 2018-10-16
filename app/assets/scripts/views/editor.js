@@ -92,7 +92,7 @@ var Editor = React.createClass({
               <h1 className='inpage__title'><T>Editor</T></h1>
             </div>
             <div className='inpage__actions'>
-              <MapSearch />
+              <MapSearch page="editor" />
             </div>
           </div>
         </header>

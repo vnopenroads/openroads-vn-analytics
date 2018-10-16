@@ -258,7 +258,7 @@ var Explore = React.createClass({
               <h1 className='inpage__title'><T>Explore</T></h1>
             </div>
             <div className='inpage__actions'>
-              <MapSearch />
+              <MapSearch page='explore' />
             </div>
           </div>
         </header>
