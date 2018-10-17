@@ -73,10 +73,8 @@ var Editor = React.createClass({
   componentWillReceiveProps: function ({ lng, lat, zoom, way }) {
     console.log('component will receive props', lng, lat, zoom, way);
     this.props.setMapPosition(lng, lat, zoom, way);
-    const mapCenter = [0, 0];
-    console.log('orFrame', this.orFrame);
-    window.orFrame = this.orFrame;
-    this.orFrame.send('settings', {
+    const mapCenter = [lng, lat];
+    this.orFrame.send('setPosition', {
       center: mapCenter,
       zoom
     });
