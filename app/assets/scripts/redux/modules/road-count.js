@@ -11,6 +11,16 @@ import config from '../../config';
 export const getRoadCountKey = (province, district) =>
   district ? `${province}-${district}` : province;
 
+/**
+ * This function is used primarily to merge in the `totalRoads` and `osmRoads`
+ * properties from the counts request with an admin-area object.
+ *
+ * @param {Object} aa - admin area object to be augmented with counts
+ * @param {Object} data - data object that holds the counts
+ * @param {String} path - path to property in data object that holds counts
+ * @param {Object} additional - additional key-values to be added to the `aa` object
+ * @returns {Object} admin-area object, augmented as above
+ */
 export const mergeAA = (aa, data, path, additional = {}) => {
   if (!aa.code) return aa;
   const count = _.get(data, path, {});

@@ -230,11 +230,7 @@ export default compose(
             data: {
               provinces: state.adminStats.index.data.provinces.map(prov => {
                 const districts = prov.districts.map(district => mergeAA(district, countData, [prov.code, 'district', district.code]));
-                const status = {
-                  pending: districts.reduce((acc, d) => acc + _.get(d, 'status.pending', 0), 0),
-                  reviewed: districts.reduce((acc, d) => acc + _.get(d, 'status.reviewed', 0), 0)
-                };
-                return mergeAA(prov, countData, [prov.code], {districts, status});
+                return mergeAA(prov, countData, [prov.code], {districts});
               })
             }
           }
