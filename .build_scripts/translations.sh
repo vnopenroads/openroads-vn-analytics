@@ -13,7 +13,7 @@ apt-get update && \
 echo ""
 echo "---Downloading Transifex Client---"
 
-pip install transifex-client
+pip install transifex-client==0.13.4
 
 # generate .transifexrc
 echo ""
