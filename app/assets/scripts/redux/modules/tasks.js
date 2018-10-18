@@ -44,7 +44,7 @@ export const dedupeWayTask = (taskId, wayIds, wayIdToKeep, dedupeId) => ({ type:
 export const dedupeWayTaskSuccess = () => ({ type: DEDUPE_WAY_TASK_SUCCESS });
 export const dedupeWayTaskError = (error) => ({ type: DEDUPE_WAY_TASK_ERROR, error: error });
 
-function getBoundaryType(allAdmins, selected) {
+function getBoundaryType (allAdmins, selected) {
   const districtIds = allAdmins.districts.district.map(d => d.id);
   const provinceIds = allAdmins.provinces.province.map(p => p.id);
   if (districtIds.indexOf(selected) !== -1) {

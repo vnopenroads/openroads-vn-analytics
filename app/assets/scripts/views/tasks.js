@@ -786,7 +786,7 @@ var Tasks = React.createClass({
     const { selectedProvince, language } = this.props;
 
     const provinceOptions = this.props.selectOptions.provinces.province.map((p) => { return {value: p.id, label: `${p.name_en} (P)`}; });
-    const districtOptions = this.props.selectOptions.districts.district.map((d) => { return { value: d.id, label: `${d.name_en} (D)`}; });
+    const districtOptions = this.props.selectOptions.districts.district.map((d) => { return {value: d.id, label: `${d.name_en} (D)`}; });
     const options = [].concat(provinceOptions).concat(districtOptions);
     const value = selectedProvince;
     return (

@@ -240,8 +240,8 @@ export function fetchProvinces () {
             dispatch(receiveProvinces({
               provinces,
               districts
-            }))
-          })
+            }));
+          });
       });
   };
 }
