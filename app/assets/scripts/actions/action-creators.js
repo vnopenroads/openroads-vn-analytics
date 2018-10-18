@@ -223,14 +223,25 @@ function receiveProvinces (json) {
 export function fetchProvinces () {
   return function (dispatch) {
     dispatch(requestProvinces());
-    let url = `${config.api}/admin/province/units`;
-    return fetch(url)
+    let provinceUrl = `${config.api}/admin/province/units`;
+    let districtUrl = `${config.api}/admin/district/units`;
+    return fetch(provinceUrl)
       .then(response => response.json())
-      .then(json => {
-        if (json.statusCode >= 400) {
+      .then(provinces => {
+        if (provinces.statusCode >= 400) {
           throw new Error('Bad response');
         }
-        dispatch(receiveProvinces(json));
+        return fetch(districtUrl)
+          .then(response => response.json())
+          .then(districts => {
+            if (districts.statusCode >= 400) {
+              throw new Error('Bad response');
+            }
+            dispatch(receiveProvinces({
+              provinces,
+              districts
+            }))
+          })
       });
   };
 }

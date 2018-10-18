@@ -44,15 +44,31 @@ export const dedupeWayTask = (taskId, wayIds, wayIdToKeep, dedupeId) => ({ type:
 export const dedupeWayTaskSuccess = () => ({ type: DEDUPE_WAY_TASK_SUCCESS });
 export const dedupeWayTaskError = (error) => ({ type: DEDUPE_WAY_TASK_ERROR, error: error });
 
+function getBoundaryType(allAdmins, selected) {
+  const districtIds = allAdmins.districts.district.map(d => d.id);
+  const provinceIds = allAdmins.provinces.province.map(p => p.id);
+  if (districtIds.indexOf(selected) !== -1) {
+    return 'district';
+  } else if (provinceIds.indexOf(selected) !== -1) {
+    return 'province';
+  } else {
+    return null;
+  }
+}
+
 export const fetchNextWayTaskEpic = () => (dispatch, getState) => {
   dispatch(fetchNextWayTask());
 
   const skipped = getState().waytasks.skipped;
-  const selectedProvince = getState().waytasks.selectedProvince;
-
+  const selectedBoundary = getState().waytasks.selectedProvince;
+  let allBoundaries, boundaryType;
+  if (selectedBoundary) {
+    allBoundaries = getState().provinces.data;
+    boundaryType = getBoundaryType(allBoundaries, selectedBoundary);
+  }
   let params = {};
   if (skipped.length) params['skip'] = skipped;
-  if (selectedProvince) params['province'] = selectedProvince;
+  if (selectedBoundary) params[boundaryType] = selectedBoundary;
 
   let url = `${config.api}/tasks/next`;
   if (Object.keys(params).length) {
@@ -71,7 +87,7 @@ export const fetchNextWayTaskEpic = () => (dispatch, getState) => {
     .then(json => {
       json.data.features.forEach(feature => {
         feature.properties._id = feature.meta.id;
-        feature.properties.province = json.province;
+        feature.properties.province = json.boundary;
       });
       dispatch(fetchWayTaskCountEpic());
       return dispatch(fetchWayTaskSuccess(json.id, json.updated_at, json.data));
