@@ -122,8 +122,14 @@ export const fetchWayTaskEpic = taskId => (dispatch, getState) => {
 
 export const fetchWayTaskCountEpic = () => (dispatch, getState) => {
   dispatch(fetchWayTaskCount());
-  const selectedProvince = getState().waytasks.selectedProvince;
-  const url = selectedProvince ? `${config.api}/tasks/count?province=${selectedProvince}` : `${config.api}/tasks/count`;
+  const selectedBoundary = getState().waytasks.selectedProvince;
+  let allBoundaries, boundaryType;
+  if (selectedBoundary) {
+    allBoundaries = getState().provinces.data;
+    boundaryType = getBoundaryType(allBoundaries, selectedBoundary);
+  }
+
+  const url = selectedBoundary ? `${config.api}/tasks/count?${boundaryType}=${selectedBoundary}` : `${config.api}/tasks/count`;
 
   fetch(url)
     .then(response => {
