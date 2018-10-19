@@ -795,7 +795,7 @@ var Tasks = React.createClass({
         value={value}
         onChange= {this.handleProvinceChange}
         options={ options }
-        placeholder ={ translate(language, 'Filter tasks by province') }
+        placeholder ={ translate(language, 'Filter by province or district') }
       />
     );
   },
