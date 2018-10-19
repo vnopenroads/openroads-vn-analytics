@@ -1,11 +1,39 @@
 ### Changelog
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
+### [v3.0.0-rc]
 
-#### [v2.6.1](https://github.com/orma/openroads-vn-analytics/compare/v2.6.0...v2.6.1)
+> 19 October 2018
+
+- Release candidate milestone.
+
+#### [v2.8.0](https://github.com/orma/openroads-vn-analytics/compare/v2.7.2...v2.8.0)
+
+> 19 October 2018
+
+- Get both provinces and districts in tasks search, handle search for districts [`#497`](https://github.com/orma/openroads-vn-analytics/pull/497)
+- fetch count correctly for currently selected boundary [`1e2ab8d`](https://github.com/orma/openroads-vn-analytics/commit/1e2ab8d56c4ad0e856c2ff5b5ca72a6e7e1b88c5)
+
+#### [v2.7.1](https://github.com/orma/openroads-vn-analytics/compare/v2.7.0...v2.7.1)
+
+> 18 October 2018
+
+- Fix Editor search bug [`#490`](https://github.com/orma/openroads-vn-analytics/pull/490)
+
+#### [v2.7.0](https://github.com/orma/openroads-vn-analytics/compare/v2.6.2...v2.7.0)
+
+> 17 October 2018
+
+- Search on assets pages [`#482`](https://github.com/orma/openroads-vn-analytics/pull/482)
+- Fix stats bug: show province status counts as returned from api, not by summing district counts + add some docs for a function [`d5a36d2`](https://github.com/orma/openroads-vn-analytics/commit/d5a36d2fd02ef396236bcf8549093c66811984c5)
+- Fix pagination bug: send page property to MapSearch component from editor page, handle actions appropriately [`0ddfead`](https://github.com/orma/openroads-vn-analytics/commit/0ddfead3209c661180a3d4117a68c9e529be04be)
+
+#### [v2.6.2](https://github.com/orma/openroads-vn-analytics/compare/v2.6.1...v2.6.2)
 
 > 12 October 2018
 
+- Map design changes [`#484`](https://github.com/orma/openroads-vn-analytics/pull/484)
+- update changelog [`da6f619`](https://github.com/orma/openroads-vn-analytics/commit/da6f619504f31ceb97c41a0470cc3259db53450c)
 - Base map improvements [`#479`](https://github.com/orma/openroads-vn-analytics/pull/479)
 
 #### v2.6.0
