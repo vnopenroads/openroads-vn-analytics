@@ -784,15 +784,18 @@ var Tasks = React.createClass({
 
   renderProvinceSelect: function () {
     const { selectedProvince, language } = this.props;
-    const provinceOptions = this.props.selectOptions.province.map((p) => { return {value: p.id, label: p.name_en}; });
+
+    const provinceOptions = this.props.selectOptions.provinces.province.map((p) => { return {value: p.id, label: `${p.name_en} (P)`}; });
+    const districtOptions = this.props.selectOptions.districts.district.map((d) => { return {value: d.id, label: `${d.name_en} (D)`}; });
+    const options = [].concat(provinceOptions).concat(districtOptions);
     const value = selectedProvince;
     return (
       <Select
         name="form-province-select"
         value={value}
         onChange= {this.handleProvinceChange}
-        options={ provinceOptions }
-        placeholder ={ translate(language, 'Filter tasks by province') }
+        options={ options }
+        placeholder ={ translate(language, 'Filter by province or district') }
       />
     );
   },
@@ -802,7 +805,7 @@ var Tasks = React.createClass({
     const { hoverId } = this.state;
     const renderPanel = !((taskStatus === 'error' || taskStatus === 'No tasks remaining') ||
                               (!taskId && taskStatus === 'pending'));
-
+    // console.log('selectOptions', this.props.selectOptions);
     return (
       <section className='inpage inpage--alt'>
         <header className='inpage__header'>
@@ -819,7 +822,7 @@ var Tasks = React.createClass({
             <div className='inpage__actions'>
               <div className='form__group task-search'>
                 <label className='form__label' htmlFor='form-select-1'><T>Search admin area</T></label>
-                { this.props.selectOptions.province && this.renderProvinceSelect() }
+                { this.props.selectOptions.provinces && this.renderProvinceSelect() }
               </div>
             </div>
           </div>
