@@ -73,6 +73,24 @@ var Explore = React.createClass({
       // Load all roads with VPRoMMS values, and color by IRI
       this.map
         .addLayer({
+          id: 'national-roads',
+          type: 'line',
+          source: {
+            type: 'vector',
+            url: 'mapbox://openroads.05tgvz1w'
+          },
+          'source-layer': 'national',
+          paint: {
+            'line-width': [
+              'interpolate', ['linear'], ['zoom'],
+              0, 1,
+              10, 2
+            ]
+          },
+          layout: { 'line-cap': 'round' },
+          maxzoom: 11
+        })
+        .addLayer({
           id: 'active_road',
           type: 'line',
           source: {
