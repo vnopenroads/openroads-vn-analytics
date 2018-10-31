@@ -108,11 +108,13 @@ var BaseSearch = React.createClass({
           this.props.router.push(url);
         });
     }
+    this.onClearSearch();
   },
 
   navigateToVProMM: function (vpromm) {
     const url = `${this.props.language}/assets/road/${vpromm}`;
     this.props.router.push(url);
+    this.onClearSearch();
   },
 
   search: function (searchVal) {
