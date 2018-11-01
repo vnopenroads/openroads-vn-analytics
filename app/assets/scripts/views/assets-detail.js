@@ -21,6 +21,8 @@ import T, {
   translate
 } from '../components/t';
 
+import sectionFields from '../utils/section-fields';
+import { getSectionValue } from '../utils/sections';
 import Dropdown from '../components/dropdown';
 import AssetsEditModal from '../components/assets-edit-modal';
 
@@ -210,6 +212,44 @@ class AssetsDetail extends React.Component {
     );
   }
 
+  renderSections () {
+    const { fetched, data } = this.props.roadGeo;
+    if (!fetched) return null;
+    const allProps = [...new Set(data.features.map(f => Object.keys(f.properties)).flat())];
+    const ignoreProps = [
+      'id',
+      'or_vpromms'
+    ];
+    let filteredProps = allProps.filter(p => {
+      return ignoreProps.indexOf(p) === -1;
+    });
+    let header = ['Way ID'];
+    let rows =[];
+    if (filteredProps.length === 0) {
+      header.push('');
+      rows = data.features.map(f => {
+        return [
+          f.properties.id,
+          'No Section Data'
+        ];
+      });
+    } else {
+      filteredProps = filteredProps.filter(p => sectionFields.hasOwnProperty(p));
+      const headerLabels = filteredProps.map(p => {
+        return sectionFields[p].label;
+      });
+      header = header.concat(headerLabels);
+      rows = data.features.map(f => {
+        const cols = filteredProps.map(p => {
+          return f.properties[p] ? getSectionValue(p, f.properties[p]) : 'NA';
+        });
+        return [f.properties.id].concat(cols);
+      });
+    }
+    //TODO: actually render the header and rows built above
+    return null;
+  }
+
   renderReviewStatus () {
     const stateMap = {
       'pending': translate(this.props.language, 'Pending'),
@@ -300,6 +340,10 @@ class AssetsDetail extends React.Component {
         </figure>
 
         {this.renderProperties()}
+
+        {hasGeometry ? (
+          this.renderSections()
+        ) : null }
 
         {this.props.roadProps.fetched ? <AssetsEditModal
           revealed={this.state.editModalOpen}
