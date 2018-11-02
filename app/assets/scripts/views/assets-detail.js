@@ -225,7 +225,7 @@ class AssetsDetail extends React.Component {
       return ignoreProps.indexOf(p) === -1;
     });
     let header = ['Way ID'];
-    let rows =[];
+    let rows = [];
     if (filteredProps.length === 0) {
       header.push('');
       rows = data.features.map(f => {
@@ -247,7 +247,6 @@ class AssetsDetail extends React.Component {
         return [f.properties.id].concat(cols);
       });
     }
-    
     return (
       <section>
         <h3><T>Section Data</T></h3>
@@ -255,7 +254,7 @@ class AssetsDetail extends React.Component {
           <table className="table">
             <thead>
               <tr>
-                {header.map((h,i) => {
+                {header.map((h, i) => {
                   return (
                     <th key={i}>{h}</th>
                   );

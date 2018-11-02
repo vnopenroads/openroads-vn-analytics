@@ -8,7 +8,7 @@ let files = fs.readdirSync('.');
 
 files = files.filter(f => f.startsWith('or_'));
 
-data = files.map(f => {
+const data = files.map(f => {
   return JSON.parse(fs.readFileSync(f));
 }).reduce((acc, val) => {
   acc[val.key] = {
