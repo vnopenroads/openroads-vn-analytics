@@ -62,7 +62,8 @@ class AssetsDetail extends React.Component {
 
     this.state = {
       layerRendered: false,
-      editModalOpen: false
+      editModalOpen: false,
+      activeTab: 'attributes'
     };
   }
 
@@ -197,7 +198,6 @@ class AssetsDetail extends React.Component {
 
     return (
       <section>
-        <h3>Attributes</h3>
         {propNames.length ? (
           <dl className='attributes-list'>
             {propNames.map(renderDlItem)}
@@ -213,6 +213,11 @@ class AssetsDetail extends React.Component {
   }
 
   renderSections () {
+    if (!this.hasGeometry()) {
+      return (
+        <div>No Section Data Available</div>
+      );
+    }
     const { fetched, data } = this.props.roadGeo;
     if (!fetched) return null;
     const allProps = [...new Set(data.features.map(f => Object.keys(f.properties)).flat())];
@@ -249,7 +254,6 @@ class AssetsDetail extends React.Component {
     }
     return (
       <section>
-        <h3><T>Section Data</T></h3>
         <div>
           <table className="table">
             <thead>
@@ -309,6 +313,27 @@ class AssetsDetail extends React.Component {
     );
   }
 
+  onTabClick(tab, e) {
+    e.preventDefault();
+    this.setState({ activeTab: tab });
+  }
+
+  renderTabs() {
+    const tabs = [
+      {key: 'attributes', label: 'Attributes'},
+      {key: 'sections', label: 'Sections'}
+    ];
+    return (
+      <ul className='nav-tabs'>
+        {tabs.map(t => (
+          <li key={t.key}>
+            <a href='#' className={c({'tab--active': this.state.activeTab === t.key})} title={translate(this.props.language, 'Switch tab')} onClick={this.onTabClick.bind(this, t.key)}><T>{t.label}</T></a>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
   render () {
     const { vpromm, language, roadProps, roadGeo } = this.props;
     const disId = get(roadProps, 'data.district.id', null);
@@ -319,7 +344,6 @@ class AssetsDetail extends React.Component {
 
     let featCenter = [0, 0];
     if (roadGeo.fetched) {
-      console.log(roadGeo.data);
       featCenter = center(roadGeo.data).geometry.coordinates;
     }
 
@@ -370,11 +394,10 @@ class AssetsDetail extends React.Component {
           <figcaption className='map__caption'><p><T>Asset geometry</T></p></figcaption>
         </figure>
 
-        {this.renderProperties()}
+        {this.renderTabs()}
+        {this.state.activeTab === 'attributes' && this.renderProperties()}
 
-        {hasGeometry ? (
-          this.renderSections()
-        ) : null }
+        {this.state.activeTab === 'sections' && this.renderSections()}
 
         {this.props.roadProps.fetched ? <AssetsEditModal
           revealed={this.state.editModalOpen}
