@@ -218,7 +218,8 @@ class AssetsDetail extends React.Component {
     const allProps = [...new Set(data.features.map(f => Object.keys(f.properties)).flat())];
     const ignoreProps = [
       'id',
-      'or_vpromms'
+      'or_vpromms',
+      'highway'
     ];
     let filteredProps = allProps.filter(p => {
       return ignoreProps.indexOf(p) === -1;
@@ -246,8 +247,39 @@ class AssetsDetail extends React.Component {
         return [f.properties.id].concat(cols);
       });
     }
-    //TODO: actually render the header and rows built above
-    return null;
+    
+    return (
+      <section>
+        <h3><T>Section Data</T></h3>
+        <div>
+          <table className="table">
+            <thead>
+              <tr>
+                {header.map((h,i) => {
+                  return (
+                    <th key={i}>{h}</th>
+                  );
+                })}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map(r => {
+                return (
+                  <tr>
+                    {r.map((val, i) => {
+                      return (
+                        <td key={i}>{val}</td>
+                      );
+                    })}
+                  </tr>
+                );
+              })
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    );
   }
 
   renderReviewStatus () {
