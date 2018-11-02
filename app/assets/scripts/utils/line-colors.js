@@ -5,7 +5,8 @@ module.exports = {
     colorSpace: 'lab',
     stops: [
       [3, '#8CCA1B'],
-      [16, '#DA251D']
+      [16, '#DA251D'],
+      [30, '#8f1813']
     ]
   },
   'RouteShoot': {
