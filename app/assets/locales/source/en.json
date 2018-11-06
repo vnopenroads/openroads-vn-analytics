@@ -204,5 +204,15 @@
     "Continue": "Continue",
     "No ID": "No ID",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "Grade": "Grade",
+    "Review Status": "Review Status",
+    "Show Bing Satellite": "Show Bing Satellite",
+    "This asset doesn't have geometry": "This asset doesn't have geometry",
+    "Upload geometry": "Upload geometry",
+    "Currently supports RLP v1, v2, and v2.1": "Currently supports RLP v1, v2, and v2.1",
+    "Choose file": "Choose file",
+    "No file chosen": "No file chosen",
+    "What's the current version of the platform?": "What's the current version of the platform?",
+    "Filter by province or district": "Filter by province or district"
 }
