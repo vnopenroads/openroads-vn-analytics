@@ -313,12 +313,12 @@ class AssetsDetail extends React.Component {
     );
   }
 
-  onTabClick(tab, e) {
+  onTabClick (tab, e) {
     e.preventDefault();
     this.setState({ activeTab: tab });
   }
 
-  renderTabs() {
+  renderTabs () {
     const tabs = [
       {key: 'attributes', label: 'Attributes'},
       {key: 'sections', label: 'Sections'}
