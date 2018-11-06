@@ -181,10 +181,10 @@ class AssetsAA extends React.Component {
         render: (r) => translate(language, r.status) || translate(language, 'pending')
       },
       {accessor: 'properties.iri_mean', label: translate(language, 'IRI'), render: renderRound},
-      {accessor: 'properties.Road Type', label: translate(language, 'Road Type') },
-      {accessor: 'properties.width', label: translate(language, 'Width') },
+      {accessor: 'properties.Road Type', label: translate(language, 'Road Type')},
+      {accessor: 'properties.width', label: translate(language, 'Width')},
       {accessor: 'properties.length', label: translate(language, 'Road Length (ORMA)'), render: renderRound},
-      {accessor: 'properties.grade', label: translate(language, 'Grade') }
+      {accessor: 'properties.grade', label: translate(language, 'Grade')}
     ];
 
     return (
