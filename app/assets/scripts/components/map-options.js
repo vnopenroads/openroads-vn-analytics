@@ -7,7 +7,7 @@ import T, {
 } from './t';
 
 
-const MapOptions = ({ language, handleLayerChange, handleShowNoVpromms }) => (
+const MapOptions = ({ layer, language, handleLayerChange, handleShowNoVpromms }) => (
   <div className='panel options-panel'>
     <div className='panel__body'>
       <form className='form'>
@@ -18,7 +18,7 @@ const MapOptions = ({ language, handleLayerChange, handleShowNoVpromms }) => (
             <option value='cvts'>{translate(language, 'CVTS')}</option>
           </select>
         </div>
-
+        {layer === 'iri' && (
         <div className='form__group'>
           <label className='form__label'>{translate(language, 'Options')}</label>
           <label
@@ -30,6 +30,8 @@ const MapOptions = ({ language, handleLayerChange, handleShowNoVpromms }) => (
             <span className='form__option__text'><T>Road without VPRoMMS ID</T> <b>----</b></span>
           </label>
         </div>
+        )
+        }
       </form>
     </div>
   </div>

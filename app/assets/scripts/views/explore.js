@@ -326,6 +326,7 @@ var Explore = React.createClass({
               <div className='map__media' id='map'></div>
               <div className='map__controls map__controls--top-right'>
                 <MapOptions
+                  layer={this.props.layer}
                   handleLayerChange={this.handleLayerChange}
                   handleShowNoVpromms={this.handleShowNoVpromms}
                 />
