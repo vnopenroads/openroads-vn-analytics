@@ -294,8 +294,8 @@ class AssetsAA extends React.Component {
     ];
     const lengthPercent = round(Math.min(totalVprommLength / totalLength * 100, 100) || 0);
     const lengthIndicators = [
-      { label: translate(lang, 'WoN Length'), value: `${round(totalLength)}Km` },
-      { label: translate(lang, 'GProMMS Length'), value: `${round(totalVprommLength)}Km (${lengthPercent}%)` }
+      { label: translate(lang, 'WoN'), value: `${round(totalLength)}Km` },
+      { label: translate(lang, 'GProMMS'), value: `${round(totalVprommLength)}Km (${lengthPercent}%)` }
     ];
 
     return (

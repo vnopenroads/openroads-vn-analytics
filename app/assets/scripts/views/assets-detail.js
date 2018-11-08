@@ -197,13 +197,18 @@ class AssetsDetail extends React.Component {
 
     if (!fetched) return null;
 
+    const nameToLabel = {
+      'length': 'Road Length (ORMA)',
+      'Road Length': 'Road Length (VPROMM)'
+    };
+
     let propNames = Object.keys(data.properties);
     propNames.sort((a, b) => a.toLowerCase() > b.toLowerCase() ? 1 : -1);
 
     const renderDlItem = (name) => {
       return [
-        <dt key={`dt-${name}`}>{name}</dt>,
-        <dd key={`dd-${name}`}>{data.properties[name] || '-'}</dd>
+        nameToLabel.hasOwnProperty(name) ? <dt key={`dt-${name}`}><T>{nameToLabel[name]}</T></dt> : <dt key={`dt-${name}`}>{name}</dt>,
+        parseFloat(data.properties[name]) ? <dd key={`dd-${name}`}>{parseFloat(data.properties[name]).toFixed(2) || '-'}</dd> : <dd key={`dd-${name}`}>{data.properties[name] || '-'}</dd>
       ];
     };
 
