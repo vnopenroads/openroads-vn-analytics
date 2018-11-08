@@ -25,6 +25,7 @@ import sectionFields from '../utils/section-fields';
 import { getSectionValue } from '../utils/sections';
 import Dropdown from '../components/dropdown';
 import AssetsEditModal from '../components/assets-edit-modal';
+import AssetsSectionRow from '../components/assets-section-row';
 
 import {
   FETCH_ROAD_GEOMETRY,
@@ -125,6 +126,16 @@ class AssetsDetail extends React.Component {
         'line-color': '#da251d'
       }
     });
+    this.map.addLayer({
+      id: 'road-geometry-highlight',
+      type: 'line',
+      source: 'road-geometry',
+      paint: {
+        'line-width': 5,
+        'line-color': '#000'
+      },
+      filter: ['==', 'way_id', '']
+    });
 
     if (data.features.length > 0) {
       this.map.fitBounds(bbox(data), { padding: 20 });
@@ -212,6 +223,15 @@ class AssetsDetail extends React.Component {
     );
   }
 
+  highlightMap (id) {
+    console.log('this', this);
+    this.map.setFilter('road-geometry-highlight', ['==', 'way_id', id]);
+  }
+
+  unhighlightMap (id) {
+    this.map.setFilter('road-geometry-highlight', ['==', 'way_id', '']); 
+  }
+
   renderSections () {
     if (!this.hasGeometry()) {
       return (
@@ -223,6 +243,7 @@ class AssetsDetail extends React.Component {
     const allProps = [...new Set(data.features.map(f => Object.keys(f.properties)).flat())];
     const ignoreProps = [
       'id',
+      'way_id',
       'or_vpromms',
       'highway'
     ];
@@ -235,7 +256,7 @@ class AssetsDetail extends React.Component {
       header.push('');
       rows = data.features.map(f => {
         return [
-          f.properties.id,
+          f.properties.way_id,
           'No Section Data'
         ];
       });
@@ -249,7 +270,7 @@ class AssetsDetail extends React.Component {
         const cols = filteredProps.map(p => {
           return f.properties[p] ? getSectionValue(p, f.properties[p]) : 'NA';
         });
-        return [f.properties.id].concat(cols);
+        return [f.properties.way_id].concat(cols);
       });
     }
     return (
@@ -268,13 +289,12 @@ class AssetsDetail extends React.Component {
             <tbody>
               {rows.map(r => {
                 return (
-                  <tr>
-                    {r.map((val, i) => {
-                      return (
-                        <td key={i}>{val}</td>
-                      );
-                    })}
-                  </tr>
+                  <AssetsSectionRow
+                    key={r[0]}
+                    data={r}
+                    onMouseOver={this.highlightMap.bind(this)}
+                    onMouseOut={this.unhighlightMap.bind(this)}
+                  />
                 );
               })
               }
