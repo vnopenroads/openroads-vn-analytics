@@ -15,6 +15,7 @@ const MapOptions = ({ language, handleLayerChange, handleShowNoVpromms }) => (
           <label className='form__label'><T>Visualized variable</T></label>
           <select className='form__control' onChange={ e => handleLayerChange(e) }>
             <option value='iri'>{translate(language, 'IRI')}</option>
+            <option value='cvts'>{translate(language, 'CVTS')}</option>
           </select>
         </div>
 
