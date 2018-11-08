@@ -229,7 +229,6 @@ class AssetsDetail extends React.Component {
   }
 
   highlightMap (id) {
-    console.log('this', this);
     this.map.setFilter('road-geometry-highlight', ['==', 'way_id', id]);
   }
 

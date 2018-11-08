@@ -75,7 +75,6 @@ var BaseSearch = React.createClass({
   },
 
   onSearchSubmit: function (e) {
-    console.log('onSearchSubmit called');
     e.preventDefault();
     this.setState({ showResults: true });
     const { page } = this.props;
@@ -157,7 +156,6 @@ var BaseSearch = React.createClass({
   },
 
   onAAClick: function (aa, e) {
-    // console.log('onAAClick called');
     const { page } = this.props;
     e.preventDefault();
     page === 'assets' ? this.navigateToAdmin(aa) : this.searchAdminArea(aa.id);
@@ -165,7 +163,6 @@ var BaseSearch = React.createClass({
   },
 
   onVprommClick: function (id, e) {
-    // console.log('onVprommClick called');
     const { page } = this.props;
     e.preventDefault();
     page === 'assets' ? this.navigateToVProMM(id) : this.searchVProMMsID(id);
