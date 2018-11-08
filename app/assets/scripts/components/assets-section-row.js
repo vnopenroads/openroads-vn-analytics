@@ -1,12 +1,10 @@
 'use strict';
+
 import React from 'react';
-import T, {
-  translate
-} from '../components/t';
 
 const AssetsSectionRow = React.createClass({
   'displayName': 'AssetsSectionRow',
-  
+
   propTypes: {
     data: React.PropTypes.array,
     onMouseOver: React.PropTypes.func,
