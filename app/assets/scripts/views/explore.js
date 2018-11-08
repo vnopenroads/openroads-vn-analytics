@@ -246,7 +246,6 @@ var Explore = React.createClass({
   },
 
   switchLayerTo: function (layer) {
-    console.log('switching to layer', layer);
     if (layer === 'cvts') {
       this.map.setLayoutProperty('vpromm', 'visibility', 'none');
       this.map.setLayoutProperty('novpromm', 'visibility', 'none');
@@ -265,15 +264,12 @@ var Explore = React.createClass({
   },
 
   componentWillReceiveProps: function ({ layer, lng, lat, zoom, activeRoad }) {
-    console.log('receiving props', this.props.layer, layer);
-
     if (this.props.layer !== layer) {
       this.switchLayerTo(layer);
     }
     if (lng !== this.props.lng || lat !== this.props.lat || zoom !== this.props.zoom) {
       this.map.flyTo({ center: [lng, lat], zoom });
     }
-
     if (activeRoad !== this.props.activeRoad) {
       this.map.setFilter('active_road', ['==', 'or_vpromms', activeRoad]);
       this.props.fetchActiveRoad(activeRoad);
