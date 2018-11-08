@@ -15,6 +15,8 @@ const renderTitle = (layer) => {
     return <T>Condition</T>;
   } else if (layer === 'or_surface') {
     return <T>Surface</T>;
+  } else if (layer === 'cvts') {
+    return <T>Vehicle Count</T>;
   }
 };
 
