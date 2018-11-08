@@ -199,6 +199,22 @@ var Explore = React.createClass({
           layout: {'line-cap': 'round'},
           filter: ['has', 'or_vpromms']
         })
+        .addLayer({
+          id: 'cvts',
+          type: 'line',
+          source: {
+            type: 'vector',
+            url: 'mapbox://openroads.18lep9y5'
+          },
+          'source-layer': 'license-counts-cv07we',
+          paint: {
+            'line-width': 1,
+            'line-opacity': 1
+          },
+          layout: {
+            visibility: 'none'
+          }
+        })
         .setPaintProperty(
           'novpromm',
           'line-color',
@@ -216,7 +232,7 @@ var Explore = React.createClass({
         );
 
       this.map.on('mousemove', (e) => {
-        const features = this.map.queryRenderedFeatures(e.point, {layers: ['vpromm-interaction']});
+        const features = this.map.queryRenderedFeatures(e.point, {layers: ['vpromm-interaction', 'cvts']});
         this.map.getCanvas().style.cursor = features.length ? 'pointer' : '';
       });
 
@@ -229,7 +245,31 @@ var Explore = React.createClass({
     });
   },
 
-  componentWillReceiveProps: function ({ lng, lat, zoom, activeRoad }) {
+  switchLayerTo: function (layer) {
+    console.log('switching to layer', layer);
+    if (layer === 'cvts') {
+      this.map.setLayoutProperty('vpromm', 'visibility', 'none');
+      this.map.setLayoutProperty('novpromm', 'visibility', 'none');
+      this.map.setLayoutProperty('novpromm_dashed', 'visibility', 'none');
+      this.map.setLayoutProperty('vpromm-interaction', 'visibility', 'none');
+      this.map.setLayoutProperty('cvts', 'visibility', 'visible');
+      this.map.setPaintProperty('cvts', 'line-color', lineColors['cvts']);
+      this.map.setZoom(9);
+    } else if (layer === 'iri') {
+      this.map.setLayoutProperty('vpromm', 'visibility', 'visible');
+      this.map.setLayoutProperty('novpromm', 'visibility', 'visible');
+      this.map.setLayoutProperty('novpromm_dashed', 'visibility', 'visible');
+      this.map.setLayoutProperty('vpromm-interaction', 'visibility', 'visible');
+      this.map.setLayoutProperty('cvts', 'visibility', 'none');
+    }
+  },
+
+  componentWillReceiveProps: function ({ layer, lng, lat, zoom, activeRoad }) {
+    console.log('receiving props', this.props.layer, layer);
+
+    if (this.props.layer !== layer) {
+      this.switchLayerTo(layer);
+    }
     if (lng !== this.props.lng || lat !== this.props.lat || zoom !== this.props.zoom) {
       this.map.flyTo({ center: [lng, lat], zoom });
     }
@@ -286,6 +326,7 @@ var Explore = React.createClass({
               <div className='map__media' id='map'></div>
               <div className='map__controls map__controls--top-right'>
                 <MapOptions
+                  layer={this.props.layer}
                   handleLayerChange={this.handleLayerChange}
                   handleShowNoVpromms={this.handleShowNoVpromms}
                 />
