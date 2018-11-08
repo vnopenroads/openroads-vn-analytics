@@ -1,6 +1,6 @@
 {
   "name": "openroads-analytics",
-  "version": "3.0.1-rc4",
+  "version": "3.0.1-rc5",
   "description": "Analytics dashboards for OpenRoads",
   "repository": {
     "type": "git",

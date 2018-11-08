@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+### [v3.0.0-rc5]
+> 08 November 2018
+
+- Release candidate 5
+- View sections in the Asset page https://github.com/orma/openroads-vn-analytics/pull/513
+- Fix Asset page labels and formatting https://github.com/orma/openroads-vn-analytics/pull/525
+- Add CVTS traffic level map https://github.com/orma/openroads-vn-analytics/pull/524
+- Fix admin search to support Vietnamese https://github.com/orma/openroads-vn-api/pull/165 
+
 ### [v3.0.0-rc4]
 
 > 02 November 2018
