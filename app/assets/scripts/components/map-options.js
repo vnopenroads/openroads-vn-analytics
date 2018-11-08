@@ -19,17 +19,17 @@ const MapOptions = ({ layer, language, handleLayerChange, handleShowNoVpromms })
           </select>
         </div>
         {layer === 'iri' && (
-        <div className='form__group'>
-          <label className='form__label'>{translate(language, 'Options')}</label>
-          <label
-            className='form__option form__option--switch option fos-io'
-            htmlFor='show-no-vpromms'
-          >
-            <input type='checkbox' defaultChecked={true} name='show-no-vpromms' id='show-no-vpromms' value='show-no-vpromms' onChange={ e => handleShowNoVpromms(e) } />
-            <span className='form__option__ui'></span>
-            <span className='form__option__text'><T>Road without VPRoMMS ID</T> <b>----</b></span>
-          </label>
-        </div>
+          <div className='form__group'>
+            <label className='form__label'>{translate(language, 'Options')}</label>
+            <label
+              className='form__option form__option--switch option fos-io'
+              htmlFor='show-no-vpromms'
+            >
+              <input type='checkbox' defaultChecked={true} name='show-no-vpromms' id='show-no-vpromms' value='show-no-vpromms' onChange={ e => handleShowNoVpromms(e) } />
+              <span className='form__option__ui'></span>
+              <span className='form__option__text'><T>Road without VPRoMMS ID</T> <b>----</b></span>
+            </label>
+          </div>
         )
         }
       </form>
