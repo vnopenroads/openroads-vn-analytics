@@ -1,6 +1,6 @@
 module.exports = {
   'iri': {
-    property: 'iri',
+    property: 'iri_mean',
     type: 'exponential',
     colorSpace: 'lab',
     stops: [

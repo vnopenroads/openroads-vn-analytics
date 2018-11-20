@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+### [v3.0.0]
+> 19 November 2018
+
+- Bug fixes
+- Consolidate IRI and CVTS information per section for visualisation
+
 ### [v3.0.0-rc5]
 > 08 November 2018
 
