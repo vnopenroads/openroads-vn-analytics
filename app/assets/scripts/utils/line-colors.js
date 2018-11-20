@@ -9,7 +9,9 @@ module.exports = {
       [30, '#8f1813']
     ]
   },
-  'cvts': {
+
+  // property and colors for CVTS visualization
+  'or_section_delivery_vehicle': {
     property: 'or_section_delivery_vehicle',
     type: 'exponential',
     colorSpace: 'lab',

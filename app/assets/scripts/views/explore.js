@@ -199,22 +199,6 @@ var Explore = React.createClass({
           layout: {'line-cap': 'round'},
           filter: ['has', 'or_vpromms']
         })
-        .addLayer({
-          id: 'cvts',
-          type: 'line',
-          source: {
-            type: 'vector',
-            url: 'mapbox://openroads.18lep9y5'
-          },
-          'source-layer': 'license-counts-cv07we',
-          paint: {
-            'line-width': 1,
-            'line-opacity': 1
-          },
-          layout: {
-            visibility: 'none'
-          }
-        })
         .setPaintProperty(
           'novpromm',
           'line-color',
@@ -232,7 +216,7 @@ var Explore = React.createClass({
         );
 
       this.map.on('mousemove', (e) => {
-        const features = this.map.queryRenderedFeatures(e.point, {layers: ['vpromm-interaction', 'cvts']});
+        const features = this.map.queryRenderedFeatures(e.point, {layers: ['vpromm-interaction']});
         this.map.getCanvas().style.cursor = features.length ? 'pointer' : '';
       });
 
@@ -246,21 +230,21 @@ var Explore = React.createClass({
   },
 
   switchLayerTo: function (layer) {
-    if (layer === 'cvts') {
-      this.map.setLayoutProperty('vpromm', 'visibility', 'none');
-      this.map.setLayoutProperty('novpromm', 'visibility', 'none');
-      this.map.setLayoutProperty('novpromm_dashed', 'visibility', 'none');
-      this.map.setLayoutProperty('vpromm-interaction', 'visibility', 'none');
-      this.map.setLayoutProperty('cvts', 'visibility', 'visible');
-      this.map.setPaintProperty('cvts', 'line-color', lineColors['cvts']);
-      this.map.setZoom(9);
-    } else if (layer === 'iri') {
-      this.map.setLayoutProperty('vpromm', 'visibility', 'visible');
-      this.map.setLayoutProperty('novpromm', 'visibility', 'visible');
-      this.map.setLayoutProperty('novpromm_dashed', 'visibility', 'visible');
-      this.map.setLayoutProperty('vpromm-interaction', 'visibility', 'visible');
-      this.map.setLayoutProperty('cvts', 'visibility', 'none');
-    }
+    this.map.setPaintProperty(
+      'novpromm',
+      'line-color',
+      lineColors[layer]
+    )
+    .setPaintProperty(
+      'novpromm_dashed',
+      'line-color',
+      lineColors[layer]
+    )
+    .setPaintProperty(
+      'vpromm',
+      'line-color',
+      lineColors[layer]
+    );
   },
 
   componentWillReceiveProps: function ({ layer, lng, lat, zoom, activeRoad }) {
