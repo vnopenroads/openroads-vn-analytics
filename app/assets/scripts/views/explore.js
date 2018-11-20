@@ -235,16 +235,16 @@ var Explore = React.createClass({
       'line-color',
       lineColors[layer]
     )
-    .setPaintProperty(
-      'novpromm_dashed',
-      'line-color',
-      lineColors[layer]
-    )
-    .setPaintProperty(
-      'vpromm',
-      'line-color',
-      lineColors[layer]
-    );
+      .setPaintProperty(
+        'novpromm_dashed',
+        'line-color',
+        lineColors[layer]
+      )
+      .setPaintProperty(
+        'vpromm',
+        'line-color',
+        lineColors[layer]
+      );
   },
 
   componentWillReceiveProps: function ({ layer, lng, lat, zoom, activeRoad }) {
