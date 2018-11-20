@@ -202,21 +202,28 @@ var Explore = React.createClass({
         .setPaintProperty(
           'novpromm',
           'line-color',
-          lineColors['iri']
+          lineColors['iri_mean']
         )
         .setPaintProperty(
           'novpromm_dashed',
           'line-color',
-          lineColors['iri']
+          lineColors['iri_mean']
         )
         .setPaintProperty(
           'vpromm',
           'line-color',
-          lineColors['iri']
+          lineColors['iri_mean']
         );
 
       this.map.on('mousemove', (e) => {
+        // console.log('moved on map');
         const features = this.map.queryRenderedFeatures(e.point, {layers: ['vpromm-interaction']});
+        features.forEach(f => {
+          console.log(f);
+          if (f.properties.or_section_delivery_vehicle) {
+            console.log('prop', f.properties.or_section_delivery_vehicle);
+          }
+        });
         this.map.getCanvas().style.cursor = features.length ? 'pointer' : '';
       });
 
@@ -269,7 +276,7 @@ var Explore = React.createClass({
   handleLayerChange: function ({ target: { value } }) {
     this.props.selectExploreMapLayer(value);
     this.map.setPaintProperty(
-      'conflated',
+      'vpromm',
       'line-color',
       lineColors[value]
     );

@@ -89,7 +89,7 @@ const fieldVProMMsids = function (state = defaultFieldVProMMsids, action) {
 };
 
 const exploreMapDefaultState = {
-  layer: 'iri',
+  layer: 'iri_mean',
   showNoVpromms: true
 };
 const exploreMap = function (state = exploreMapDefaultState, action) {

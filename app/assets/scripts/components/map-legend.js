@@ -7,7 +7,7 @@ import T from './t';
 
 
 const renderTitle = (layer) => {
-  if (layer === 'iri') {
+  if (layer === 'iri_mean') {
     return <T>IRI</T>;
   } else if (layer === 'or_width') {
     return <T>Width</T>;
@@ -21,6 +21,7 @@ const renderTitle = (layer) => {
 };
 
 const MapLegend = ({ layer }) => {
+  console.log('LAYER', layer);
   const colors = lineColors[layer];
   const continuous = (colors.type !== 'categorical');
   const stops = colors.stops;

@@ -1,6 +1,6 @@
 module.exports = {
-  'iri': {
-    property: 'iri',
+  'iri_mean': {
+    property: 'iri_mean',
     type: 'exponential',
     colorSpace: 'lab',
     stops: [
@@ -13,6 +13,7 @@ module.exports = {
   // property and colors for CVTS visualization
   'or_section_delivery_vehicle': {
     property: 'or_section_delivery_vehicle',
+    default: 0,
     type: 'exponential',
     colorSpace: 'lab',
     stops: [
