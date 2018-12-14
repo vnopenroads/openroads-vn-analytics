@@ -34,11 +34,11 @@ const Faq = ({ language }) => (
           language === 'en' ?
             <section className="question">
               <h3 className='inpage__title'>What's the current version of the platform?</h3>
-              <p>v3.0.0-rc5. A full changelog of the project is regularly published <a href='https://github.com/orma/openroads-vn-analytics/blob/develop/CHANGELOG.md'>here.</a></p>
+              <p>v3.0.1. A full changelog of the project is regularly published <a href='https://github.com/orma/openroads-vn-analytics/blob/develop/CHANGELOG.md'>here.</a></p>
             </section> :
             <section className="question">
               <h3 className='inpage__title'>What's the current version of the platform?</h3>
-              <p>v3.0.0-rc5.  A full changelog of the project is regularly published <a href='https://github.com/orma/openroads-vn-analytics/blob/develop/CHANGELOG.md'>here.</a></p>
+              <p>v3.0.1.  A full changelog of the project is regularly published <a href='https://github.com/orma/openroads-vn-analytics/blob/develop/CHANGELOG.md'>here.</a></p>
             </section>
         }
         {

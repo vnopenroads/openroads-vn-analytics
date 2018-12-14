@@ -1,3 +1,4 @@
+/* eslint-disable react/no-deprecated */
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import {
@@ -202,13 +203,27 @@ class AssetsDetail extends React.Component {
       'Road Length': 'Road Length (VPROMM)'
     };
 
+    const convertToFloat = ['Road Length (ORMA)', 'Road Length (VPROMM)', 'iri_mean', 'iri_med', 'iri_min', 'iri_max'];
+
+    // setup the order for rendering attributes
+    const renderOrder = ['Road Name', 'Road Number', 'Management', 'Province Name', 'Province GSO code', 'Road Start Location', 'Road End Location', 'Road Length', 'length', 'iri_mean', 'iri_med', 'iri_min', 'iri_max'];
+
     let propNames = Object.keys(data.properties);
-    propNames.sort((a, b) => a.toLowerCase() > b.toLowerCase() ? 1 : -1);
+
+    // remove lat long attributes https://github.com/orma/openroads-vn-analytics/issues/533
+    propNames.splice(propNames.indexOf('Road Start Latitude'), 1);
+    propNames.splice(propNames.indexOf('Road Start Longitude'), 1);
+    propNames.splice(propNames.indexOf('Road End Latitude'), 1);
+    propNames.splice(propNames.indexOf('Road End Longitude'), 1);
+
+    // sort based on the render order
+    propNames.sort((a, b) => renderOrder.indexOf(a) > renderOrder.indexOf(b) ? 1 : -1);
+
 
     const renderDlItem = (name) => {
       return [
         nameToLabel.hasOwnProperty(name) ? <dt key={`dt-${name}`}><T>{nameToLabel[name]}</T></dt> : <dt key={`dt-${name}`}>{name}</dt>,
-        parseFloat(data.properties[name]) ? <dd key={`dd-${name}`}>{parseFloat(data.properties[name]).toFixed(2) || '-'}</dd> : <dd key={`dd-${name}`}>{data.properties[name] || '-'}</dd>
+        convertToFloat.indexOf(name) > -1 ? <dd key={`dd-${name}`}>{parseFloat(data.properties[name]).toFixed(2) || '-'}</dd> : <dd key={`dd-${name}`}>{data.properties[name] || '-'}</dd>
       ];
     };
 

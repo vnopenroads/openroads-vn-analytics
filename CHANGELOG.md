@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+### [v3.0.1]
+> 14 December 2018
+
+- Improve Asset detail page layout based on suggestions https://github.com/orma/openroads-vn-analytics/issues/533
+
 ### [v3.0.0]
 > 19 November 2018
 
