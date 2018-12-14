@@ -420,8 +420,8 @@
 
   dd {
     width: 13.33%;
-    word-break: break-all;
-    text-align: right;
+    word-break: normal;
+    text-align: left;
     font-weight: $base-font-bold;
   }
 }
