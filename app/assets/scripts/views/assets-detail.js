@@ -1,3 +1,4 @@
+/* eslint-disable react/no-deprecated */
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import {
@@ -202,7 +203,7 @@ class AssetsDetail extends React.Component {
       'Road Length': 'Road Length (VPROMM)'
     };
 
-    const convertToFloat = ['Road Length (ORMA)', 'Road Length (VPROMM)', 'iri_mean', 'iri_med', 'iri_min', 'iri_max']
+    const convertToFloat = ['Road Length (ORMA)', 'Road Length (VPROMM)', 'iri_mean', 'iri_med', 'iri_min', 'iri_max'];
 
     // setup the order for rendering attributes
     const renderOrder = ['Road Name', 'Road Number', 'Management', 'Province Name', 'Province GSO code', 'Road Start Location', 'Road End Location', 'Road Length', 'length', 'iri_mean', 'iri_med', 'iri_min', 'iri_max'];
@@ -210,10 +211,10 @@ class AssetsDetail extends React.Component {
     let propNames = Object.keys(data.properties);
 
     // remove lat long attributes https://github.com/orma/openroads-vn-analytics/issues/533
-    propNames.splice(propNames.indexOf('Road Start Latitude'), 1)
-    propNames.splice(propNames.indexOf('Road Start Longitude'), 1)
-    propNames.splice(propNames.indexOf('Road End Latitude'), 1)
-    propNames.splice(propNames.indexOf('Road End Longitude'), 1)
+    propNames.splice(propNames.indexOf('Road Start Latitude'), 1);
+    propNames.splice(propNames.indexOf('Road Start Longitude'), 1);
+    propNames.splice(propNames.indexOf('Road End Latitude'), 1);
+    propNames.splice(propNames.indexOf('Road End Longitude'), 1);
 
     // sort based on the render order
     propNames.sort((a, b) => renderOrder.indexOf(a) > renderOrder.indexOf(b) ? 1 : -1);
