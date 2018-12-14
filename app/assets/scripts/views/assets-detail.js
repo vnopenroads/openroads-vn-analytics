@@ -223,7 +223,7 @@ class AssetsDetail extends React.Component {
     const renderDlItem = (name) => {
       return [
         nameToLabel.hasOwnProperty(name) ? <dt key={`dt-${name}`}><T>{nameToLabel[name]}</T></dt> : <dt key={`dt-${name}`}>{name}</dt>,
-        convertToFloat.indexOf(data.properties[name]) ? <dd key={`dd-${name}`}>{data.properties[name] || '-'}</dd> : <dd key={`dd-${name}`}>{parseFloat(data.properties[name]).toFixed(2) || '-'}</dd>
+        convertToFloat.indexOf(name) > -1 ? <dd key={`dd-${name}`}>{parseFloat(data.properties[name]).toFixed(2) || '-'}</dd> : <dd key={`dd-${name}`}>{data.properties[name] || '-'}</dd>
       ];
     };
 
