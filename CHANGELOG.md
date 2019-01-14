@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+### [v3.1.0]
+> 14 January 2019
+
+- Fix VPROMM search bug https://github.com/orma/openroads-vn-analytics/issues/537
+
 ### [v3.0.1]
 > 14 December 2018
 
