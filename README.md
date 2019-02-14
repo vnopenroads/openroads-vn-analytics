@@ -14,11 +14,11 @@ ORMA–VN is a deployment of the ORMA platform, originally built by Development 
 
 View and edit a tabular inventory of all roads, their lengths and properties, and the presence or absence of field data.
 
-![](https://user-images.githubusercontent.com/4959135/34584717-e3345f84-f16a-11e7-83d7-bc179b126daf.gif)
+![assets-page](https://user-images.githubusercontent.com/371666/48693935-f044dc80-ec00-11e8-83c3-ae6c6d03464a.gif)
 
 Visually explore the road network, leveraging field data to color-code by road condition or other properties.
 
-![](https://user-images.githubusercontent.com/4959135/34584763-0846726c-f16b-11e7-9e6b-66165979446c.gif)
+![explore-page](https://user-images.githubusercontent.com/371666/48694453-5b42e300-ec02-11e8-9499-5d15322ac81b.gif)
 
 Make manual corrections to the road paths.
 
@@ -26,7 +26,7 @@ Make manual corrections to the road paths.
 
 Discover algorithmically-detected issues with the road network, and implement quick fixes.
 
-![](https://user-images.githubusercontent.com/4959135/34584968-de9c6eca-f16b-11e7-8845-ea1da50394b7.gif)
+![tasks-page](https://user-images.githubusercontent.com/371666/48696032-c8f10e00-ec06-11e8-90d3-df8255d57054.gif)
 
 View the platform in either English or Vietnamese.
 

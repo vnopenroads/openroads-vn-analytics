@@ -84,8 +84,8 @@ export class AssetsIndex extends React.Component {
 
     const lengthPercent = round(Math.min(statData.totalVprommLength / statData.totalLength * 100, 100) || 0);
     const lengthIndicators = [
-      { label: translate(lang, 'WoN Length'), value: `${round(statData.totalLength)}Km` },
-      { label: translate(lang, 'GProMMS Length'), value: `${round(statData.totalVprommLength)}Km (${lengthPercent}%)` }
+      { label: translate(lang, 'WoN'), value: `${round(statData.totalLength)}Km` },
+      { label: translate(lang, 'GProMMS'), value: `${round(statData.totalVprommLength)}Km (${lengthPercent}%)` }
     ];
 
     return (
