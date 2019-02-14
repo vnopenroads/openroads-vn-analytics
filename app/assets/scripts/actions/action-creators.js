@@ -128,7 +128,7 @@ function receiveFieldVProMMsids (json) {
 export function fetchFieldVProMMsIds (json) {
   return function (dispatch) {
     dispatch(requestFieldVProMMsids());
-    const url = `${config.api}/roads/ids`;
+    const url = `${config.api}/field/ids/all`;
     return fetch(url)
       .then(response => response.json())
       .then(json => {
@@ -143,7 +143,7 @@ export function fetchFieldVProMMsIds (json) {
 export function fetchAllVProMMsIds (json) {
   return function (dispatch) {
     dispatch(requestFieldVProMMsids());
-    const url = `${config.api}/field/ids/all`;
+    const url = `${config.api}/roads/ids`;
     return fetch(url)
       .then(response => response.json())
       .then(json => {
