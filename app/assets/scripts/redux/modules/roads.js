@@ -185,10 +185,10 @@ export const createRoadEpic = (id) => (dispatch) => {
   })
     .then(response => {
       if (!response.ok) {
-        throw new Error(response.status);
+        throw response;
       }
+      return response.json()
 
-      return response.json();
     })
     .then((id) => {
       return Promise.all([
@@ -196,7 +196,7 @@ export const createRoadEpic = (id) => (dispatch) => {
         dispatch(clearRoadsPages()),
         dispatch(clearRoadCount())
       ]);
-    }, (err) => dispatch(createRoadError(err.message)));
+    }, (err) => {  dispatch(createRoadError(err)); throw err; } );
 };
 
 

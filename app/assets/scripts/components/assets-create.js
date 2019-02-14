@@ -67,7 +67,9 @@ class AssetsCreateModal extends React.Component {
       if (res.error) throw new Error(res.error);
       this.props.onCloseClick({action: 'redirect', vpromm});
     } catch (error) {
-      alert(translate(this.props.language, 'The Vpromm Id id not valid. Please try again.'));
+      error.json().then(errMessage => {
+        alert(translate(this.props.language, errMessage.message));
+      })
     }
   }
 
