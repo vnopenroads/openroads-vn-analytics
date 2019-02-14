@@ -103,7 +103,7 @@ var Explore = React.createClass({
             'line-color': '#D3D3D3'
           },
           layout: { 'line-cap': 'round' },
-          filter: ['==', 'or_vpromms', activeRoad]
+          filter: ['==', 'vpromm_id', activeRoad]
         })
         .addLayer({
           id: 'novpromm',
@@ -121,7 +121,7 @@ var Explore = React.createClass({
             ]
           },
           layout: { 'line-cap': 'round' },
-          filter: ['!has', 'or_vpromms'],
+          filter: ['!has', 'vpromm_id'],
           maxzoom: 11
         })
         .addLayer({
@@ -141,7 +141,7 @@ var Explore = React.createClass({
             'line-dasharray': [1, 2, 1]
           },
           layout: { 'line-cap': 'round' },
-          filter: ['!has', 'or_vpromms'],
+          filter: ['!has', 'vpromm_id'],
           minzoom: 10
         })
         .addLayer({
@@ -162,7 +162,7 @@ var Explore = React.createClass({
           layout: {
             'line-cap': 'round'
           },
-          filter: ['has', 'or_vpromms']
+          filter: ['has', 'vpromm_id']
         })
         .addLayer({
           id: 'vpromm-label',
@@ -175,7 +175,7 @@ var Explore = React.createClass({
           layout: {
             'symbol-placement': 'line',
             'text-anchor': 'top',
-            'text-field': ['get', 'or_vpromms'],
+            'text-field': ['get', 'vpromm_id'],
             'text-font': ['DIN Offc Pro Regular', 'Open Sans Semibold'],
             'text-size': 10
           }
@@ -197,7 +197,7 @@ var Explore = React.createClass({
             'line-opacity': 0
           },
           layout: {'line-cap': 'round'},
-          filter: ['has', 'or_vpromms']
+          filter: ['has', 'vpromm_id']
         })
         .setPaintProperty(
           'novpromm',
@@ -216,19 +216,12 @@ var Explore = React.createClass({
         );
 
       this.map.on('mousemove', (e) => {
-        // console.log('moved on map');
         const features = this.map.queryRenderedFeatures(e.point, {layers: ['vpromm-interaction']});
-        features.forEach(f => {
-          console.log(f);
-          if (f.properties.or_section_delivery_vehicle) {
-            console.log('prop', f.properties.or_section_delivery_vehicle);
-          }
-        });
         this.map.getCanvas().style.cursor = features.length ? 'pointer' : '';
       });
 
       this.map.on('click', 'vpromm-interaction', (e) => {
-        const vpromm = _.get(e, 'features[0].properties.or_vpromms', null);
+        const vpromm = _.get(e, 'features[0].properties.vpromm_id', null);
         if (vpromm) {
           this.props.router.push(`/${language}/assets/road/${vpromm}`);
         }
@@ -262,7 +255,7 @@ var Explore = React.createClass({
       this.map.flyTo({ center: [lng, lat], zoom });
     }
     if (activeRoad !== this.props.activeRoad) {
-      this.map.setFilter('active_road', ['==', 'or_vpromms', activeRoad]);
+      this.map.setFilter('active_road', ['==', 'vpromm_id', activeRoad]);
       this.props.fetchActiveRoad(activeRoad);
     }
   },
