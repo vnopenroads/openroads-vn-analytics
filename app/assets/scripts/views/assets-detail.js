@@ -1,3 +1,4 @@
+/* eslint-disable react/no-deprecated */
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import {
@@ -21,8 +22,11 @@ import T, {
   translate
 } from '../components/t';
 
+import sectionFields from '../utils/section-fields';
+import { getSectionValue } from '../utils/sections';
 import Dropdown from '../components/dropdown';
 import AssetsEditModal from '../components/assets-edit-modal';
+import AssetsSectionRow from '../components/assets-section-row';
 
 import {
   FETCH_ROAD_GEOMETRY,
@@ -60,7 +64,8 @@ class AssetsDetail extends React.Component {
 
     this.state = {
       layerRendered: false,
-      editModalOpen: false
+      editModalOpen: false,
+      activeTab: 'attributes'
     };
   }
 
@@ -121,6 +126,16 @@ class AssetsDetail extends React.Component {
         'line-width': 4,
         'line-color': '#da251d'
       }
+    });
+    this.map.addLayer({
+      id: 'road-geometry-highlight',
+      type: 'line',
+      source: 'road-geometry',
+      paint: {
+        'line-width': 5,
+        'line-color': '#000'
+      },
+      filter: ['==', 'way_id', '']
     });
 
     if (data.features.length > 0) {
@@ -183,19 +198,37 @@ class AssetsDetail extends React.Component {
 
     if (!fetched) return null;
 
+    const nameToLabel = {
+      'length': 'Road Length (ORMA)',
+      'Road Length': 'Road Length (VPROMM)'
+    };
+
+    const convertToFloat = ['Road Length (ORMA)', 'Road Length (VPROMM)', 'iri_mean', 'iri_med', 'iri_min', 'iri_max'];
+
+    // setup the order for rendering attributes
+    const renderOrder = ['Road Name', 'Road Number', 'Management', 'Province Name', 'Province GSO code', 'Road Start Location', 'Road End Location', 'Road Length', 'length', 'iri_mean', 'iri_med', 'iri_min', 'iri_max'];
+
     let propNames = Object.keys(data.properties);
-    propNames.sort((a, b) => a.toLowerCase() > b.toLowerCase() ? 1 : -1);
+
+    // remove lat long attributes https://github.com/orma/openroads-vn-analytics/issues/533
+    propNames.splice(propNames.indexOf('Road Start Latitude'), 1);
+    propNames.splice(propNames.indexOf('Road Start Longitude'), 1);
+    propNames.splice(propNames.indexOf('Road End Latitude'), 1);
+    propNames.splice(propNames.indexOf('Road End Longitude'), 1);
+
+    // sort based on the render order
+    propNames.sort((a, b) => renderOrder.indexOf(a) > renderOrder.indexOf(b) ? 1 : -1);
+
 
     const renderDlItem = (name) => {
       return [
-        <dt key={`dt-${name}`}>{name}</dt>,
-        <dd key={`dd-${name}`}>{data.properties[name] || '-'}</dd>
+        nameToLabel.hasOwnProperty(name) ? <dt key={`dt-${name}`}><T>{nameToLabel[name]}</T></dt> : <dt key={`dt-${name}`}>{name}</dt>,
+        convertToFloat.indexOf(name) > -1 ? <dd key={`dd-${name}`}>{parseFloat(data.properties[name]).toFixed(2) || '-'}</dd> : <dd key={`dd-${name}`}>{data.properties[name] || '-'}</dd>
       ];
     };
 
     return (
       <section>
-        <h3>Attributes</h3>
         {propNames.length ? (
           <dl className='attributes-list'>
             {propNames.map(renderDlItem)}
@@ -206,6 +239,87 @@ class AssetsDetail extends React.Component {
             <p><a className='button button--base-raised-light' href='#' onClick={this.onEditProperties}><T>Edit attributes</T></a></p>
           </div>
         )}
+      </section>
+    );
+  }
+
+  highlightMap (id) {
+    this.map.setFilter('road-geometry-highlight', ['==', 'way_id', id]);
+  }
+
+  unhighlightMap (id) {
+    this.map.setFilter('road-geometry-highlight', ['==', 'way_id', '']);
+  }
+
+  renderSections () {
+    if (!this.hasGeometry()) {
+      return (
+        <div>No Section Data Available</div>
+      );
+    }
+    const { fetched, data } = this.props.roadGeo;
+    if (!fetched) return null;
+    const allProps = [...new Set(data.features.map(f => Object.keys(f.properties)).flat())];
+    const ignoreProps = [
+      'id',
+      'way_id',
+      'or_vpromms',
+      'highway'
+    ];
+    let filteredProps = allProps.filter(p => {
+      return ignoreProps.indexOf(p) === -1;
+    });
+    let header = ['Way ID'];
+    let rows = [];
+    if (filteredProps.length === 0) {
+      header.push('');
+      rows = data.features.map(f => {
+        return [
+          f.properties.way_id,
+          'No Section Data'
+        ];
+      });
+    } else {
+      filteredProps = filteredProps.filter(p => sectionFields.hasOwnProperty(p));
+      const headerLabels = filteredProps.map(p => {
+        return sectionFields[p].label;
+      });
+      header = header.concat(headerLabels);
+      rows = data.features.map(f => {
+        const cols = filteredProps.map(p => {
+          return f.properties[p] ? getSectionValue(p, f.properties[p]) : 'NA';
+        });
+        return [f.properties.way_id].concat(cols);
+      });
+    }
+    return (
+      <section>
+        <div>
+          <table className="table">
+            <thead>
+              <tr>
+                {header.map((h, i) => {
+                  return (
+                    <th key={i}>{h}</th>
+                  );
+                })}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map(r => {
+                return (
+                  <AssetsSectionRow
+                    key={r[0]}
+                    data={r}
+                    onMouseOver={this.highlightMap.bind(this)}
+                    onMouseOut={this.unhighlightMap.bind(this)}
+                  />
+                );
+              })
+              }
+            </tbody>
+          </table>
+        </div>
       </section>
     );
   }
@@ -238,6 +352,27 @@ class AssetsDetail extends React.Component {
     );
   }
 
+  onTabClick (tab, e) {
+    e.preventDefault();
+    this.setState({ activeTab: tab });
+  }
+
+  renderTabs () {
+    const tabs = [
+      {key: 'attributes', label: 'Attributes'},
+      {key: 'sections', label: 'Sections'}
+    ];
+    return (
+      <ul className='nav-tabs'>
+        {tabs.map(t => (
+          <li key={t.key}>
+            <a href='#' className={c({'tab--active': this.state.activeTab === t.key})} title={translate(this.props.language, 'Switch tab')} onClick={this.onTabClick.bind(this, t.key)}><T>{t.label}</T></a>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
   render () {
     const { vpromm, language, roadProps, roadGeo } = this.props;
     const disId = get(roadProps, 'data.district.id', null);
@@ -248,7 +383,6 @@ class AssetsDetail extends React.Component {
 
     let featCenter = [0, 0];
     if (roadGeo.fetched) {
-      console.log(roadGeo.data);
       featCenter = center(roadGeo.data).geometry.coordinates;
     }
 
@@ -299,7 +433,10 @@ class AssetsDetail extends React.Component {
           <figcaption className='map__caption'><p><T>Asset geometry</T></p></figcaption>
         </figure>
 
-        {this.renderProperties()}
+        {this.renderTabs()}
+        {this.state.activeTab === 'attributes' && this.renderProperties()}
+
+        {this.state.activeTab === 'sections' && this.renderSections()}
 
         {this.props.roadProps.fetched ? <AssetsEditModal
           revealed={this.state.editModalOpen}

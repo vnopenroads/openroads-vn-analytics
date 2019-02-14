@@ -168,7 +168,6 @@ class AssetsAA extends React.Component {
       if (val === null) return 'n/a';
       return round(val);
     };
-
     const columns = [
       {
         accessor: 'id',
@@ -178,14 +177,14 @@ class AssetsAA extends React.Component {
       },
       {
         accessor: 'status',
-        label: 'Review Status',
-        render: (r) => r.status || 'pending'
+        label: translate(language, 'Review Status'),
+        render: (r) => translate(language, r.status) || translate(language, 'pending')
       },
-      {accessor: 'properties.iri_mean', label: 'IRI', render: renderRound},
-      {accessor: 'properties.Road Type', label: 'Type'},
-      {accessor: 'properties.width', label: 'Width'},
-      {accessor: 'properties.length', label: 'Length', render: renderRound},
-      {accessor: 'properties.grade', label: 'Grade'}
+      {accessor: 'properties.iri_mean', label: translate(language, 'IRI'), render: renderRound},
+      {accessor: 'properties.Road Type', label: translate(language, 'Road Type')},
+      {accessor: 'properties.width', label: translate(language, 'Width')},
+      {accessor: 'properties.length', label: translate(language, 'Road Length (ORMA)'), render: renderRound},
+      {accessor: 'properties.grade', label: translate(language, 'Grade')}
     ];
 
     return (
@@ -295,8 +294,8 @@ class AssetsAA extends React.Component {
     ];
     const lengthPercent = round(Math.min(totalVprommLength / totalLength * 100, 100) || 0);
     const lengthIndicators = [
-      { label: translate(lang, 'WoN Length'), value: `${round(totalLength)}Km` },
-      { label: translate(lang, 'GProMMS Length'), value: `${round(totalVprommLength)}Km (${lengthPercent}%)` }
+      { label: translate(lang, 'WoN'), value: `${round(totalLength)}Km` },
+      { label: translate(lang, 'GProMMS'), value: `${round(totalVprommLength)}Km (${lengthPercent}%)` }
     ];
 
     return (

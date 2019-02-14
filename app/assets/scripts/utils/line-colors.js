@@ -1,11 +1,22 @@
 module.exports = {
   'iri': {
-    property: 'iri',
+    property: 'iri_mean',
     type: 'exponential',
     colorSpace: 'lab',
     stops: [
       [3, '#8CCA1B'],
-      [16, '#DA251D']
+      [16, '#DA251D'],
+      [30, '#8f1813']
+    ]
+  },
+  'cvts': {
+    property: 'or_section_delivery_vehicle',
+    type: 'exponential',
+    colorSpace: 'lab',
+    stops: [
+      [3, '#8CCA1B'],
+      [16, '#DA251D'],
+      [30, '#8f1813']
     ]
   },
   'RouteShoot': {

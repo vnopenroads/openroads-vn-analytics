@@ -1,6 +1,49 @@
 ### Changelog
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
+
+### [v3.1.0]
+> 14 January 2019
+
+- Fix VPROMM search bug https://github.com/orma/openroads-vn-analytics/issues/537
+
+### [v3.0.1]
+> 14 December 2018
+
+- Improve Asset detail page layout based on suggestions https://github.com/orma/openroads-vn-analytics/issues/533
+
+### [v3.0.0]
+> 19 November 2018
+
+- Bug fixes
+- Consolidate IRI and CVTS information per section for visualisation
+
+### [v3.0.0-rc5]
+> 08 November 2018
+
+- Release candidate 5
+- View sections in the Asset page https://github.com/orma/openroads-vn-analytics/pull/513
+- Fix Asset page labels and formatting https://github.com/orma/openroads-vn-analytics/pull/525
+- Add CVTS traffic level map https://github.com/orma/openroads-vn-analytics/pull/524
+- Fix admin search to support Vietnamese https://github.com/orma/openroads-vn-api/pull/165 
+
+### [v3.0.0-rc4]
+
+> 02 November 2018
+
+- Release candidate 4. Bug fixes https://github.com/orma/openroads-vn-analytics/pull/521
+
+### [v3.0.0-rc3]
+> 23 October 2018
+
+- Release candidate 3. Translations https://github.com/orma/openroads-vn-analytics/pull/506
+
+### [v3.0.0-rc2]
+
+> 20 October 2018
+
+- Release candidate 2. Bug fixes https://github.com/orma/openroads-vn-analytics/pull/504
+
 ### [v3.0.0-rc]
 
 > 19 October 2018
