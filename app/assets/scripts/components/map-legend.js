@@ -21,7 +21,6 @@ const renderTitle = (layer) => {
 };
 
 const MapLegend = ({ layer }) => {
-  console.log('LAYER', layer);
   const colors = lineColors[layer];
   const continuous = (colors.type !== 'categorical');
   const stops = colors.stops;
