@@ -69,7 +69,7 @@ class AssetsCreateModal extends React.Component {
     } catch (error) {
       error.json().then(errMessage => {
         alert(translate(this.props.language, errMessage.message));
-      })
+      });
     }
   }
 
