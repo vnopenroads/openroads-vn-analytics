@@ -75,7 +75,8 @@ var Editor = React.createClass({
     const mapCenter = [lng, lat];
     this.orFrame.send('setPosition', {
       center: mapCenter,
-      zoom
+      zoom,
+      way
     });
   },
 

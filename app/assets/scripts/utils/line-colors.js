@@ -1,5 +1,5 @@
 module.exports = {
-  'iri': {
+  'iri_mean': {
     property: 'iri_mean',
     type: 'exponential',
     colorSpace: 'lab',
@@ -9,14 +9,18 @@ module.exports = {
       [30, '#8f1813']
     ]
   },
-  'cvts': {
+
+  // property and colors for CVTS visualization
+  'or_section_delivery_vehicle': {
     property: 'or_section_delivery_vehicle',
+    // default: 0,
     type: 'exponential',
-    colorSpace: 'lab',
+    colorSpace: 'hcl',
     stops: [
-      [3, '#8CCA1B'],
-      [16, '#DA251D'],
-      [30, '#8f1813']
+      [1, '#8CCA1B'],
+      [50, '#e85953'],
+      [300, '#DA251D'],
+      [1000, '#8f1813']
     ]
   },
   'RouteShoot': {

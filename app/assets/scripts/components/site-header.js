@@ -23,7 +23,7 @@ const SiteHeader = ({language, pathname}) => (
       <div className='site__headline'>
         <h1 className='site__title'>
           <Link to={`/${language}`}>
-            <img src='assets/graphics/layout/openroads-vn-logo-hor-neg.svg' width='736' height='96' alt='OpenRoads Vietnam logo' /><span>OpenRoads</span> <strong>Vietnam v3.1.0</strong>
+            <img src='assets/graphics/layout/openroads-vn-logo-hor-neg.svg' width='736' height='96' alt='OpenRoads Vietnam logo' /><span>OpenRoads</span> <strong>Vietnam v3.2.0</strong>
           </Link>
         </h1>
       </div>

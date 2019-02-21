@@ -103,7 +103,7 @@ var Explore = React.createClass({
             'line-color': '#D3D3D3'
           },
           layout: { 'line-cap': 'round' },
-          filter: ['==', 'or_vpromms', activeRoad]
+          filter: ['==', 'vpromm_id', activeRoad]
         })
         .addLayer({
           id: 'novpromm',
@@ -121,7 +121,7 @@ var Explore = React.createClass({
             ]
           },
           layout: { 'line-cap': 'round' },
-          filter: ['!has', 'or_vpromms'],
+          filter: ['!has', 'vpromm_id'],
           maxzoom: 11
         })
         .addLayer({
@@ -141,7 +141,7 @@ var Explore = React.createClass({
             'line-dasharray': [1, 2, 1]
           },
           layout: { 'line-cap': 'round' },
-          filter: ['!has', 'or_vpromms'],
+          filter: ['!has', 'vpromm_id'],
           minzoom: 10
         })
         .addLayer({
@@ -162,7 +162,7 @@ var Explore = React.createClass({
           layout: {
             'line-cap': 'round'
           },
-          filter: ['has', 'or_vpromms']
+          filter: ['has', 'vpromm_id']
         })
         .addLayer({
           id: 'vpromm-label',
@@ -175,7 +175,7 @@ var Explore = React.createClass({
           layout: {
             'symbol-placement': 'line',
             'text-anchor': 'top',
-            'text-field': ['get', 'or_vpromms'],
+            'text-field': ['get', 'vpromm_id'],
             'text-font': ['DIN Offc Pro Regular', 'Open Sans Semibold'],
             'text-size': 10
           }
@@ -197,47 +197,31 @@ var Explore = React.createClass({
             'line-opacity': 0
           },
           layout: {'line-cap': 'round'},
-          filter: ['has', 'or_vpromms']
-        })
-        .addLayer({
-          id: 'cvts',
-          type: 'line',
-          source: {
-            type: 'vector',
-            url: 'mapbox://openroads.18lep9y5'
-          },
-          'source-layer': 'license-counts-cv07we',
-          paint: {
-            'line-width': 1,
-            'line-opacity': 1
-          },
-          layout: {
-            visibility: 'none'
-          }
+          filter: ['has', 'vpromm_id']
         })
         .setPaintProperty(
           'novpromm',
           'line-color',
-          lineColors['iri']
+          lineColors['iri_mean']
         )
         .setPaintProperty(
           'novpromm_dashed',
           'line-color',
-          lineColors['iri']
+          lineColors['iri_mean']
         )
         .setPaintProperty(
           'vpromm',
           'line-color',
-          lineColors['iri']
+          lineColors['iri_mean']
         );
 
       this.map.on('mousemove', (e) => {
-        const features = this.map.queryRenderedFeatures(e.point, {layers: ['vpromm-interaction', 'cvts']});
+        const features = this.map.queryRenderedFeatures(e.point, {layers: ['vpromm-interaction']});
         this.map.getCanvas().style.cursor = features.length ? 'pointer' : '';
       });
 
       this.map.on('click', 'vpromm-interaction', (e) => {
-        const vpromm = _.get(e, 'features[0].properties.or_vpromms', null);
+        const vpromm = _.get(e, 'features[0].properties.vpromm_id', null);
         if (vpromm) {
           this.props.router.push(`/${language}/assets/road/${vpromm}`);
         }
@@ -246,21 +230,21 @@ var Explore = React.createClass({
   },
 
   switchLayerTo: function (layer) {
-    if (layer === 'cvts') {
-      this.map.setLayoutProperty('vpromm', 'visibility', 'none');
-      this.map.setLayoutProperty('novpromm', 'visibility', 'none');
-      this.map.setLayoutProperty('novpromm_dashed', 'visibility', 'none');
-      this.map.setLayoutProperty('vpromm-interaction', 'visibility', 'none');
-      this.map.setLayoutProperty('cvts', 'visibility', 'visible');
-      this.map.setPaintProperty('cvts', 'line-color', lineColors['cvts']);
-      this.map.setZoom(9);
-    } else if (layer === 'iri') {
-      this.map.setLayoutProperty('vpromm', 'visibility', 'visible');
-      this.map.setLayoutProperty('novpromm', 'visibility', 'visible');
-      this.map.setLayoutProperty('novpromm_dashed', 'visibility', 'visible');
-      this.map.setLayoutProperty('vpromm-interaction', 'visibility', 'visible');
-      this.map.setLayoutProperty('cvts', 'visibility', 'none');
-    }
+    this.map.setPaintProperty(
+      'novpromm',
+      'line-color',
+      lineColors[layer]
+    )
+      .setPaintProperty(
+        'novpromm_dashed',
+        'line-color',
+        lineColors[layer]
+      )
+      .setPaintProperty(
+        'vpromm',
+        'line-color',
+        lineColors[layer]
+      );
   },
 
   componentWillReceiveProps: function ({ layer, lng, lat, zoom, activeRoad }) {
@@ -271,7 +255,7 @@ var Explore = React.createClass({
       this.map.flyTo({ center: [lng, lat], zoom });
     }
     if (activeRoad !== this.props.activeRoad) {
-      this.map.setFilter('active_road', ['==', 'or_vpromms', activeRoad]);
+      this.map.setFilter('active_road', ['==', 'vpromm_id', activeRoad]);
       this.props.fetchActiveRoad(activeRoad);
     }
   },
@@ -285,7 +269,7 @@ var Explore = React.createClass({
   handleLayerChange: function ({ target: { value } }) {
     this.props.selectExploreMapLayer(value);
     this.map.setPaintProperty(
-      'conflated',
+      'vpromm',
       'line-color',
       lineColors[value]
     );
