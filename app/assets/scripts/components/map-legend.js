@@ -7,7 +7,7 @@ import T from './t';
 
 
 const renderTitle = (layer) => {
-  if (layer === 'iri') {
+  if (layer === 'iri_mean') {
     return <T>IRI</T>;
   } else if (layer === 'or_width') {
     return <T>Width</T>;
@@ -15,7 +15,7 @@ const renderTitle = (layer) => {
     return <T>Condition</T>;
   } else if (layer === 'or_surface') {
     return <T>Surface</T>;
-  } else if (layer === 'cvts') {
+  } else if (layer === 'or_section_delivery_vehicle') {
     return <T>Vehicle Count</T>;
   }
 };
