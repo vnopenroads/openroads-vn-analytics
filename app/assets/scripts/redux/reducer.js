@@ -15,12 +15,10 @@ import adminStats from './modules/admin-stats';
 const admins = function (state = {units: [], fetching: false, fetched: false}, action) {
   switch (action.type) {
     case actions.REQUEST_ADMINS:
-      console.log('REQUEST_ADMINS');
       state = _.cloneDeep(state);
       state.fetching = true;
       break;
     case actions.RECEIVE_ADMINS:
-      console.log('RECEIVE_ADMINS');
       state = _.cloneDeep(state);
       state.units = action.json;
       state.fetching = false;
@@ -38,20 +36,17 @@ const admins = function (state = {units: [], fetching: false, fetched: false}, a
 const search = function (state = {results: [], fetching: false, fetched: false, query: '', searching: false}, action) {
   switch (action.type) {
     case actions.REQUEST_SEARCH_RESULTS:
-      console.log('REQUEST_SEARCH_RESULTS');
       state = _.cloneDeep(state);
       state.fetching = true;
       state.query = action.query;
       state.searching = true;
       break;
     case actions.RECEIVE_SEARCH_RESULTS:
-      console.log('RECEIVE_SEARCH_RESULTS');
       state = _.cloneDeep(state);
       state.results = action.json;
       state.fetching = false;
       break;
     case actions.CLEAN_SEARCH_RESULTS:
-      console.log('CLEAN_SEARCH_RESULTS');
       state = _.cloneDeep(state);
       state.results = [];
       state.fetching = false;

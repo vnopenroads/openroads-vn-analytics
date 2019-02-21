@@ -6,9 +6,9 @@ import { hashHistory } from 'react-router';
 import logger from 'redux-logger';
 const middlewares = [syncHistory(hashHistory), thunkMiddleware];
 
-if (process.env.DS_ENV === 'staging') {
-  middlewares.push(logger);
-}
+// if (process.env.DS_ENV === 'staging') {
+//   middlewares.push(logger);
+// }
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export default createStore(

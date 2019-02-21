@@ -19,5 +19,3 @@ const data = files.map(f => {
   }
   return acc;
 }, {});
-
-console.log(JSON.stringify(data, null, 2));
