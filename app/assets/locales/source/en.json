@@ -149,7 +149,7 @@
     "Temperature Class": "Temperature Class",
     "or_responsibility": "or_responsibility",
     "Road Length (ORMA)": "Road Length (ORMA)",
-    "Road Length (VProMMS)": "Road Length (VProMMS)",
+    "Road Length (VPROMM)": "Road Length (VPROMM)",
     "Accessibility Score": "Accessibility Score",
     "Large Bus (veh/day)": "Large Bus (veh/day)",
     "Pavement Age (year)": "Pavement Age (year)",
@@ -184,6 +184,7 @@
     "Overview": "Overview",
     "Field data": "Field data",
     "Pending": "Pending",
+    "pending": "pending",
     "Reviewed": "Reviewed",
     "WoN Length": "WoN Length",
     "GProMMS Length": "GProMMS Length",
@@ -214,5 +215,15 @@
     "Choose file": "Choose file",
     "No file chosen": "No file chosen",
     "What's the current version of the platform?": "What's the current version of the platform?",
-    "Filter by province or district": "Filter by province or district"
+    "Filter by province or district": "Filter by province or district",
+    "Switch tab": "Switch tab",
+    "View asset page": "View asset page",
+    "Sort by this field": "Sort by this field",
+    "GProMMS": "GProMMS",
+    "WoN": "WoN",
+    "Sections": "Sections",
+    "Attributes": "Attributes",
+    "Asset geometry": "Asset geometry",
+    "This asset doesn't have geometry.": "This asset doesn't have geometry.",
+    "CVTS": "CVTS"
 }
