@@ -805,7 +805,6 @@ var Tasks = React.createClass({
     const { hoverId } = this.state;
     const renderPanel = !((taskStatus === 'error' || taskStatus === 'No tasks remaining') ||
                               (!taskId && taskStatus === 'pending'));
-    // console.log('selectOptions', this.props.selectOptions);
     return (
       <section className='inpage inpage--alt'>
         <header className='inpage__header'>
