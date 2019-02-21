@@ -3,7 +3,7 @@ import thunkMiddleware from 'redux-thunk';
 import { syncHistory } from 'react-router-redux';
 import reducer from './reducer';
 import { hashHistory } from 'react-router';
-import logger from 'redux-logger';
+// import logger from 'redux-logger';
 const middlewares = [syncHistory(hashHistory), thunkMiddleware];
 
 // if (process.env.DS_ENV === 'staging') {
