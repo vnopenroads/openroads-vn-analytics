@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+### [3.2.0]
+> 21 February 2019
+
+- Fix RLP uploads and catch errors [`#182`](https://github.com/orma/openroads-vn-api/pull/182)
+
+- Select geometry directly in editor [after search](https://github.com/orma/openroads-vn-iD/pull/57)
+
+- Validate province while adding a new road https://github.com/orma/openroads-vn-api/pull/185
+
+- Remove logging [`#560`](https://github.com/orma/openroads-vn-analytics/pull/560)
+- Fix map navigation [`#559`](https://github.com/orma/openroads-vn-analytics/pull/559)
+
 ### [v3.1.0]
 > 14 January 2019
 

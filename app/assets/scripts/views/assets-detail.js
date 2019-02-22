@@ -108,35 +108,42 @@ class AssetsDetail extends React.Component {
     }
 
     if (this.props.roadGeo.fetching && !nextProps.roadGeo.fetching && !nextProps.roadGeo.error) {
-      this.setupMapStyle();
+      // do this once props have been set
+      process.nextTick(() => this.setupMapStyle());
     }
   }
 
   setupMapStyle () {
     const { fetched, data } = this.props.roadGeo;
 
-    if (!fetched || this.map.getSource('road-geometry')) return;
+    if (!fetched) return;
 
-    this.map.addSource('road-geometry', { type: 'geojson', data: data });
-    this.map.addLayer({
-      id: `road-geometry-layer`,
-      type: 'line',
-      source: 'road-geometry',
-      paint: {
-        'line-width': 4,
-        'line-color': '#da251d'
-      }
-    });
-    this.map.addLayer({
-      id: 'road-geometry-highlight',
-      type: 'line',
-      source: 'road-geometry',
-      paint: {
-        'line-width': 5,
-        'line-color': '#000'
-      },
-      filter: ['==', 'way_id', '']
-    });
+    if (!this.map.getSource('road-geometry')) {
+      this.map.addSource('road-geometry', { type: 'geojson', data: data });
+      this.map.addLayer({
+        id: `road-geometry-layer`,
+        type: 'line',
+        source: 'road-geometry',
+        paint: {
+          'line-width': 4,
+          'line-color': '#da251d'
+        }
+      });
+      this.map.addLayer({
+        id: 'road-geometry-highlight',
+        type: 'line',
+        source: 'road-geometry',
+        paint: {
+          'line-width': 5,
+          'line-color': '#000'
+        },
+        filter: ['==', 'way_id', '']
+      });
+    } else {
+      const source = this.map.getSource('road-geometry');
+      source.setData(data);
+    }
+
 
     if (data.features.length > 0) {
       this.map.fitBounds(bbox(data), { padding: 20 });
