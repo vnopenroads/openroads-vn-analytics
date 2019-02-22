@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import {
   toPairs,
   find,
-  get
+  get,
+  without
 } from 'lodash';
 import {
   compose,
@@ -202,7 +203,6 @@ class AssetsDetail extends React.Component {
 
   renderProperties () {
     const { fetched, data } = this.props.roadProps;
-
     if (!fetched) return null;
 
     const nameToLabel = {
@@ -218,14 +218,10 @@ class AssetsDetail extends React.Component {
     let propNames = Object.keys(data.properties);
 
     // remove lat long attributes https://github.com/orma/openroads-vn-analytics/issues/533
-    propNames.splice(propNames.indexOf('Road Start Latitude'), 1);
-    propNames.splice(propNames.indexOf('Road Start Longitude'), 1);
-    propNames.splice(propNames.indexOf('Road End Latitude'), 1);
-    propNames.splice(propNames.indexOf('Road End Longitude'), 1);
+    propNames = without(propNames, 'Road Start Latitude', 'Road Start Longitude', 'Road End Latitude', 'Road End Longitude')
 
     // sort based on the render order
     propNames.sort((a, b) => renderOrder.indexOf(a) > renderOrder.indexOf(b) ? 1 : -1);
-
 
     const renderDlItem = (name) => {
       return [
