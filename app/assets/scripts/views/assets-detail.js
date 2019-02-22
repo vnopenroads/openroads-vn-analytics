@@ -218,7 +218,7 @@ class AssetsDetail extends React.Component {
     let propNames = Object.keys(data.properties);
 
     // remove lat long attributes https://github.com/orma/openroads-vn-analytics/issues/533
-    propNames = without(propNames, 'Road Start Latitude', 'Road Start Longitude', 'Road End Latitude', 'Road End Longitude')
+    propNames = without(propNames, 'Road Start Latitude', 'Road Start Longitude', 'Road End Latitude', 'Road End Longitude');
 
     // sort based on the render order
     propNames.sort((a, b) => renderOrder.indexOf(a) > renderOrder.indexOf(b) ? 1 : -1);
