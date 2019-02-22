@@ -62,7 +62,7 @@ export const FETCH_ROAD_BBOX = 'FETCH_ROAD_BBOX';
 export const FETCH_ROAD_BBOX_SUCCESS = 'FETCH_ROAD_BBOX_SUCCESS';
 export const FETCH_ROAD_BBOX_ERROR = 'FETCH_ROAD_BBOX_ERROR';
 export const FETCH_ROAD_PROPERTY = 'FETCH_ROAD_PROPERTY';
-export const FETCH_ROAD_PROPERTY_ERROR = 'FETCH_ROAD_PROPERTY';
+export const FETCH_ROAD_PROPERTY_ERROR = 'FETCH_ROAD_PROPERTY_ERROR';
 export const FETCH_ROAD_PROPERTY_SUCCESS = 'FETCH_ROAD_PROPERTY_SUCCESS';
 export const EDIT_ROAD_ID = 'EDIT_ROAD_ID';
 export const EDIT_ROAD_ID_SUCCESS = 'EDIT_ROAD_ID_SUCCESS';
@@ -167,9 +167,8 @@ export const fetchRoadGeometryEpic = (id) => (dispatch) => {
   return fetch(`${config.api}/properties/roads/${id}.geojson`)
     .then(response => {
       if (!response.ok) {
-        throw new Error(response.status);
+        throw response.status;
       }
-
       return response.json();
     })
     .then(geoJSON => dispatch(fetchRoadGeometrySuccess(id, geoJSON)))
@@ -385,13 +384,15 @@ export const fetchRoadPropertyEpic = (roadId) => (dispatch) => {
   return fetch(`${config.api}/properties/roads/${roadId}`)
     .then(response => {
       if (!response.ok) {
-        return new Error(response.status);
+        throw response.status;
       }
 
       return response.json();
     })
     .then(property => dispatch(fetchRoadPropertySuccess(roadId, property)))
-    .catch(err => dispatch(fetchRoadPropertyError(roadId, err)));
+    .catch(err => {
+      dispatch(fetchRoadPropertyError(roadId, err));
+    });
 };
 
 export const editRoadIdEpic = (wayId, vprommId) => (dispatch) => {
@@ -525,6 +526,5 @@ export default (
       roadsById: Object.assign({}, state.roadsById, delete state.roadsById[action.id])
     });
   }
-
   return state;
 };
