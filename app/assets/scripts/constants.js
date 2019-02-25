@@ -968,4 +968,4 @@ export const ADMIN_MAP = {
     '775': '',
     '776': ''
   }
-}
+};
