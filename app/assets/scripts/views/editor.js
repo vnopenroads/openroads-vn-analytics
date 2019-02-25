@@ -83,7 +83,7 @@ var Editor = React.createClass({
       setTimeout(() => {
         this.orFrame.send('setPosition', {
           way
-        })
+        });
       }, 1000);
     }
   },
