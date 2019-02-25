@@ -83,12 +83,12 @@ var BaseSearch = React.createClass({
     if (searchVal.length) {
       if (this.props.searchType === 'Admin' && this.props.admins[0]) {
         const admin = this.props.admins[0];
+        this.setState({ searchVal: this.props.admins[0].name_en });
         page === 'assets' ? this.navigateToAdmin(admin) : this.searchAdminArea(admin.id);
-        //this.setState({ searchVal: this.props.admins[0].name_en });
       } else if (this.props.filteredVProMMs[0]) {
         const vpromm = this.props.filteredVProMMs[0];
+        this.setState({ searchVal: this.props.filteredVProMMs[0] });
         page === 'assets' ? this.navigateToVProMM(vpromm) : this.searchVProMMsID(vpromm);
-        //this.setState({ searchVal: this.props.filteredVProMMs[0] });
       }
     }
   },
