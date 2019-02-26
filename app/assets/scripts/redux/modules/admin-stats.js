@@ -75,6 +75,9 @@ export const fetchAdminStatsAA = (aaType, pId, dId) => (dispatch) => {
       return response.json();
     })
     .then((data) => {
+      if (data.provinces.length === 0) {
+        throw new Error('Province not found.');
+      }
       const province = data.provinces[0];
 
       const d = aaType === 'province'
@@ -90,7 +93,8 @@ export const fetchAdminStatsAA = (aaType, pId, dId) => (dispatch) => {
         };
 
       return dispatch(fetchAdminStatsAASucess(d, aaType, pId, dId));
-    }, (err) => dispatch(fetchAdminStatsAAError(err.message, aaType, pId, dId)));
+    })
+    .catch(err => dispatch(fetchAdminStatsAAError(err.message, aaType, pId, dId)));
 };
 
 const aaState = {
