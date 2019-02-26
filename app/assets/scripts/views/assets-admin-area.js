@@ -344,7 +344,7 @@ class AssetsAA extends React.Component {
     if (fetched && error) {
       return (
         <Barebones title='Error'>
-          <p>Something went wrong with the request. Please try again later.</p>
+          <p>Something went wrong with the request. { error }</p>
         </Barebones>
       );
     }

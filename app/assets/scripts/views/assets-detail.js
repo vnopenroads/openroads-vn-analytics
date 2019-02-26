@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import {
   toPairs,
   find,
-  get
+  get,
+  without
 } from 'lodash';
 import {
   compose,
@@ -27,6 +28,7 @@ import { getSectionValue } from '../utils/sections';
 import Dropdown from '../components/dropdown';
 import AssetsEditModal from '../components/assets-edit-modal';
 import AssetsSectionRow from '../components/assets-section-row';
+import UhOh from './uhoh';
 
 import {
   FETCH_ROAD_GEOMETRY,
@@ -117,27 +119,30 @@ class AssetsDetail extends React.Component {
     const { fetched, data } = this.props.roadGeo;
 
     if (!fetched) return;
+    if (!data.features.length) return;
 
     if (!this.map.getSource('road-geometry')) {
-      this.map.addSource('road-geometry', { type: 'geojson', data: data });
-      this.map.addLayer({
-        id: `road-geometry-layer`,
-        type: 'line',
-        source: 'road-geometry',
-        paint: {
-          'line-width': 4,
-          'line-color': '#da251d'
-        }
-      });
-      this.map.addLayer({
-        id: 'road-geometry-highlight',
-        type: 'line',
-        source: 'road-geometry',
-        paint: {
-          'line-width': 5,
-          'line-color': '#000'
-        },
-        filter: ['==', 'way_id', '']
+      this.map.on('load', () => {
+        this.map.addSource('road-geometry', { type: 'geojson', data: data });
+        this.map.addLayer({
+          id: `road-geometry-layer`,
+          type: 'line',
+          source: 'road-geometry',
+          paint: {
+            'line-width': 4,
+            'line-color': '#da251d'
+          }
+        });
+        this.map.addLayer({
+          id: 'road-geometry-highlight',
+          type: 'line',
+          source: 'road-geometry',
+          paint: {
+            'line-width': 5,
+            'line-color': '#000'
+          },
+          filter: ['==', 'way_id', '']
+        });
       });
     } else {
       const source = this.map.getSource('road-geometry');
@@ -202,7 +207,6 @@ class AssetsDetail extends React.Component {
 
   renderProperties () {
     const { fetched, data } = this.props.roadProps;
-
     if (!fetched) return null;
 
     const nameToLabel = {
@@ -218,14 +222,10 @@ class AssetsDetail extends React.Component {
     let propNames = Object.keys(data.properties);
 
     // remove lat long attributes https://github.com/orma/openroads-vn-analytics/issues/533
-    propNames.splice(propNames.indexOf('Road Start Latitude'), 1);
-    propNames.splice(propNames.indexOf('Road Start Longitude'), 1);
-    propNames.splice(propNames.indexOf('Road End Latitude'), 1);
-    propNames.splice(propNames.indexOf('Road End Longitude'), 1);
+    propNames = without(propNames, 'Road Start Latitude', 'Road Start Longitude', 'Road End Latitude', 'Road End Longitude');
 
     // sort based on the render order
     propNames.sort((a, b) => renderOrder.indexOf(a) > renderOrder.indexOf(b) ? 1 : -1);
-
 
     const renderDlItem = (name) => {
       return [
@@ -389,6 +389,10 @@ class AssetsDetail extends React.Component {
     const hasGeometry = this.hasGeometry();
 
     let featCenter = [0, 0];
+    if (roadProps.error) {
+      return (<UhOh />);
+    }
+
     if (roadGeo.fetched) {
       featCenter = center(roadGeo.data).geometry.coordinates;
     }

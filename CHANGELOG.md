@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+#### [v3.3.0](https://github.com/orma/openroads-vn-analytics/compare/v3.2.0...v3.3.0)
+
+> 26 February 2019
+
+- Fix search box [#566](https://github.com/orma/openroads-vn-analytics/issues/566). [`#591`](https://github.com/orma/openroads-vn-analytics/pull/591)
+- Skip empty tasks, fix [#574](https://github.com/orma/openroads-vn-analytics/issues/574). [`#590`](https://github.com/orma/openroads-vn-analytics/pull/590)
+- Fix search in the editor [`#589`](https://github.com/orma/openroads-vn-analytics/pull/589)
+- Display error if province not found, fixes #587 [`#588`](https://github.com/orma/openroads-vn-analytics/pull/588)
+- Update province information in constants.js, fixes #583 [`#586`](https://github.com/orma/openroads-vn-analytics/pull/586)
+- Make file input required for upload [`#585`](https://github.com/orma/openroads-vn-analytics/pull/585)
+- Handle 404 of a deleted asset [`#579`](https://github.com/orma/openroads-vn-analytics/pull/579)
+- Fix assset attibute editing [`#565`](https://github.com/orma/openroads-vn-analytics/pull/565)
+- Better error message if user uploads RLP properties with no csv [`#189`](https://github.com/orma/openroads-vn-api/pull/189)
+- Remove grid layer, fix Mapbox Satellite, and docs [#61](https://github.com/orma/openroads-vn-iD/pull/61)
+
 ### [3.2.0]
 > 21 February 2019
 

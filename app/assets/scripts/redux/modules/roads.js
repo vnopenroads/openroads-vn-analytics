@@ -10,7 +10,10 @@ import {
   clearRoadCount
 } from './road-count';
 import config from '../../config';
-
+import { setMapPosition } from './map';
+import {
+  bboxToLngLatZoom
+} from '../../utils/zoom';
 
 /**
  * Utils
@@ -62,7 +65,7 @@ export const FETCH_ROAD_BBOX = 'FETCH_ROAD_BBOX';
 export const FETCH_ROAD_BBOX_SUCCESS = 'FETCH_ROAD_BBOX_SUCCESS';
 export const FETCH_ROAD_BBOX_ERROR = 'FETCH_ROAD_BBOX_ERROR';
 export const FETCH_ROAD_PROPERTY = 'FETCH_ROAD_PROPERTY';
-export const FETCH_ROAD_PROPERTY_ERROR = 'FETCH_ROAD_PROPERTY';
+export const FETCH_ROAD_PROPERTY_ERROR = 'FETCH_ROAD_PROPERTY_ERROR';
 export const FETCH_ROAD_PROPERTY_SUCCESS = 'FETCH_ROAD_PROPERTY_SUCCESS';
 export const EDIT_ROAD_ID = 'EDIT_ROAD_ID';
 export const EDIT_ROAD_ID_SUCCESS = 'EDIT_ROAD_ID_SUCCESS';
@@ -120,7 +123,7 @@ export const fetchRoadBboxSuccess = (roadId, bbox) => ({ type: FETCH_ROAD_BBOX_S
 export const fetchRoadBboxError = (roadId, error) => ({ type: FETCH_ROAD_BBOX_ERROR, roadId, error });
 
 export const fetchRoadProperty = (roadId) => ({ type: FETCH_ROAD_PROPERTY, roadId });
-export const fetchRoadPropertySuccess = (roadId, properties) => ({ type: FETCH_ROAD_PROPERTY_SUCCESS, roadId, properties });
+export const fetchRoadPropertySuccess = (roadId, properties, bbox) => ({ type: FETCH_ROAD_PROPERTY_SUCCESS, roadId, properties, bbox });
 export const fetchRoadPropertyError = (roadId, error) => ({ type: FETCH_ROAD_PROPERTY_ERROR, roadId, error });
 
 export const editRoadId = (wayId, vprommId) => ({ type: EDIT_ROAD_ID, wayId, vprommId });
@@ -167,9 +170,8 @@ export const fetchRoadGeometryEpic = (id) => (dispatch) => {
   return fetch(`${config.api}/properties/roads/${id}.geojson`)
     .then(response => {
       if (!response.ok) {
-        throw new Error(response.status);
+        throw response.status;
       }
-
       return response.json();
     })
     .then(geoJSON => dispatch(fetchRoadGeometrySuccess(id, geoJSON)))
@@ -385,12 +387,31 @@ export const fetchRoadPropertyEpic = (roadId) => (dispatch) => {
   return fetch(`${config.api}/properties/roads/${roadId}`)
     .then(response => {
       if (!response.ok) {
-        return new Error(response.status);
+        throw response.status;
       }
 
       return response.json();
     })
-    .then(property => dispatch(fetchRoadPropertySuccess(roadId, property)))
+    .then(property => {
+      if (!property.way_id) {
+        dispatch(fetchRoadPropertySuccess(roadId, property));
+        return null;
+      } else {
+        return fetch(`${config.api}/wayid/${property.way_id}/bbox`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(response.status);
+            }
+            return response.json();
+          })
+          .then(bbox => {
+            dispatch(fetchRoadPropertySuccess(roadId, property, bbox));
+            const { lng, lat, zoom } = bboxToLngLatZoom(bbox);
+            let editorZoom = zoom >= 14 ? zoom : 15;
+            dispatch(setMapPosition(lng, lat, editorZoom, 'w' + property.way_id));
+          });
+      }
+    })
     .catch(err => dispatch(fetchRoadPropertyError(roadId, err)));
 };
 
@@ -514,7 +535,8 @@ export default (
     return Object.assign({}, state, {
       roadsById: Object.assign({}, state.roadsById, {
         [action.roadId]: Object.assign({}, state.roadsById[action.roadId], {
-          properties: action.properties
+          properties: action.properties,
+          bbox: action.bbox ? action.bbox : null
         })
       })
     });
@@ -525,6 +547,5 @@ export default (
       roadsById: Object.assign({}, state.roadsById, delete state.roadsById[action.id])
     });
   }
-
   return state;
 };
