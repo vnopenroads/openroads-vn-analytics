@@ -83,12 +83,12 @@ var BaseSearch = React.createClass({
     if (searchVal.length) {
       if (this.props.searchType === 'Admin' && this.props.admins[0]) {
         const admin = this.props.admins[0];
-        page === 'assets' ? this.navigateToAdmin(admin) : this.searchAdminArea(admin.id);
         this.setState({ searchVal: this.props.admins[0].name_en });
+        page === 'assets' ? this.navigateToAdmin(admin) : this.searchAdminArea(admin.id);
       } else if (this.props.filteredVProMMs[0]) {
         const vpromm = this.props.filteredVProMMs[0];
-        page === 'assets' ? this.navigateToVProMM(vpromm) : this.searchVProMMsID(vpromm);
         this.setState({ searchVal: this.props.filteredVProMMs[0] });
+        page === 'assets' ? this.navigateToVProMM(vpromm) : this.searchVProMMsID(vpromm);
       }
     }
   },
@@ -111,9 +111,9 @@ var BaseSearch = React.createClass({
   },
 
   navigateToVProMM: function (vpromm) {
+    this.onClearSearch();
     const url = `${this.props.language}/assets/road/${vpromm}`;
     this.props.router.push(url);
-    this.onClearSearch();
   },
 
   search: function (searchVal) {
@@ -158,15 +158,15 @@ var BaseSearch = React.createClass({
   onAAClick: function (aa, e) {
     const { page } = this.props;
     e.preventDefault();
-    page === 'assets' ? this.navigateToAdmin(aa) : this.searchAdminArea(aa.id);
     this.setState({ searchVal: this.props.language === 'en' ? aa.name_en : aa.name_vn });
+    page === 'assets' ? this.navigateToAdmin(aa) : this.searchAdminArea(aa.id);
   },
 
   onVprommClick: function (id, e) {
     const { page } = this.props;
     e.preventDefault();
-    page === 'assets' ? this.navigateToVProMM(id) : this.searchVProMMsID(id);
     this.setState({ searchVal: id });
+    page === 'assets' ? this.navigateToVProMM(id) : this.searchVProMMsID(id);
   },
 
   renderResults: function () {
