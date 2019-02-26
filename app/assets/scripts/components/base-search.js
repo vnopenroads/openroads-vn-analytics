@@ -141,7 +141,7 @@ var BaseSearch = React.createClass({
       // Wait for the state to be set, otherwise the shouldComponentUpdate
       // of the parent will prevent the re-render.
       // This is an artifact.
-      this.props.fetchRoadBbox(VProMMsID);
+      // this.props.fetchRoadBbox(VProMMsID);
       this.props.fetchRoadProperty(VProMMsID);
     });
   },

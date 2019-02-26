@@ -60,7 +60,6 @@ export default (
     });
   } else if (action.type === FETCH_ROAD_PROPERTY_SUCCESS) {
     const waySlug = 'w' + action.properties.way_id;
-
     return Object.assign({}, state, {waySlug});
   }
 

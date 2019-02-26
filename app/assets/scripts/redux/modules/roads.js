@@ -10,7 +10,10 @@ import {
   clearRoadCount
 } from './road-count';
 import config from '../../config';
-
+import { setMapPosition } from './map';
+import {
+  bboxToLngLatZoom
+} from '../../utils/zoom';
 
 /**
  * Utils
@@ -120,7 +123,7 @@ export const fetchRoadBboxSuccess = (roadId, bbox) => ({ type: FETCH_ROAD_BBOX_S
 export const fetchRoadBboxError = (roadId, error) => ({ type: FETCH_ROAD_BBOX_ERROR, roadId, error });
 
 export const fetchRoadProperty = (roadId) => ({ type: FETCH_ROAD_PROPERTY, roadId });
-export const fetchRoadPropertySuccess = (roadId, properties) => ({ type: FETCH_ROAD_PROPERTY_SUCCESS, roadId, properties });
+export const fetchRoadPropertySuccess = (roadId, properties, bbox) => ({ type: FETCH_ROAD_PROPERTY_SUCCESS, roadId, properties, bbox });
 export const fetchRoadPropertyError = (roadId, error) => ({ type: FETCH_ROAD_PROPERTY_ERROR, roadId, error });
 
 export const editRoadId = (wayId, vprommId) => ({ type: EDIT_ROAD_ID, wayId, vprommId });
@@ -389,10 +392,26 @@ export const fetchRoadPropertyEpic = (roadId) => (dispatch) => {
 
       return response.json();
     })
-    .then(property => dispatch(fetchRoadPropertySuccess(roadId, property)))
-    .catch(err => {
-      dispatch(fetchRoadPropertyError(roadId, err));
-    });
+    .then(property => {
+      if (!property.way_id) {
+        dispatch(fetchRoadPropertySuccess(roadId, property))
+        return null;
+      } else {
+        return fetch(`${config.api}/wayid/${property.way_id}/bbox`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(response.status);
+            }
+            return response.json();
+          })
+          .then(bbox => {
+            dispatch(fetchRoadPropertySuccess(roadId, property, bbox));
+            const { lng, lat, zoom } = bboxToLngLatZoom(bbox);
+            dispatch(setMapPosition(lng, lat, zoom, property.way_id));
+          });
+      }
+    })
+    .catch(err => dispatch(fetchRoadPropertyError(roadId, err)));
 };
 
 export const editRoadIdEpic = (wayId, vprommId) => (dispatch) => {
@@ -515,7 +534,8 @@ export default (
     return Object.assign({}, state, {
       roadsById: Object.assign({}, state.roadsById, {
         [action.roadId]: Object.assign({}, state.roadsById[action.roadId], {
-          properties: action.properties
+          properties: action.properties,
+          bbox: action.bbox ? action.bbox : null
         })
       })
     });
