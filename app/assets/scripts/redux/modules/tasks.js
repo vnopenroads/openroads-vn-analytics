@@ -81,10 +81,20 @@ export const fetchNextWayTaskEpic = () => (dispatch, getState) => {
         throw new Error('No tasks remaining');
       } else if (response.status >= 400) {
         throw new Error(response.statusText);
+      } else if (response.status === 302) {
+        // this means the task didn't have geometry so let's fetch the next one.
+        response.json()
+          .then(data => {
+            dispatch(skipTask(data.id));
+            dispatch(fetchNextWayTaskEpic());
+          })
+          .catch(err => dispatch(fetchWayTaskError(err)));
+        return null;
       }
       return response.json();
     })
     .then(json => {
+      if (!json) return null;
       json.data.features.forEach(feature => {
         feature.properties._id = feature.meta.id;
         feature.properties.province = json.boundary;
