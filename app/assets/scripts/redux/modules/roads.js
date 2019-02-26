@@ -394,7 +394,7 @@ export const fetchRoadPropertyEpic = (roadId) => (dispatch) => {
     })
     .then(property => {
       if (!property.way_id) {
-        dispatch(fetchRoadPropertySuccess(roadId, property))
+        dispatch(fetchRoadPropertySuccess(roadId, property));
         return null;
       } else {
         return fetch(`${config.api}/wayid/${property.way_id}/bbox`)
@@ -407,7 +407,8 @@ export const fetchRoadPropertyEpic = (roadId) => (dispatch) => {
           .then(bbox => {
             dispatch(fetchRoadPropertySuccess(roadId, property, bbox));
             const { lng, lat, zoom } = bboxToLngLatZoom(bbox);
-            dispatch(setMapPosition(lng, lat, zoom, property.way_id));
+            let editorZoom = zoom >= 14 ? zoom : 15;
+            dispatch(setMapPosition(lng, lat, editorZoom, 'w' + property.way_id));
           });
       }
     })

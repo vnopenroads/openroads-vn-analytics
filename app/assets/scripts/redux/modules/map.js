@@ -40,7 +40,7 @@ export default (
       lat: action.lat,
       lng: action.lng,
       zoom: action.zoom,
-      way: action.waySlug
+      waySlug: action.waySlug
     });
   } else if (action.type === RECEIVE_ADMIN_BBOX) {
     const { lng, lat, zoom } = bboxToLngLatZoom(action.json.bbox);
@@ -58,10 +58,11 @@ export default (
       lat,
       zoom
     });
-  } else if (action.type === FETCH_ROAD_PROPERTY_SUCCESS) {
-    const waySlug = 'w' + action.properties.way_id;
-    return Object.assign({}, state, {waySlug});
   }
+  //  else if (action.type === FETCH_ROAD_PROPERTY_SUCCESS) {
+  //   const waySlug = 'w' + action.properties.way_id;
+  //   return Object.assign({}, state, {waySlug});
+  // }
 
   return state;
 };
