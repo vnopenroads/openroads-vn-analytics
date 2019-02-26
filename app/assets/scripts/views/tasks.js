@@ -252,6 +252,7 @@ var Tasks = React.createClass({
 
   syncMap: function () {
     const features = this.state.renderedFeatures;
+    if (!features || !features.length) return;
     const { map } = this;
     const existingSource = map.getSource(source);
     const selectedIds = [].concat(this.state.selectedStep0);
