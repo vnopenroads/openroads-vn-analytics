@@ -45,7 +45,6 @@ var Explore = React.createClass({
     mapboxgl.accessToken = config.mbToken;
 
     const { lng, lat, zoom, activeRoad, language } = this.props;
-
     if (activeRoad) {
       this.props.fetchActiveRoad(activeRoad);
     }
@@ -55,7 +54,7 @@ var Explore = React.createClass({
       style: 'mapbox://styles/openroads/cjdvlo06e68g22rmt6tme34xg',
       failIfMajorPerformanceCaveat: false,
       center: [lng, lat],
-      zoom: zoom
+      zoom: zoom >= 15 ? 13 : zoom
     });
 
     this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
