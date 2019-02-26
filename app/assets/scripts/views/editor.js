@@ -73,11 +73,19 @@ var Editor = React.createClass({
   componentWillReceiveProps: function ({ lng, lat, zoom, way }) {
     this.props.setMapPosition(lng, lat, zoom, way);
     const mapCenter = [lng, lat];
-    this.orFrame.send('setPosition', {
-      center: mapCenter,
-      zoom,
-      way
-    });
+    if (lng !== this.props.lng || lat !== this.props.lat) {
+      this.orFrame.send('setPosition', {
+        center: mapCenter,
+        zoom
+      });
+    }
+    if (way && way !== this.props.way) {
+      setTimeout(() => {
+        this.orFrame.send('setPosition', {
+          way
+        });
+      }, 1000);
+    }
   },
 
   componentDidMount: function () {
