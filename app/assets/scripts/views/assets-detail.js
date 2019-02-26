@@ -28,6 +28,7 @@ import { getSectionValue } from '../utils/sections';
 import Dropdown from '../components/dropdown';
 import AssetsEditModal from '../components/assets-edit-modal';
 import AssetsSectionRow from '../components/assets-section-row';
+import UhOh from './uhoh';
 
 import {
   FETCH_ROAD_GEOMETRY,
@@ -118,6 +119,7 @@ class AssetsDetail extends React.Component {
     const { fetched, data } = this.props.roadGeo;
 
     if (!fetched) return;
+    if (!data.features.length) return;
 
     if (!this.map.getSource('road-geometry')) {
       this.map.addSource('road-geometry', { type: 'geojson', data: data });
@@ -385,6 +387,10 @@ class AssetsDetail extends React.Component {
     const hasGeometry = this.hasGeometry();
 
     let featCenter = [0, 0];
+    if (roadProps.error) {
+      return (<UhOh />);
+    }
+
     if (roadGeo.fetched) {
       featCenter = center(roadGeo.data).geometry.coordinates;
     }
