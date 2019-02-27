@@ -252,7 +252,7 @@ var Tasks = React.createClass({
 
   syncMap: function () {
     const features = this.state.renderedFeatures;
-    if (!features.features || !features.features.length) return;
+    if (!features || !features.features.length) return;
 
     const { map } = this;
     const existingSource = map.getSource(source);
