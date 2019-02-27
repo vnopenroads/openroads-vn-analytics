@@ -225,5 +225,8 @@
     "Attributes": "Attributes",
     "Asset geometry": "Asset geometry",
     "This asset doesn't have geometry.": "This asset doesn't have geometry.",
-    "CVTS": "CVTS"
+    "CVTS": "CVTS",
+    "Stats": "Stats",
+    "Add new asset": "Add new asset",
+    "Meta": "Meta"
 }
