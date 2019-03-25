@@ -77,8 +77,19 @@ const fieldVProMMsids = function (state = defaultFieldVProMMsids, action) {
       state.fetched = true;
       state.ids = action.json;
       break;
+    case actions.DELETE_VPROMMS_FIELD_ID:
+      state = _.cloneDeep(state);
+      const idToRemove = action.id;
+      state.ids = state.ids.filter(id => id !== idToRemove);
+      break;
+    case actions.ADD_VPROMMS_FIELD_ID:
+      state = _.cloneDeep(state);
+      const idToAdd = action.id.id;
+      state.ids.push(idToAdd);
+      break;
     case actions.REMOVE_VPROMMS_FIELD_IDS:
       return defaultFieldVProMMsids;
+
   }
   return state;
 };
