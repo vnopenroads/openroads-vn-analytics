@@ -291,7 +291,11 @@ class AssetsDetail extends React.Component {
       const headerLabels = filteredProps.map(p => {
         return sectionFields[p].label;
       });
+      headerLabels.sort();
       header = header.concat(headerLabels);
+      filteredProps.sort((a, b) => {
+        return headerLabels.indexOf(sectionFields[a].label) > headerLabels.indexOf(sectionFields[b].label) ? 1 : -1;
+      });
       rows = data.features.map(f => {
         const cols = filteredProps.map(p => {
           return f.properties[p] ? getSectionValue(p, f.properties[p]) : 'NA';
