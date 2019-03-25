@@ -89,7 +89,6 @@ const fieldVProMMsids = function (state = defaultFieldVProMMsids, action) {
       break;
     case actions.REMOVE_VPROMMS_FIELD_IDS:
       return defaultFieldVProMMsids;
-
   }
   return state;
 };
