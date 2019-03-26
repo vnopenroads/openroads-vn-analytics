@@ -15,6 +15,8 @@ import {
   bboxToLngLatZoom
 } from '../../utils/zoom';
 
+import * as actions from '../../actions/action-types';
+
 /**
  * Utils
  */
@@ -91,10 +93,12 @@ export const editRoadSuccess = (id, newId) => ({ type: EDIT_ROAD_SUCCESS, id, ne
 export const editRoadError = (id, newId, error) => ({ type: EDIT_ROAD_ERROR, id, newId, error });
 
 export const deleteRoad = (id) => ({ type: DELETE_ROAD, id });
+export const deleteVprommsFieldId = (id) => ({ type: actions.DELETE_VPROMMS_FIELD_ID, id });
 export const deleteRoadSuccess = (id) => ({ type: DELETE_ROAD_SUCCESS, id });
 export const deleteRoadError = (id, error) => ({ type: DELETE_ROAD_ERROR, id, error });
 
 export const createRoad = (id) => ({ type: CREATE_ROAD, id });
+export const addVprommsFieldId = (id) => ({ type: actions.ADD_VPROMMS_FIELD_ID, id });
 export const createRoadSuccess = () => ({ type: CREATE_ROAD_SUCCESS });
 export const createRoadError = (error) => ({ type: CREATE_ROAD_ERROR, error });
 
@@ -192,6 +196,7 @@ export const createRoadEpic = (id) => (dispatch) => {
       return response.json();
     })
     .then((id) => {
+      dispatch(addVprommsFieldId(id));
       return Promise.all([
         dispatch(createRoadSuccess(id)),
         dispatch(clearRoadsPages()),
@@ -267,6 +272,7 @@ export const deleteRoadEpic = (id) => (dispatch) => {
       }
 
       dispatch(deleteRoadSuccess(id));
+      dispatch(deleteVprommsFieldId(id));
       dispatch(clearRoadsPages());
       dispatch(clearRoadCount());
     })
