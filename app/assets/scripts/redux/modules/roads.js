@@ -213,7 +213,7 @@ export const editRoadEpic = (id, newId) => (dispatch) => {
   })
     .then(response => {
       if (!response.ok) {
-        throw response.status;
+        throw response;
       }
 
       return response.json();
@@ -226,12 +226,8 @@ export const editRoadEpic = (id, newId) => (dispatch) => {
       ]);
     })
     .catch(err => {
-      if (err === 409) {
-        dispatch(editRoadError(id, newId, 'Road ID already exists'));
-        return err;
-      } else {
-        dispatch(editRoadError(id, newId, err.message));
-      }
+      dispatch(editRoadError(id, newId, err.statusText));
+      return err;
     });
 };
 

@@ -118,17 +118,24 @@ class AssetsEditModal extends React.Component {
 
       if (diffVpromm) {
         const res = await this.props.editRoad(originalVpromm, newVpromm);
-        if (res === 409) {
-          throw new Error('Road ID already exists');
+        if (!res.ok) {
+          throw res;
         }
 
-        if (res.error) throw new Error(res.error);
         successRes = {action: 'redirect', vpromm: newVpromm};
       }
 
       this.props.onCloseClick(successRes);
     } catch (error) {
-      alert(error);
+      let message = 'An unknown error occurred';
+      if (error.status === 409) {
+        message = 'Error Road ID already exists'
+      }
+
+      if (error.status === 422) {
+        message = 'Invalid VPROMM ID'
+      }
+      alert(message);
     }
   }
 
