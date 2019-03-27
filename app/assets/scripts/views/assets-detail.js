@@ -209,7 +209,6 @@ class AssetsDetail extends React.Component {
 
   renderProperties () {
     const { fetched, data } = this.props.roadProps;
-    
     if (!fetched) return null;
 
     // calculate length if length is null
