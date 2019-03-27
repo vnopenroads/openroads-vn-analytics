@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file. Dates are d
 - fixes inconsistencies in RLP data from Android vs iOs [`#194`](https://github.com/orma/openroads-vn-api/pull/194)
 - [fix length calculation](https://github.com/orma/openroads-vn-analytics/issues/600)
 - [Fix order of section attributes](https://github.com/orma/openroads-vn-analytics/issues/605)
+- [Show length immediately after adding geometry](https://github.com/orma/openroads-vn-analytics/pull/610)
 
 #### [v3.3.0](https://github.com/orma/openroads-vn-analytics/compare/v3.2.0...v3.3.0)
 
