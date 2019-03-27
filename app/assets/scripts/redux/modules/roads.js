@@ -218,7 +218,7 @@ export const editRoadEpic = (id, newId) => (dispatch) => {
   })
     .then(response => {
       if (!response.ok) {
-        throw new Error(response.status);
+        throw response;
       }
 
       return response.json();
@@ -229,7 +229,11 @@ export const editRoadEpic = (id, newId) => (dispatch) => {
         dispatch(clearRoadsPages()),
         dispatch(clearRoadCount())
       ]);
-    }, (err) => dispatch(editRoadError(id, newId, err.message)));
+    })
+    .catch(err => {
+      dispatch(editRoadError(id, newId, err.statusText));
+      return err;
+    });
 };
 
 
