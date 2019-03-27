@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+#### [v3.4.0](https://github.com/orma/openroads-vn-analytics/compare/v3.3.1...v3.4.0)
+
+> 27 March 2019
+
+- Fix/conflict error [`#609`](https://github.com/orma/openroads-vn-analytics/pull/609)
+- update vpromms search list when user adds or deletes a road asset [`#608`](https://github.com/orma/openroads-vn-analytics/pull/608)
+- fixes inconsistencies in RLP data from Android vs iOs [`#194`](https://github.com/orma/openroads-vn-api/pull/194)
+- [fix length calculation](https://github.com/orma/openroads-vn-analytics/issues/600)
+- [Fix order of section attributes](https://github.com/orma/openroads-vn-analytics/issues/605)
+
 #### [v3.3.0](https://github.com/orma/openroads-vn-analytics/compare/v3.2.0...v3.3.0)
 
 > 26 February 2019
