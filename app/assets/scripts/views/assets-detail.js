@@ -196,10 +196,8 @@ class AssetsDetail extends React.Component {
 
     try {
       const res = await this.props.editRoadStatus(this.props.vpromm, status);
-      console.log('error in component', res);
       if (res.error) throw new Error(res.error);
     } catch (error) {
-      console.log('error in component', error);
       alert('An error occurred while saving. Please try again.');
     }
   }
@@ -213,14 +211,14 @@ class AssetsDetail extends React.Component {
     const { fetched, data } = this.props.roadProps;
     
     if (!fetched) return null;
-    
-    console.log('prop data', data);
+
     // calculate length if length is null
-    if (this.props.roadGeo.data.features.length > 0) {
+    if (this.props.roadGeo && this.props.roadGeo.data && this.props.roadGeo.data.features && this.props.roadGeo.data.features.length > 0 && !data.properties.length) {
       const roadGeo = this.props.roadGeo.data;
-      console.log('here', roadGeo);
-      console.log('length', length(roadGeo, {units: 'kilometers'}));
+      const roadLength = length(roadGeo, {units: 'kilometers'});
+      data.properties.length = roadLength;
     }
+
     const nameToLabel = {
       'length': 'Road Length (ORMA)',
       'Road Length': 'Road Length (VPROMM)'
