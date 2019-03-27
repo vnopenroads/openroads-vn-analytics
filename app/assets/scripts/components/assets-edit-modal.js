@@ -111,19 +111,31 @@ class AssetsEditModal extends React.Component {
           replace: propertiesToUpdate,
           remove: propertiesToRemove
         });
+
         if (res.error) throw new Error(res.error);
         successRes = {action: 'refresh'};
       }
 
       if (diffVpromm) {
         const res = await this.props.editRoad(originalVpromm, newVpromm);
-        if (res.error) throw new Error(res.error);
+        if (!res.ok) {
+          throw res;
+        }
+
         successRes = {action: 'redirect', vpromm: newVpromm};
       }
 
       this.props.onCloseClick(successRes);
     } catch (error) {
-      alert('An error occurred while saving. Please try again.');
+      let message = 'Error ';
+      if (error.status === 409) {
+        message = 'Error Road ID already exists';
+      }
+
+      if (error.status === 422) {
+        message = 'Invalid VPROMM ID';
+      }
+      alert(message + error.statusText);
     }
   }
 
