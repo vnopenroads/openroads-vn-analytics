@@ -121,7 +121,6 @@ class AssetsDetail extends React.Component {
 
     if (!fetched) return;
     if (!data.features.length) return;
-    console.log('data', data);
 
     if (!this.map.getSource('road-geometry')) {
       this.map.on('load', () => {
