@@ -17,6 +17,7 @@ import { createStore, combineReducers } from 'redux';
 import { Link, withRouter } from 'react-router';
 import bbox from '@turf/bbox';
 import center from '@turf/center';
+import length from '@turf/length';
 import mapboxgl from 'mapbox-gl';
 import c from 'classnames';
 import T, {
@@ -120,6 +121,7 @@ class AssetsDetail extends React.Component {
 
     if (!fetched) return;
     if (!data.features.length) return;
+    console.log('data', data);
 
     if (!this.map.getSource('road-geometry')) {
       this.map.on('load', () => {
@@ -194,8 +196,10 @@ class AssetsDetail extends React.Component {
 
     try {
       const res = await this.props.editRoadStatus(this.props.vpromm, status);
+      console.log('error in component', res);
       if (res.error) throw new Error(res.error);
     } catch (error) {
+      console.log('error in component', error);
       alert('An error occurred while saving. Please try again.');
     }
   }
@@ -207,8 +211,16 @@ class AssetsDetail extends React.Component {
 
   renderProperties () {
     const { fetched, data } = this.props.roadProps;
+    
     if (!fetched) return null;
-
+    
+    console.log('prop data', data);
+    // calculate length if length is null
+    if (this.props.roadGeo.data.features.length > 0) {
+      const roadGeo = this.props.roadGeo.data;
+      console.log('here', roadGeo);
+      console.log('length', length(roadGeo, {units: 'kilometers'}));
+    }
     const nameToLabel = {
       'length': 'Road Length (ORMA)',
       'Road Length': 'Road Length (VPROMM)'
