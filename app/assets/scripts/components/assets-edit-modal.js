@@ -129,11 +129,11 @@ class AssetsEditModal extends React.Component {
     } catch (error) {
       let message = 'Error ';
       if (error.status === 409) {
-        message = 'Error Road ID already exists'
+        message = 'Error Road ID already exists';
       }
 
       if (error.status === 422) {
-        message = 'Invalid VPROMM ID'
+        message = 'Invalid VPROMM ID';
       }
       alert(message + error.statusText);
     }
