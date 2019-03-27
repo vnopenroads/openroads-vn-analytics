@@ -17,6 +17,7 @@ import { createStore, combineReducers } from 'redux';
 import { Link, withRouter } from 'react-router';
 import bbox from '@turf/bbox';
 import center from '@turf/center';
+import length from '@turf/length';
 import mapboxgl from 'mapbox-gl';
 import c from 'classnames';
 import T, {
@@ -208,6 +209,13 @@ class AssetsDetail extends React.Component {
   renderProperties () {
     const { fetched, data } = this.props.roadProps;
     if (!fetched) return null;
+
+    // calculate length if length is null
+    if (this.props.roadGeo && this.props.roadGeo.data && this.props.roadGeo.data.features && this.props.roadGeo.data.features.length > 0 && !data.properties.length) {
+      const roadGeo = this.props.roadGeo.data;
+      const roadLength = length(roadGeo, {units: 'kilometers'});
+      data.properties.length = roadLength;
+    }
 
     const nameToLabel = {
       'length': 'Road Length (ORMA)',
