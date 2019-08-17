@@ -4,9 +4,9 @@
  */
 module.exports = {
   environment: 'production',
-  api: 'http://api.openroads-vn.com',
-  mbToken: 'pk.eyJ1Ijoib3BlbnJvYWRzIiwiYSI6InJ0aUQ2N3MifQ.R3hdFqriZr6kEUr-j_FYpg',
-  editorUrl: '//editor.openroads-vn.com',
-  roadNetTileLayerUrl: 'http://api.openroads-vn.com:3000/dashboard/{z}/{x}/{y}.png',
+  api: 'http://orma.drvn.vn/api',
+  mbToken: 'pk.eyJ1IjoibmdkbmdoaWEyOCIsImEiOiJjano4emx6NmwwM3J6M2Vtbjd2cjF4ZDNoIn0.ytQffAlYX9LFRMZ46YZHhg',
+  editorUrl: '//orma.drvn.vn/editor',
+  roadNetTileLayerUrl: 'http://orma.drvn.vn/tilemap/{z}/{x}/{y}.png',
   provinceDumpBaseUrl: 'https:/openroads-vn-dumps-prod.s3.amazonaws.com/by-province-id/'
 };
