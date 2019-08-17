@@ -51,7 +51,7 @@ var Explore = React.createClass({
 
     this.map = new mapboxgl.Map({
       container: 'map',
-      style: 'mapbox://styles/openroads/cjdvlo06e68g22rmt6tme34xg',
+      style: 'mapbox://styles/ngdnghia28/cjx5v72962j0f1dmyvo0kjeto',
       failIfMajorPerformanceCaveat: false,
       center: [lng, lat],
       zoom: zoom >= 15 ? 13 : zoom
@@ -94,7 +94,7 @@ var Explore = React.createClass({
           type: 'line',
           source: {
             type: 'vector',
-            url: 'mapbox://openroads.vietnam-conflated-1'
+            url: 'mapbox://ngdnghia28.vietnam-conflated-1'
           },
           'source-layer': 'conflated',
           paint: {
@@ -109,7 +109,7 @@ var Explore = React.createClass({
           type: 'line',
           source: {
             type: 'vector',
-            url: 'mapbox://openroads.vietnam-conflated-1'
+            url: 'mapbox://ngdnghia28.vietnam-conflated-1'
           },
           'source-layer': 'conflated',
           paint: {
@@ -128,7 +128,7 @@ var Explore = React.createClass({
           type: 'line',
           source: {
             type: 'vector',
-            url: 'mapbox://openroads.vietnam-conflated-1'
+            url: 'mapbox://ngdnghia28.vietnam-conflated-1'
           },
           'source-layer': 'conflated',
           paint: {
@@ -148,7 +148,7 @@ var Explore = React.createClass({
           type: 'line',
           source: {
             type: 'vector',
-            url: 'mapbox://openroads.vietnam-conflated-1'
+            url: 'mapbox://ngdnghia28.vietnam-conflated-1'
           },
           'source-layer': 'conflated',
           paint: {
@@ -168,7 +168,7 @@ var Explore = React.createClass({
           type: 'symbol',
           source: {
             type: 'vector',
-            url: 'mapbox://openroads.vietnam-conflated-1'
+            url: 'mapbox://ngdnghia28.vietnam-conflated-1'
           },
           'source-layer': 'conflated',
           layout: {
@@ -184,7 +184,7 @@ var Explore = React.createClass({
           type: 'line',
           source: {
             type: 'vector',
-            url: 'mapbox://openroads.vietnam-conflated-1'
+            url: 'mapbox://ngdnghia28.vietnam-conflated-1'
           },
           'source-layer': 'conflated',
           paint: {
@@ -195,7 +195,7 @@ var Explore = React.createClass({
             ],
             'line-opacity': 0
           },
-          layout: {'line-cap': 'round'},
+          layout: { 'line-cap': 'round' },
           filter: ['has', 'vpromm_id']
         })
         .setPaintProperty(
@@ -215,7 +215,7 @@ var Explore = React.createClass({
         );
 
       this.map.on('mousemove', (e) => {
-        const features = this.map.queryRenderedFeatures(e.point, {layers: ['vpromm-interaction']});
+        const features = this.map.queryRenderedFeatures(e.point, { layers: ['vpromm-interaction'] });
         this.map.getCanvas().style.cursor = features.length ? 'pointer' : '';
       });
 
