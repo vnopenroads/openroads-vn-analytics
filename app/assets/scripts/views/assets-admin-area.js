@@ -355,6 +355,7 @@ class AssetsAA extends React.Component {
           {this.renderHeadline()}
 
           <div className='incontainer__hactions'>
+            {!aaIdSub && aaId && <a href={`${config.provinceCBABaseUrl}${aaId}.csv`} className='ica-download'><T>Download CBA</T></a>}
             {!aaIdSub && aaId && <a href={`${config.provinceDumpBaseUrl}${aaId}.csv`} className='ica-download'><T>Download</T></a>}
             <AssetsCreate />
           </div>
