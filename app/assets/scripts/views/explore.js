@@ -94,7 +94,7 @@ var Explore = React.createClass({
           type: 'line',
           source: {
             type: 'vector',
-            url: 'mapbox://ngdnghia28.vietnam-conflated-1'
+            url: 'mapbox://tailm1.vietnam-conflated-1'
           },
           'source-layer': 'conflated',
           paint: {
@@ -109,7 +109,7 @@ var Explore = React.createClass({
           type: 'line',
           source: {
             type: 'vector',
-            url: 'mapbox://ngdnghia28.vietnam-conflated-1'
+            url: 'mapbox://tailm1.vietnam-conflated-1'
           },
           'source-layer': 'conflated',
           paint: {
@@ -128,7 +128,7 @@ var Explore = React.createClass({
           type: 'line',
           source: {
             type: 'vector',
-            url: 'mapbox://ngdnghia28.vietnam-conflated-1'
+            url: 'mapbox://tailm1.vietnam-conflated-1'
           },
           'source-layer': 'conflated',
           paint: {
@@ -148,7 +148,7 @@ var Explore = React.createClass({
           type: 'line',
           source: {
             type: 'vector',
-            url: 'mapbox://ngdnghia28.vietnam-conflated-1'
+            url: 'mapbox://tailm1.vietnam-conflated-1'
           },
           'source-layer': 'conflated',
           paint: {
@@ -168,7 +168,7 @@ var Explore = React.createClass({
           type: 'symbol',
           source: {
             type: 'vector',
-            url: 'mapbox://ngdnghia28.vietnam-conflated-1'
+            url: 'mapbox://tailm1.vietnam-conflated-1'
           },
           'source-layer': 'conflated',
           layout: {
@@ -184,7 +184,7 @@ var Explore = React.createClass({
           type: 'line',
           source: {
             type: 'vector',
-            url: 'mapbox://ngdnghia28.vietnam-conflated-1'
+            url: 'mapbox://tailm1.vietnam-conflated-1'
           },
           'source-layer': 'conflated',
           paint: {
