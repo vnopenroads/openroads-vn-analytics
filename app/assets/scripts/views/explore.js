@@ -51,7 +51,7 @@ var Explore = React.createClass({
 
     this.map = new mapboxgl.Map({
       container: 'map',
-      style: 'mapbox://styles/ngdnghia28/cjx5v72962j0f1dmyvo0kjeto',
+      style: 'mapbox://styles/mapbox/satellite-v9',
       failIfMajorPerformanceCaveat: false,
       center: [lng, lat],
       zoom: zoom >= 15 ? 13 : zoom
@@ -69,33 +69,36 @@ var Explore = React.createClass({
     document.querySelector('.mapboxgl-ctrl .mapboxgl-ctrl-compass').remove();
 
     this.map.on('load', () => {
+      this.map.addSource("conflated-map", {
+        type: "vector",
+        tiles: ["http://orma.drvn.gov.vn/vertor-tiles/{z}/{x}/{y}.vector.pbf"],
+        minzoom: 6,
+        maxzoom: 14,
+      });
       // Load all roads with VPRoMMS values, and color by IRI
       this.map
-        .addLayer({
-          id: 'national-roads',
-          type: 'line',
-          source: {
-            type: 'vector',
-            url: 'mapbox://openroads.05tgvz1w'
-          },
-          'source-layer': 'national',
-          paint: {
-            'line-width': [
-              'interpolate', ['linear'], ['zoom'],
-              0, 1,
-              10, 2
-            ]
-          },
-          layout: { 'line-cap': 'round' },
-          maxzoom: 11
-        })
+        // .addLayer({
+        //   id: 'national-roads',
+        //   type: 'line',
+        //   source: {
+        //     type: 'vector',
+        //     url: 'mapbox://mapbox.mapbox-streets-v8'
+        //   },
+        //   'source-layer': 'road',
+        //   paint: {
+        //     'line-width': [
+        //       'interpolate', ['linear'], ['zoom'],
+        //       0, 1,
+        //       10, 2
+        //     ]
+        //   },
+        //   layout: { 'line-cap': 'round' },
+        //   maxzoom: 11
+        // })
         .addLayer({
           id: 'active_road',
           type: 'line',
-          source: {
-            type: 'vector',
-            url: 'mapbox://ngdnghia28.vietnam-conflated-1'
-          },
+          source: "conflated-map",
           'source-layer': 'conflated',
           paint: {
             'line-width': 20,
@@ -107,10 +110,7 @@ var Explore = React.createClass({
         .addLayer({
           id: 'novpromm',
           type: 'line',
-          source: {
-            type: 'vector',
-            url: 'mapbox://ngdnghia28.vietnam-conflated-1'
-          },
+          source: "conflated-map",
           'source-layer': 'conflated',
           paint: {
             'line-width': [
@@ -126,10 +126,7 @@ var Explore = React.createClass({
         .addLayer({
           id: 'novpromm_dashed',
           type: 'line',
-          source: {
-            type: 'vector',
-            url: 'mapbox://ngdnghia28.vietnam-conflated-1'
-          },
+          source: "conflated-map",
           'source-layer': 'conflated',
           paint: {
             'line-width': [
@@ -146,10 +143,7 @@ var Explore = React.createClass({
         .addLayer({
           id: 'vpromm',
           type: 'line',
-          source: {
-            type: 'vector',
-            url: 'mapbox://ngdnghia28.vietnam-conflated-1'
-          },
+          source: "conflated-map",
           'source-layer': 'conflated',
           paint: {
             'line-width': [
@@ -166,10 +160,7 @@ var Explore = React.createClass({
         .addLayer({
           id: 'vpromm-label',
           type: 'symbol',
-          source: {
-            type: 'vector',
-            url: 'mapbox://ngdnghia28.vietnam-conflated-1'
-          },
+          source: "conflated-map",
           'source-layer': 'conflated',
           layout: {
             'symbol-placement': 'line',
@@ -182,10 +173,7 @@ var Explore = React.createClass({
         .addLayer({
           id: 'vpromm-interaction',
           type: 'line',
-          source: {
-            type: 'vector',
-            url: 'mapbox://ngdnghia28.vietnam-conflated-1'
-          },
+          source: "conflated-map",
           'source-layer': 'conflated',
           paint: {
             'line-width': [
