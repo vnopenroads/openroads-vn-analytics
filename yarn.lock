@@ -100,6 +100,13 @@
     "@turf/helpers" "6.x"
     "@turf/invariant" "6.x"
 
+"@turf/distance@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@turf/distance/-/distance-6.3.0.tgz#4bd084af7fe369e921476e52b597a638dae4ed95"
+  dependencies:
+    "@turf/helpers" "^6.3.0"
+    "@turf/invariant" "^6.3.0"
+
 "@turf/helpers@*", "@turf/helpers@6.x":
   version "6.1.4"
   resolved "https://registry.yarnpkg.com/@turf/helpers/-/helpers-6.1.4.tgz#d6fd7ebe6782dd9c87dca5559bda5c48ae4c3836"
@@ -111,6 +118,10 @@
 "@turf/helpers@^5.1.5":
   version "5.1.5"
   resolved "https://registry.yarnpkg.com/@turf/helpers/-/helpers-5.1.5.tgz#153405227ab933d004a5bb9641a9ed999fcbe0cf"
+
+"@turf/helpers@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@turf/helpers/-/helpers-6.3.0.tgz#87f90f806c3f8ad6385ef8d2041d3662bf3c9fb1"
 
 "@turf/invariant@5.0.0":
   version "5.0.0"
@@ -127,6 +138,20 @@
   resolved "https://registry.yarnpkg.com/@turf/invariant/-/invariant-5.2.0.tgz#f0150ff7290b38577b73d088b7932c1ee0aa90a7"
   dependencies:
     "@turf/helpers" "^5.1.5"
+
+"@turf/invariant@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@turf/invariant/-/invariant-6.3.0.tgz#04a22b26c5503146c03fa6198176b72bd591eadf"
+  dependencies:
+    "@turf/helpers" "^6.3.0"
+
+"@turf/length@^6.0.2":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@turf/length/-/length-6.3.0.tgz#7d6b61bf870d6f056eb34ec7a787ce49f7dbe292"
+  dependencies:
+    "@turf/distance" "^6.3.0"
+    "@turf/helpers" "^6.3.0"
+    "@turf/meta" "^6.3.0"
 
 "@turf/line-intersect@^5.0.3":
   version "5.1.5"
@@ -179,6 +204,12 @@
   resolved "https://registry.yarnpkg.com/@turf/meta/-/meta-5.2.0.tgz#3b1ad485ee0c3b0b1775132a32c384d53e4ba53d"
   dependencies:
     "@turf/helpers" "^5.1.5"
+
+"@turf/meta@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@turf/meta/-/meta-6.3.0.tgz#f3e280ab29641f21e4f99310ce77f9c8394ae394"
+  dependencies:
+    "@turf/helpers" "^6.3.0"
 
 "@turf/point-on-line@^5.0.3":
   version "5.0.3"
@@ -2982,7 +3013,7 @@ event-emitter@^0.3.5:
 
 event-stream@^3.3.4:
   version "3.3.4"
-  resolved "http://registry.npmjs.org/event-stream/-/event-stream-3.3.4.tgz#4ab4c9a0f5a54db9338b4c34d86bfce8f4b35571"
+  resolved "https://registry.npmjs.org/event-stream/-/event-stream-3.3.4.tgz#4ab4c9a0f5a54db9338b4c34d86bfce8f4b35571"
   dependencies:
     duplexer "~0.1.1"
     from "~0"
@@ -4370,8 +4401,8 @@ homedir-polyfill@^1.0.0, homedir-polyfill@^1.0.1:
     parse-passwd "^1.0.0"
 
 hosted-git-info@^2.1.4:
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.7.1.tgz#97f236977bd6e125408930ff6de3eec6281ec047"
+  version "2.8.9"
+  resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.8.9.tgz#dffc0bf9a21c02209090f2aa69429e1414daf3f9"
 
 html-comment-regex@^1.1.0:
   version "1.1.1"
@@ -6138,7 +6169,7 @@ once@~1.3.0:
 
 onetime@^1.0.0:
   version "1.1.0"
-  resolved "http://registry.npmjs.org/onetime/-/onetime-1.1.0.tgz#a1f7838f8314c516f05ecefcbc4ccfe04b4ed789"
+  resolved "https://registry.npmjs.org/onetime/-/onetime-1.1.0.tgz#a1f7838f8314c516f05ecefcbc4ccfe04b4ed789"
 
 onetime@^2.0.0:
   version "2.0.1"
