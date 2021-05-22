@@ -269,5 +269,17 @@ module.exports = {
         '6+': '> 6 meters'
       }
     }
-  }
+  },
+  'id': {
+    'label': 'ID'
+  },
+  'way_id': {
+    'label': 'WAY ID'
+  },
+  'highway': {
+    'label': 'HIGHWAY'
+  },
+  'name': {
+    'label': 'NAME'
+  },
 };

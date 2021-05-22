@@ -275,12 +275,13 @@ class AssetsDetail extends React.Component {
     const { fetched, data } = this.props.roadGeo;
     if (!fetched) return null;
     const allProps = [...new Set(data.features.map(f => Object.keys(f.properties)).flat())];
-    const ignoreProps = [
-      'id',
-      'way_id',
-      'or_vpromms',
-      'highway'
-    ];
+    const ignoreProps = [];
+    // const ignoreProps = [
+    //   'id',
+    //   'way_id',
+    //   'or_vpromms',
+    //   'highway'
+    // ];
     let filteredProps = allProps.filter(p => {
       return ignoreProps.indexOf(p) === -1;
     });
@@ -313,7 +314,7 @@ class AssetsDetail extends React.Component {
     }
     return (
       <section>
-        <div>
+        <div className="scrollable">
           <table className="table">
             <thead>
               <tr>
