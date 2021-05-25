@@ -272,17 +272,17 @@ class AssetsDetail extends React.Component {
         <div>No Section Data Available</div>
       );
     }
-    const { fetched, data } = this.props.roadGeo;
+    let { fetched, data } = this.props.roadGeo;
     if (!fetched) return null;
     const allProps = [...new Set(data.features.map(f => Object.keys(f.properties)).flat())];
-    const ignoreProps = [];
+    const ignoreProps = ['way_id'];
     // const ignoreProps = [
     //   'id',
     //   'way_id',
     //   'or_vpromms',
     //   'highway'
     // ];
-    let filteredProps = allProps.filter(p => {
+     let filteredProps = allProps.filter(p => {
       return ignoreProps.indexOf(p) === -1;
     });
     let header = ['Way ID'];
@@ -296,14 +296,17 @@ class AssetsDetail extends React.Component {
         ];
       });
     } else {
-      filteredProps = filteredProps.filter(p => sectionFields.hasOwnProperty(p));
+      // filteredProps = filteredProps.filter(p => sectionFields.hasOwnProperty(p));
       const headerLabels = filteredProps.map(p => {
-        return sectionFields[p].label;
+        return sectionFields[p] ? sectionFields[p].label : p.replace("or", "").replaceAll("_", " ").trim();
       });
       headerLabels.sort();
       header = header.concat(headerLabels);
-      filteredProps.sort((a, b) => {
-        return headerLabels.indexOf(sectionFields[a].label) > headerLabels.indexOf(sectionFields[b].label) ? 1 : -1;
+      filteredProps.sort((a, b) => { 
+        if(sectionFields[a] && sectionFields[b]){
+          return headerLabels.indexOf(sectionFields[a].label) > headerLabels.indexOf(sectionFields[b].label) ? 1 : -1;
+        }
+        return false;
       });
       rows = data.features.map(f => {
         const cols = filteredProps.map(p => {
