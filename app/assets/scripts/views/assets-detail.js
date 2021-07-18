@@ -275,46 +275,63 @@ class AssetsDetail extends React.Component {
     let { fetched, data } = this.props.roadGeo;
     if (!fetched) return null;
     const allProps = [...new Set(data.features.map(f => Object.keys(f.properties)).flat())];
-    const ignoreProps = ['way_id'];
-    // const ignoreProps = [
-    //   'id',
-    //   'way_id',
-    //   'or_vpromms',
-    //   'highway'
-    // ];
-     let filteredProps = allProps.filter(p => {
-      return ignoreProps.indexOf(p) === -1;
-    });
-    let header = ['Way ID'];
-    let rows = [];
-    if (filteredProps.length === 0) {
-      header.push('');
-      rows = data.features.map(f => {
-        return [
-          f.properties.way_id,
-          'No Section Data'
-        ];
-      });
-    } else {
-      // filteredProps = filteredProps.filter(p => sectionFields.hasOwnProperty(p));
-      const headerLabels = filteredProps.map(p => {
-        return sectionFields[p] ? sectionFields[p].label : p.replace("or", "").replaceAll("_", " ").trim();
-      });
-      headerLabels.sort();
-      header = header.concat(headerLabels);
-      filteredProps.sort((a, b) => { 
-        if(sectionFields[a] && sectionFields[b]){
-          return headerLabels.indexOf(sectionFields[a].label) > headerLabels.indexOf(sectionFields[b].label) ? 1 : -1;
-        }
-        return false;
-      });
-      rows = data.features.map(f => {
-        const cols = filteredProps.map(p => {
-          return f.properties[p] ? getSectionValue(p, f.properties[p]) : 'NA';
-        });
-        return [f.properties.way_id].concat(cols);
-      });
-    }
+    // const ignoreProps = ['way_id'];
+    // // const ignoreProps = [
+    // //   'id',
+    // //   'way_id',
+    // //   'or_vpromms',
+    // //   'highway'
+    // // ];
+    //  let filteredProps = allProps.filter(p => {
+    //   return ignoreProps.indexOf(p) === -1;
+    // });
+    // let header = ['Way ID'];
+    // let rows = [];
+    // if (filteredProps.length === 0) {
+    //   header.push('');
+    //   rows = data.features.map(f => {
+    //     return [
+    //       f.properties.way_id,
+    //       'No Section Data'
+    //     ];
+    //   });
+    // } else {
+    //   // filteredProps = filteredProps.filter(p => sectionFields.hasOwnProperty(p));
+    //   const headerLabels = filteredProps.map(p => {
+    //     return sectionFields[p] ? sectionFields[p].label : p.replace("or", "").replaceAll("_", " ").trim();
+    //   });
+    //   headerLabels.sort();
+    //   header = header.concat(headerLabels);
+    //   filteredProps.sort((a, b) => { 
+    //     if(sectionFields[a] && sectionFields[b]){
+    //       return headerLabels.indexOf(sectionFields[a].label) > headerLabels.indexOf(sectionFields[b].label) ? 1 : -1;
+    //     }
+    //     return false;
+    //   });
+    //   rows = data.features.map(f => {
+    //     const cols = filteredProps.map(p => {
+    //       return f.properties[p] ? getSectionValue(p, f.properties[p]) : 'NA';
+    //     });
+    //     return [f.properties.way_id].concat(cols);
+    //   });
+    // }
+    //update logic table column 
+    let definedCol = allProps.filter(v => {
+      return sectionFields.hasOwnProperty(v);
+    })
+    let undefinedCol = allProps.filter(v => {
+      return !sectionFields.hasOwnProperty(v);
+    })
+    let listSortedCol = [...definedCol, ...undefinedCol ];
+    let header = listSortedCol.map(v => {
+      return sectionFields[v] ? sectionFields[v].label : v.replace("or", "").replaceAll("_", " ").replaceAll(":", " ").trim();
+    })
+
+    let rows = data.features.map(row => {
+      return listSortedCol.map(p => {
+        return row.properties[p] ? getSectionValue(p, row.properties[p]) : 'NA'
+      })
+    })
     return (
       <section>
         <div className="scrollable">
@@ -332,7 +349,7 @@ class AssetsDetail extends React.Component {
               {rows.map(r => {
                 return (
                   <AssetsSectionRow
-                    key={r[0]}
+                    key={r["way_id"]}
                     data={r}
                     onMouseOver={this.highlightMap.bind(this)}
                     onMouseOut={this.unhighlightMap.bind(this)}
