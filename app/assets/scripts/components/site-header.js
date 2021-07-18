@@ -17,8 +17,20 @@ import Dropdown from './dropdown';
 
 const classForLanguage = (current, lang) => c('drop__menu-item', {'drop__menu-item--active': current === lang});
 
-const SiteHeader = ({language, pathname}) => (
-  <header className='site__header'>
+const SiteHeader = ({language, pathname}) => {
+  var items = [];
+  var navItems = [["assets", "Assets"], ["explore", "Explore"], ["editor", "Editor"], ["tasks", "Tasks"], ["cba", "CBA"],
+                  ["upload", "Upload"], ["faq", "FAQ"]];
+  for (const [route,uxName] of navItems) {
+    items.push(<li>
+                <Link to={`/${language}/${route}`}
+                      className='site__menu-global-item'
+                      activeClassName='site__menu-global-item--active'>
+                  <T>{uxName}</T>
+                </Link>
+              </li>);
+  }
+  return (<header className='site__header'>
     <div className='inner'>
       <div className='site__headline'>
         <h1 className='site__title'>
@@ -43,59 +55,11 @@ const SiteHeader = ({language, pathname}) => (
             <li><Link to={pathname.replace(/^\/[a-z]+/, '/vi')} className={classForLanguage(language, 'vi')}>Tiếng Việt</Link></li>
           </ul>
         </Dropdown>
-        <ul className='site__menu-global'>
-          <li>
-            <Link
-              to={`/${language}/assets`}
-              className='site__menu-global-item'
-              activeClassName='site__menu-global-item--active'>
-              <T>Assets</T>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to={`/${language}/explore`}
-              className='site__menu-global-item'
-              activeClassName='site__menu-global-item--active'>
-              <T>Explore</T>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to={`/${language}/editor`}
-              className='site__menu-global-item'
-              activeClassName='site__menu-global-item--active'>
-              <T>Editor</T>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to={`/${language}/tasks`}
-              className='site__menu-global-item'
-              activeClassName='site__menu-global-item--active'>
-              <T>Tasks</T>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to={`/${language}/upload`}
-              className={c('site__menu-global-item', {'site__menu-global-item--active': pathname.match(new RegExp(`^/${language}/(jobs|upload)`))})}>
-              <T>Upload</T>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to={`/${language}/faq`}
-              className='site__menu-global-item'
-              activeClassName='site__menu-global-item--active'>
-              <T>FAQ</T>
-            </Link>
-          </li>
-        </ul>
+        <ul className='site__menu-global'>{items}</ul>
       </nav>
     </div>
   </header>
-);
+  )};
 
 
 SiteHeader.propTypes = {
