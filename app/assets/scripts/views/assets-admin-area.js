@@ -233,7 +233,7 @@ class AssetsAA extends React.Component {
             marginPagesDisplayed={2}
             pageRangeDisplayed={5}
             onPageChange={this.handleRoadsPageChange}
-            containerClassName={'pagination'}
+
             subContainerClassName={'pages'}
             pageClassName={'pages__wrapper'}
             pageLinkClassName={'pages__page'}

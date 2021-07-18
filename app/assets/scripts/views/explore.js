@@ -98,7 +98,7 @@ var Explore = React.createClass({
         .addLayer({
           id: 'active_road',
           type: 'line',
-          source: "conflated-map",
+          source: 'conflated-map',
           'source-layer': 'conflated',
           paint: {
             'line-width': 20,
@@ -291,18 +291,10 @@ var Explore = React.createClass({
           <div className='inner'>
             <figure className='map'>
               <div className='map__media' id='map'></div>
-              <div className='map__controls map__controls--top-right'>
-                <MapOptions
-                  layer={this.props.layer}
-                  handleLayerChange={this.handleLayerChange}
-                  handleShowNoVpromms={this.handleShowNoVpromms}
-                />
-              </div>
-              <div className='map__controls map__controls--bottom-right'>
-                <MapLegend
-                  layer={this.props.layer}
-                />
-              </div>
+              <MapOptions layer={this.props.layer}
+                          handleLayerChange={this.handleLayerChange}
+                          handleShowNoVpromms={this.handleShowNoVpromms} />
+              <MapLegend layer={this.props.layer} />
             </figure>
           </div>
         </div>
