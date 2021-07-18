@@ -20,14 +20,14 @@ import {
 import {
   fetchRoadBboxEpic
 } from '../redux/modules/roads';
-import MapSearch from '../components/map-search';
 import MapOptions from '../components/map-options';
 import MapLegend from '../components/map-legend';
+import SitePage from '../components/site-page';
 import { withRouter } from 'react-router';
 
 
-var Explore = React.createClass({
-  displayName: 'Explore',
+var CBA = React.createClass({
+  displayName: 'CBA',
 
   propTypes: {
     layer: React.PropTypes.string,
@@ -50,7 +50,7 @@ var Explore = React.createClass({
     }
 
     this.map = new mapboxgl.Map({
-      container: 'explore_map',
+      container: 'cba_map',
       style: 'mapbox://styles/mapbox/satellite-v9',
       failIfMajorPerformanceCaveat: false,
       center: [lng, lat],
@@ -274,32 +274,34 @@ var Explore = React.createClass({
     }
   },
 
-  render: function () {
+  renderInnerPage: function() {
     return (
-      <section className='inpage inpage--alt'>
-        <header className='inpage__header'>
-          <div className='inner'>
-            <div className='inpage__headline'>
-              <h1 className='inpage__title'><T>Explore</T></h1>
-            </div>
-            <div className='inpage__actions'>
-              <MapSearch page='explore' />
-            </div>
-          </div>
-        </header>
-        <div className='inpage__body'>
-          <div className='inner'>
-            <figure className='explore_map'>
-              <div className='map__media' id='explore_map'></div>
-              <MapOptions layer={this.props.layer}
-                          handleLayerChange={this.handleLayerChange}
-                          handleShowNoVpromms={this.handleShowNoVpromms} />
-              <MapLegend layer={this.props.layer} />
-            </figure>
-          </div>
+      <div className='cba_container'>
+        <div className='cba_inner'>
+          <figure className='cba_map debug' >
+            <div className='map__media' id="cba_map" />
+          </figure>
+          <div className='cba_sidebar debug'>SideBar</div>
         </div>
-      </section>
+        <div className='cba_table debug'>TABLE</div>
+      </div>
     );
+  },
+
+  renderInnerPage2: function() {
+    return (
+        <figure className='cba_map'>
+          <div className='map__media' id='cba_map'></div>
+          <MapOptions layer={this.props.layer}
+                      handleLayerChange={this.handleLayerChange}
+                      handleShowNoVpromms={this.handleShowNoVpromms} />
+          <MapLegend layer={this.props.layer} />
+        </figure>
+    );
+  },
+
+  render: function () {
+    return ( <SitePage pageName="CBA" innerPage={this.renderInnerPage()} noMargins={true} /> );
   }
 });
 
@@ -324,4 +326,4 @@ export default compose(
       fetchActiveRoad: (activeRoad) => dispatch(fetchRoadBboxEpic(activeRoad))
     })
   )
-)(Explore);
+)(CBA);

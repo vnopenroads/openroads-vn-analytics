@@ -1,0 +1,44 @@
+.cba_container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    border-style: solid;
+    border-color: red;
+    border-width: 2pt;
+
+}
+
+.cba_inner {
+    display: flex;
+    flex-direction: row;
+    flex: 1 1 auto;
+    border-color: pink;
+    border-width: 2pt;
+    border-style: solid;
+    height: 100%;
+}
+
+.debug {
+    border-color: greenyellow;
+    border-width: 2pt;
+    border-style: solid;
+}
+
+.cba_map {
+    flex: 5 1 auto;
+    height: 550px;
+}
+
+#cba_map {
+  height: 100%;
+  width: 100%;
+}
+
+.cba_sidebar {
+    flex: 1 1 auto;
+}
+
+.cba_table {
+    flex: 1 1 auto;
+}
