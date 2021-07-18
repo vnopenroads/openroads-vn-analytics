@@ -23,6 +23,8 @@ import {
 import MapOptions from '../components/map-options';
 import MapLegend from '../components/map-legend';
 import SitePage from '../components/site-page';
+import CbaTable from '../views/cba/table'
+import SectionDetails from '../views/cba/sidebar'
 import { withRouter } from 'react-router';
 
 
@@ -35,6 +37,7 @@ var CBA = React.createClass({
     lng: React.PropTypes.number,
     lat: React.PropTypes.number,
     zoom: React.PropTypes.number,
+    rowId: React.PropTypes.number,
     selectExploreMapLayer: React.PropTypes.func,
     exploreMapShowNoVpromms: React.PropTypes.func,
     setMapPosition: React.PropTypes.func,
@@ -281,9 +284,11 @@ var CBA = React.createClass({
           <figure className='cba_map debug' >
             <div className='map__media' id="cba_map" />
           </figure>
-          <div className='cba_sidebar debug'>SideBar</div>
+          <div className='cba_sidebar debug'><SectionDetails rowId={this.props.rowId}/></div>
         </div>
-        <div className='cba_table debug'>TABLE</div>
+        <div className='cba_table debug'>
+          <CbaTable />
+        </div>
       </div>
     );
   },
@@ -317,7 +322,8 @@ export default compose(
       layer: state.exploreMap.layer,
       lng: state.map.lng,
       lat: state.map.lat,
-      zoom: state.map.zoom
+      zoom: state.map.zoom,
+      rowId: 1
     }),
     (dispatch, { activeRoad }) => ({
       setMapPosition: (lng, lat, zoom) => dispatch(setMapPosition(lng, lat, zoom)),
