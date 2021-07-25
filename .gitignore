@@ -27,3 +27,7 @@ env
 ## pyenv
 .python-version
 yarn-error.log
+
+
+# Pycharm/IntelliJ based IDE
+.idea
