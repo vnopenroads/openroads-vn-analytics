@@ -1,0 +1,51 @@
+.cba_table {
+    table {
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    .react-bs-table {
+        border: 1px solid #1f1e1e;
+    }
+
+    thead {
+        display: table-header-group;
+        vertical-align: middle;
+        border-color: inherit;
+    }
+    .table-bordered > thead > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > tfoot > tr > td {
+        border: 1px solid #ddd;
+    }
+
+    .react-bs-table .table-bordered > thead > tr > td, .react-bs-table .table-bordered>thead>tr>th {
+        height: 50px;
+        border-bottom: 1px solid black;
+    }
+    .react-bs-table-container {
+        display: block;
+        font-family: "Open Sans", Arial, sans-serif;
+        // line-height: 1.6;
+        // font-size: 16px;
+        // background: #fff;
+        // color: #848484;
+        // font-weight: 300;
+        overflow-x: hidden;
+        overflow-y: hidden;
+    }
+    .react-bs-container-header {
+        width: 100%;
+    }
+    .react-bs-table .table-bordered {
+        border: 0;
+        outline: 0!important;
+    }
+
+    .react-bs-table table {
+        margin-bottom: 0;
+        table-layout: fixed;
+    }
+    .react-bs-container-body {
+        overflow: auto;
+        width: 100%;
+    }
+}
