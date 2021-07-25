@@ -5,40 +5,43 @@
 
     border-style: solid;
     border-color: red;
-    border-width: 2pt;
+    border-width: 0pt;
 
 }
 
 .cba_inner {
     display: flex;
     flex-direction: row;
-    flex: 1 1 auto;
-    border-color: pink;
-    border-width: 2pt;
+    flex: 1;
+    border-color: magenta;
+    border-width: 0pt;
     border-style: solid;
     height: 100%;
 }
 
 .debug {
     border-color: greenyellow;
-    border-width: 2pt;
+    border-width: 0pt;
     border-style: solid;
 }
 
 .cba_map {
-    flex: 5 1 auto;
-    height: 550px;
-}
-
-#cba_map {
-  height: 100%;
-  width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex: 5;
 }
 
 .cba_sidebar {
-    flex: 1 1 auto;
+    flex: 1;
 }
 
 .cba_table {
-    flex: 1 1 auto;
+    flex: 1;
+}
+
+.map__media {
+    width: 100%;
+    background: $base-alpha-color;
+    height: 800px;
 }

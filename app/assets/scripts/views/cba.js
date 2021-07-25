@@ -281,9 +281,9 @@ var CBA = React.createClass({
     return (
       <div className='cba_container'>
         <div className='cba_inner'>
-          <figure className='cba_map debug' >
+          <div className='cba_map debug' >
             <div className='map__media' id="cba_map" />
-          </figure>
+          </div>
           <div className='cba_sidebar debug'><SectionDetails rowId={this.props.rowId}/></div>
         </div>
         <div className='cba_table debug'>
@@ -296,7 +296,7 @@ var CBA = React.createClass({
   renderInnerPage2: function() {
     return (
         <figure className='cba_map'>
-          <div className='map__media' id='cba_map'></div>
+          <div className='map__media'></div>
           <MapOptions layer={this.props.layer}
                       handleLayerChange={this.handleLayerChange}
                       handleShowNoVpromms={this.handleShowNoVpromms} />
