@@ -1,0 +1,5 @@
+- hosts: openroads-analytics
+  gather_facts: false
+  roles:
+    - common
+    - openroads-analytics
