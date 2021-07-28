@@ -2,13 +2,13 @@
 
 This repo contains the static assets that constitute the OpenRoads Vietnam website. This repository is also where Development Seed stores all GitHub tickets and planning for the ORMA–VN project. The other repos in this project include:
 
-- [API](https://github.com/orma/openroads-vn-api/)
-- [various workers](https://github.com/orma/openroads-vn-tiler)
-- [iD editor](https://github.com/orma/openroads-vn-iD)
-- [admin boundary generation](https://github.com/orma/openroads-vn-boundaries)
-- [raster tile generation](https://github.com/orma/openroads-tilemap)
+- [API](https://github.com/vnopenroads/openroads-vn-api/)
+- [various workers](https://github.com/vnopenroads/openroads-vn-tiler)
+- [iD editor](https://github.com/vnopenroads/openroads-vn-iD)
+- [admin boundary generation](https://github.com/vnopenroads/openroads-vn-boundaries)
+- [raster tile generation](https://github.com/vnopenroads/openroads-vn-tilemap)
 
-ORMA–VN is a deployment of the ORMA platform, originally built by Development Seed and the World Bank for use in the Philippines; several more repos may be found in the `orma` GitHub organization, pertaining to that or other deployments.
+ORMA–VN is a deployment of the ORMA platform, originally built by Development Seed and the World Bank for use in the Philippines; several more repos may be found in the `vnopenroads` GitHub organization, pertaining to that or other deployments.
 
 ## Platform functionality
 
@@ -92,7 +92,7 @@ To add new words to translate:
 $ tx pull && tx push -s
 ```
 
-the reason to pull then push is so that translations on transifex aren't overwritten (the behavior of tx push) 
+the reason to pull then push is so that translations on transifex aren't overwritten (the behavior of tx push)
 
 3. pull the new changes using tx pull once translations are complete on transifex
 

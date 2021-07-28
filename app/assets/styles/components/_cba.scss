@@ -1,0 +1,47 @@
+.cba_container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    border-style: solid;
+    border-color: red;
+    border-width: 0pt;
+
+}
+
+.cba_inner {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    border-color: magenta;
+    border-width: 0pt;
+    border-style: solid;
+    height: 100%;
+}
+
+.debug {
+    border-color: greenyellow;
+    border-width: 0pt;
+    border-style: solid;
+}
+
+.cba_map {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex: 5;
+}
+
+.cba_sidebar {
+    flex: 1;
+}
+
+.cba_table {
+    flex: 1;
+}
+
+.map__media {
+    width: 100%;
+    background: $base-alpha-color;
+    height: 800px;
+}

@@ -1,0 +1,19 @@
+- set_fact:
+    ansible_python_interpreter: "{{ ansible_playbook_python }}"
+  tags: localhost
+
+- debug:
+    msg: "The ansible python on localhost: {{ ansible_playbook_python }}"
+
+- pip:
+    name: stormssh
+
+
+- name: make sure that ssh config has required alias for mapmatcher host (used in inventory)
+  community.general.ssh_config:
+    user: "{{ ansible_user_id }}"
+    group: "staff"
+    host: "cba-worldbank"
+    hostname: "103.160.88.197"
+    state: present
+  tags: localhost

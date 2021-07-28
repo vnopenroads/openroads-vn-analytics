@@ -20,14 +20,16 @@ import {
 import {
   fetchRoadBboxEpic
 } from '../redux/modules/roads';
-import MapSearch from '../components/map-search';
 import MapOptions from '../components/map-options';
 import MapLegend from '../components/map-legend';
+import SitePage from '../components/site-page';
+import CbaTable from '../views/cba/table'
+import SectionDetails from '../views/cba/sidebar'
 import { withRouter } from 'react-router';
 
 
-var Explore = React.createClass({
-  displayName: 'Explore',
+var CBA = React.createClass({
+  displayName: 'CBA',
 
   propTypes: {
     layer: React.PropTypes.string,
@@ -35,6 +37,7 @@ var Explore = React.createClass({
     lng: React.PropTypes.number,
     lat: React.PropTypes.number,
     zoom: React.PropTypes.number,
+    rowId: React.PropTypes.number,
     selectExploreMapLayer: React.PropTypes.func,
     exploreMapShowNoVpromms: React.PropTypes.func,
     setMapPosition: React.PropTypes.func,
@@ -50,7 +53,7 @@ var Explore = React.createClass({
     }
 
     this.map = new mapboxgl.Map({
-      container: 'explore_map',
+      container: 'cba_map',
       style: 'mapbox://styles/mapbox/satellite-v9',
       failIfMajorPerformanceCaveat: false,
       center: [lng, lat],
@@ -274,32 +277,36 @@ var Explore = React.createClass({
     }
   },
 
-  render: function () {
+  renderInnerPage: function() {
     return (
-      <section className='inpage inpage--alt'>
-        <header className='inpage__header'>
-          <div className='inner'>
-            <div className='inpage__headline'>
-              <h1 className='inpage__title'><T>Explore</T></h1>
-            </div>
-            <div className='inpage__actions'>
-              <MapSearch page='explore' />
-            </div>
+      <div className='cba_container'>
+        <div className='cba_inner'>
+          <div className='cba_map debug' >
+            <div className='map__media' id="cba_map" />
           </div>
-        </header>
-        <div className='inpage__body'>
-          <div className='inner'>
-            <figure className='explore_map'>
-              <div className='map__media' id='explore_map'></div>
-              <MapOptions layer={this.props.layer}
-                          handleLayerChange={this.handleLayerChange}
-                          handleShowNoVpromms={this.handleShowNoVpromms} />
-              <MapLegend layer={this.props.layer} />
-            </figure>
-          </div>
+          <div className='cba_sidebar debug'><SectionDetails rowId={this.props.rowId}/></div>
         </div>
-      </section>
+        <div className='cba_table debug'>
+          <CbaTable />
+        </div>
+      </div>
     );
+  },
+
+  renderInnerPage2: function() {
+    return (
+        <figure className='cba_map'>
+          <div className='map__media'></div>
+          <MapOptions layer={this.props.layer}
+                      handleLayerChange={this.handleLayerChange}
+                      handleShowNoVpromms={this.handleShowNoVpromms} />
+          <MapLegend layer={this.props.layer} />
+        </figure>
+    );
+  },
+
+  render: function () {
+    return ( <SitePage pageName="CBA" innerPage={this.renderInnerPage()} noMargins={true} /> );
   }
 });
 
@@ -315,7 +322,8 @@ export default compose(
       layer: state.exploreMap.layer,
       lng: state.map.lng,
       lat: state.map.lat,
-      zoom: state.map.zoom
+      zoom: state.map.zoom,
+      rowId: 1
     }),
     (dispatch, { activeRoad }) => ({
       setMapPosition: (lng, lat, zoom) => dispatch(setMapPosition(lng, lat, zoom)),
@@ -324,4 +332,4 @@ export default compose(
       fetchActiveRoad: (activeRoad) => dispatch(fetchRoadBboxEpic(activeRoad))
     })
   )
-)(Explore);
+)(CBA);

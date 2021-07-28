@@ -34,22 +34,24 @@ const MapLegend = ({ layer }) => {
   }
 
   return (
-    <figcaption className='panel legend-panel'>
-      <div className='panel__body'>
-        <h3 className='map-legend-title'>{renderTitle(layer)}</h3>
-        <div>
-          <div className='map-legend-scale-container'>
-            <div className='map-legend-scale' />
-            <span className='map-legend-scale-label'>{ bestColorLabel }</span>
-            <span className='map-legend-scale-label'>{ worstColorLabel }</span>
-          </div>
-          <div className='map-legend-nodata-container'>
-            <div className='map-legend-nodata' />
-            <span className='map-legend-nodata-label'><T>No data</T></span>
+    <div className='map__controls map__controls--bottom-right'>
+      <figcaption className='panel legend-panel'>
+        <div className='panel__body'>
+          <h3 className='map-legend-title'>{renderTitle(layer)}</h3>
+          <div>
+            <div className='map-legend-scale-container'>
+              <div className='map-legend-scale' />
+              <span className='map-legend-scale-label'>{ bestColorLabel }</span>
+              <span className='map-legend-scale-label'>{ worstColorLabel }</span>
+            </div>
+            <div className='map-legend-nodata-container'>
+              <div className='map-legend-nodata' />
+              <span className='map-legend-nodata-label'><T>No data</T></span>
+            </div>
           </div>
         </div>
-      </div>
-    </figcaption>
+      </figcaption>
+    </div>
   );
 };
 

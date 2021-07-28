@@ -1,0 +1,33 @@
+
+.cba_sidebar {
+    .detail {
+        font-weight: bold;
+        text-align: center;
+        padding: 10px;
+        border-bottom: 1px solid #1f1e1e;
+        font-size: 130%;
+    }
+
+    .title {
+        padding: 5px;
+        background-color: beige;
+        font-weight: 460;
+    }
+
+    .inner {
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .inner-left {
+        flex: 1;
+    }
+    .inner-right {
+        text-align: right;
+        flex: 1;
+    }
+
+    overflow: scroll;
+    height: 800px;
+    display: inline-block;
+}
