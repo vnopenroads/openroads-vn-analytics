@@ -1,0 +1,37 @@
+- block:
+
+  - name: Create app directory
+    ansible.builtin.file:
+      path: "{{ react_app_dir }}"
+      state: directory
+
+  - name: Build the app locally
+    shell:
+      chdir: ../../
+      cmd: |
+        export NVM_DIR=~/.nvm && source /usr/local/opt/nvm/nvm.sh && nvm use && yarn run build
+    delegate_to: localhost
+    register: output
+
+  - name: Deploy the built app
+    synchronize:
+      src: ../../dist/
+      dest: "{{ react_app_dir }}"
+    notify: restart nginx
+
+  - name: Template out the nginx vhost config
+    ansible.builtin.template:
+      src: nginx-react-app.conf
+      dest: /etc/nginx/sites-available/react-app.conf
+    become: true
+    notify: restart nginx
+
+  - name: Symlink the vhost config from available to enabled
+    ansible.builtin.file:
+      src: /etc/nginx/sites-available/react-app.conf
+      dest: /etc/nginx/sites-enabled/react-app.conf
+      state: link
+    become: true
+    notify: restart nginx
+
+  tags: react-app

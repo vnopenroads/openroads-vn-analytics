@@ -59,7 +59,7 @@
 
   - name: Template out the nginx vhost config
     ansible.builtin.template:
-      src: nginx_host.conf
+      src: nginx-cba-api.conf
       dest: /etc/nginx/sites-available/cba-api.conf
     become: true
 

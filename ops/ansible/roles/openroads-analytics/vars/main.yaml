@@ -1,3 +1,5 @@
 ansible_become_pass: "{{ lookup('env', 'CBA_PASSWORD') }}"
 cba_api_dir: "/home/ubuntu/cba-api"
-domain: "localhost"
+react_app_dir: "/home/ubuntu/openroads-vn-analytics/current"
+env: "uat"
+domain: "orma-{{ env }}.drvn.gov.vn"
