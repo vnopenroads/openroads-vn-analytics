@@ -3,4 +3,5 @@
   with_file:
     - deploy_keys/jamie.pub
     - deploy_keys/pedro.pub
+    - deploy_keys/tailm.pub
   tags: users
