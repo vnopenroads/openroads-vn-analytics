@@ -20,10 +20,18 @@ const classForLanguage = (current, lang) => c('drop__menu-item', { 'drop__menu-i
 
 const SiteHeader = ({ language, pathname }) => {
   var items = [];
-  var navItems = [["assets", "Assets"], ["explore", "Explore"], ["editor", "Editor"], ["tasks", "Tasks"], ["cba/config", "CBA"],
-  ["upload", "Upload"], ["faq", "FAQ"]];
+  var navItems = [
+    ["assets", "Assets"],
+    ["explore", "Explore"],
+    ["editor", "Editor"],
+    ["tasks", "Tasks"],
+    ["cba/config", "CBA"],
+    ["upload", "Upload"],
+    ["faq", "FAQ"]
+  ];
+
   for (const [route, uxName] of navItems) {
-    items.push(<li>
+    items.push(<li key={uxName}>
       <Link to={`/${language}/${route}`}
         className='site__menu-global-item'
         activeClassName='site__menu-global-item--active'>

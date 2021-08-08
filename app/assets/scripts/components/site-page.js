@@ -9,7 +9,7 @@ const SitePage = ({ pageName, innerPage, noMargins, language, subPageNav }) => {
 
   var subPageNav = subPageNav.map((subPageName) => {
     return (
-      <li>
+      <li key={subPageName}>
         <Link to={`/${language}/${pageName}/${subPageName}`} className='inpage__menu-link' activeClassName='inpage__menu-link--active' title={subPageName}>
           <span><T>{subPageName}</T></span>
         </Link>

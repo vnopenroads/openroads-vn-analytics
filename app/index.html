@@ -1,67 +1,76 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="description" content="Mapping, tracking and visualizing road projects in Vietnam for inclusive growth." />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <title>OpenRoads Vietnam</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="Mapping, tracking and visualizing road projects in Vietnam for inclusive growth." />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="@vgovernment" />
-    <meta name="twitter:title" content="OpenRoads Vietnam" />
-    <meta name="twitter:description" content="Mapping, tracking and visualizing road projects in Vietnam for inclusive growth." />
-    <meta name="twitter:image:src" content="assets/graphics/meta/default-meta-image.png" />
-    <!--/ Twitter -->
+  <title>OpenRoads Vietnam</title>
 
-    <!-- OG -->
-    <meta property="og:site_name" content="OpenRoads Vietnam" />
-    <meta property="og:title" content="OpenRoads Vietnam" />
-    <meta property="og:url" content="" />
-    <meta property="og:type" content="website" />
-    <meta property="og:description" content="Mapping, tracking and visualizing road projects in Vietnam for inclusive growth." />
-    <meta property="og:image" content="assets/graphics/meta/default-meta-image.png" />
-    <!--/ OG -->
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@vgovernment" />
+  <meta name="twitter:title" content="OpenRoads Vietnam" />
+  <meta name="twitter:description"
+    content="Mapping, tracking and visualizing road projects in Vietnam for inclusive growth." />
+  <meta name="twitter:image:src" content="assets/graphics/meta/default-meta-image.png" />
+  <!--/ Twitter -->
 
-    <link rel="shortcut icon" href="assets/graphics/meta/favicon.ico" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="assets/graphics/meta/apple-touch-icon.png" />
-    <link rel="apple-touch-icon" sizes="57x57" href="assets/graphics/meta/apple-touch-icon-57x57.png" />
-    <link rel="apple-touch-icon" sizes="72x72" href="assets/graphics/meta/apple-touch-icon-72x72.png" />
-    <link rel="apple-touch-icon" sizes="76x76" href="assets/graphics/meta/apple-touch-icon-76x76.png" />
-    <link rel="apple-touch-icon" sizes="114x114" href="assets/graphics/meta/apple-touch-icon-114x114.png" />
-    <link rel="apple-touch-icon" sizes="120x120" href="assets/graphics/meta/apple-touch-icon-120x120.png" />
-    <link rel="apple-touch-icon" sizes="144x144" href="assets/graphics/meta/apple-touch-icon-144x144.png" />
-    <link rel="apple-touch-icon" sizes="152x152" href="assets/graphics/meta/apple-touch-icon-152x152.png" />
+  <!-- OG -->
+  <meta property="og:site_name" content="OpenRoads Vietnam" />
+  <meta property="og:title" content="OpenRoads Vietnam" />
+  <meta property="og:url" content="" />
+  <meta property="og:type" content="website" />
+  <meta property="og:description"
+    content="Mapping, tracking and visualizing road projects in Vietnam for inclusive growth." />
+  <meta property="og:image" content="assets/graphics/meta/default-meta-image.png" />
+  <!--/ OG -->
 
-    <link rel="author" type="text/plain" href="humans.txt" />
+  <link rel="shortcut icon" href="assets/graphics/meta/favicon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" href="assets/graphics/meta/apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="57x57" href="assets/graphics/meta/apple-touch-icon-57x57.png" />
+  <link rel="apple-touch-icon" sizes="72x72" href="assets/graphics/meta/apple-touch-icon-72x72.png" />
+  <link rel="apple-touch-icon" sizes="76x76" href="assets/graphics/meta/apple-touch-icon-76x76.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="assets/graphics/meta/apple-touch-icon-114x114.png" />
+  <link rel="apple-touch-icon" sizes="120x120" href="assets/graphics/meta/apple-touch-icon-120x120.png" />
+  <link rel="apple-touch-icon" sizes="144x144" href="assets/graphics/meta/apple-touch-icon-144x144.png" />
+  <link rel="apple-touch-icon" sizes="152x152" href="assets/graphics/meta/apple-touch-icon-152x152.png" />
 
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300italic,400italic,700italic,400,300,700" />
+  <link rel="author" type="text/plain" href="humans.txt" />
 
-    <!-- build:css assets/styles/vendor.css -->
-    <!-- endbuild -->
+  <link rel="stylesheet" type="text/css"
+    href="//fonts.googleapis.com/css?family=Roboto:300italic,400italic,700italic,400,300,700" />
 
-    <link rel="stylesheet" href="https://unpkg.com/react-select@1.2.1/dist/react-select.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <!-- build:css assets/styles/vendor.css -->
+  <!-- endbuild -->
+
+  <link rel="stylesheet" href="https://unpkg.com/react-select@1.2.1/dist/react-select.css">
 
 
-    <!-- build:css assets/styles/main.css -->
-    <link rel="stylesheet" href="assets/styles/main.css">
-    <!-- endbuild -->
+  <!-- build:css assets/styles/main.css -->
+  <link rel="stylesheet" href="assets/styles/main.css">
+  <!-- endbuild -->
 
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
-    
-  </head>
-  <body>
-    <div class="site-canvas" id="site-canvas">
-      <!-- React will handle content. See main.js -->
-    </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
 
-    <!-- build:js assets/scripts/vendor.js -->
-    <script src="assets/scripts/vendor.js"></script>
-    <!-- endbuild -->
-    <!-- build:js assets/scripts/bundle.js -->
-    <script src="assets/scripts/bundle.js"></script>
-    <!-- endbuild -->
-  </body>
+</head>
+
+<body>
+  <div class="site-canvas" id="site-canvas">
+    <!-- React will handle content. See main.js -->
+  </div>
+
+  <!-- build:js assets/scripts/vendor.js -->
+  <script src="assets/scripts/vendor.js"></script>
+  <!-- endbuild -->
+  <!-- build:js assets/scripts/bundle.js -->
+  <script src="assets/scripts/bundle.js"></script>
+  <!-- endbuild -->
+</body>
+
 </html>

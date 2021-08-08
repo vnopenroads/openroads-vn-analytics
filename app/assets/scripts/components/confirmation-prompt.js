@@ -19,6 +19,8 @@ export default class ConfirmationPrompt extends React.Component {
       description: null,
       body: <p>Are you sure</p>
     };
+
+    this.keyListener = this.keyListener.bind(this);
   }
 
   keyListener(e) {
@@ -45,7 +47,6 @@ export default class ConfirmationPrompt extends React.Component {
     }
     theConfirmationModal = this;
     document.addEventListener('keyup', this.keyListener);
-    console.log(this.state)
   }
 
   componentWillUnmount() {
