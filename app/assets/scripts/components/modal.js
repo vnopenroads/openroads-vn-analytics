@@ -1,10 +1,11 @@
 'use strict';
-import React, { PropTypes as T } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Portal } from 'react-portal';
 import { CSSTransition } from 'react-transition-group';
 
 export class Modal extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.componentAddedBodyClass = false;
@@ -19,7 +20,7 @@ export class Modal extends React.Component {
     if (!this.rootEl) throw new Error('Portal root element does not exist.');
   }
 
-  keyListener (e) {
+  keyListener(e) {
     // ESC.
     if (this.props.revealed && e.keyCode === 27) {
       e.preventDefault();
@@ -27,21 +28,7 @@ export class Modal extends React.Component {
     }
   }
 
-  // closeModal () {
-  //   this.setState({ revealed: false });
-  // },
-
-  // openModal () {
-  //   this.setState({ revealed: true });
-  // },
-
-  // getInitialState () {
-  //   return {
-  //     revealed: this.props.revealed
-  //   };
-  // },
-
-  toggleBodyClass (revealed) {
+  toggleBodyClass(revealed) {
     let bd = document.getElementsByTagName('body')[0];
     if (revealed) {
       this.componentAddedBodyClass = true;
@@ -53,25 +40,25 @@ export class Modal extends React.Component {
     }
   }
 
-  componentDidUpdate () {
+  componentDidUpdate() {
     this.toggleBodyClass(this.props.revealed);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     document.addEventListener('keyup', this.keyListener);
     this.toggleBodyClass(this.props.revealed);
 
     this.rootEl.appendChild(this.el);
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     document.removeEventListener('keyup', this.keyListener);
     this.toggleBodyClass(false);
 
     this.rootEl.removeChild(this.el);
   }
 
-  onOverlayClick (e) {
+  onOverlayClick(e) {
     // Prevent children from triggering this.
     if (e.target === e.currentTarget) {
       // Overlay click is disabled.
@@ -79,12 +66,12 @@ export class Modal extends React.Component {
     }
   }
 
-  onCloseClick (e) {
+  onCloseClick(e) {
     e.preventDefault();
     this.props.onCloseClick(e);
   }
 
-  getChild (klass) {
+  getChild(klass) {
     let c = null;
     React.Children.forEach(this.props.children, o => {
       if (!c && o.type === klass) {
@@ -94,7 +81,7 @@ export class Modal extends React.Component {
     return c;
   }
 
-  render () {
+  render() {
     var klasses = ['modal'];
     if (this.props.className) {
       klasses.push(this.props.className);
@@ -142,11 +129,11 @@ Modal.defaultProps = {
 
 if (process.env.NODE_ENV !== 'production') {
   Modal.propTypes = {
-    id: T.string.isRequired,
-    revealed: T.bool,
-    className: T.string,
-    onOverlayClick: T.func,
-    onCloseClick: T.func,
+    id: PropTypes.string.isRequired,
+    revealed: PropTypes.bool,
+    className: PropTypes.string,
+    onOverlayClick: PropTypes.func,
+    onCloseClick: PropTypes.func,
     children: function (props, propName, componentName) {
       let types = ['ModalHeader', 'ModalBody', 'ModalFooter'];
       let typesRequired = ['ModalHeader', 'ModalBody'];
@@ -183,7 +170,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 export class ModalHeader extends React.Component {
-  render () {
+  render() {
     return (
       <header className='modal__header'>
         {this.props.children}
@@ -194,12 +181,12 @@ export class ModalHeader extends React.Component {
 
 if (process.env.NODE_ENV !== 'production') {
   ModalHeader.propTypes = {
-    children: T.node
+    children: PropTypes.node
   };
 }
 
 export class ModalBody extends React.Component {
-  render () {
+  render() {
     return (
       <div className='modal__body'>
         {this.props.children}
@@ -210,12 +197,12 @@ export class ModalBody extends React.Component {
 
 if (process.env.NODE_ENV !== 'production') {
   ModalBody.propTypes = {
-    children: T.node
+    children: PropTypes.node
   };
 }
 
 export class ModalFooter extends React.Component {
-  render () {
+  render() {
     return (
       <footer className='modal__footer'>
         {this.props.children}
@@ -226,6 +213,6 @@ export class ModalFooter extends React.Component {
 
 if (process.env.NODE_ENV !== 'production') {
   ModalFooter.propTypes = {
-    children: T.node
+    children: PropTypes.node
   };
 }

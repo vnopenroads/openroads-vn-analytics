@@ -1,5 +1,6 @@
 'use strict';
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   compose,
@@ -17,7 +18,7 @@ import { fetchRoadCountEpic, mergeAA } from '../redux/modules/road-count';
 import { round } from '../utils/format';
 
 export class AssetsIndex extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -25,27 +26,27 @@ export class AssetsIndex extends React.Component {
     };
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.fetchAdminStats();
     this.props.fetchRoadCountEpic();
   }
 
-  onExpandToggle (id, e) {
+  onExpandToggle(id, e) {
     e.preventDefault();
     const expIds = this.state.expanded;
 
     if (this.isExpanded(id)) {
-      this.setState({expanded: expIds.filter(o => o !== id)});
+      this.setState({ expanded: expIds.filter(o => o !== id) });
     } else {
-      this.setState({expanded: expIds.concat(id)});
+      this.setState({ expanded: expIds.concat(id) });
     }
   }
 
-  isExpanded (id) {
+  isExpanded(id) {
     return this.state.expanded.indexOf(id) !== -1;
   }
 
-  renderStats () {
+  renderStats() {
     const lang = this.props.language;
     const { fetching, fetched, data } = this.props.adminStats;
 
@@ -109,7 +110,7 @@ export class AssetsIndex extends React.Component {
     );
   }
 
-  renderTable () {
+  renderTable() {
     const lang = this.props.language;
     const { fetching, fetched, data } = this.props.adminStats;
     const nameVar = lang === 'en' ? 'name_en' : 'name_vn';
@@ -120,7 +121,7 @@ export class AssetsIndex extends React.Component {
 
     return (
       <table className='table table--aa'>
-        <StatsTableHeader type='province'/>
+        <StatsTableHeader type='province' />
 
         {_.sortBy(data.provinces, nameVar).map(province => {
           const pId = province.id;
@@ -141,7 +142,7 @@ export class AssetsIndex extends React.Component {
               <div className='table-details-wrapper'>
                 {districts.length ? (
                   <table className='table table--aa'>
-                    <StatsTableHeader type='province-district'/>
+                    <StatsTableHeader type='province-district' />
                     <tbody>
                       {_.sortBy(districts, nameVar).map(district => {
                         const dId = district.id;
@@ -171,7 +172,7 @@ export class AssetsIndex extends React.Component {
     );
   }
 
-  render () {
+  render() {
     const { fetched, error } = this.props.adminStats;
 
     if (fetched && error) {
@@ -218,7 +219,7 @@ if (environment !== 'production') {
 }
 
 export default compose(
-  getContext({ language: React.PropTypes.string }),
+  getContext({ language: PropTypes.string }),
   connect(
     state => {
       if (state.adminStats.index.fetched && !state.adminStats.index.error && state.roadCount.index.status === 'complete') {
@@ -230,7 +231,7 @@ export default compose(
             data: {
               provinces: state.adminStats.index.data.provinces.map(prov => {
                 const districts = prov.districts.map(district => mergeAA(district, countData, [prov.code, 'district', district.code]));
-                return mergeAA(prov, countData, [prov.code], {districts});
+                return mergeAA(prov, countData, [prov.code], { districts });
               })
             }
           }

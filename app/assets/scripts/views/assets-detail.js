@@ -1,5 +1,6 @@
 /* eslint-disable react/no-deprecated */
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   toPairs,
@@ -58,7 +59,7 @@ import { showConfirm } from '../components/confirmation-prompt';
 mapboxgl.accessToken = mbToken;
 
 class AssetsDetail extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.onEditDelete = this.onEditDelete.bind(this);
@@ -72,13 +73,13 @@ class AssetsDetail extends React.Component {
     };
   }
 
-  componentWillMount () {
+  componentWillMount() {
     const { vpromm, fetchRoadProperty, fetchRoadGeometry } = this.props;
     fetchRoadProperty(vpromm);
     fetchRoadGeometry(vpromm);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.map = new mapboxgl.Map({
       container: 'asset-map',
       center: [106.12774207395364, 16.185396038978936],
@@ -104,7 +105,7 @@ class AssetsDetail extends React.Component {
     document.querySelector('.mapboxgl-ctrl .mapboxgl-ctrl-compass').remove();
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (this.props.vpromm !== nextProps.vpromm) {
       this.props.fetchRoadProperty(nextProps.vpromm);
       this.props.fetchRoadGeometry(nextProps.vpromm);
@@ -116,7 +117,7 @@ class AssetsDetail extends React.Component {
     }
   }
 
-  setupMapStyle () {
+  setupMapStyle() {
     const { fetched, data } = this.props.roadGeo;
 
     if (!fetched) return;
@@ -156,7 +157,7 @@ class AssetsDetail extends React.Component {
     }
   }
 
-  onModalClose (data = {}) {
+  onModalClose(data = {}) {
     this.setState({ editModalOpen: false });
     if (data.action === 'refresh') {
       // Why the setTimeout you ask?
@@ -166,16 +167,16 @@ class AssetsDetail extends React.Component {
       // This is meant to refresh the data after properties are saved.
       setTimeout(() => { this.props.fetchRoadProperty(this.props.vpromm); }, 0);
     } else if (data.action === 'redirect') {
-      setTimeout(() => { this.props.router.push({pathname: `/${this.props.language}/assets/road/${data.vpromm}/`}); }, 0);
+      setTimeout(() => { this.props.router.push({ pathname: `/${this.props.language}/assets/road/${data.vpromm}/` }); }, 0);
     }
   }
 
-  onEditProperties (e) {
+  onEditProperties(e) {
     e.preventDefault();
     this.setState({ editModalOpen: true });
   }
 
-  onEditDelete (e) {
+  onEditDelete(e) {
     e.preventDefault();
     showConfirm({
       title: 'Delete asset',
@@ -186,11 +187,11 @@ class AssetsDetail extends React.Component {
       )
     }, () => {
       this.props.deleteRoad(this.props.vpromm);
-      this.props.router.push({pathname: `/${this.props.language}/assets`});
+      this.props.router.push({ pathname: `/${this.props.language}/assets` });
     });
   }
 
-  async onStateChange (status, e) {
+  async onStateChange(status, e) {
     e.preventDefault();
 
     try {
@@ -201,19 +202,19 @@ class AssetsDetail extends React.Component {
     }
   }
 
-  hasGeometry () {
+  hasGeometry() {
     const { roadGeo } = this.props;
     return roadGeo.fetched ? get(roadGeo, 'data.features', []).length > 0 : true;
   }
 
-  renderProperties () {
+  renderProperties() {
     const { fetched, data } = this.props.roadProps;
     if (!fetched) return null;
 
     // calculate length if length is null
     if (this.props.roadGeo && this.props.roadGeo.data && this.props.roadGeo.data.features && this.props.roadGeo.data.features.length > 0 && !data.properties.length) {
       const roadGeo = this.props.roadGeo.data;
-      const roadLength = length(roadGeo, {units: 'kilometers'});
+      const roadLength = length(roadGeo, { units: 'kilometers' });
       data.properties.length = roadLength;
     }
 
@@ -258,15 +259,15 @@ class AssetsDetail extends React.Component {
     );
   }
 
-  highlightMap (id) {
+  highlightMap(id) {
     this.map.setFilter('road-geometry-highlight', ['==', 'way_id', id]);
   }
 
-  unhighlightMap (id) {
+  unhighlightMap(id) {
     this.map.setFilter('road-geometry-highlight', ['==', 'way_id', '']);
   }
 
-  renderSections () {
+  renderSections() {
     if (!this.hasGeometry()) {
       return (
         <div>No Section Data Available</div>
@@ -282,7 +283,7 @@ class AssetsDetail extends React.Component {
     //   'or_vpromms',
     //   'highway'
     // ];
-     let filteredProps = allProps.filter(p => {
+    let filteredProps = allProps.filter(p => {
       return ignoreProps.indexOf(p) === -1;
     });
     let header = ['Way ID'];
@@ -302,8 +303,8 @@ class AssetsDetail extends React.Component {
       });
       headerLabels.sort();
       header = header.concat(headerLabels);
-      filteredProps.sort((a, b) => { 
-        if(sectionFields[a] && sectionFields[b]){
+      filteredProps.sort((a, b) => {
+        if (sectionFields[a] && sectionFields[b]) {
           return headerLabels.indexOf(sectionFields[a].label) > headerLabels.indexOf(sectionFields[b].label) ? 1 : -1;
         }
         return false;
@@ -347,7 +348,7 @@ class AssetsDetail extends React.Component {
     );
   }
 
-  renderReviewStatus () {
+  renderReviewStatus() {
     const stateMap = {
       'pending': translate(this.props.language, 'Pending'),
       'reviewed': translate(this.props.language, 'Reviewed')
@@ -355,7 +356,7 @@ class AssetsDetail extends React.Component {
 
     const reviewState = this.props.roadProps.data.status || 'pending';
     const triggerText = this.props.roadProps.fetched ? stateMap[reviewState] : 'Loading';
-    const classForState = (state) => c('drop__menu-item', {'drop__menu-item--active': reviewState === state});
+    const classForState = (state) => c('drop__menu-item', { 'drop__menu-item--active': reviewState === state });
 
     return (
       <Dropdown
@@ -375,28 +376,28 @@ class AssetsDetail extends React.Component {
     );
   }
 
-  onTabClick (tab, e) {
+  onTabClick(tab, e) {
     e.preventDefault();
     this.setState({ activeTab: tab });
   }
 
-  renderTabs () {
+  renderTabs() {
     const tabs = [
-      {key: 'attributes', label: 'Attributes'},
-      {key: 'sections', label: 'Sections'}
+      { key: 'attributes', label: 'Attributes' },
+      { key: 'sections', label: 'Sections' }
     ];
     return (
       <ul className='nav-tabs'>
         {tabs.map(t => (
           <li key={t.key}>
-            <a href='#' className={c({'tab--active': this.state.activeTab === t.key})} title={translate(this.props.language, 'Switch tab')} onClick={this.onTabClick.bind(this, t.key)}><T>{t.label}</T></a>
+            <a href='#' className={c({ 'tab--active': this.state.activeTab === t.key })} title={translate(this.props.language, 'Switch tab')} onClick={this.onTabClick.bind(this, t.key)}><T>{t.label}</T></a>
           </li>
         ))}
       </ul>
     );
   }
 
-  render () {
+  render() {
     const { vpromm, language, roadProps, roadGeo } = this.props;
     const disId = get(roadProps, 'data.district.id', null);
     const disName = get(roadProps, 'data.district.name', null);
@@ -440,7 +441,7 @@ class AssetsDetail extends React.Component {
               alignment='right' >
               <ul className='drop__menu drop__menu--iconified edit-menu'>
                 <li><a href='#' className='drop__menu-item em-attributes' onClick={this.onEditProperties}>Attributes</a></li>
-                <li><Link to={`/${language}/editor?center=${featCenter.join('/')}`} className={c('drop__menu-item em-geometry', {disabled: !hasGeometry})} disabled={!hasGeometry}>Geometry</Link></li>
+                <li><Link to={`/${language}/editor?center=${featCenter.join('/')}`} className={c('drop__menu-item em-geometry', { disabled: !hasGeometry })} disabled={!hasGeometry}>Geometry</Link></li>
               </ul>
               <ul className='drop__menu drop__menu--iconified'>
                 <li><a href='#' className='drop__menu-item em-delete' onClick={this.onEditDelete}>Delete</a></li>
@@ -509,13 +510,13 @@ const stateRoadProps = {
 const reducerRoadProps = (state = stateRoadProps, action) => {
   switch (action.type) {
     case FETCH_ROAD_PROPERTY:
-      return {...state, fetching: true, fetched: false, error: false};
+      return { ...state, fetching: true, fetched: false, error: false };
     case FETCH_ROAD_PROPERTY_ERROR:
-      return {...state, fetching: false, fetched: true, error: true};
+      return { ...state, fetching: false, fetched: true, error: true };
     case FETCH_ROAD_PROPERTY_SUCCESS:
-      return {...state, fetching: false, fetched: true, data: action.properties};
+      return { ...state, fetching: false, fetched: true, data: action.properties };
     case EDIT_ROAD_STATUS_SUCCESS:
-      return {...state, data: {...state.data, status: action.value}};
+      return { ...state, data: { ...state.data, status: action.value } };
   }
 
   return state;
@@ -531,11 +532,11 @@ const stateRoadGeo = {
 const reducerRoadGeo = (state = stateRoadGeo, action) => {
   switch (action.type) {
     case FETCH_ROAD_GEOMETRY:
-      return {...state, fetching: true, fetched: false, error: false};
+      return { ...state, fetching: true, fetched: false, error: false };
     case FETCH_ROAD_GEOMETRY_ERROR:
-      return {...state, fetching: false, fetched: true, error: true};
+      return { ...state, fetching: false, fetched: true, error: true };
     case FETCH_ROAD_GEOMETRY_SUCCESS:
-      return {...state, fetching: false, fetched: true, data: action.geoJSON};
+      return { ...state, fetching: false, fetched: true, data: action.geoJSON };
   }
 
   return state;
@@ -551,11 +552,11 @@ const stateOpOnRoad = {
 const reducerOpOnRoad = (state = stateOpOnRoad, action) => {
   switch (action.type) {
     case OP_ON_ROAD_PROPERTY:
-      return {...state, processing: true, error: false};
+      return { ...state, processing: true, error: false };
     case OP_ON_ROAD_PROPERTY_SUCCESS:
-      return {...state, processing: false, error: false, data: action.data};
+      return { ...state, processing: false, error: false, data: action.data };
     case OP_ON_ROAD_PROPERTY_ERROR:
-      return {...state, processing: false, error: true};
+      return { ...state, processing: false, error: true };
   }
 
   return state;
@@ -574,7 +575,7 @@ const reducer = combineReducers({
 // to merge both therefore we're handling everything here.
 export default compose(
   withRouter,
-  getContext({ language: React.PropTypes.string }),
+  getContext({ language: PropTypes.string }),
   withProps(({ language, params: { vpromm } }) => {
     const [aaId, { name }] = find(
       toPairs(ADMIN_MAP.province),

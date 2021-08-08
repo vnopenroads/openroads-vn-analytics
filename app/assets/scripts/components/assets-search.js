@@ -1,5 +1,6 @@
 'use strict';
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   compose,
   getContext
@@ -27,7 +28,7 @@ import BaseSearch from './base-search';
 
 
 export default compose(
-  getContext({ language: React.PropTypes.string }),
+  getContext({ language: PropTypes.string }),
   withRouter,
   // withProps(({ location: { query: { activeRoad } } }) => ({
   //   activeRoad

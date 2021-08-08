@@ -1,10 +1,20 @@
 'use strict';
 import React from 'react';
+import { Link } from 'react-router';
 import T from '../components/t';
 
-const SitePage = ({ pageName, innerPage, noMargins }) => {
+const SitePage = ({ pageName, innerPage, noMargins, language, subPageNav }) => {
   var inpageClasses = "inpage";
   if (noMargins) { inpageClasses += " inpage--alt" }
+
+  var subPageNav = subPageNav.map((subPageName) => {
+    return (
+      <li>
+        <Link to={`/${language}/${pageName}/${subPageName}`} className='inpage__menu-link' activeClassName='inpage__menu-link--active' title={subPageName}>
+          <span><T>{subPageName}</T></span>
+        </Link>
+      </li>);
+  });
 
   return (
     <section className={inpageClasses}>
@@ -12,6 +22,13 @@ const SitePage = ({ pageName, innerPage, noMargins }) => {
         <div className='inner'>
           <div className='inpage__headline'>
             <h1 className='inpage__title'><T>{pageName}</T></h1>
+          </div>
+          <nav className='inpage__nav'>
+            <ul className='inpage__menu'>
+              {subPageNav}
+            </ul>
+          </nav>
+          <div className='inpage__actions'>
           </div>
         </div>
       </header>
@@ -21,6 +38,7 @@ const SitePage = ({ pageName, innerPage, noMargins }) => {
         </div>
       </div>
     </section>
-  )};
+  )
+};
 
 export default SitePage;

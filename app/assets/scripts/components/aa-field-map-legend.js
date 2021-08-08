@@ -1,15 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import lineColors from '../utils/line-colors';
 import T from './t';
 
-const AAFieldMapLegend = React.createClass({
-  displayName: 'AAFieldMapLegend',
+export default class AAFieldMapLegend extends React.Component {
 
-  propTypes: {
-    sources: React.PropTypes.array
-  },
-
-  renderLegendElements: function () {
+  renderLegendElements() {
     // for each source as the source name
     // as well as a small svg path with the color
     // matching source in the lineColors config
@@ -25,9 +21,9 @@ const AAFieldMapLegend = React.createClass({
         </li>
       );
     });
-  },
+  }
 
-  render: function () {
+  render() {
     return (
       <div className='aa-map-legend'>
         <h3 className='aa-map-legend-title'><T>Field Data Sources</T></h3>
@@ -37,6 +33,8 @@ const AAFieldMapLegend = React.createClass({
       </div>
     );
   }
-});
+};
 
-module.exports = AAFieldMapLegend;
+AAFieldMapLegend.propTypes = {
+  sources: PropTypes.array
+};

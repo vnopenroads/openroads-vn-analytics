@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   compose,
@@ -26,22 +27,9 @@ import MapLegend from '../components/map-legend';
 import { withRouter } from 'react-router';
 
 
-var Explore = React.createClass({
-  displayName: 'Explore',
+class Explore extends React.Component {
 
-  propTypes: {
-    layer: React.PropTypes.string,
-    activeRoad: React.PropTypes.string,
-    lng: React.PropTypes.number,
-    lat: React.PropTypes.number,
-    zoom: React.PropTypes.number,
-    selectExploreMapLayer: React.PropTypes.func,
-    exploreMapShowNoVpromms: React.PropTypes.func,
-    setMapPosition: React.PropTypes.func,
-    fetchActiveRoad: React.PropTypes.func
-  },
-
-  componentDidMount: function () {
+  componentDidMount() {
     mapboxgl.accessToken = config.mbToken;
 
     const { lng, lat, zoom, activeRoad, language } = this.props;
@@ -214,9 +202,9 @@ var Explore = React.createClass({
         }
       });
     });
-  },
+  }
 
-  switchLayerTo: function (layer) {
+  switchLayerTo(layer) {
     this.map.setPaintProperty(
       'novpromm',
       'line-color',
@@ -232,9 +220,9 @@ var Explore = React.createClass({
         'line-color',
         lineColors[layer]
       );
-  },
+  }
 
-  componentWillReceiveProps: function ({ layer, lng, lat, zoom, activeRoad }) {
+  componentWillReceiveProps({ layer, lng, lat, zoom, activeRoad }) {
     if (this.props.layer !== layer) {
       this.switchLayerTo(layer);
     }
@@ -245,24 +233,24 @@ var Explore = React.createClass({
       this.map.setFilter('active_road', ['==', 'vpromm_id', activeRoad]);
       this.props.fetchActiveRoad(activeRoad);
     }
-  },
+  }
 
-  componentWillUnmount: function () {
+  componentWillUnmount() {
     const { lng, lat } = this.map.getCenter();
     const zoom = this.map.getZoom();
     this.props.setMapPosition(lng, lat, zoom);
-  },
+  }
 
-  handleLayerChange: function ({ target: { value } }) {
+  handleLayerChange({ target: { value } }) {
     this.props.selectExploreMapLayer(value);
     this.map.setPaintProperty(
       'vpromm',
       'line-color',
       lineColors[value]
     );
-  },
+  }
 
-  handleShowNoVpromms: function ({ target: { checked } }) {
+  handleShowNoVpromms({ target: { checked } }) {
     this.props.exploreMapShowNoVpromms(checked);
 
     if (checked) {
@@ -272,9 +260,9 @@ var Explore = React.createClass({
       this.map.setLayoutProperty('novpromm', 'visibility', 'none');
       this.map.setLayoutProperty('novpromm_dashed', 'visibility', 'none');
     }
-  },
+  }
 
-  render: function () {
+  render() {
     return (
       <section className='inpage inpage--alt'>
         <header className='inpage__header'>
@@ -292,8 +280,8 @@ var Explore = React.createClass({
             <figure className='explore_map'>
               <div className='map__media' id='explore_map'></div>
               <MapOptions layer={this.props.layer}
-                          handleLayerChange={this.handleLayerChange}
-                          handleShowNoVpromms={this.handleShowNoVpromms} />
+                handleLayerChange={this.handleLayerChange}
+                handleShowNoVpromms={this.handleShowNoVpromms} />
               <MapLegend layer={this.props.layer} />
             </figure>
           </div>
@@ -301,15 +289,26 @@ var Explore = React.createClass({
       </section>
     );
   }
-});
+};
 
+Explore.propTypes = {
+  layer: PropTypes.string,
+  activeRoad: PropTypes.string,
+  lng: PropTypes.number,
+  lat: PropTypes.number,
+  zoom: PropTypes.number,
+  selectExploreMapLayer: PropTypes.func,
+  exploreMapShowNoVpromms: PropTypes.func,
+  setMapPosition: PropTypes.func,
+  fetchActiveRoad: PropTypes.func
+};
 
 export default compose(
   withRouter,
   withProps(({ location: { query: { activeRoad = '' } } }) => ({
     activeRoad
   })),
-  getContext({ language: React.PropTypes.string }),
+  getContext({ language: PropTypes.string }),
   connect(
     state => ({
       layer: state.exploreMap.layer,

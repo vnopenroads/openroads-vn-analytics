@@ -3,14 +3,15 @@ import React from 'react';
 
 import { Modal, ModalHeader, ModalBody, ModalFooter } from './modal';
 
-const noop = () => {};
+const noop = () => { };
 // Once the component is mounted we store it to be able to access it from
 // the outside.
 var theConfirmationModal = null;
 
-const ConfirmationPrompt = React.createClass({
-  getInitialState: function () {
-    return {
+export default class ConfirmationPrompt extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       onConfirm: noop,
       onCancel: noop,
       revealed: false,
@@ -18,39 +19,40 @@ const ConfirmationPrompt = React.createClass({
       description: null,
       body: <p>Are you sure</p>
     };
-  },
+  }
 
-  keyListener: function (e) {
+  keyListener(e) {
     // Enter.
     if (this.state.revealed && e.keyCode === 13) {
       e.preventDefault();
       this.onConfirm();
     }
-  },
+  }
 
-  onConfirm: function () {
-    this.setState({revealed: false});
+  onConfirm() {
+    this.setState({ revealed: false });
     this.state.onConfirm();
-  },
+  }
 
-  onCancel: function () {
-    this.setState({revealed: false});
+  onCancel() {
+    this.setState({ revealed: false });
     this.state.onCancel();
-  },
+  }
 
-  componentDidMount: function () {
+  componentDidMount() {
     if (theConfirmationModal !== null) {
       throw new Error('<ConfirmationPrompt /> component was already mounted. Only 1 is allowed.');
     }
     theConfirmationModal = this;
     document.addEventListener('keyup', this.keyListener);
-  },
+    console.log(this.state)
+  }
 
-  componentWillUnmount: function () {
+  componentWillUnmount() {
     document.removeEventListener('keyup', this.keyListener);
-  },
+  }
 
-  render: function () {
+  render() {
     return (
       <Modal
         id='confirmation-prompt'
@@ -76,11 +78,9 @@ const ConfirmationPrompt = React.createClass({
       </Modal>
     );
   }
-});
+};
 
-export default ConfirmationPrompt;
-
-export function showConfirm (opt, onConfirm = noop, onCancel = noop) {
+export function showConfirm(opt, onConfirm = noop, onCancel = noop) {
   if (theConfirmationModal === null) {
     throw new Error('<ConfirmationPrompt /> component not mounted');
   }

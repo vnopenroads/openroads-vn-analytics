@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   compose,
   getContext,
@@ -15,29 +16,30 @@ import T, { translate } from '../components/t';
 
 const STATUS_POLL_INTERVAL = 2000; // in ms
 
-var Job = React.createClass({
+class Job extends React.Component {
   // propTypes: {
-  //   fetchJob: React.PropTypes.func,
-  //   language: React.PropTypes.string
+  //   fetchJob: PropTypes.func,
+  //   language: PropTypes.string
   // },
-  getInitialState: function () {
-    return {};
-  },
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     // if job does not have a return value yet, keep polling backend for status
     if (!nextProps.job.returnvalue) {
       setTimeout(() => {
         this.props.fetchJob(this.props.params.id);
       }, STATUS_POLL_INTERVAL);
     }
-  },
-  copyToClipboard () {
+  }
+  copyToClipboard() {
     const textarea = document.getElementById('api-response');
     textarea.select();
     document.execCommand('copy');
-  },
-  getMessage: function (value) {
+  }
+  getMessage(value) {
     if (typeof (value) === 'string') {
       return value;
     }
@@ -49,8 +51,8 @@ var Job = React.createClass({
       return value.message;
     }
     return '';
-  },
-  getStatusType: function (value) {
+  }
+  getStatusType(value) {
     if (value.changeset) {
       return 'success';
     } else if (value.type) {
@@ -58,8 +60,9 @@ var Job = React.createClass({
     } else {
       return 'error';
     }
-  },
-  render: function () {
+  }
+
+  render() {
     const { params, language, job } = this.props;
     const STATUS_MESSAGES = {
       'success': translate(language, 'Success'),
@@ -91,7 +94,7 @@ var Job = React.createClass({
             <div className='incontainer'>
               <div className='incontainer__header'>
                 <div className='incontainer__headline'>
-                  <h2 className='incontainer__title'><T>Job</T> #{ id }</h2>
+                  <h2 className='incontainer__title'><T>Job</T> #{id}</h2>
                 </div>
                 <div className='incontainer__hactions'>
                   <Link to={`/${language}/upload`} className='ica-upload ica-main' title='Upload'><span><T>New upload</T></span></Link>
@@ -100,25 +103,25 @@ var Job = React.createClass({
 
               <div className='incontainer__body'>
 
-                { statusType === 'success' &&
-                <div className='status-card status-card--success'>
-                  <h3>{ status }</h3>
-                  { msg && <p> { msg } </p> }
-                </div>
+                {statusType === 'success' &&
+                  <div className='status-card status-card--success'>
+                    <h3>{status}</h3>
+                    {msg && <p> {msg} </p>}
+                  </div>
                 }
 
-                { statusType === 'error' &&
-                <div className='status-card status-card--error'>
-                  <h3>{ status }</h3>
-                  { msg && <p> { msg } </p> }
-                </div>
+                {statusType === 'error' &&
+                  <div className='status-card status-card--error'>
+                    <h3>{status}</h3>
+                    {msg && <p> {msg} </p>}
+                  </div>
                 }
 
-                { statusType === 'inprocess' &&
-                <div className='status-card status-card--pending'>
-                  <h3>{ status }</h3>
-                  { msg && <p> { msg } </p> }
-                </div>
+                {statusType === 'inprocess' &&
+                  <div className='status-card status-card--pending'>
+                    <h3>{status}</h3>
+                    {msg && <p> {msg} </p>}
+                  </div>
                 }
 
                 <form className='form'>
@@ -128,10 +131,10 @@ var Job = React.createClass({
                         <label className='form__label' htmlFor='api-response'><T>API response</T></label>
                       </div>
                       <div className='form__inner-actions'>
-                        <button type='button' className='fia-clipboard' onClick={ this.copyToClipboard } title='Copy to clipboard'><span><T>Copy</T></span></button>
+                        <button type='button' className='fia-clipboard' onClick={this.copyToClipboard} title='Copy to clipboard'><span><T>Copy</T></span></button>
                       </div>
                     </div>
-                    <textarea className='form__control' id='api-response' rows='8' readOnly value={ JSON.stringify(job, null, '  ') } />
+                    <textarea className='form__control' id='api-response' rows='8' readOnly value={JSON.stringify(job, null, '  ')} />
                     <p className='form__help'><T>Details of upload job</T></p>
                   </div>
                 </form>
@@ -144,10 +147,10 @@ var Job = React.createClass({
       </section>
     );
   }
-});
+};
 
 export default compose(
-  getContext({ language: React.PropTypes.string }),
+  getContext({ language: PropTypes.string }),
   connect(
     state => ({
       job: state.jobs.data
@@ -157,7 +160,7 @@ export default compose(
     })
   ),
   lifecycle({
-    componentDidMount: function () {
+    componentDidMount() {
       this.props.fetchJob(this.props.params.id);
     }
   })

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   compose,
   getContext
@@ -14,17 +15,7 @@ import {
 
 import ORFrameNotifier from '../../../OR_frame_notifier';
 
-var Editor = React.createClass({
-  displayName: 'Editor',
-
-  propTypes: {
-    setMapPosition: React.PropTypes.func,
-    lng: React.PropTypes.number,
-    lat: React.PropTypes.number,
-    zoom: React.PropTypes.number,
-    language: React.PropTypes.string.isRequired,
-    way: React.PropTypes.string
-  },
+class Editor extends React.Component {
 
   // /////////////////////////////////////////////////////////////////////////////
   // / Message listener (postMessage)
@@ -50,7 +41,7 @@ var Editor = React.createClass({
   // / - When entering the page, everything after (/#/editor/)
   // /   is sent to the iframe alongside the proper prefix.
   // /
-  messageListener: function (e) {
+  messageListener(e) {
     // TODO: This is not working with the new version od ORFrameNotifier
     if (e.data.type === 'urlchange') {
       switch (e.data.id) {
@@ -68,9 +59,9 @@ var Editor = React.createClass({
           break;
       }
     }
-  },
+  }
 
-  componentWillReceiveProps: function ({ lng, lat, zoom, way }) {
+  componentWillReceiveProps({ lng, lat, zoom, way }) {
     // this.props.setMapPosition(lng, lat, zoom, way);
     const mapCenter = [lng, lat];
     if (lng !== this.props.lng || lat !== this.props.lat) {
@@ -88,9 +79,9 @@ var Editor = React.createClass({
         });
       }, 1000);
     }
-  },
+  }
 
-  componentDidMount: function () {
+  componentDidMount() {
     this.orFrame = new ORFrameNotifier('orma-vn', this.refs.editor.contentWindow);
 
     this.orFrame.on('loaded', () => {
@@ -107,13 +98,13 @@ var Editor = React.createClass({
         zoom
       });
     });
-  },
+  }
 
-  componentWillUnmount: function () {
+  componentWillUnmount() {
     this.orFrame.destroy();
-  },
+  }
 
-  render: function () {
+  render() {
     return (
       <section className='inpage inpage--alt'>
         <header className='inpage__header'>
@@ -142,11 +133,22 @@ var Editor = React.createClass({
       </section>
     );
   }
-});
+};
+
+
+Editor.propTypes = {
+  setMapPosition: PropTypes.func,
+  lng: PropTypes.number,
+  lat: PropTypes.number,
+  zoom: PropTypes.number,
+  language: PropTypes.string.isRequired,
+  way: PropTypes.string
+};
+
 
 
 module.exports = compose(
-  getContext({ language: React.PropTypes.string }),
+  getContext({ language: PropTypes.string }),
   connect(
     state => ({
       lng: state.map.lng || 108.239,

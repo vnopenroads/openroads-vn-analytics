@@ -1,27 +1,21 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
-const AssetsSectionRow = React.createClass({
-  'displayName': 'AssetsSectionRow',
+export default class AssetsSectionRow extends React.Component {
 
-  propTypes: {
-    data: React.PropTypes.array,
-    onMouseOver: React.PropTypes.func,
-    onMouseOut: React.PropTypes.func
-  },
-
-  handleMouseOver: function () {
+  handleMouseOver() {
     const { data, onMouseOver } = this.props;
     onMouseOver(data[0]);
-  },
+  }
 
-  handleMouseOut: function () {
+  handleMouseOut() {
     const { data, onMouseOut } = this.props;
     onMouseOut(data[0]);
-  },
+  }
 
-  render: function () {
+  render() {
     const { data } = this.props;
     return (
       <tr onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut}>
@@ -33,6 +27,10 @@ const AssetsSectionRow = React.createClass({
       </tr>
     );
   }
-});
+};
 
-module.exports = AssetsSectionRow;
+AssetsSectionRow.propTypes = {
+  data: PropTypes.array,
+  onMouseOver: PropTypes.func,
+  onMouseOut: PropTypes.func
+};

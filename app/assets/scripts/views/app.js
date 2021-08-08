@@ -1,5 +1,6 @@
 'use strict';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import {
@@ -12,23 +13,12 @@ import SiteHeader from '../components/site-header';
 import ConfirmationPrompt from '../components/confirmation-prompt';
 
 
-var App = React.createClass({
-  displayName: 'App',
-
-  propTypes: {
-    _fetchSearchResults: React.PropTypes.func,
-    _cleanSearchResults: React.PropTypes.func,
-    search: React.PropTypes.object,
-    routes: React.PropTypes.array,
-    children: React.PropTypes.object,
-    location: React.PropTypes.object
-  },
-
-  render: function () {
+class App extends React.Component {
+  render() {
     const pageClass = _.get(_.last(this.props.routes), 'pageClass', '');
     return (
       <div className={'site-canvas-inner ' + pageClass}>
-        <SiteHeader/>
+        <SiteHeader />
 
         <main className='site-body'>
           {this.props.children}
@@ -38,8 +28,16 @@ var App = React.createClass({
       </div>
     );
   }
-});
+};
 
+App.propTypes = {
+  _fetchSearchResults: PropTypes.func,
+  _cleanSearchResults: PropTypes.func,
+  search: PropTypes.object,
+  routes: PropTypes.array,
+  children: PropTypes.object,
+  location: PropTypes.object
+};
 
 export default compose(
   connect(
@@ -53,7 +51,7 @@ export default compose(
     })
   ),
   withContext(
-    { language: React.PropTypes.string },
+    { language: PropTypes.string },
     ({ params: { lang: language } }) => ({ language })
   )
 )(App);

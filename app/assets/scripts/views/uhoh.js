@@ -2,11 +2,8 @@
 import React from 'react';
 import T from '../components/t';
 
-
-var UhOh = React.createClass({
-  displayName: 'UhOh',
-
-  render: function () {
+export default class UhOh extends React.Component {
+  render() {
     return (
       <div className='inpage__body'>
         <div className='inner'>
@@ -14,7 +11,6 @@ var UhOh = React.createClass({
         </div>
       </div>
     );
-  }
-});
+  };
 
-module.exports = UhOh;
+};

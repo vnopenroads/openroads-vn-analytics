@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 import T, {
   translate
@@ -8,73 +9,54 @@ import T, {
 import config from '../config';
 
 
-var BaseSearch = React.createClass({
-  displayName: 'MapSearch',
-
-  propTypes: {
-    searchType: React.PropTypes.string,
-    page: React.PropTypes.string,
-    fetching: React.PropTypes.bool,
-    vpromms: React.PropTypes.array,
-    admins: React.PropTypes.array,
-    filteredVProMMs: React.PropTypes.array,
-    language: React.PropTypes.string,
-    _setSearchType: React.PropTypes.func,
-    _fetchAdmins: React.PropTypes.func,
-    _clearAdmins: React.PropTypes.func,
-    _setFilteredVProMMs: React.PropTypes.func,
-    fetchRoadBbox: React.PropTypes.func,
-    _fetchFieldVProMMsIds: React.PropTypes.func,
-    _fetchAdminBbox: React.PropTypes.func,
-    fetchRoadProperty: React.PropTypes.func
-  },
-
-  getInitialState: function () {
-    return {
+export default class BaseSearch extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       searchVal: '',
       showResults: true
     };
-  },
+  }
 
-  componentDidMount: function () {
+  componentDidMount() {
     this.props._fetchFieldVProMMsIds();
     this.search = _.debounce(this.search, 300);
-  },
+  }
 
-  componentWillUnmount: function () {
+  componentWillUnmount() {
     this.props._clearAdmins();
     this.props._setFilteredVProMMs([]);
-  },
+  }
 
-  componentWillReceiveProps: function (nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (this.props.language !== nextProps.language) {
       this.setState({ searchVal: '', showResults: false });
       this.props._clearAdmins();
       this.props._setFilteredVProMMs([]);
     }
-  },
+  }
 
-  onClearSearch: function (e) {
+  onClearSearch(e) {
     this.setState({ searchVal: '', showResults: false });
     this.props._clearAdmins();
     this.props._setFilteredVProMMs([]);
-  },
+  }
 
-  onSearchTypeChange: function (e) {
+  onSearchTypeChange(e) {
     this.props._setSearchType(e.target.value);
     this.setState({ searchVal: '', showResults: true });
     this.props._clearAdmins();
     this.props._setFilteredVProMMs([]);
-  },
+  }
 
-  onSearchQueryChange: function (e) {
+  onSearchQueryChange(e) {
     var searchVal = e.target.value;
     this.setState({ searchVal, showResults: true });
     // The search function is debounced.
     this.search(_.trim(searchVal));
-  },
+  }
 
-  onSearchSubmit: function (e) {
+  onSearchSubmit(e) {
     e.preventDefault();
     this.setState({ showResults: true });
     const { page } = this.props;
@@ -91,9 +73,9 @@ var BaseSearch = React.createClass({
         page === 'assets' ? this.navigateToVProMM(vpromm) : this.searchVProMMsID(vpromm);
       }
     }
-  },
+  }
 
-  navigateToAdmin: function (admin) {
+  navigateToAdmin(admin) {
     if (admin.level === 'province') {
       const url = `${this.props.language}/assets/${admin.id}`;
       this.props.router.push(url);
@@ -108,15 +90,15 @@ var BaseSearch = React.createClass({
         });
     }
     this.onClearSearch();
-  },
+  }
 
-  navigateToVProMM: function (vpromm) {
+  navigateToVProMM(vpromm) {
     this.onClearSearch();
     const url = `${this.props.language}/assets/road/${vpromm}`;
     this.props.router.push(url);
-  },
+  }
 
-  search: function (searchVal) {
+  search(searchVal) {
     if (this.props.searchType === 'Admin') {
       if (searchVal.length > 0) {
         this.props._fetchAdmins(searchVal);
@@ -134,9 +116,9 @@ var BaseSearch = React.createClass({
         this.props._setFilteredVProMMs([]);
       }
     }
-  },
+  }
 
-  searchVProMMsID: function (VProMMsID) {
+  searchVProMMsID(VProMMsID) {
     this.setState({ showResults: false }, () => {
       // Wait for the state to be set, otherwise the shouldComponentUpdate
       // of the parent will prevent the re-render.
@@ -146,32 +128,32 @@ var BaseSearch = React.createClass({
       }
       this.props.fetchRoadProperty(VProMMsID);
     });
-  },
+  }
 
-  searchAdminArea: function (adminAreaID) {
+  searchAdminArea(adminAreaID) {
     this.setState({ showResults: false }, () => {
       // Wait for the state to be set, otherwise the shouldComponentUpdate
       // of the parent will prevent the re-render.
       // This is an artifact.
       this.props._fetchAdminBbox(adminAreaID);
     });
-  },
+  }
 
-  onAAClick: function (aa, e) {
+  onAAClick(aa, e) {
     const { page } = this.props;
     e.preventDefault();
     this.setState({ searchVal: this.props.language === 'en' ? aa.name_en : aa.name_vn });
     page === 'assets' ? this.navigateToAdmin(aa) : this.searchAdminArea(aa.id);
-  },
+  }
 
-  onVprommClick: function (id, e) {
+  onVprommClick(id, e) {
     const { page } = this.props;
     e.preventDefault();
     this.setState({ searchVal: id });
     page === 'assets' ? this.navigateToVProMM(id) : this.searchVProMMsID(id);
-  },
+  }
 
-  renderResults: function () {
+  renderResults() {
     if (!this.state.showResults) {
       return null;
     }
@@ -233,9 +215,9 @@ var BaseSearch = React.createClass({
         </div>
       </div>
     );
-  },
+  }
 
-  render: function () {
+  render() {
     const { language, searchType } = this.props;
 
     return (
@@ -281,6 +263,23 @@ var BaseSearch = React.createClass({
       </form>
     );
   }
-});
+};
 
-export default BaseSearch;
+BaseSearch.propTypes = {
+  searchType: PropTypes.string,
+  page: PropTypes.string,
+  fetching: PropTypes.bool,
+  vpromms: PropTypes.array,
+  admins: PropTypes.array,
+  filteredVProMMs: PropTypes.array,
+  language: PropTypes.string,
+  _setSearchType: PropTypes.func,
+  _fetchAdmins: PropTypes.func,
+  _clearAdmins: PropTypes.func,
+  _setFilteredVProMMs: PropTypes.func,
+  fetchRoadBbox: PropTypes.func,
+  _fetchFieldVProMMsIds: PropTypes.func,
+  _fetchAdminBbox: PropTypes.func,
+  fetchRoadProperty: PropTypes.func
+};
+

@@ -1,5 +1,6 @@
 'use strict';
-import React, { PropTypes as T } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import TetherComponent from 'react-tether';
 import { CSSTransition } from 'react-transition-group';
 
@@ -24,7 +25,7 @@ let activeDropdowns = [];
 */
 
 export default class Dropdown extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -35,16 +36,16 @@ export default class Dropdown extends React.Component {
     this._toggleDropdown = this._toggleDropdown.bind(this);
   }
 
-  static closeAll () {
+  static closeAll() {
     activeDropdowns.forEach(d => d.close());
   }
 
-  _bodyListener (e) {
+  _bodyListener(e) {
     // Get the dropdown that is a parent of the clicked element. If any.
     let theSelf = e.target;
     if (theSelf.tagName === 'BODY' ||
-        theSelf.tagName === 'HTML' ||
-        e.target.getAttribute('data-hook') === 'dropdown:close') {
+      theSelf.tagName === 'HTML' ||
+      e.target.getAttribute('data-hook') === 'dropdown:close') {
       this.close();
       return;
     }
@@ -54,12 +55,12 @@ export default class Dropdown extends React.Component {
     // This code handles this case. No idea why this is happening.
     // TODO: Unveil whatever black magic is at work here.
     if (theSelf.tagName === 'SPAN' &&
-        theSelf.parentNode === this.triggerRef &&
-        theSelf.parentNode.getAttribute('data-hook') === 'dropdown:btn') {
+      theSelf.parentNode === this.triggerRef &&
+      theSelf.parentNode.getAttribute('data-hook') === 'dropdown:btn') {
       return;
     }
     if (theSelf.tagName === 'SPAN' &&
-        theSelf.parentNode.getAttribute('data-hook') === 'dropdown:close') {
+      theSelf.parentNode.getAttribute('data-hook') === 'dropdown:close') {
       this.close();
       return;
     }
@@ -83,37 +84,37 @@ export default class Dropdown extends React.Component {
     }
   }
 
-  _toggleDropdown (e) {
+  _toggleDropdown(e) {
     e.preventDefault();
     this.toggle();
   }
 
   // Lifecycle method.
   // Called once as soon as the component has a DOM representation.
-  componentDidMount () {
+  componentDidMount() {
     activeDropdowns.push(this);
     window.addEventListener('click', this._bodyListener);
   }
 
   // Lifecycle method.
-  componentWillUnmount () {
+  componentWillUnmount() {
     activeDropdowns.splice(activeDropdowns.indexOf(this), 1);
     window.removeEventListener('click', this._bodyListener);
   }
 
-  toggle () {
+  toggle() {
     this.setState({ open: !this.state.open });
   }
 
-  open () {
+  open() {
     !this.state.open && this.setState({ open: true });
   }
 
-  close () {
+  close() {
     this.state.open && this.setState({ open: false });
   }
 
-  renderTriggerElement () {
+  renderTriggerElement() {
     const {
       id,
       triggerTitle,
@@ -155,12 +156,12 @@ export default class Dropdown extends React.Component {
 
     return (
       <TriggerElement {...triggerProps} >
-        <span>{ triggerText }</span>
+        <span>{triggerText}</span>
       </TriggerElement>
     );
   }
 
-  renderContent () {
+  renderContent() {
     const { id, direction, className } = this.props;
 
     // Base and additional classes for the trigger and the content.
@@ -191,14 +192,14 @@ export default class Dropdown extends React.Component {
         <TransitionItem
           props={dropdownContentProps}
           onChange={this.props.onChange} >
-          { this.props.children }
+          {this.props.children}
         </TransitionItem>
 
       </CSSTransition>
     );
   }
 
-  render () {
+  render() {
     let { alignment, direction } = this.props;
 
     let allowed;
@@ -262,41 +263,41 @@ Dropdown.defaultProps = {
 
 if (process.env.NODE_ENV !== 'production') {
   Dropdown.propTypes = {
-    id: T.string,
-    onChange: T.func,
+    id: PropTypes.string,
+    onChange: PropTypes.func,
 
-    triggerElement: T.oneOf(['a', 'button']),
-    triggerClassName: T.string,
-    triggerActiveClassName: T.string,
-    triggerTitle: T.string,
-    triggerText: T.string.isRequired,
+    triggerElement: PropTypes.oneOf(['a', 'button']),
+    triggerClassName: PropTypes.string,
+    triggerActiveClassName: PropTypes.string,
+    triggerTitle: PropTypes.string,
+    triggerText: PropTypes.string.isRequired,
 
-    direction: T.oneOf(['up', 'down', 'left', 'right']),
-    alignment: T.oneOf(['left', 'center', 'right', 'top', 'middle', 'bottom']),
+    direction: PropTypes.oneOf(['up', 'down', 'left', 'right']),
+    alignment: PropTypes.oneOf(['left', 'center', 'right', 'top', 'middle', 'bottom']),
 
-    className: T.string,
-    children: T.node
+    className: PropTypes.string,
+    children: PropTypes.node
   };
 }
 
 class TransitionItem extends React.Component {
-  componentDidMount () {
+  componentDidMount() {
     this.props.onChange && this.props.onChange(true);
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.props.onChange && this.props.onChange(false);
   }
 
-  render () {
-    return <div {...this.props.props}>{ this.props.children }</div>;
+  render() {
+    return <div {...this.props.props}>{this.props.children}</div>;
   }
 }
 
 if (process.env.NODE_ENV !== 'production') {
   TransitionItem.propTypes = {
-    onChange: T.func,
-    props: T.object,
-    children: T.node
+    onChange: PropTypes.func,
+    props: PropTypes.object,
+    children: PropTypes.node
   };
 }

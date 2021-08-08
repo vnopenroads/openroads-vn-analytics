@@ -1,5 +1,6 @@
 'use strict';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { local } from 'redux-fractal';
 import { createStore } from 'redux';
@@ -35,7 +36,7 @@ const getAACodes = (data) => {
 };
 
 class AssetsAA extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.onCreateAssetClick = this.onCreateAssetClick.bind(this);
@@ -47,8 +48,8 @@ class AssetsAA extends React.Component {
     };
   }
 
-  fetchData (props) {
-    const {page, sortField, sortOrder, params: {aaId, aaIdSub}} = props;
+  fetchData(props) {
+    const { page, sortField, sortOrder, params: { aaId, aaIdSub } } = props;
 
     (aaIdSub ? props.fetchAdminStatsAA('district', aaId, aaIdSub) : props.fetchAdminStatsAA('province', aaId))
       .then(res => {
@@ -61,43 +62,43 @@ class AssetsAA extends React.Component {
       .catch(e => console.log('e', e));
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.fetchData(this.props);
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (this.props.params.aaId !== nextProps.params.aaId || this.props.params.aaIdSub !== nextProps.params.aaIdSub) {
       // Reset tab.
-      this.setState({activeTab: 'assets'});
+      this.setState({ activeTab: 'assets' });
       this.fetchData(nextProps);
     }
   }
 
-  onModalClose (data = {}) {
+  onModalClose(data = {}) {
     this.setState({ createModalOpen: false });
   }
 
-  onCreateAssetClick (e) {
+  onCreateAssetClick(e) {
     e.preventDefault();
     this.setState({ createModalOpen: true });
   }
 
-  onTabClick (tab, e) {
+  onTabClick(tab, e) {
     e.preventDefault();
     this.setState({ activeTab: tab });
   }
 
-  handleRoadsPageChange ({selected}) {
-    const {sortField, sortOrder, aa} = this.props;
+  handleRoadsPageChange({ selected }) {
+    const { sortField, sortOrder, aa } = this.props;
     const codes = getAACodes(aa.data);
     const newPage = selected + 1;
     this.props.setPage(newPage);
     this.props.fetchRoadsEpic(codes.province, codes.district, newPage, sortField, sortOrder);
   }
 
-  handleRoadsSortChange (field, e) {
+  handleRoadsSortChange(field, e) {
     e.preventDefault();
-    const {sortField, sortOrder, aa} = this.props;
+    const { sortField, sortOrder, aa } = this.props;
     const codes = getAACodes(aa.data);
 
     const newOrder = field !== sortField ? 'asc' : sortOrder === 'asc' ? 'desc' : 'asc';
@@ -109,8 +110,8 @@ class AssetsAA extends React.Component {
     this.props.fetchRoadsEpic(codes.province, codes.district, newPage, field, newOrder);
   }
 
-  renderHeadline () {
-    const {language, params: { aaId, aaIdSub }, aa: { data }} = this.props;
+  renderHeadline() {
+    const { language, params: { aaId, aaIdSub }, aa: { data } } = this.props;
     const type = aaIdSub ? translate(language, 'District') : translate(language, 'Province');
     const nameVar = language === 'en' ? 'name_en' : 'name_vn';
 
@@ -126,32 +127,32 @@ class AssetsAA extends React.Component {
     );
   }
 
-  renderTabs () {
+  renderTabs() {
     // If it is a district there's no need to have tabs.
     if (this.props.params.aaIdSub) return null;
 
     const tabs = [
-      {key: 'assets', label: 'Assets'},
-      {key: 'districts', label: 'Districts'}
+      { key: 'assets', label: 'Assets' },
+      { key: 'districts', label: 'Districts' }
     ];
 
     return (
       <ul className='nav-tabs'>
         {tabs.map(t => (
           <li key={t.key}>
-            <a href='#' className={c({'tab--active': this.state.activeTab === t.key})} title={translate(this.props.language, 'Switch tab')} onClick={this.onTabClick.bind(this, t.key)}><T>{t.label}</T></a>
+            <a href='#' className={c({ 'tab--active': this.state.activeTab === t.key })} title={translate(this.props.language, 'Switch tab')} onClick={this.onTabClick.bind(this, t.key)}><T>{t.label}</T></a>
           </li>
         ))}
       </ul>
     );
   }
 
-  renderAssetsTable () {
+  renderAssetsTable() {
     const {
       roadsPageStatus,
       roadsPage,
       language,
-      aa: {data: aaData},
+      aa: { data: aaData },
       page,
       sortField,
       sortOrder
@@ -180,11 +181,11 @@ class AssetsAA extends React.Component {
         label: translate(language, 'Review Status'),
         render: (r) => translate(language, r.status) || translate(language, 'pending')
       },
-      {accessor: 'properties.iri_mean', label: translate(language, 'IRI'), render: renderRound},
-      {accessor: 'properties.Road Type', label: translate(language, 'Road Type')},
-      {accessor: 'properties.width', label: translate(language, 'Width')},
-      {accessor: 'properties.length', label: translate(language, 'Road Length (ORMA)'), render: renderRound},
-      {accessor: 'properties.grade', label: translate(language, 'Grade')}
+      { accessor: 'properties.iri_mean', label: translate(language, 'IRI'), render: renderRound },
+      { accessor: 'properties.Road Type', label: translate(language, 'Road Type') },
+      { accessor: 'properties.width', label: translate(language, 'Width') },
+      { accessor: 'properties.length', label: translate(language, 'Road Length (ORMA)'), render: renderRound },
+      { accessor: 'properties.grade', label: translate(language, 'Grade') }
     ];
 
     return (
@@ -192,7 +193,7 @@ class AssetsAA extends React.Component {
         <table className='table'>
           <thead>
             <tr>
-              {columns.map(({accessor, label, sortable}) => {
+              {columns.map(({ accessor, label, sortable }) => {
                 const sortClasses = c('table__sort', {
                   'table__sort--none': sortField !== accessor,
                   'table__sort--asc': sortField === accessor && sortOrder === 'asc',
@@ -214,7 +215,7 @@ class AssetsAA extends React.Component {
           <tbody>
             {roadsPage.map(r => (
               <tr key={r.id}>
-                {columns.map(({accessor, render}, i) => {
+                {columns.map(({ accessor, render }, i) => {
                   const El = i === 0 ? 'th' : 'td';
                   return <El key={accessor}>{render ? render(r, accessor) : (_.get(r, accessor) || 'n/a')}</El>;
                 })}
@@ -243,7 +244,7 @@ class AssetsAA extends React.Component {
     );
   }
 
-  renderDistrictsTable () {
+  renderDistrictsTable() {
     const { language, aa: { data } } = this.props;
     const nameVar = language === 'en' ? 'name_en' : 'name_vn';
 
@@ -251,7 +252,7 @@ class AssetsAA extends React.Component {
 
     return (
       <table className='table table--aa'>
-        <StatsTableHeader type='district'/>
+        <StatsTableHeader type='district' />
         <tbody>
           {_.sortBy(data.districts, nameVar).map(d => (
             <StatsTableRow
@@ -268,7 +269,7 @@ class AssetsAA extends React.Component {
     );
   }
 
-  renderStats () {
+  renderStats() {
     const lang = this.props.language;
     const { fetched, fetching, data } = this.props.aa;
 
@@ -319,10 +320,10 @@ class AssetsAA extends React.Component {
     );
   }
 
-  render () {
+  render() {
     const { params: { aaId, aaIdSub }, aa: { fetched, fetching, error } } = this.props;
 
-    const Barebones = ({title, children}) => (
+    const Barebones = ({ title, children }) => (
       <div className='incontainer'>
         <div className='incontainer__header'>
           <div className='incontainer__headline'>
@@ -344,7 +345,7 @@ class AssetsAA extends React.Component {
     if (fetched && error) {
       return (
         <Barebones title='Error'>
-          <p>Something went wrong with the request. { error }</p>
+          <p>Something went wrong with the request. {error}</p>
         </Barebones>
       );
     }
@@ -374,19 +375,19 @@ class AssetsAA extends React.Component {
 
 if (config.environment !== 'production') {
   AssetsAA.propTypes = {
-    fetchAdminStatsAA: React.PropTypes.func,
-    fetchRoadsEpic: React.PropTypes.func,
-    fetchAARoadCountEpic: React.PropTypes.func,
-    setPage: React.PropTypes.func,
-    sortColumn: React.PropTypes.func,
-    page: React.PropTypes.number,
-    sortField: React.PropTypes.string,
-    sortOrder: React.PropTypes.string,
-    params: React.PropTypes.object,
-    language: React.PropTypes.string,
-    aa: React.PropTypes.object,
-    roadsPageStatus: React.PropTypes.string,
-    roadsPage: React.PropTypes.array
+    fetchAdminStatsAA: PropTypes.func,
+    fetchRoadsEpic: PropTypes.func,
+    fetchAARoadCountEpic: PropTypes.func,
+    setPage: PropTypes.func,
+    sortColumn: PropTypes.func,
+    page: PropTypes.number,
+    sortField: PropTypes.string,
+    sortOrder: PropTypes.string,
+    params: PropTypes.object,
+    language: PropTypes.string,
+    aa: PropTypes.object,
+    roadsPageStatus: PropTypes.string,
+    roadsPage: PropTypes.array
   };
 }
 
@@ -413,7 +414,7 @@ const reducer = (state = localState, action) => {
 
 
 export default compose(
-  getContext({ language: React.PropTypes.string }),
+  getContext({ language: PropTypes.string }),
   local({
     key: ({ router: { params: { aaId = '', aaIdSub = '' } } }) => `road-table-${aaId}-${aaIdSub}`,
     createStore: () => createStore(reducer),
@@ -425,10 +426,10 @@ export default compose(
   }),
   connect(
     (state, props) => {
-      const {page, sortField, sortOrder, params: {aaId, aaIdSub}} = props;
+      const { page, sortField, sortOrder, params: { aaId, aaIdSub } } = props;
       // Admin area id to get from state.
       const id = aaIdSub ? `${aaId}-${aaIdSub}` : aaId;
-      const aa = _.get(state.adminStats.aa, id, {fetched: false, fetching: false, data: {}});
+      const aa = _.get(state.adminStats.aa, id, { fetched: false, fetching: false, data: {} });
       const aaData = aa.data;
       // Get the district and province code for the RoadPageKey.
       // Depending on whether it is a district or province the keys differ.
@@ -460,7 +461,7 @@ export default compose(
               pending: districts.reduce((acc, d) => acc + _.get(d, 'status.pending', 0), 0),
               reviewed: districts.reduce((acc, d) => acc + _.get(d, 'status.reviewed', 0), 0)
             };
-            aaWithCounts = mergeAA(aaData, roadCount, [aaData.code], {districts, status});
+            aaWithCounts = mergeAA(aaData, roadCount, [aaData.code], { districts, status });
           } else {
             aaWithCounts = mergeAA(aaData, roadCount, [aaData.province.code, 'district', aaData.code]);
           }

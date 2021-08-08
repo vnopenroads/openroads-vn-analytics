@@ -4,8 +4,8 @@ import config from '../config';
 import T from '../components/t';
 
 
-var Upload = React.createClass({
-  render: function () {
+export default class Upload extends React.Component {
+  render() {
     return (
       <section className='inpage'>
         <header className='inpage__header'>
@@ -43,6 +43,5 @@ var Upload = React.createClass({
       </section>
     );
   }
-});
+};
 
-module.exports = Upload;

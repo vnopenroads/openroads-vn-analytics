@@ -1,10 +1,7 @@
 import React from 'react';
-import {
-  getContext
-} from 'recompose';
-import T, {
-  translate
-} from './t';
+import PropTypes from 'prop-types';
+import { getContext } from 'recompose';
+import T, { translate } from './t';
 
 
 const MapOptions = ({ layer, language, handleLayerChange, handleShowNoVpromms }) => (
@@ -14,7 +11,7 @@ const MapOptions = ({ layer, language, handleLayerChange, handleShowNoVpromms })
         <form className='form'>
           <div className='form__group'>
             <label className='form__label'><T>Visualized variable</T></label>
-            <select className='form__control' onChange={ e => handleLayerChange(e) }>
+            <select className='form__control' onChange={e => handleLayerChange(e)}>
               <option value='iri_mean'>{translate(language, 'IRI')}</option>
               <option value='or_section_delivery_vehicle'>{translate(language, 'CVTS')}</option>
             </select>
@@ -26,7 +23,7 @@ const MapOptions = ({ layer, language, handleLayerChange, handleShowNoVpromms })
                 className='form__option form__option--switch option fos-io'
                 htmlFor='show-no-vpromms'
               >
-                <input type='checkbox' defaultChecked={true} name='show-no-vpromms' id='show-no-vpromms' value='show-no-vpromms' onChange={ e => handleShowNoVpromms(e) } />
+                <input type='checkbox' defaultChecked={true} name='show-no-vpromms' id='show-no-vpromms' value='show-no-vpromms' onChange={e => handleShowNoVpromms(e)} />
                 <span className='form__option__ui'></span>
                 <span className='form__option__text'><T>Road without VPRoMMS ID</T> <b>----</b></span>
               </label>
@@ -41,11 +38,11 @@ const MapOptions = ({ layer, language, handleLayerChange, handleShowNoVpromms })
 
 
 MapOptions.propTypes = {
-  layer: React.PropTypes.string,
-  handleLayerChange: React.PropTypes.func,
-  handleShowNoVpromms: React.PropTypes.func,
-  language: React.PropTypes.string
+  layer: PropTypes.string,
+  handleLayerChange: PropTypes.func,
+  handleShowNoVpromms: PropTypes.func,
+  language: PropTypes.string
 };
 
 
-export default getContext({ language: React.PropTypes.string })(MapOptions);
+export default getContext({ language: PropTypes.string })(MapOptions);

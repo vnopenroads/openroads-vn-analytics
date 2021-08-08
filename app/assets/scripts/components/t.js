@@ -1,9 +1,6 @@
-import React, {
-  PropTypes
-} from 'react';
-import {
-  getContext
-} from 'recompose';
+import React from 'react';
+import { getContext } from 'recompose';
+import PropTypes from 'prop-types';
 import en from '../../locales/source/en.json';
 import vi from '../../locales/vi.json';
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 import {
   toPairs,
@@ -31,22 +32,14 @@ import {
 } from '../constants';
 
 
-var AAFieldMap = React.createClass({
-  displayName: 'AAFieldMap',
-  propTypes: {
-    status: React.PropTypes.string,
-    geoJSON: React.PropTypes.object,
-    vpromm: React.PropTypes.string,
-    provinceName: React.PropTypes.string,
-    navigateBack: React.PropTypes.func,
-    setMapPosition: React.PropTypes.func
-  },
+class AAFieldMap extends React.Component {
 
-  getInitialState: function () {
-    return { layerRendered: false };
-  },
+  constructor(props) {
+    super(props);
+    this.state = { layerRendered: false };
+  }
 
-  componentDidMount: function () {
+  componentDidMount() {
     mapboxgl.accessToken = config.mbToken;
 
     this.map = new mapboxgl.Map({
@@ -63,23 +56,23 @@ var AAFieldMap = React.createClass({
     if (this.props.geoJSON && !this.state.layerRendered) {
       this.renderLayer();
     }
-  },
+  }
 
 
-  componentWillReceiveProps: function ({ geoJSON, lng, lat, zoom }) {
+  componentWillReceiveProps({ geoJSON, lng, lat, zoom }) {
     // TODO - rendering map could be less of a kludge w/ proper react/mapbox-gl bindings
     if (geoJSON && !this.state.layerRendered) {
       this.renderLayer();
     }
-  },
+  }
 
-  componentWillUnmount: function () {
+  componentWillUnmount() {
     const { lng, lat } = this.map.getCenter();
     const zoom = this.map.getZoom();
     this.props.setMapPosition(lng, lat, zoom);
-  },
+  }
 
-  renderLayer: function () {
+  renderLayer() {
     this.setState({ layerRendered: true });
 
     this.map.on('load', () => {
@@ -100,10 +93,10 @@ var AAFieldMap = React.createClass({
         }
       });
     });
-  },
+  }
 
 
-  render: function () {
+  render() {
     const { vpromm, provinceName, navigateBack } = this.props;
 
     return (
@@ -146,10 +139,19 @@ const reducer = (
   return state;
 };
 
+AAFieldMap.propTypes = {
+  status: PropTypes.string,
+  geoJSON: PropTypes.object,
+  vpromm: PropTypes.string,
+  provinceName: PropTypes.string,
+  navigateBack: PropTypes.func,
+  setMapPosition: PropTypes.func
+}
+
 module.exports = compose(
   withRouter,
   getContext({
-    language: React.PropTypes.string
+    language: PropTypes.string
   }),
   withProps(({ language, params: { vpromm } }) => {
     const [aaId, { name }] = find(

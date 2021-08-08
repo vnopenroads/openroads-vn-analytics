@@ -1,5 +1,6 @@
 'use strict';
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import c from 'classnames';
 import { clone, findIndex } from 'lodash';
 import T from '../components/t';
@@ -12,7 +13,7 @@ let idCounter = 0;
 const uniqueId = key => `${key}-${++idCounter}`;
 
 class AssetsEditModal extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.addProperty = this.addProperty.bind(this);
@@ -24,13 +25,13 @@ class AssetsEditModal extends React.Component {
     this.state = this.prepareState(props);
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (!this.props.revealed && nextProps.revealed) {
       this.setState(this.prepareState(nextProps));
     }
   }
 
-  prepareState (props) {
+  prepareState(props) {
     const roadProperties = props.roadProps.data.properties;
     let propertyNames = Object.keys(roadProperties);
     propertyNames.sort((a, b) => a.toLowerCase() > b.toLowerCase() ? 1 : -1);
@@ -48,7 +49,7 @@ class AssetsEditModal extends React.Component {
     };
   }
 
-  getBaseProperty () {
+  getBaseProperty() {
     return {
       id: uniqueId('property'),
       key: '',
@@ -57,12 +58,12 @@ class AssetsEditModal extends React.Component {
     };
   }
 
-  addProperty () {
+  addProperty() {
     const properties = this.state.properties.concat(this.getBaseProperty());
-    this.setState({properties});
+    this.setState({ properties });
   }
 
-  removeProperty (id) {
+  removeProperty(id) {
     const field = this.state.properties.find(o => o.id === id);
     const properties = this.state.properties.filter(o => o.id !== id);
     let propertiesToRemove = this.state.propertiesToRemove;
@@ -70,14 +71,14 @@ class AssetsEditModal extends React.Component {
     if (field.existing) {
       propertiesToRemove = propertiesToRemove.concat(field);
     }
-    this.setState({properties, propertiesToRemove});
+    this.setState({ properties, propertiesToRemove });
   }
 
-  onValueChange (what, event) {
+  onValueChange(what, event) {
     this.setState({ [what]: event.target.value });
   }
 
-  onPropertyChange (id, what, event) {
+  onPropertyChange(id, what, event) {
     let properties = clone(this.state.properties);
     const idx = findIndex(properties, ['id', id]);
 
@@ -87,13 +88,13 @@ class AssetsEditModal extends React.Component {
     this.setState({ properties });
   }
 
-  onCloseClick (e) {
+  onCloseClick(e) {
     // Block while processing.
     if (this.props.roadPropsOp.processing) return;
     this.props.onCloseClick();
   }
 
-  async onSave (e) {
+  async onSave(e) {
     e.preventDefault();
     const propertiesToAdd = this.state.properties.filter(property => !property.existing && property.key !== '');
     const propertiesToUpdate = this.state.properties.filter(property => property.existing && property.value !== property.valueOriginal);
@@ -113,7 +114,7 @@ class AssetsEditModal extends React.Component {
         });
 
         if (res.error) throw new Error(res.error);
-        successRes = {action: 'refresh'};
+        successRes = { action: 'refresh' };
       }
 
       if (diffVpromm) {
@@ -122,7 +123,7 @@ class AssetsEditModal extends React.Component {
           throw res;
         }
 
-        successRes = {action: 'redirect', vpromm: newVpromm};
+        successRes = { action: 'redirect', vpromm: newVpromm };
       }
 
       this.props.onCloseClick(successRes);
@@ -139,7 +140,7 @@ class AssetsEditModal extends React.Component {
     }
   }
 
-  renderExistingProperties ({id, key, value}) {
+  renderExistingProperties({ id, key, value }) {
     return (
       <div className='form__group' key={id}>
         <div className='form__inner-header'>
@@ -155,7 +156,7 @@ class AssetsEditModal extends React.Component {
     );
   }
 
-  renderNewProperties ({id, key, value}) {
+  renderNewProperties({ id, key, value }) {
     return (
       <fieldset className='form__fieldset' key={id}>
         <div className='form__inner-header'>
@@ -180,7 +181,7 @@ class AssetsEditModal extends React.Component {
       </fieldset>
     );
   }
-  render () {
+  render() {
     const { processing } = this.props.roadPropsOp;
 
     return (
@@ -196,7 +197,7 @@ class AssetsEditModal extends React.Component {
           </div>
         </ModalHeader>
         <ModalBody>
-          <form className={c('form', {disabled: processing})} disabled={processing} onSubmit={this.onSave}>
+          <form className={c('form', { disabled: processing })} disabled={processing} onSubmit={this.onSave}>
             <div className='inner'>
               <fieldset className='form__fieldset'>
                 <legend className='form__legend'><T>Meta</T></legend>
@@ -220,8 +221,8 @@ class AssetsEditModal extends React.Component {
           </form>
         </ModalBody>
         <ModalFooter>
-          <button className={c('mfa-xmark', {disabled: processing})} disabled={processing} type='button' onClick={this.onCloseClick}><span>Cancel</span></button>
-          <button className={c('mfa-main mfa-tick', {disabled: processing})} disabled={processing} type='submit' onClick={this.onSave}><span>Save</span></button>
+          <button className={c('mfa-xmark', { disabled: processing })} disabled={processing} type='button' onClick={this.onCloseClick}><span>Cancel</span></button>
+          <button className={c('mfa-main mfa-tick', { disabled: processing })} disabled={processing} type='submit' onClick={this.onSave}><span>Save</span></button>
         </ModalFooter>
       </Modal>
     );

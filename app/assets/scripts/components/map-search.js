@@ -1,9 +1,7 @@
 'use strict';
 import React from 'react';
-import {
-  compose,
-  getContext
-} from 'recompose';
+import PropTypes from 'prop-types';
+import { compose, getContext } from 'recompose';
 import { connect } from 'react-redux';
 
 import {
@@ -27,7 +25,7 @@ import BaseSearch from './base-search';
 
 
 export default compose(
-  getContext({ language: React.PropTypes.string }),
+  getContext({ language: PropTypes.string }),
   withRouter,
   // withProps(({ location: { query: { activeRoad } } }) => ({
   //   activeRoad

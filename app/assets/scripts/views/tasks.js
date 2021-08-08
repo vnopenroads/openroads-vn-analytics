@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   compose,
   lifecycle,
@@ -127,9 +128,10 @@ const layers = [{
 
 const layerIds = layers.map(layer => layer.id);
 
-var Tasks = React.createClass({
-  getInitialState: function () {
-    return {
+class Tasks extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       renderedFeatures: null,
       mode: 'dedupe',
       satelliteState: false,
@@ -143,31 +145,9 @@ var Tasks = React.createClass({
       selectedVpromm: null,
       skipType: 'noterror' // can be either 'error' or 'noterror' to indicate state of Skip dropdown
     };
-  },
+  }
 
-  propTypes: {
-    fetchNextTask: React.PropTypes.func,
-    setMapPosition: React.PropTypes.func,
-    _queryOsm: React.PropTypes.func,
-    _markTaskAsDone: React.PropTypes.func,
-    _deleteWays: React.PropTypes.func,
-    skipTask: React.PropTypes.func,
-    fetchTaskCount: React.PropTypes.func,
-    osmStatus: React.PropTypes.string,
-    taskStatus: React.PropTypes.string,
-    meta: React.PropTypes.object,
-    task: React.PropTypes.object,
-    taskId: React.PropTypes.number,
-    taskUpdatedAt: React.PropTypes.string,
-    taskCount: React.PropTypes.number,
-    selectOptions: React.PropTypes.object,
-    selectedProvince: React.PropTypes.number,
-    selectNextTaskProvince: React.PropTypes.func,
-    dedupeWayTask: React.PropTypes.func,
-    language: React.PropTypes.string
-  },
-
-  componentDidMount: function () {
+  componentDidMount() {
     mapboxgl.accessToken = config.mbToken;
     const map = this.map = new mapboxgl.Map({
       container: 'map',
@@ -208,7 +188,7 @@ var Tasks = React.createClass({
 
       map.on('click', (e) => {
         const { step } = this.state;
-        let features = map.queryRenderedFeatures(e.point, { layers: [ roadHoverId ] });
+        let features = map.queryRenderedFeatures(e.point, { layers: [roadHoverId] });
         if (features.length && features[0].properties._id) {
           let featId = features[0].properties._id;
           if (step === 0) {
@@ -221,9 +201,9 @@ var Tasks = React.createClass({
         }
       });
     });
-  },
+  }
 
-  componentWillReceiveProps: function ({ task: nextTask, taskId: nextTaskId, osmStatus: nextOsmStatus }) {
+  componentWillReceiveProps({ task: nextTask, taskId: nextTaskId, osmStatus: nextOsmStatus }) {
     if (this.props.task !== nextTask) {
       // TODO - ANTIPATTERN: should not mirror properties task and taskId in state
       this.setState({ renderedFeatures: nextTask }, () => this.onMapLoaded(() => this.syncMap()));
@@ -237,20 +217,20 @@ var Tasks = React.createClass({
         mode: null
       });
     }
-  },
+  }
 
-  componentWillUnmount: function () {
+  componentWillUnmount() {
     const { lng, lat } = this.map.getCenter();
     const zoom = this.map.getZoom();
     this.props.setMapPosition(lng, lat, zoom);
-  },
+  }
 
-  onMapLoaded: function (fn) {
+  onMapLoaded(fn) {
     if (this.map.loaded()) fn();
     else this.map.once('load', fn);
-  },
+  }
 
-  syncMap: function () {
+  syncMap() {
     const features = this.state.renderedFeatures;
     if (!features || !features.features.length) return;
 
@@ -277,9 +257,9 @@ var Tasks = React.createClass({
     map.setFilter(roadSelected, ['in', '_id'].concat(selectedIds));
     map.setFilter(roadHoverId, ['==', '_id', hoverId]);
     map.setFilter(roadSelectedStep1, ['==', '_id', selectedStep1]);
-  },
+  }
 
-  renderPropertiesOverlay: function () {
+  renderPropertiesOverlay() {
     const { hoverId } = this.state;
     const { task } = this.props;
     const properties = task.features.find(c => hoverId === c.properties._id).properties;
@@ -300,9 +280,9 @@ var Tasks = React.createClass({
         </figcaption>
       </div>
     );
-  },
+  }
 
-  getPanelTitle: function () {
+  getPanelTitle() {
     const { mode, step } = this.state;
     if (step === 0) {
       return 'Prepare workflow';
@@ -316,9 +296,9 @@ var Tasks = React.createClass({
     if (step === 2) {
       return 'Workflow completed';
     }
-  },
+  }
 
-  renderInstrumentPanel: function () {
+  renderInstrumentPanel() {
     const { step, renderedFeatures } = this.state;
     const { osmStatus, language, taskId, taskUpdatedAt } = this.props;
     const diffHours = moment().diff(taskUpdatedAt, 'hours');
@@ -341,47 +321,47 @@ var Tasks = React.createClass({
           {renderedFeatures &&
             <header className='panel__header'>
               <div className='panel__headline'>
-                <h1 className='panel__sectitle'><T>Task</T> #{ taskId }</h1>
-                <p className='panel__subtitle'><time dateTime={ taskUpdatedAt }>{ diffHours } { hoursText }</time></p>
-                <h2 className='panel__title'><T>{ panelTitle }</T></h2>
+                <h1 className='panel__sectitle'><T>Task</T> #{taskId}</h1>
+                <p className='panel__subtitle'><time dateTime={taskUpdatedAt}>{diffHours} {hoursText}</time></p>
+                <h2 className='panel__title'><T>{panelTitle}</T></h2>
               </div>
             </header>
           }
 
-          { step === 0 && renderedFeatures && this.renderStep0() }
-          { step === 1 && renderedFeatures && this.renderStep1() }
-          { step === 2 && renderedFeatures && this.renderStep2() }
+          {step === 0 && renderedFeatures && this.renderStep0()}
+          {step === 1 && renderedFeatures && this.renderStep1()}
+          {step === 2 && renderedFeatures && this.renderStep2()}
 
           <footer className='panel__footer'>
 
-            { step === 0 && renderedFeatures && this.renderActionsStep0() }
-            { step === 1 && renderedFeatures && this.renderActionsStep1() }
-            { step === 2 && renderedFeatures && this.renderActionsStep2() }
+            {step === 0 && renderedFeatures && this.renderActionsStep0()}
+            {step === 1 && renderedFeatures && this.renderActionsStep1()}
+            {step === 2 && renderedFeatures && this.renderActionsStep2()}
 
           </footer>
         </article>
       </div>
     );
-  },
+  }
 
   // reset selected items when user changes mode, user can only change mode in step 0
-  handleChangeMode: function (event) {
-    this.setState({mode: event.target.value, selectedStep0: []}, this.syncMap);
-  },
+  handleChangeMode(event) {
+    this.setState({ mode: event.target.value, selectedStep0: [] }, this.syncMap);
+  }
 
-  showSatellite: function (state) {
+  showSatellite(state) {
     const satelliteState = this.state.satelliteState;
     if (!satelliteState) {
       this.map.setStyle(satelliteStyle);
-      this.setState({satelliteState: true});
+      this.setState({ satelliteState: true });
     } else {
       this.map.setStyle('mapbox://styles/mapbox/light-v9');
-      this.setState({satelliteState: false});
+      this.setState({ satelliteState: false });
     }
-  },
+  }
 
   // trigger when an item is selected during step 0
-  selectStep0: function (id) {
+  selectStep0(id) {
     const { mode, selectedStep0 } = this.state;
     let selectedClone = [].concat(selectedStep0);
     if (mode === 'dedupe') { // user can select multiple
@@ -398,21 +378,21 @@ var Tasks = React.createClass({
       }
     }
     this.setState({ selectedStep0: selectedClone }, this.syncMap);
-  },
+  }
 
-  selectStep1: function (id) {
+  selectStep1(id) {
     this.setState({ selectedStep1: id }, this.syncMap);
-  },
+  }
 
-  hoverItemOver: function (id) {
+  hoverItemOver(id) {
     this.setState({ hoverId: id }, this.syncMap);
-  },
+  }
 
-  hoverItemOut: function (id) {
+  hoverItemOut(id) {
     this.setState({ hoverId: '' }, this.syncMap);
-  },
+  }
 
-  renderStep0: function () {
+  renderStep0() {
     const { renderedFeatures, mode, selectedStep0, hoverId } = this.state;
     const { language } = this.props;
     const title = mode === 'dedupe' ? 'Select roads to work on' : 'Select road to work on';
@@ -433,9 +413,9 @@ var Tasks = React.createClass({
             <form className='form task-group__actions'>
               <div className='form__group'>
                 <label className='form__label visually-hidden'><T>Actions</T></label>
-                <select className='form__control' value={ mode } onChange={ this.handleChangeMode }>
-                  <option value='dedupe'>{ removeDuplicatesT }</option>
-                  <option value='join'>{ createIntersectionT }</option>
+                <select className='form__control' value={mode} onChange={this.handleChangeMode}>
+                  <option value='dedupe'>{removeDuplicatesT}</option>
+                  <option value='join'>{createIntersectionT}</option>
                 </select>
               </div>
             </form>
@@ -443,25 +423,25 @@ var Tasks = React.createClass({
         </section>
         <section className='task-group'>
           <header className='task-group__header'>
-            <h1 className='task-group__title'><T>{ title }</T></h1>
+            <h1 className='task-group__title'><T>{title}</T></h1>
           </header>
           <div className='task-group__body'>
             <ul className='road-list'>
               {
                 renderedFeatures.features.map(road =>
                   <TaskListItem
-                    vpromm={ road.properties.or_vpromms }
-                    province={ road.properties.province }
-                    _id={ road.properties._id }
-                    mode={ mode }
-                    type={ type }
-                    language={ language }
-                    key={ road.properties._id }
-                    selected={ selectedStep0.includes(road.properties._id) }
-                    isHighlighted={ road.properties._id === hoverId }
-                    onMouseOver={ this.hoverItemOver }
-                    onMouseOut={ this.hoverItemOut }
-                    toggleSelect={ this.selectStep0 }
+                    vpromm={road.properties.or_vpromms}
+                    province={road.properties.province}
+                    _id={road.properties._id}
+                    mode={mode}
+                    type={type}
+                    language={language}
+                    key={road.properties._id}
+                    selected={selectedStep0.includes(road.properties._id)}
+                    isHighlighted={road.properties._id === hoverId}
+                    onMouseOver={this.hoverItemOver}
+                    onMouseOut={this.hoverItemOut}
+                    toggleSelect={this.selectStep0}
                   />
                 )
               }
@@ -470,19 +450,19 @@ var Tasks = React.createClass({
         </section>
       </div>
     );
-  },
+  }
 
-  setSkipError: function (e) {
+  setSkipError(e) {
     e.preventDefault();
-    this.setState({'skipType': 'error'});
-  },
+    this.setState({ 'skipType': 'error' });
+  }
 
-  setSkipNotError: function (e) {
+  setSkipNotError(e) {
     e.preventDefault();
-    this.setState({'skipType': 'noterror'});
-  },
+    this.setState({ 'skipType': 'noterror' });
+  }
 
-  clickSkipTask: function (e) {
+  clickSkipTask(e) {
     const { skipType } = this.state;
     e.preventDefault();
     if (skipType === 'noterror') {
@@ -490,9 +470,9 @@ var Tasks = React.createClass({
     } else {
       this.next();
     }
-  },
+  }
 
-  renderActionsStep0: function () {
+  renderActionsStep0() {
     const { mode, selectedStep0, skipType } = this.state;
     let isDisabled;
     if (mode === 'dedupe') {
@@ -503,7 +483,7 @@ var Tasks = React.createClass({
     return (
       <div className='panel__f-actions'>
         <div className='button-group button-group--horizontal'>
-          <button type='button' className='pfa-secondary' onClick={ this.clickSkipTask }>
+          <button type='button' className='pfa-secondary' onClick={this.clickSkipTask}>
             <span><T>Skip task</T></span>
           </button>
           <Dropdown
@@ -516,8 +496,8 @@ var Tasks = React.createClass({
             alignment='right' >
             <h3 className='drop__title'><T>Marked as</T></h3>
             <ul className='drop__menu drop__menu--select'>
-              <li><a href='#' onClick={this.setSkipNotError} className={`drop__menu-item  ${skipType === 'noterror' ? 'drop__menu-item--active' : ''}` }><T>Not an error</T></a></li>
-              <li><a href='#' onClick={this.setSkipError} className={ `drop__menu-item ${skipType === 'error' ? 'drop__menu-item--active' : ''}` }><T>An error</T></a></li>
+              <li><a href='#' onClick={this.setSkipNotError} className={`drop__menu-item  ${skipType === 'noterror' ? 'drop__menu-item--active' : ''}`}><T>Not an error</T></a></li>
+              <li><a href='#' onClick={this.setSkipError} className={`drop__menu-item ${skipType === 'error' ? 'drop__menu-item--active' : ''}`}><T>An error</T></a></li>
             </ul>
           </Dropdown>
         </div>
@@ -525,16 +505,16 @@ var Tasks = React.createClass({
         <button
           type='button'
           className={`pfa-primary ${isDisabled ? 'disabled' : ''}`}
-          disabled={ isDisabled }
-          onClick={ this.gotoStep1 }
+          disabled={isDisabled}
+          onClick={this.gotoStep1}
         >
           <span><T>Continue</T></span>
         </button>
       </div>
     );
-  },
+  }
 
-  renderActionsStep1: function () {
+  renderActionsStep1() {
     const { mode, selectedStep1 } = this.state;
     const isDisabled = !selectedStep1;
     let onClick;
@@ -545,48 +525,48 @@ var Tasks = React.createClass({
     }
     return (
       <div className='panel__f-actions'>
-        <button type='button' className='pfa-secondary' onClick={ this.gotoStep0 }>
+        <button type='button' className='pfa-secondary' onClick={this.gotoStep0}>
           <span><T>Back</T></span>
         </button>
         <button
           type='button'
           className={`pfa-primary ${isDisabled ? 'disabled' : ''}`}
-          disabled={ isDisabled }
-          onClick={ onClick }
+          disabled={isDisabled}
+          onClick={onClick}
         >
           <span><T>Apply</T></span>
         </button>
       </div>
     );
-  },
+  }
 
-  doMore: function () {
+  doMore() {
     this.setState({
       selectedStep0: [],
       selectedStep1: null,
       step: 0
     }, this.syncMap);
-  },
+  }
 
-  renderActionsStep2: function () {
+  renderActionsStep2() {
     return (
       <div className='panel__f-actions'>
-        <button type='button' className='pfa-secondary' onClick={ this.doMore }><span><T>Do more</T></span></button>
-        <button type='button' onClick={ this.next } className='pfa-primary'><span><T>Next task</T></span></button>
+        <button type='button' className='pfa-secondary' onClick={this.doMore}><span><T>Do more</T></span></button>
+        <button type='button' onClick={this.next} className='pfa-primary'><span><T>Next task</T></span></button>
       </div>
     );
-  },
+  }
 
-  getSelectedVpromms: function () {
+  getSelectedVpromms() {
     const { renderedFeatures, selectedStep0 } = this.state;
     const vpromms = renderedFeatures.features
       .filter(feat => selectedStep0.includes(feat.properties._id))
       .map(feat => feat.properties.or_vpromms || 'No ID');
     return _.uniq(vpromms);
-  },
+  }
 
 
-  renderStep1: function () {
+  renderStep1() {
     const { mode, selectedStep0, selectedStep1, renderedFeatures, hoverId } = this.state;
     const { language } = this.props;
     let step1Features;
@@ -603,56 +583,56 @@ var Tasks = React.createClass({
       <div className='panel__body'>
         <section className='task-group'>
           <header className='task-group__header'>
-            <h1 className='task-group__title'><T>{ title }</T></h1>
+            <h1 className='task-group__title'><T>{title}</T></h1>
           </header>
           <div className='task-group__body'>
             <ul className='road-list'>
               {
                 step1Features.map(road =>
                   <TaskListItem
-                    vpromm={ road.properties.or_vpromms }
-                    province={ road.properties.province }
-                    _id={ road.properties._id }
-                    mode={ mode }
+                    vpromm={road.properties.or_vpromms}
+                    province={road.properties.province}
+                    _id={road.properties._id}
+                    mode={mode}
                     type='radio'
-                    language={ language }
-                    key={ road.properties._id }
-                    selected={ selectedStep1 === road.properties._id }
-                    isHighlighted={ road.properties._id === hoverId }
-                    onMouseOver={ this.hoverItemOver }
-                    onMouseOut={ this.hoverItemOut }
-                    toggleSelect={ this.selectStep1 }
+                    language={language}
+                    key={road.properties._id}
+                    selected={selectedStep1 === road.properties._id}
+                    isHighlighted={road.properties._id === hoverId}
+                    onMouseOver={this.hoverItemOver}
+                    onMouseOut={this.hoverItemOut}
+                    toggleSelect={this.selectStep1}
                   />
                 )
               }
             </ul>
           </div>
         </section>
-        { mode === 'dedupe' &&
-                        <section className='task-group'>
-                          <header className='task-group__header'>
-                            <h1 className='task-group__title'><T>Select VPROMMID to Apply</T></h1>
-                          </header>
-                          <div className='task-group__body'>
-                            <form className='form task-group__actions'>
-                              <div className='form__group'>
-                                <label className='form__label visually-hidden'><T>VPROMMIDs</T></label>
-                                <select className='form__control' onChange={ this.selectVpromm }>
-                                  { vpromms.map(id =>
-                                    <option key={ id } value={ id }>{ id }</option>
-                                  )
-                                  }
-                                </select>
-                              </div>
-                            </form>
-                          </div>
-                        </section>
+        {mode === 'dedupe' &&
+          <section className='task-group'>
+            <header className='task-group__header'>
+              <h1 className='task-group__title'><T>Select VPROMMID to Apply</T></h1>
+            </header>
+            <div className='task-group__body'>
+              <form className='form task-group__actions'>
+                <div className='form__group'>
+                  <label className='form__label visually-hidden'><T>VPROMMIDs</T></label>
+                  <select className='form__control' onChange={this.selectVpromm}>
+                    {vpromms.map(id =>
+                      <option key={id} value={id}>{id}</option>
+                    )
+                    }
+                  </select>
+                </div>
+              </form>
+            </div>
+          </section>
         }
       </div>
     );
-  },
+  }
 
-  renderStep2: function () {
+  renderStep2() {
     const { mode, selectedStep0 } = this.state;
     const { language } = this.props;
 
@@ -667,25 +647,25 @@ var Tasks = React.createClass({
         </div>
       </div>
     );
-  },
+  }
 
-  gotoStep0: function () {
-    this.setState({step: 0, selectedStep1: null}, this.syncMap);
-  },
+  gotoStep0() {
+    this.setState({ step: 0, selectedStep1: null }, this.syncMap);
+  }
 
-  gotoStep1: function () {
-    this.setState({step: 1});
-  },
+  gotoStep1() {
+    this.setState({ step: 1 });
+  }
 
-  gotoStep2: function () {
-    this.setState({step: 2});
-  },
+  gotoStep2() {
+    this.setState({ step: 2 });
+  }
 
-  handleSelectVprommid: function (selectedVprommid) {
+  handleSelectVprommid(selectedVprommid) {
     this.setState({ applyVprommid: selectedVprommid });
-  },
+  }
 
-  commitDedupe: function () {
+  commitDedupe() {
     const { selectedStep1, renderedFeatures, applyVprommid } = this.state;
     const { features } = renderedFeatures;
     const toDelete = features.filter(feature => feature.properties._id !== selectedStep1);
@@ -696,9 +676,9 @@ var Tasks = React.createClass({
     // TODO - should deduping mark task as done?
     this.props._markTaskAsDone(toDelete.map(feature => feature.properties._id));
     this.gotoStep2();
-  },
+  }
 
-  commitJoin: function () {
+  commitJoin() {
     const { selectedStep0, selectedStep1, renderedFeatures } = this.state;
     const { features } = renderedFeatures;
     const line1 = features.find(f => f.properties._id === selectedStep0[0]);
@@ -729,7 +709,7 @@ var Tasks = React.createClass({
           };
         }
         return context;
-      }, {distance: Infinity, line1Point: null, line2Point: null});
+      }, { distance: Infinity, line1Point: null, line2Point: null });
 
 
       // Figure out where to add the extra point.
@@ -739,10 +719,10 @@ var Tasks = React.createClass({
       const line2Point = pointOnLine(line2, point(closestPoints.line2Point));
 
       if (line1Point.properties.index === 0
-                            || line1Point.properties.index === line1.geometry.coordinates.length - 1) {
+        || line1Point.properties.index === line1.geometry.coordinates.length - 1) {
         changes.push(insertPointOnLine(line1, line2Point));
       } else if (line2Point.properties.index === 0
-                              || line2Point.properties.index === line2.geometry.coordinates.length - 1) {
+        || line2Point.properties.index === line2.geometry.coordinates.length - 1) {
         changes.push(insertPointOnLine(line2, line1Point));
       } else {
         changes.push(insertPointOnLine(line1, point(closestPoints.line2Point)));
@@ -762,51 +742,51 @@ var Tasks = React.createClass({
     this.props._markTaskAsDone([line1.properties._id, line2.properties._id]);
 
     this.gotoStep2();
-  },
+  }
 
-  markAsDone: function () {
+  markAsDone() {
     // This function is different from #next, in that it allows you
     // to specify all visible roads as 'done'
     this.props._markTaskAsDone(this.state.renderedFeatures.features.map(feature => Number(feature.properties._id)));
     this.props.fetchTaskCount();
     this.next();
-  },
+  }
 
-  next: function () {
+  next() {
     this.map.setFilter(roadSelected, ['all', ['in', '_id', '']]);
     this.props.skipTask(this.props.taskId);
     this.setState({ selectedStep0: [], selectedStep1: null, mode: 'dedupe', selectedVpromm: null, step: 0, renderedFeatures: null }, this.props.fetchNextTask);
-  },
+  }
 
-  handleProvinceChange: function (selectedProvince) {
+  handleProvinceChange(selectedProvince) {
     const value = selectedProvince ? selectedProvince.value : null;
     this.props.selectNextTaskProvince(value);
     this.props.fetchNextTask();
-  },
+  }
 
-  renderProvinceSelect: function () {
+  renderProvinceSelect() {
     const { selectedProvince, language } = this.props;
 
-    const provinceOptions = this.props.selectOptions.provinces.province.map((p) => { return {value: p.id, label: `${p.name_en} (P)`}; });
-    const districtOptions = this.props.selectOptions.districts.district.map((d) => { return {value: d.id, label: `${d.name_en} (D)`}; });
+    const provinceOptions = this.props.selectOptions.provinces.province.map((p) => { return { value: p.id, label: `${p.name_en} (P)` }; });
+    const districtOptions = this.props.selectOptions.districts.district.map((d) => { return { value: d.id, label: `${d.name_en} (D)` }; });
     const options = [].concat(provinceOptions).concat(districtOptions);
     const value = selectedProvince;
     return (
       <Select
         name="form-province-select"
         value={value}
-        onChange= {this.handleProvinceChange}
-        options={ options }
-        placeholder ={ translate(language, 'Filter by province or district') }
+        onChange={this.handleProvinceChange}
+        options={options}
+        placeholder={translate(language, 'Filter by province or district')}
       />
     );
-  },
+  }
 
-  render: function () {
+  render() {
     const { taskId, taskCount, taskStatus } = this.props;
     const { hoverId } = this.state;
     const renderPanel = !((taskStatus === 'error' || taskStatus === 'No tasks remaining') ||
-                              (!taskId && taskStatus === 'pending'));
+      (!taskId && taskStatus === 'pending'));
     return (
       <section className='inpage inpage--alt'>
         <header className='inpage__header'>
@@ -816,14 +796,14 @@ var Tasks = React.createClass({
             </div>
             <nav className='inpage__nav'>
               <ul className='inpage__menu'>
-                <li><Link to={`/${this.props.language}/tasks`} className='inpage__menu-link' activeClassName='inpage__menu-link--active' title='View'><span><T>Solve</T> <small className='label'>{ taskCount }</small></span></Link></li>
+                <li><Link to={`/${this.props.language}/tasks`} className='inpage__menu-link' activeClassName='inpage__menu-link--active' title='View'><span><T>Solve</T> <small className='label'>{taskCount}</small></span></Link></li>
                 <li><a className='inpage__menu-link disabled' href='#' title='View'><span><T>Stats</T></span></a></li>
               </ul>
             </nav>
             <div className='inpage__actions'>
               <div className='form__group task-search'>
                 <label className='form__label' htmlFor='form-select-1'><T>Search admin area</T></label>
-                { this.props.selectOptions.provinces && this.renderProvinceSelect() }
+                {this.props.selectOptions.provinces && this.renderProvinceSelect()}
               </div>
             </div>
           </div>
@@ -834,7 +814,7 @@ var Tasks = React.createClass({
             <figure className='map'>
               <div className='map__media' id='map'>
                 <form className='satellite-toggle mapboxgl-ctrl-top-left'>
-                  <input type='checkbox' value='satellite' onChange={ this.showSatellite }></input>
+                  <input type='checkbox' value='satellite' onChange={this.showSatellite}></input>
                   <label> Show Bing Satellite</label>
                 </form>
               </div>
@@ -843,21 +823,21 @@ var Tasks = React.createClass({
               }
               {
                 taskStatus === 'error' &&
-                                  <div className='placeholder__fullscreen'>
-                                    <h3 className='placeholder__message'><T>Error</T></h3>
-                                  </div>
+                <div className='placeholder__fullscreen'>
+                  <h3 className='placeholder__message'><T>Error</T></h3>
+                </div>
               }
               {
                 taskStatus === 'No tasks remaining' &&
-                                  <div className='placeholder__fullscreen'>
-                                    <h3 className='placeholder__message'><T>No tasks remaining</T></h3>
-                                  </div>
+                <div className='placeholder__fullscreen'>
+                  <h3 className='placeholder__message'><T>No tasks remaining</T></h3>
+                </div>
               }
               {
                 !taskId && taskStatus === 'pending' &&
-                                  <div className='placeholder__fullscreen'>
-                                    <h3 className='placeholder__message'><T>Loading</T></h3>
-                                  </div>
+                <div className='placeholder__fullscreen'>
+                  <h3 className='placeholder__message'><T>Loading</T></h3>
+                </div>
               }
               {
                 renderPanel && this.renderInstrumentPanel()
@@ -870,11 +850,33 @@ var Tasks = React.createClass({
       </section>
     );
   }
-});
+};
+
+Tasks.propTypes = {
+  fetchNextTask: PropTypes.func,
+  setMapPosition: PropTypes.func,
+  _queryOsm: PropTypes.func,
+  _markTaskAsDone: PropTypes.func,
+  _deleteWays: PropTypes.func,
+  skipTask: PropTypes.func,
+  fetchTaskCount: PropTypes.func,
+  osmStatus: PropTypes.string,
+  taskStatus: PropTypes.string,
+  meta: PropTypes.object,
+  task: PropTypes.object,
+  taskId: PropTypes.number,
+  taskUpdatedAt: PropTypes.string,
+  taskCount: PropTypes.number,
+  selectOptions: PropTypes.object,
+  selectedProvince: PropTypes.number,
+  selectNextTaskProvince: PropTypes.func,
+  dedupeWayTask: PropTypes.func,
+  language: PropTypes.string
+};
 
 
 export default compose(
-  getContext({ language: React.PropTypes.string }),
+  getContext({ language: PropTypes.string }),
   connect(
     state => ({
       task: state.waytasks.geoJSON,
@@ -900,7 +902,7 @@ export default compose(
     })
   ),
   lifecycle({
-    componentDidMount: function () {
+    componentDidMount() {
       // TODO - data fetching for this page should be moved into a route container
       // fire to get all the provinces here.
       this.props.fetchProvinces();
@@ -910,7 +912,7 @@ export default compose(
   })
 )(Tasks);
 
-function insertPointOnLine (feature, point) {
+function insertPointOnLine(feature, point) {
   const nearest = pointOnLine(feature, point);
   const { index } = nearest.properties;
   const coordinates = feature.geometry.coordinates.slice();

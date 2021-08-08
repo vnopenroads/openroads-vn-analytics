@@ -1,5 +1,6 @@
 'use strict';
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import c from 'classnames';
 import { connect } from 'react-redux';
 import {
@@ -25,7 +26,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from './modal';
 
 
 class AssetsCreateModal extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.onSave = this.onSave.bind(this);
@@ -34,29 +35,29 @@ class AssetsCreateModal extends React.Component {
     this.state = this.prepareState(props);
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (!this.props.revealed && nextProps.revealed) {
       this.setState(this.prepareState(nextProps));
     }
   }
 
-  prepareState (props) {
+  prepareState(props) {
     return {
       vpromm: ''
     };
   }
 
-  onValueChange (what, event) {
+  onValueChange(what, event) {
     this.setState({ [what]: event.target.value });
   }
 
-  onCloseClick (e) {
+  onCloseClick(e) {
     // Block while processing.
     if (this.props.roadPropsOp.processing) return;
     this.props.onCloseClick();
   }
 
-  async onSave (e) {
+  async onSave(e) {
     e.preventDefault();
     const vpromm = this.state.vpromm;
 
@@ -65,7 +66,7 @@ class AssetsCreateModal extends React.Component {
     try {
       const res = await this.props.createRoad(vpromm);
       if (res.error) throw new Error(res.error);
-      this.props.onCloseClick({action: 'redirect', vpromm});
+      this.props.onCloseClick({ action: 'redirect', vpromm });
     } catch (error) {
       error.json().then(errMessage => {
         alert(translate(this.props.language, errMessage.message));
@@ -73,7 +74,7 @@ class AssetsCreateModal extends React.Component {
     }
   }
 
-  render () {
+  render() {
     const { processing } = this.props.roadPropsOp;
 
     return (
@@ -89,7 +90,7 @@ class AssetsCreateModal extends React.Component {
           </div>
         </ModalHeader>
         <ModalBody>
-          <form className={c('form', {disabled: processing})} disabled={processing} onSubmit={this.onSave}>
+          <form className={c('form', { disabled: processing })} disabled={processing} onSubmit={this.onSave}>
             <div className='inner'>
               <fieldset className='form__fieldset'>
                 <legend className='form__legend'><T>Meta</T></legend>
@@ -102,8 +103,8 @@ class AssetsCreateModal extends React.Component {
           </form>
         </ModalBody>
         <ModalFooter>
-          <button className={c('mfa-xmark', {disabled: processing})} disabled={processing} type='button' onClick={this.onCloseClick}><span>Cancel</span></button>
-          <button className={c('mfa-main mfa-tick', {disabled: processing})} disabled={processing} type='submit' onClick={this.onSave}><span>Save</span></button>
+          <button className={c('mfa-xmark', { disabled: processing })} disabled={processing} type='button' onClick={this.onCloseClick}><span>Cancel</span></button>
+          <button className={c('mfa-main mfa-tick', { disabled: processing })} disabled={processing} type='submit' onClick={this.onSave}><span>Save</span></button>
         </ModalFooter>
       </Modal>
     );
@@ -122,7 +123,7 @@ if (environment !== 'production') {
 
 
 class AssetsCreate extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.onCreateAssetClick = this.onCreateAssetClick.bind(this);
@@ -133,7 +134,7 @@ class AssetsCreate extends React.Component {
     };
   }
 
-  onModalClose (data = {}) {
+  onModalClose(data = {}) {
     this.setState({ createModalOpen: false });
     if (data.action === 'redirect') {
       // Why the setTimeout you ask?
@@ -141,16 +142,16 @@ class AssetsCreate extends React.Component {
       // It thinks that the action is being dispatched from a reducer and
       // throws an error. "Reducers may not dispatch actions."
       // This is meant to refresh the data after properties are saved.
-      setTimeout(() => { this.props.router.push({pathname: `/${this.props.language}/assets/road/${data.vpromm}/`}); }, 0);
+      setTimeout(() => { this.props.router.push({ pathname: `/${this.props.language}/assets/road/${data.vpromm}/` }); }, 0);
     }
   }
 
-  onCreateAssetClick (e) {
+  onCreateAssetClick(e) {
     e.preventDefault();
     this.setState({ createModalOpen: true });
   }
 
-  render () {
+  render() {
     return (
       <div>
         <a href='#' className='ica-plus ica-main' onClick={this.onCreateAssetClick}><T>Add asset</T></a>
@@ -169,9 +170,9 @@ class AssetsCreate extends React.Component {
 if (environment !== 'production') {
   AssetsCreate.propTypes = {
     router: PropTypes.object,
-    createRoad: React.PropTypes.func,
-    language: React.PropTypes.string,
-    roadPropsOp: React.PropTypes.object
+    createRoad: PropTypes.func,
+    language: PropTypes.string,
+    roadPropsOp: PropTypes.object
   };
 }
 
@@ -189,11 +190,11 @@ const stateOpOnRoad = {
 const reducerOpOnRoad = (state = stateOpOnRoad, action) => {
   switch (action.type) {
     case CREATE_ROAD:
-      return {...state, processing: true, error: false};
+      return { ...state, processing: true, error: false };
     case CREATE_ROAD_SUCCESS:
-      return {...state, processing: false, error: false, data: action.data};
+      return { ...state, processing: false, error: false, data: action.data };
     case CREATE_ROAD_ERROR:
-      return {...state, processing: false, error: true};
+      return { ...state, processing: false, error: true };
   }
 
   return state;
@@ -201,7 +202,7 @@ const reducerOpOnRoad = (state = stateOpOnRoad, action) => {
 
 export default compose(
   withRouter,
-  getContext({ language: React.PropTypes.string }),
+  getContext({ language: PropTypes.string }),
   local({
     key: ({ vpromm }) => `create-road`,
     createStore: () => createStore(reducerOpOnRoad),

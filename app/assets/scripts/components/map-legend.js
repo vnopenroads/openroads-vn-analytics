@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   getContext
 } from 'recompose';
@@ -41,8 +42,8 @@ const MapLegend = ({ layer }) => {
           <div>
             <div className='map-legend-scale-container'>
               <div className='map-legend-scale' />
-              <span className='map-legend-scale-label'>{ bestColorLabel }</span>
-              <span className='map-legend-scale-label'>{ worstColorLabel }</span>
+              <span className='map-legend-scale-label'>{bestColorLabel}</span>
+              <span className='map-legend-scale-label'>{worstColorLabel}</span>
             </div>
             <div className='map-legend-nodata-container'>
               <div className='map-legend-nodata' />
@@ -57,9 +58,9 @@ const MapLegend = ({ layer }) => {
 
 
 MapLegend.propTypes = {
-  layer: React.PropTypes.string,
-  language: React.PropTypes.string
+  layer: PropTypes.string,
+  language: PropTypes.string
 };
 
 
-export default getContext({ language: React.PropTypes.string })(MapLegend);
+export default getContext({ language: PropTypes.string })(MapLegend);
