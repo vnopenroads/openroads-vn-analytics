@@ -30,7 +30,7 @@ var pkg;
 // Set the correct environment, which controls what happens in config.js
 if (!process.env.DS_ENV) {
   if (!process.env.CIRCLE_BRANCH || process.env.CIRCLE_BRANCH !== process.env.PRODUCTION_BRANCH) {
-    process.env.DS_ENV = 'staging';
+    process.env.DS_ENV = 'uat';
   } else {
     process.env.DS_ENV = 'production';
   }
@@ -42,7 +42,7 @@ var prodBuild = false;
 // ------------------------- Helper functions --------------------------------//
 // ---------------------------------------------------------------------------//
 
-function readPackage () {
+function readPackage() {
   pkg = JSON.parse(fs.readFileSync('package.json'));
 }
 readPackage();
@@ -101,9 +101,9 @@ gulp.task('javascript', function () {
     cache: {},
     packageCache: {},
     fullPaths: true
-  }), {poll: true});
+  }), { poll: true });
 
-  function bundler () {
+  function bundler() {
     if (pkg.dependencies) {
       watcher.external(Object.keys(pkg.dependencies));
     }
@@ -123,10 +123,10 @@ gulp.task('javascript', function () {
       .pipe(source('bundle.js'))
       .pipe(buffer())
       // Source maps.
-      .pipe(sourcemaps.init({loadMaps: true}))
+      .pipe(sourcemaps.init({ loadMaps: true }))
       .pipe(sourcemaps.write('./'))
       .pipe(gulp.dest('.tmp/assets/scripts'))
-      .pipe(reload({stream: true}));
+      .pipe(reload({ stream: true }));
   }
 
   watcher
@@ -149,10 +149,10 @@ gulp.task('vendorScripts', function () {
     .on('error', log.bind(log, 'Browserify Error'))
     .pipe(source('vendor.js'))
     .pipe(buffer())
-    .pipe(sourcemaps.init({loadMaps: true}))
+    .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('.tmp/assets/scripts/'))
-    .pipe(reload({stream: true}));
+    .pipe(reload({ stream: true }));
 });
 
 // /////////////////////////////////////////////////////////////////////////////
@@ -177,7 +177,7 @@ gulp.task('collecticons', function (done) {
     '--no-preview'
   ];
 
-  return cp.spawn('node', args, {stdio: 'inherit'})
+  return cp.spawn('node', args, { stdio: 'inherit' })
     .on('close', done);
 });
 
@@ -188,7 +188,7 @@ gulp.task('collecticons', function (done) {
 gulp.task('build', ['vendorScripts', 'javascript', 'collecticons'], function () {
   gulp.start(['html', 'images', 'extras'], function () {
     return gulp.src('dist/**/*')
-      .pipe($.size({title: 'build', gzip: true}))
+      .pipe($.size({ title: 'build', gzip: true }))
       .pipe(exit());
   });
 });
@@ -218,19 +218,20 @@ gulp.task('styles', function () {
           return v;
         }
       },
-      includePaths: require('node-bourbon').with('node_modules/jeet')
+      includePaths: ['node_modules/bourbon/app/assets/stylesheets', 'node_modules/jeet', 'node_modules/react-bootstrap-table-next/dist']
+      // includePaths: require('node-bourbon').with('node_modules/jeet')
     }))
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest('.tmp/assets/styles'))
-    .pipe(reload({stream: true}));
+    .pipe(reload({ stream: true }));
 });
 
 gulp.task('html', ['styles'], function () {
   return gulp.src('app/*.html')
-    .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
+    .pipe($.useref({ searchPath: ['.tmp', 'app', '.'] }))
     // Do not compress comparisons, to avoid MapboxGLJS minification issue
     // https://github.com/mapbox/mapbox-gl-js/issues/4359#issuecomment-286277540
-    .pipe($.if('*.js', $.uglify({compress: {comparisons: false}})))
+    .pipe($.if('*.js', $.uglify({ compress: { comparisons: false } })))
     .pipe($.if('*.css', $.csso()))
     .pipe($.if(/\.(css|js)$/, rev()))
     .pipe(revReplace())
@@ -240,12 +241,12 @@ gulp.task('html', ['styles'], function () {
 gulp.task('images', function () {
   return gulp.src('app/assets/graphics/**/*')
     .pipe($.cache($.imagemin([
-      $.imagemin.gifsicle({interlaced: true}),
-      $.imagemin.jpegtran({progressive: true}),
-      $.imagemin.optipng({optimizationLevel: 5}),
+      $.imagemin.gifsicle({ interlaced: true }),
+      $.imagemin.jpegtran({ progressive: true }),
+      $.imagemin.optipng({ optimizationLevel: 5 }),
       // don't remove IDs from SVGs, they are often used
       // as hooks for embedding and styling
-      $.imagemin.svgo({plugins: [{cleanupIDs: false}]})
+      $.imagemin.svgo({ plugins: [{ cleanupIDs: false }] })
     ])))
     .pipe(gulp.dest('dist/assets/graphics'));
 });

@@ -36,6 +36,7 @@ class CBA extends React.Component {
     mapboxgl.accessToken = config.mbToken;
 
     const { lng, lat, zoom, activeRoad, language } = this.props;
+    console.log(lng + "," + lat + "," + language);
     if (activeRoad) {
       this.props.fetchActiveRoad(activeRoad);
     }
@@ -295,7 +296,8 @@ class CBA extends React.Component {
 
   render() {
     var subPageNav = ["Results", "Config"];
-    return (<SitePage pageName="CBA" innerPage={this.renderInnerPage()} noMargins={true} subPageNav={subPageNav} />);
+    const { language } = this.props;
+    return (<SitePage pageName="CBA" innerPage={this.renderInnerPage()} noMargins={true} subPageNav={subPageNav} language={language} />);
   }
 };
 
@@ -314,9 +316,7 @@ CBA.propTypes = {
 
 export default compose(
   withRouter,
-  withProps(({ location: { query: { activeRoad = '' } } }) => ({
-    activeRoad
-  })),
+  withProps(({ location: { query: { activeRoad = '' } } }) => ({ activeRoad })),
   getContext({ language: PropTypes.string }),
   connect(
     state => ({

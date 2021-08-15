@@ -1,5 +1,5 @@
 import React from 'react'
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import BootstrapTable from 'react-bootstrap-table-next';
 import fakeData from '../../fakeData';
 
 const CbaTable = () => {
@@ -23,6 +23,26 @@ const CbaTable = () => {
             }
         }
     };
+
+    const columns = [
+        { dataField: 'road_section_id', text: "ID", sort: true },
+        { dataField: 'road_number', text: "Road Number", sort: true },
+        { dataField: 'road_name', text: "Road Name", sort: true },
+        { dataField: 'district', text: "District", sort: true },
+        { dataField: 'length', text: "Length (km)", sort: true },
+        { dataField: 'road_class', text: "Road Class", sort: true },
+        { dataField: 'surface_type', text: "Surface Type", sort: true },
+        { dataField: 'traffic_level', text: "Traffic Level", sort: true },
+    ]
+
+    return <BootstrapTable
+        keyField='volume'
+        data={dataList}
+        columns={columns}
+        bordered={false}
+        // cellEdit={cellEditFactory({ mode: 'click' })}
+        striped hover
+    />;
 
     return (
         <div>

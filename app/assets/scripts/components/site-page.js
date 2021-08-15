@@ -6,11 +6,12 @@ import T from '../components/t';
 const SitePage = ({ pageName, innerPage, noMargins, language, subPageNav }) => {
   var inpageClasses = "inpage";
   if (noMargins) { inpageClasses += " inpage--alt" }
+  var urlPrefix = `/${language.toLowerCase()}/${pageName.toLowerCase()}`;
 
   var subPageNav = subPageNav.map((subPageName) => {
     return (
       <li key={subPageName}>
-        <Link to={`/${language}/${pageName}/${subPageName}`} className='inpage__menu-link' activeClassName='inpage__menu-link--active' title={subPageName}>
+        <Link to={`${urlPrefix}/${subPageName.toLowerCase()}`} className='inpage__menu-link' activeClassName='inpage__menu-link--active' title={subPageName}>
           <span><T>{subPageName}</T></span>
         </Link>
       </li>);
