@@ -5,5 +5,5 @@
 module.exports = {
   environment: 'uat',
   // api: 'http://orma-uat.drvn.gov.vn/api',
-  api: 'http://localhost:4000/api',
+  api: 'http://localhost:4000',
 };

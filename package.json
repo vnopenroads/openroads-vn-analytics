@@ -23,7 +23,7 @@
     "test": "mocha test/*"
   },
   "engines": {
-    "node": "8.x"
+    "node": "10.x"
   },
   "browserify": {
     "transform": [
@@ -82,9 +82,11 @@
     "gulp-size": "^3.0.0",
     "gulp-sourcemaps": "^2.4.1",
     "gulp-uglify": "^3.0.0",
+    "gulp-uglify-es": "^3.0.0",
     "gulp-useref": "^3.1.2",
     "jeet": "^7.1.0",
     "mocha": "^3.5.0",
+    "natives": "*",
     "node-bourbon": "^4.2.8",
     "node-notifier": "^5.1.2",
     "node-sass": "^4.5.1",
