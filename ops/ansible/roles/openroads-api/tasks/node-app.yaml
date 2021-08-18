@@ -1,0 +1,88 @@
+- block:
+
+  # - name: Create log directory
+  #   ansible.builtin.file:
+  #     path: "/home/ubuntu/log"
+  #     state: directory
+
+  # # - name: Install Node
+  # #   command: 
+  # # curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -       
+
+  # - name: install Node/NPM
+  #   apt: 
+  #     update: true
+  #     pkg: 
+  #       - nodejs
+  #       - npm
+  #       - make
+  #       - gcc
+  #       - g++
+  #   become: true
+
+  # - name: Create app directory
+  #   ansible.builtin.file:
+  #     path: "{{ node_app_dir }}"
+  #     state: directory
+
+  - name: Deploy the api source 
+    synchronize:
+      src: "{{ api_src_dir }}/{{ item }}"
+      dest: "{{ node_app_dir }}/"
+    with_items: 
+      - src
+      - db
+  
+  # - ansible.builtin.copy:
+  #     src: "{{ api_src_dir }}/{{ item }}"
+  #     dest: "{{ node_app_dir }}/"
+  #   with_items:
+  #     - package.json
+  #     - index.js
+
+  # - name: Install SupervisorD
+  #   pip:
+  #     name: supervisor
+  #   become: yes
+
+  # - name: Copy systemd service file
+  #   copy:
+  #       src: templates/supervisord.service
+  #       dest: /etc/systemd/system/
+  #   become: yes
+  #   notify: restart supervisord
+
+  # - name: Deploy supervisord config from template
+  #   template:
+  #     src: supervisord.conf.j2
+  #     dest: /home/ubuntu/supervisord.conf
+  #   become: yes
+  #   notify: restart supervisord
+
+  - name: Create pgpass file
+    file: 
+      path: "/home/ubuntu/.pgpass"
+      state: touch
+      mode: 0600
+
+  # - name: Create pgpass file
+  #   file: 
+  #     path: "/home/ubuntu/.pgpass"
+  #     state: file
+
+  - name: Add password
+    lineinfile:
+      path: "/home/ubuntu/.pgpass"
+      regexp: '.*orma:orma'
+      line: "*:*:*:orma:orma"
+
+  # - name: Restore a copy of the database
+  #   command: 
+  #     cmd: "pg_restore -U orma -h localhost -d orma /home/ubuntu/psql_dump_20210713"
+  
+  # - name: Restore a copy of the database
+  #   command: 
+  #     cmd: "psql 1gg
+  
+
+  tags: node-app

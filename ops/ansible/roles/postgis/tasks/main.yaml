@@ -1,0 +1,6 @@
+#- include_tasks: disks.yaml
+#  tags: disks
+- include_tasks: postgres.yaml
+  tags: 
+    - postgis
+    - postgres

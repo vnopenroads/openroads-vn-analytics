@@ -1,0 +1,37 @@
+[supervisord]
+logfile          = /home/ubuntu/log/supervisord.log
+logfile_maxbytes = 50MB
+logfile_backups  = 10
+loglevel         = info
+pidfile          = /home/ubuntu/log/supervisord.pid
+nodaemon         = false
+minfds           = 1024
+minprocs         = 200
+umask            = 022
+user             = root
+identifier       = supervisor
+directory        = /home/ubuntu/log
+nocleanup        = true
+childlogdir      = /home/ubuntu/log
+strip_ansi       = false
+
+[supervisorctl]
+
+[inet_http_server]
+port = 127.0.0.1:9001
+
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
+[program:openroads-vn-api]
+command         = npm start
+directory       = /home/ubuntu/openroads-vn-api/current
+stdout_logfile  = /home/ubuntu/log/openroads-vn-api.stdout
+redirect_stderr = true
+autostart       = true
+autorestart     = true
+startsecs       = 10
+user            = ubuntu
+stopsignal      = INT
+startretries    = 99999
+environment     = 

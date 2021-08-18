@@ -1,0 +1,12 @@
+- hosts: openroads-analytics
+  gather_facts: true
+  vars:
+    ansible_os_family: Debian
+    ansible_python_interpreter: auto
+  roles:
+    - postgis
+
+  tasks:
+    - debug:
+        msg: "jamie"
+      tags: postgis

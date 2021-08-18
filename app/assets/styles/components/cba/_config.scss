@@ -1,0 +1,143 @@
+// $base-color: #c6538c;
+$base-color: rgb(245, 136, 136);
+$highlight-color: rgba($base-color, 0.38);
+$verylight-color: rgba($base-color, 0.28);
+
+.content-con {
+    display: flex;
+    // border: 5px solid #ffb9b9;
+    // background-color: #ff000033;
+}
+.content-con-left {
+    flex: 1;
+    margin-right: 20px;
+    margin-left: 20px;
+    margin-top: 1.3%;
+    height: 20%;
+}
+.content-con-right {
+    flex: 5;
+    margin: 15px;
+}
+.title-con {
+    padding: 15px;
+    padding: 15px 15px 0px 15px;
+    text-align: center;
+    font-weight: bold;
+    // background-color: #ffff;
+
+    
+}
+.config-name {
+    padding: 0px 0px 5px 0px;
+    border-bottom: 1px solid #bdb9b9;
+    text-align: center;
+    .dropdown {
+        border: 0px solid #ff0000;
+        button { 
+            border: 0px;
+            &:hover {
+                background-color: $verylight-color !important;
+            }
+        }
+        &.show {
+            button {
+                background-color: $verylight-color !important;
+                border: 0px;
+            }
+        }
+        //     color: #aaa;
+        //     // color: #ffffff;
+
+        //     &:active {
+        //         background-color: $highlight-color;
+        //     }
+
+        //     &.btn-primary { 
+        //         background-color: $highlight-color;
+        //     }
+    }
+}
+.menu-con {
+    border: 1px solid #bdb9b9;
+    // border: 5px solid #b9b9ff;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+.nav-con {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    // background-color: rgb(211, 208, 204)
+    div {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+.config-con {
+    ul {
+        li {
+            :first-child {
+                // border: 1px solid #00ff00;
+                flex: 1;
+                margin-right: 20px;
+                margin-left: 10px;
+                text-align: right;
+            }
+            :last-child {
+                // border: 1px solid #0000ff;
+                flex: 1;
+                margin-left: 20px;
+                margin-right: 10px;
+            }
+            //border: 1px solid #ff0000;
+            display: flex;
+            margin-top: 5px;
+            margin-bottom: 5px;
+
+            .float_input {
+                max-width: 60px;
+            }
+        }
+    }
+}
+
+
+// .table-RW {
+//     height: 742px;
+//     overflow: auto;
+// }
+// .road-work {
+//     width: 100%;
+// }
+// 
+// @media only screen and (max-width: 900px) {
+//     .col-md-12 {
+//         width: 100%;
+//     }
+// }
+// 
+// .title-active {
+//     border-top: 1px solid black;
+//     border-left: 1px solid black;
+//     border-right: 1px solid black;
+//     padding: 15px;
+//     background-color: rgb(245, 136, 136);
+//     cursor: pointer;
+// }
+
+.nav-con-default {
+    padding: 5px;
+}
+
+.nav-con-active {
+    background-color: $base-color;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.nav-con-default:hover {
+    // background-color: rgb(245, 136, 136);
+    background-color: $highlight-color;
+    cursor: pointer;
+}
