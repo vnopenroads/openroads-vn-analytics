@@ -84,5 +84,10 @@
   #   command: 
   #     cmd: "psql 1gg
   
+  - name: Allow API through firewall
+    community.general.ufw:
+      rule: allow
+      port: 4000
+    become: true
 
   tags: node-app

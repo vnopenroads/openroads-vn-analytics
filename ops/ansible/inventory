@@ -4,6 +4,7 @@ all:
       hosts:
         cba-worldbank
       vars:
+        environment: uat
         ansible_python_intepreter: /usr/bin/python3
     localhost:
       hosts:

@@ -1,9 +1,9 @@
 - block:
 
-  - name: Create app directory
-    ansible.builtin.file:
-      path: "{{ react_app_dir }}"
-      state: directory
+  # - name: Create app directory
+  #   ansible.builtin.file:
+  #     path: "{{ react_app_dir }}"
+  #     state: directory
 
   - name: Build the app locally
     shell:
@@ -19,19 +19,27 @@
       dest: "{{ react_app_dir }}"
     notify: restart nginx
 
-  - name: Template out the nginx vhost config
-    ansible.builtin.template:
-      src: nginx-react-app.conf
-      dest: /etc/nginx/sites-available/react-app.conf
-    become: true
-    notify: restart nginx
+  # - name: Template out the nginx vhost config
+  #   ansible.builtin.template:
+  #     src: nginx-react-app.conf
+  #     dest: /etc/nginx/sites-available/react-app.conf
+  #   become: true
+  #   notify: restart nginx
 
-  - name: Symlink the vhost config from available to enabled
-    ansible.builtin.file:
-      src: /etc/nginx/sites-available/react-app.conf
-      dest: /etc/nginx/sites-enabled/react-app.conf
-      state: link
-    become: true
-    notify: restart nginx
+  # - name: Symlink the vhost config from available to enabled
+  #   ansible.builtin.file:
+  #     src: /etc/nginx/sites-available/react-app.conf
+  #     dest: /etc/nginx/sites-enabled/react-app.conf
+  #     state: link
+  #   become: true
+  #   notify: restart nginx
+
+  # - name: Set the environment ENV_VAR for nginx
+  #   lineinfile:
+  #     line: env DS_ENV={{ environment }};
+  #     file: /etc/nginx/nginx.conf
+  #     regexp: '.*DS_ENV.*'
+  #   become: true
+  #   notify: restart nginx
 
   tags: react-app

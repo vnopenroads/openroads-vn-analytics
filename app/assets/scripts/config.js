@@ -20,11 +20,18 @@ import { defaultsDeep } from 'lodash';
  */
 
 var configurations = require('./config/*.js', { mode: 'hash' });
-var config = configurations.local || {};
+var env = process.env.DS_ENV;
 
-if (process.env.DS_ENV === 'uat') {
-  defaultsDeep(config, configurations.uat);
+var config = { env: env };
+if (env === 'local') {
+  defaultsDeep(config, configurations.local);
+} else if (env === 'uat') {
+  defaultsDeep(config, configurations.uat, configurations.local);
+} else if (env === 'production') {
+  defaultsDeep(config, configurations.production, configurations.local);
+} else {
+  console.log(`Cant find Configuration for environment ${env}`)
+  throw `Cant find Configuration for environment ${env}`;
 }
-defaultsDeep(config, configurations.production);
 
 module.exports = config;

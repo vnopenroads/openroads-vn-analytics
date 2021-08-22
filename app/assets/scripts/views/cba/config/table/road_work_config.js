@@ -12,9 +12,6 @@ export default class RoadWork extends React.Component {
         };
     }
 
-    componentDidMount() {
-        this.pull_data_from_db();
-    }
 
     pull_data_from_db() {
         var user_config_url = `${config.api}/cba/user_configs/${this.props.config_id}/road_works`
@@ -25,15 +22,9 @@ export default class RoadWork extends React.Component {
             .then((res) => this.setState({ road_works: [] }));
     }
 
-    // floatifyEntries(e) {
-    //     return Object.fromEntries(
-    //         Object.entries(e).map(([key, val]) => [key, parseFloat(val)])
-    //     );
-    // };
-
-    // floatifyArray(es) {
-    //     return es.map((e) => this.floatifyEntries(e))
-    // }
+    componentDidMount() {
+        this.pull_data_from_db();
+    }
 
     componentWillUnmount() {
 

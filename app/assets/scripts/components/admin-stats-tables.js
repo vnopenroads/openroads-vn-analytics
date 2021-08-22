@@ -106,7 +106,7 @@ if (environment !== 'production') {
 
 export const StatsBar = ({ total, completed }) => (
   <div className='stats-bar'>
-    <span className='stats-bar__complete' style={{ width: Math.min((completed / total) || 0, 100) * 100 + '%' }}></span>
+    <span className='stats-bar__complete' style={{ width: Math.min((completed / total) || 0, 1.0) * 100 + '%' }}></span>
   </div>
 );
 

@@ -295,7 +295,7 @@ class CBA extends React.Component {
   }
 
   render() {
-    var subPageNav = ["Results", "Config"];
+    var subPageNav = ["Analysis", "Config"];
     const { language } = this.props;
     return (<SitePage pageName="CBA" innerPage={this.renderInnerPage()} noMargins={true} subPageNav={subPageNav} language={language} />);
   }
