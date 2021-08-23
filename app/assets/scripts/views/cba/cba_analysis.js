@@ -6,8 +6,10 @@ import PropTypes from 'prop-types';
 import { getContext } from 'recompose';
 import { StatsTableHeader, StatsTableRow, StatsBar, StatsBlock } from '../../components/admin-stats-tables';
 import T, { translate } from '../../components/t';
+import TakeSnapshotModal from './take_snapshot_modal';
 
 import config from '../../config';
+import { Button } from 'react-bootstrap';
 
 class SnapshotStats extends React.Component {
 
@@ -33,13 +35,17 @@ class SnapshotStats extends React.Component {
     }
 
 }
+
 class CbaAnalysis extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            takeSnapshotModalOpen: false,
             snapshots: -1
         }
-        //this.selectConfig = this.selectConfig.bind(this);
+        this.snapshotModalElement = React.createRef();
+        this.handleTakeSnapshot = this.handleTakeSnapshot.bind(this);
+        this.handleSnapshotTaken = this.handleSnapshotTaken.bind(this);
     }
 
     componentDidMount() {
@@ -92,11 +98,36 @@ class CbaAnalysis extends React.Component {
         }
     }
 
+    handleTakeSnapshot(e) {
+        this.snapshotModalElement.current.setState({ show: true });
+    }
+
+    handleSnapshotTaken() {
+        this.pull_data_from_db();
+    }
+
+    takeSnapshot() {
+        return (
+            <div className='snapshot-controls-con'>
+                <Button variant="primary" onClick={this.handleTakeSnapshot}>
+                    Take Snapshot Now
+                </Button>
+
+                <TakeSnapshotModal
+                    show={this.state.takeSnapshotModalOpen}
+                    ref={this.snapshotModalElement}
+                    onSnapshotTaken={this.handleSnapshotTaken}
+                />
+            </div>
+        );
+    }
+
     renderSnapshotSelector() {
         return (
             <div className='snapshot-con'>
                 <div className='title-con'>Road Asset Snapshots</div>
                 {this.getSnapshotItems()}
+                {this.takeSnapshot()}
             </div>
         )
         //         <div className='title-con'>Configuration</div>

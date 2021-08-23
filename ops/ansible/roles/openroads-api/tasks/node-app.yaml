@@ -32,6 +32,7 @@
     with_items: 
       - src
       - db
+    notify: restart supervisord
   
   # - ansible.builtin.copy:
   #     src: "{{ api_src_dir }}/{{ item }}"
@@ -59,22 +60,22 @@
   #   become: yes
   #   notify: restart supervisord
 
-  - name: Create pgpass file
-    file: 
-      path: "/home/ubuntu/.pgpass"
-      state: touch
-      mode: 0600
+  # - name: Create pgpass file
+  #   file: 
+  #     path: "/home/ubuntu/.pgpass"
+  #     state: touch
+  #     mode: 0600
 
   # - name: Create pgpass file
   #   file: 
   #     path: "/home/ubuntu/.pgpass"
   #     state: file
 
-  - name: Add password
-    lineinfile:
-      path: "/home/ubuntu/.pgpass"
-      regexp: '.*orma:orma'
-      line: "*:*:*:orma:orma"
+  # - name: Add password
+  #   lineinfile:
+  #     path: "/home/ubuntu/.pgpass"
+  #     regexp: '.*orma:orma'
+  #     line: "*:*:*:orma:orma"
 
   # - name: Restore a copy of the database
   #   command: 
@@ -84,10 +85,10 @@
   #   command: 
   #     cmd: "psql 1gg
   
-  - name: Allow API through firewall
-    community.general.ufw:
-      rule: allow
-      port: 4000
-    become: true
+  # - name: Allow API through firewall
+  #   community.general.ufw:
+  #     rule: allow
+  #     port: 4000
+  #   become: true
 
   tags: node-app

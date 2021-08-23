@@ -41,6 +41,19 @@ $border-color: #bdb9b977;
     };
 }
 
+.snapshot-controls-con {
+    padding: 0px;
+    margin: 5px;
+    border: 1px solid $pink-color;
+    border-radius: 5px;
+}
+
+// Override some bootstap weirdnes
+// .modal-content {
+//     position: absolute;
+//     top: -900px;
+// }
+
 .snapshot-loading {
     width: 100%;
     height: 60px;
