@@ -32,7 +32,10 @@
     with_items: 
       - src
       - db
+      - index.js
+      - package.json
     notify: restart supervisord
+    
   
   # - ansible.builtin.copy:
   #     src: "{{ api_src_dir }}/{{ item }}"
