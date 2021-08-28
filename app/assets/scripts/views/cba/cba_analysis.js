@@ -75,7 +75,7 @@ class CbaAnalysis extends React.Component {
     renderSnapshot(e) {
         var language = "en";
 
-        var perc = Math.round(100.0 * e.valid_records / e.num_records);
+        var perc = (e.num_records > 0) ? Math.round(100.0 * e.valid_records / e.num_records) : '-';
         const progressIndicators = [
             { label: translate(language, 'Total'), value: e.num_records },
             { label: translate(language, 'Valid'), value: `${e.valid_records} (${perc}%)` }
@@ -130,17 +130,6 @@ class CbaAnalysis extends React.Component {
                 {this.takeSnapshot()}
             </div>
         )
-        //         <div className='title-con'>Configuration</div>
-        //         <div className='config-name'> {this.renderConfigSelector(configName)} </div>
-        //         <div className='nav-con'>
-        //             {this.navElement('General', 'general')}
-        //             {this.navElement('Growth Rate', 'growth-rates')}
-        //             {this.navElement('Traffic Levels', 'traffic-levels')}
-        //             {this.navElement('Road Works', 'road-works')}
-        //             {this.navElement('Recurrent Maintenance', 'recurrent-maintenance')}
-        //         </div>
-        //     </div>
-        //  )
     }
 
     renderAnalysisBox() {
@@ -150,22 +139,6 @@ class CbaAnalysis extends React.Component {
                 <p>This is where the content relating to results of the selected snapshot will be shown</p>
             </div>
         )
-        // var configItems = Object.entries(this.state.available_configs).map((entry) => {
-        //     const [id, e] = entry;
-        //     return (<Dropdown.Item key={id} eventKey={id} onSelect={this.selectConfig}> {e.name} </Dropdown.Item>)
-        // }
-        // );
-
-        // return (
-        //     <Dropdown title="Choose a saved Config">
-        //         <Dropdown.Toggle id="dropdown-basic" variant='outline-secondary' >
-        //             {name}
-        //         </Dropdown.Toggle>
-        //         <Dropdown.Menu>
-        //             {configItems}
-        //         </Dropdown.Menu>
-        //     </Dropdown>
-        // )
     }
 
     renderInnerPage() {

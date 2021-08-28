@@ -27,9 +27,7 @@ class TakeSnapshotModal extends React.Component {
         this.setState({ show: false });
         console.log(this.state);
 
-        var num_records = Math.floor(Math.random() * 1000);
-        var valid_records = Math.floor(Math.random() * num_records);
-        var body = { name: this.state.snapshotName, num_records: num_records, valid_records: valid_records };
+        var body = { name: this.state.snapshotName };
         if (this.state.province > 0) {
             body.province_id = this.state.province;
         }

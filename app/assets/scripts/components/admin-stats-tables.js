@@ -104,11 +104,14 @@ if (environment !== 'production') {
   };
 }
 
-export const StatsBar = ({ total, completed }) => (
-  <div className='stats-bar'>
-    <span className='stats-bar__complete' style={{ width: Math.min((completed / total) || 0, 1.0) * 100 + '%' }}></span>
-  </div>
-);
+export const StatsBar = ({ total, completed }) => {
+  var perc = (total == 0) ? 0 : Math.min((completed / total) || 0, 1.0) * 100
+  return (
+    <div className='stats-bar'>
+      <span className='stats-bar__complete' style={{ width: perc + '%' }}></span>
+    </div>
+  )
+};
 
 if (environment !== 'production') {
   StatsBar.propTypes = {
