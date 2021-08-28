@@ -1,0 +1,49 @@
+- block:
+  - name: Install SupervisorD
+    pip:
+      name: supervisor
+    become: yes
+
+  - name: Copy systemd service file
+    copy:
+        src: templates/supervisord.service
+        dest: /etc/systemd/system/
+    become: yes
+    notify: restart supervisord
+
+  - name: Deploy supervisord config from template
+    template:
+      src: supervisord.conf.j2
+      dest: /home/ubuntu/supervisord.conf
+    become: yes
+    notify: restart supervisord
+
+  - name: Create pgpass file
+    file: 
+      path: "/home/ubuntu/.pgpass"
+      state: touch
+      mode: 0600
+
+  - name: Create pgpass file
+    file: 
+      path: "/home/ubuntu/.pgpass"
+      state: file
+
+  # TODO: This is assuming a db running on the same instance with an insecure password (orma)
+  - name: Add password
+    lineinfile:
+      path: "/home/ubuntu/.pgpass"
+      regexp: '.*orma:orma'
+      line: "*:*:*:orma:orma"
+
+  # - name: Restore a copy of the database
+  #   command: 
+  #     cmd: "pg_restore -U orma -h localhost -d orma /home/ubuntu/psql_dump_20210713"
+  
+  - name: Allow API through firewall
+    community.general.ufw:
+      rule: allow
+      port: 4000
+    become: true
+
+  tags: supervisord

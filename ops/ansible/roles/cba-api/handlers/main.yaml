@@ -1,0 +1,11 @@
+- name: restart nginx
+  service:
+    name: nginx
+    state: restarted
+  become: true
+
+- name: restart wsgi
+  service:
+    name: cba-api.uwsgi
+    state: restarted
+  become: true

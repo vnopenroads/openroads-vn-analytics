@@ -1,0 +1,5 @@
+- debug:
+    msg: "CBA"
+      
+- include_tasks: wsgi.yaml
+  tags: cba-api
