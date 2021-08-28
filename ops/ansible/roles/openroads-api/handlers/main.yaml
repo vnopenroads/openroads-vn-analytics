@@ -1,5 +1,3 @@
 - name: restart supervisord
-  service:
-    name: supervisord
-    state: restarted
-    enabled: yes
+  shell: systemctl restart supervisord && killall node
+  become: true

@@ -5,16 +5,20 @@
   #     path: "/home/ubuntu/log"
   #     state: directory
 
-  # # - name: Install Node
-  # #   command: 
-  # # curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -       
+  # - name: Setup APT Sources for Node/Yarn
+  #   shell: "{{ item }}"
+  #   with_items: 
+  #   - "curl -sL https://deb.nodesource.com/setup_14.x | bash -"
+  #   - "curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -"
+  #   - "echo 'deb https://dl.yarnpkg.com/debian/ stable main' > /etc/apt/sources.list.d/yarn.list"
+  #   become: true
 
-  # - name: install Node/NPM
+  # - name: install Node/Yarn
   #   apt: 
-  #     update: true
+  #     update_cache: true
   #     pkg: 
   #       - nodejs
-  #       - npm
+  #       - yarn
   #       - make
   #       - gcc
   #       - g++
@@ -35,63 +39,11 @@
       - index.js
       - package.json
     notify: restart supervisord
-    
   
-  # - ansible.builtin.copy:
-  #     src: "{{ api_src_dir }}/{{ item }}"
-  #     dest: "{{ node_app_dir }}/"
-  #   with_items:
-  #     - package.json
-  #     - index.js
-
-  # - name: Install SupervisorD
-  #   pip:
-  #     name: supervisor
-  #   become: yes
-
-  # - name: Copy systemd service file
-  #   copy:
-  #       src: templates/supervisord.service
-  #       dest: /etc/systemd/system/
-  #   become: yes
-  #   notify: restart supervisord
-
-  # - name: Deploy supervisord config from template
-  #   template:
-  #     src: supervisord.conf.j2
-  #     dest: /home/ubuntu/supervisord.conf
-  #   become: yes
-  #   notify: restart supervisord
-
-  # - name: Create pgpass file
-  #   file: 
-  #     path: "/home/ubuntu/.pgpass"
-  #     state: touch
-  #     mode: 0600
-
-  # - name: Create pgpass file
-  #   file: 
-  #     path: "/home/ubuntu/.pgpass"
-  #     state: file
-
-  # - name: Add password
-  #   lineinfile:
-  #     path: "/home/ubuntu/.pgpass"
-  #     regexp: '.*orma:orma'
-  #     line: "*:*:*:orma:orma"
-
-  # - name: Restore a copy of the database
-  #   command: 
-  #     cmd: "pg_restore -U orma -h localhost -d orma /home/ubuntu/psql_dump_20210713"
-  
-  # - name: Restore a copy of the database
-  #   command: 
-  #     cmd: "psql 1gg
-  
-  # - name: Allow API through firewall
-  #   community.general.ufw:
-  #     rule: allow
-  #     port: 4000
-  #   become: true
+  - name: Yarn Install
+    command: id
+      # cmd: yarn install
+      # chdir: "{{ node_app_dir }}"
+    notify: restart supervisord
 
   tags: node-app

@@ -1,14 +1,4 @@
-#- include_tasks: disks.yaml
-#  tags: disks
-#- include_tasks: users.yaml
-#  tags: users
 - include_tasks: nginx.yaml
   tags: nginx
-- include_tasks: wsgi.yaml
-  tags: wsgi
 - include_tasks: react-app.yaml
   tags: react-app
-# - include_tasks: prime_server.yaml
-#   tags: prime_server
-# - include_tasks: valhalla.yaml
-#   tags: valhalla

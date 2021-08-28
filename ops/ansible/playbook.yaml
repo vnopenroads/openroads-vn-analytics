@@ -3,3 +3,4 @@
 - import_playbook: openroads-analytics.yaml
 - import_playbook: openroads-api.yaml
 - import_playbook: postgis.yaml
+- import_playbook: cba-api.yaml

@@ -82,7 +82,7 @@ export class Modal extends React.Component {
   }
 
   render() {
-    var klasses = ['modal'];
+    var klasses = ['diy-modal'];
     if (this.props.className) {
       klasses.push(this.props.className);
     }
@@ -93,7 +93,7 @@ export class Modal extends React.Component {
           in={this.props.revealed}
           appear={true}
           unmountOnExit={true}
-          classNames='modal'
+          classNames='diy-modal'
           timeout={{ enter: 300, exit: 300 }}>
 
           <section className={klasses.join(' ')} key={'modal-' + this.props.id} onClick={this.onOverlayClick} id={this.props.id}>
