@@ -73,7 +73,7 @@ class AssetsDetail extends React.Component {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { vpromm, fetchRoadProperty, fetchRoadGeometry } = this.props;
     fetchRoadProperty(vpromm);
     fetchRoadGeometry(vpromm);

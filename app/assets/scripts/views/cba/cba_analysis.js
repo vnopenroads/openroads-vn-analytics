@@ -1,142 +1,31 @@
 'use strict';
 import React from 'react';
-import SitePage from '../../components/site-page';
-import Dropdown from 'react-bootstrap/Dropdown'
 import PropTypes from 'prop-types';
 import { getContext } from 'recompose';
-import { StatsTableHeader, StatsTableRow, StatsBar, StatsBlock } from '../../components/admin-stats-tables';
-import T, { translate } from '../../components/t';
-import TakeSnapshotModal from './take_snapshot_modal';
-
-import config from '../../config';
-import { Button } from 'react-bootstrap';
-
-class SnapshotStats extends React.Component {
-
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return <div className='snapshot-stats'>
-            <h3>{this.props.name}</h3>
-            <figure>
-                <StatsBar total={this.props.total} completed={this.props.valid} />
-                <figcaption>
-                    <ul className='stats-list'>
-                        {this.props.list.map(({ label, value }) => (
-                            <li key={label} className='stats-list__item'><span className='value'>{value}</span><small>{label}</small></li>
-                        ))}
-                    </ul>
-                </figcaption>
-            </figure>
-        </div>
-
-    }
-
-}
+import { Tab, Tabs } from 'react-bootstrap'
+import SitePage from '../../components/site-page';
+import SnapshotSelector from './snapshot_selector';
+import ConfigSelector from './config_selector';
+import CbaResults from './cba_results';
 
 class CbaAnalysis extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            takeSnapshotModalOpen: false,
-            snapshots: -1
+            selectedSnapshotId: undefined,
+            selectedConfigId: undefined
         }
-        this.snapshotModalElement = React.createRef();
-        this.handleTakeSnapshot = this.handleTakeSnapshot.bind(this);
-        this.handleSnapshotTaken = this.handleSnapshotTaken.bind(this);
     }
 
     componentDidMount() {
-        this.pull_data_from_db();
-    }
-
-    pull_data_from_db() {
-        var url = `${config.api}/cba/roads/snapshots`;
-        fetch(url)
-            .then((res) => res.json())
-            .then((res) => { this.setState({ snapshots: res }) });
-    }
-
-    // selectConfig(e) {
-    //     this.setState({ config_name: this.state.available_configs[e].name, config_id: e })
-    // }
-
-    navElement(title, tag) {
-        // var className = (this.state.title === tag) ? 'nav-con-active' : 'nav-con-default'
-        // return (
-        //     <div key={tag} className={className} onClick={() => { this.setState({ title: tag }) }}>
-        //         {title}
-        //     </div>
-        // )
-    }
-
-    renderSnapshot(e) {
-        var language = "en";
-
-        var perc = (e.num_records > 0) ? Math.round(100.0 * e.valid_records / e.num_records) : '-';
-        const progressIndicators = [
-            { label: translate(language, 'Total'), value: e.num_records },
-            { label: translate(language, 'Valid'), value: `${e.valid_records} (${perc}%)` }
-        ];
-        return (<div className='snapshot-el'>
-            <SnapshotStats
-                snapshot_id={e.id}
-                name={e.name}
-                total={e.num_records}
-                valid={e.valid_records}
-                list={progressIndicators} />
-        </div>)
-    }
-
-    getSnapshotItems() {
-        if (this.state.snapshots === -1) {
-            return <div className="snapshot-loading"><div /></div>
-        } else {
-            return this.state.snapshots.map(this.renderSnapshot);
-        }
-    }
-
-    handleTakeSnapshot(e) {
-        this.snapshotModalElement.current.setState({ show: true });
-    }
-
-    handleSnapshotTaken() {
-        this.pull_data_from_db();
-    }
-
-    takeSnapshot() {
-        return (
-            <div className='snapshot-controls-con'>
-                <Button variant="primary" onClick={this.handleTakeSnapshot}>
-                    Take Snapshot Now
-                </Button>
-
-                <TakeSnapshotModal
-                    show={this.state.takeSnapshotModalOpen}
-                    ref={this.snapshotModalElement}
-                    onSnapshotTaken={this.handleSnapshotTaken}
-                />
-            </div>
-        );
-    }
-
-    renderSnapshotSelector() {
-        return (
-            <div className='snapshot-con'>
-                <div className='title-con'>Road Asset Snapshots</div>
-                {this.getSnapshotItems()}
-                {this.takeSnapshot()}
-            </div>
-        )
     }
 
     renderAnalysisBox() {
         return (
             <div className='analysis-con'>
                 <p>Select a snapshot from the left to get started</p>
-                <p>This is where the content relating to results of the selected snapshot will be shown</p>
+                <p>This is where the content relating to the results of the selected snapshot will be shown</p>
+                <p> Selected: {this.state.selectedSnapshotId}</p>
             </div>
         )
     }
@@ -150,18 +39,24 @@ class CbaAnalysis extends React.Component {
         // console.log("DONE: Creating a new " + configContainer);
 
         return (
-            <div className='content-con'>
-                {this.renderSnapshotSelector()}
-                {this.renderAnalysisBox()}
-            </div>
+            // <div className='content-con'>
+            <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="">
+                <Tab eventKey="RoadAssets" title="Road Assets">
+                    <SnapshotSelector selectSnapshotFn={(id) => { this.setState({ selectedSnapshotId: id }) }} />
+                </Tab>
+                <Tab eventKey="Configuration" title="Configuration">
+                    <ConfigSelector selectConfigFn={(id) => { this.setState({ selectedConfigId: id }) }} />
+                </Tab>
+                <Tab eventKey="Results" title="Results">
+                    <CbaResults snapshotId={this.state.selectedSnapshotId} configId={this.state.selectedConfigId} />
+                </Tab>
+            </Tabs>
+            // </div>
         )
     }
 
     render() {
-        var { language } = this.props;
-        console.log("Rendering stuff: " + language);
-        var subPageNav = ["Analysis", "Config"];
-        return (<SitePage pageName="CBA" innerPage={this.renderInnerPage()} noMargins={true} subPageNav={subPageNav} language={language} />);
+        return (<SitePage pageName="CBA" innerPage={this.renderInnerPage()} noMargins={false} subPageNav={[]} />);
     }
 };
 

@@ -188,7 +188,7 @@ module.exports = compose(
     )
   }),
   lifecycle({
-    componentWillMount: function () {
+    UNSAFE_componentWillMount: function () {
       const { vpromm, geoJSON, status, fetchRoadGeometry } = this.props;
       if (!geoJSON && status !== 'pending' && status !== 'error') {
         fetchRoadGeometry(vpromm);

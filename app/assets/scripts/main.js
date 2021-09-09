@@ -13,7 +13,6 @@ import Editor from './views/editor';
 import Tasks from './views/tasks';
 import Explore from './views/explore';
 import CBA from './views/cba';
-import CbaConfig from './views/cba/cba_config';
 import CbaAnalysis from './views/cba/cba_analysis';
 import Assets from './views/assets';
 import AssetsIndex from './views/assets-index';
@@ -40,10 +39,7 @@ render((
         <Route path='editor' component={Editor} pageClass='editor' />
         <Route path='editor/*' component={Editor} pageClass='editor' />
         <Route path='explore' component={Explore} pageClass='explore' />
-        <Route path='cba'>
-          <Route path='config' component={CbaConfig} pageClass='cba-config' />
-          <Route path='analysis' component={CbaAnalysis} pageClass='cba' />
-        </Route>
+        <Route path='cba' component={CbaAnalysis} pageClass='cba' />
         <Route path='faq' component={Faq} pageClass='faq' />
         <Route path='jobs/:id' component={Job} pageClass='job' />
         <Route path='assets' component={Assets}>

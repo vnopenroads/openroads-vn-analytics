@@ -57,8 +57,8 @@ class TakeSnapshotModal extends React.Component {
 
     render() {
         const processing = false;
-        var provinceOptions_ = this.state.provinces.map((e) => { return <option value={e.id}>{e.name_en}</option> });
-        var provinceOptions = [<option value={-1}>All</option>, ...provinceOptions_]
+        var provinceOptions_ = this.state.provinces.map((e) => { return <option key={e.id} value={e.id}>{e.name_en}</option> });
+        var provinceOptions = [<option key={-1} value={- 1}> All</option >, ...provinceOptions_]
 
         return (
             <Modal show={this.state.show}
