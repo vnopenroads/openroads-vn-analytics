@@ -386,16 +386,16 @@ blockquote,
 /* Dividers
    ========================================================================== */
 
-hr,
-.hr {
-  border: 0;
-  height: ($global-spacing / 2);
-  background: none;
-  width: 80%;
-  max-width: 16rem;
-  margin: ($global-spacing / 4) auto;
-  background: transparent linear-gradient(transparent, $base-alpha-color, transparent) 50% / auto 1px repeat-x;
-}
+// hr,
+// .hr {
+//   // border: 1px solid magenta;
+//   height: ($global-spacing / 2);
+//   background: none;
+//   width: 100%;
+//   // max-width: 16rem;
+//   // margin: ($global-spacing / 4) auto;
+//   background: transparent linear-gradient(transparent, $base-alpha-color, transparent) 50% / auto 1px repeat-x;
+// }
 
 /* Prose specific */
 

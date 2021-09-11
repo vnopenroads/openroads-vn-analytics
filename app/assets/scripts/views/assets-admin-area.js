@@ -66,7 +66,7 @@ class AssetsAA extends React.Component {
     this.fetchData(this.props);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.params.aaId !== nextProps.params.aaId || this.props.params.aaIdSub !== nextProps.params.aaIdSub) {
       // Reset tab.
       this.setState({ activeTab: 'assets' });

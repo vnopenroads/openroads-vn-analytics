@@ -226,7 +226,7 @@ class CBA extends React.Component {
       );
   }
 
-  componentWillReceiveProps({ layer, lng, lat, zoom, activeRoad }) {
+  UNSAFE_componentWillReceiveProps({ layer, lng, lat, zoom, activeRoad }) {
     if (this.props.layer !== layer) {
       this.switchLayerTo(layer);
     }

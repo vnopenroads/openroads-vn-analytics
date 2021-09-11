@@ -28,7 +28,7 @@ export default class BaseSearch extends React.Component {
     this.props._setFilteredVProMMs([]);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.language !== nextProps.language) {
       this.setState({ searchVal: '', showResults: false });
       this.props._clearAdmins();

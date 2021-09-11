@@ -3,6 +3,10 @@
 @import "components/cba/section_details";
 @import "components/cba/table";
 
+.flex-parent { 
+    display: flex;
+}
+
 .cba_container {
     display: flex;
     flex-direction: column;
@@ -26,7 +30,7 @@
 
 .debug {
     border-color: greenyellow;
-    border-width: 0pt;
+    border-width: 2pt;
     border-style: solid;
 }
 

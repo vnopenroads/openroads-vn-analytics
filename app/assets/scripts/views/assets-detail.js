@@ -105,7 +105,7 @@ class AssetsDetail extends React.Component {
     document.querySelector('.mapboxgl-ctrl .mapboxgl-ctrl-compass').remove();
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.vpromm !== nextProps.vpromm) {
       this.props.fetchRoadProperty(nextProps.vpromm);
       this.props.fetchRoadGeometry(nextProps.vpromm);

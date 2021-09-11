@@ -26,7 +26,7 @@ class Job extends React.Component {
     this.state = {};
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // if job does not have a return value yet, keep polling backend for status
     if (!nextProps.job.returnvalue) {
       setTimeout(() => {

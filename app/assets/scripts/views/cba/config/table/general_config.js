@@ -1,15 +1,16 @@
 import React from 'react';
+import { Form, Row } from 'react-bootstrap';
 import config from '../../../../config';
 
 export default class GeneralConfig extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log('this.state: ' + props.config_id)
+        console.log('this.props.config_id: ' + props.config_id)
         this.state = {
             config_id: props.config_id,
-            discount_rate: this.props.discount_rate,
-            economic_factor: this.props.economic_factor,
+            discount_rate: "",
+            economic_factor: "",
             modified: false
         };
         this.handleDiscountChange = this.handleDiscountChange.bind(this);
@@ -25,10 +26,9 @@ export default class GeneralConfig extends React.Component {
 
     pull_data_from_db() {
         var user_config_url = `${config.api}/cba/user_configs/${this.props.config_id}`
-        console.log("Setting up general config: " + user_config_url);
         fetch(user_config_url)
             .then((res) => res.json())
-            .then((res) => this.setState({ discount_rate: res.discount_rate, economic_factor: res.economic_factor }));
+            .then((res) => this.setState({ discount_rate: res.discount_rate, economic_factor: res.economic_factor, modified: false }));
     }
 
     componentDidMount() {
@@ -36,6 +36,10 @@ export default class GeneralConfig extends React.Component {
     }
 
     componentWillUnmount() {
+        this.push_data_to_db();
+    }
+
+    push_data_to_db() {
         if (this.state.modified) {
             const body = { discount_rate: this.state.discount_rate, economic_factor: this.state.economic_factor };
             const request = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
@@ -43,41 +47,31 @@ export default class GeneralConfig extends React.Component {
             var url = `${config.api}/cba/user_configs/${this.state.config_id}/update`
             fetch(url, request)
                 .then(res => res.json())
-                .then(res => { console.log(res); });
+                .then(res => console.log("Successfully updated config in db: " + JSON.stringify(res)));
         }
     }
 
     componentDidUpdate(prevProps) {
         // Typical usage (don't forget to compare props):
         if (this.props.config_id !== prevProps.config_id) {
-            this.setState({ config_id: this.props.config_id, config_name: this.props.config_name });
+            this.push_data_to_db()
+            this.setState({ config_id: this.props.config_id });
             this.pull_data_from_db()
         }
     }
 
     render() {
-        // this.pull_data_from_db();
-
-        console.log("Render() in general_config");
         return (
             <div className='menu-con'>
-                <div className='title-con'> General Configuration </div>
-                <div className='config-con'>
-                    <ul>
-                        <li key="discount_rate">
-                            <div className='config-label'>Discount Rate</div>
-                            <div>
-                                <input type="text" className='float_input' value={this.state.discount_rate} onChange={this.handleDiscountChange} />
-                            </div>
-                        </li>
-                        <li key="economic_factor">
-                            <div className='config-label'>Economic Factor</div>
-                            <div>
-                                <input type="text" className='float_input' value={this.state.economic_factor} onChange={this.handleEconFactorChange} />
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+                <div className='title-con'>General Configuration </div>
+                <Form.Group as={Row} className="mb-3" controlId="discountRate">
+                    <Form.Label column sm="2">Discount Rate</Form.Label>
+                    <Form.Control sm="10" value={this.state.discount_rate} onChange={this.handleDiscountChange} />
+                </Form.Group>
+                <Form.Group as={Row} className="mb-3" controlId="economicFactor">
+                    <Form.Label column>Economic Factor</Form.Label>
+                    <Form.Control sm="10" value={this.state.economic_factor} onChange={this.handleEconFactorChange} />
+                </Form.Group>
             </div>
         )
     }

@@ -1,7 +1,8 @@
 $pink-color: rgba(245, 136, 136, 0.2);
-$border-color: #bdb9b977;
+// $border-color: #bdb9b977;
+$border-color: #f00;
 
-.snapshot-con {
+.snapshot-select-con {
     flex: 1;
     margin-right: 20px;
     margin-left: 20px;
@@ -13,7 +14,7 @@ $border-color: #bdb9b977;
     border-radius: 10px;
 }
 
-.analysis-con {
+.snapshot-stats-con {
     flex: 5;
     margin-right: 20px;
     margin-left: 20px;

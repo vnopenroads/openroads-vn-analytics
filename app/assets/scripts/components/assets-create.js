@@ -35,7 +35,7 @@ class AssetsCreateModal extends React.Component {
     this.state = this.prepareState(props);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (!this.props.revealed && nextProps.revealed) {
       this.setState(this.prepareState(nextProps));
     }

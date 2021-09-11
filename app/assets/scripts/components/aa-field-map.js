@@ -59,7 +59,7 @@ class AAFieldMap extends React.Component {
   }
 
 
-  componentWillReceiveProps({ geoJSON, lng, lat, zoom }) {
+  UNSAFE_componentWillReceiveProps({ geoJSON, lng, lat, zoom }) {
     // TODO - rendering map could be less of a kludge w/ proper react/mapbox-gl bindings
     if (geoJSON && !this.state.layerRendered) {
       this.renderLayer();

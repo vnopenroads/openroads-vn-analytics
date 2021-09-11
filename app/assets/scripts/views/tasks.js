@@ -203,7 +203,7 @@ class Tasks extends React.Component {
     });
   }
 
-  componentWillReceiveProps({ task: nextTask, taskId: nextTaskId, osmStatus: nextOsmStatus }) {
+  UNSAFE_componentWillReceiveProps({ task: nextTask, taskId: nextTaskId, osmStatus: nextOsmStatus }) {
     if (this.props.task !== nextTask) {
       // TODO - ANTIPATTERN: should not mirror properties task and taskId in state
       this.setState({ renderedFeatures: nextTask }, () => this.onMapLoaded(() => this.syncMap()));

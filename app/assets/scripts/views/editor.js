@@ -61,7 +61,7 @@ class Editor extends React.Component {
     }
   }
 
-  componentWillReceiveProps({ lng, lat, zoom, way }) {
+  UNSAFE_componentWillReceiveProps({ lng, lat, zoom, way }) {
     // this.props.setMapPosition(lng, lat, zoom, way);
     const mapCenter = [lng, lat];
     if (lng !== this.props.lng || lat !== this.props.lat) {
