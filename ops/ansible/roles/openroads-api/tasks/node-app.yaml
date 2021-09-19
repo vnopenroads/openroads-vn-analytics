@@ -41,9 +41,9 @@
     notify: restart supervisord
   
   - name: Yarn Install
-    command: id
-      # cmd: yarn install
-      # chdir: "{{ node_app_dir }}"
+    command: 
+      cmd: yarn install
+      chdir: "{{ node_app_dir }}"
     notify: restart supervisord
 
   tags: node-app

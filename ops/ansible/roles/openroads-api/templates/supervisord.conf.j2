@@ -34,4 +34,4 @@ startsecs       = 10
 user            = ubuntu
 stopsignal      = INT
 startretries    = 99999
-environment     = DS_ENV={{ environment }}
+environment     = DS_ENV={{ app_env }},MACROCOSM_ENV={{ app_env }}

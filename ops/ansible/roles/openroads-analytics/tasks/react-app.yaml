@@ -36,7 +36,7 @@
 
   # - name: Set the environment ENV_VAR for nginx
   #   lineinfile:
-  #     line: env DS_ENV={{ environment }};
+  #     line: env DS_ENV={{ app_env }};
   #     file: /etc/nginx/nginx.conf
   #     regexp: '.*DS_ENV.*'
   #   become: true

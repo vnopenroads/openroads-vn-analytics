@@ -1,4 +1,8 @@
 - include_tasks: node-app.yaml
-  tags: node-app
+  tags: 
+    - node-app
+    - app
 - include_tasks: supervisord.yaml
-  tags: supervisord 
+  tags: 
+    - supervisord 
+    - node-app

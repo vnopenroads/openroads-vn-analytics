@@ -24,12 +24,17 @@ var env = process.env.DS_ENV;
 
 var config = { env: env };
 if (env === 'local') {
+  console.log("env == local")
+  console.log("config : " + JSON.stringify(configurations.local));
   defaultsDeep(config, configurations.local);
 } else if (env === 'uat') {
+  console.log("env == local")
   defaultsDeep(config, configurations.uat, configurations.local);
 } else if (env === 'production') {
+  console.log("env == local")
   defaultsDeep(config, configurations.production, configurations.local);
 } else {
+  console.log("env == local")
   console.log(`Cant find Configuration for environment ${env}`)
   throw `Cant find Configuration for environment ${env}`;
 }

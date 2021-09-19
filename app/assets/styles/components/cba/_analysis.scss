@@ -1,6 +1,6 @@
 $pink-color: rgba(245, 136, 136, 0.2);
-// $border-color: #bdb9b977;
-$border-color: #f00;
+$border-color: #bdb9b977;
+// $border-color: #f00;
 
 .snapshot-select-con {
     flex: 1;
@@ -40,6 +40,10 @@ $border-color: #f00;
     &:hover {
         border: 1px solid $primary-color;
     };
+
+    &.selected {
+        border: 3px solid $primary-color
+    }
 }
 
 .snapshot-controls-con {
