@@ -63,6 +63,7 @@ class CbaResults extends React.Component {
     resultsAvailable() {
         return this.state.availableResults[[this.state.selectedSnapshotId, this.state.selectedConfigId]]
     }
+
     run() {
         console.log("RUNNING");
         fetch(`${config.api}/cba/run?snapshot_id=${this.state.selectedSnapshotId}&config_id=${this.state.selectedConfigId}`)
@@ -118,9 +119,10 @@ class CbaResults extends React.Component {
 
     renderResults() {
         if (this.resultsAvailable()) {
+            var key = `${this.state.selectedConfigId}-${this.state.selectedSnapshotId}`;
             return (<div>
-                <ResultKpis configId={this.state.selectedConfigId} snapshotId={this.state.selectedSnapshotId} />
-                <ResultsTable configId={this.state.selectedConfigId} snapshotId={this.state.selectedSnapshotId} />
+                <ResultKpis key={`k-${key}`} configId={this.state.selectedConfigId} snapshotId={this.state.selectedSnapshotId} />
+                <ResultsTable key={`t-${key}`} configId={this.state.selectedConfigId} snapshotId={this.state.selectedSnapshotId} />
             </div>);
         } else {
             return <figure className="text-center">
