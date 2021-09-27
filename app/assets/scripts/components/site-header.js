@@ -25,7 +25,7 @@ const SiteHeader = ({ language, pathname }) => {
     ["explore", "Explore"],
     ["editor", "Editor"],
     ["tasks", "Tasks"],
-    ["cba/config", "CBA"],
+    ["cba", "CBA"],
     ["upload", "Upload"],
     ["faq", "FAQ"]
   ];

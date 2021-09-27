@@ -1,8 +1,6 @@
-
-
+'use strict';
 import React from 'react';
-import BootstrapTable from 'react-bootstrap-table-next';
-import cellEditFactory from 'react-bootstrap-table2-editor';
+import { Form, Row } from 'react-bootstrap';
 import config from '../../../../config';
 
 export default class GrowthRateConfig extends React.Component {
@@ -13,6 +11,13 @@ export default class GrowthRateConfig extends React.Component {
             growth_rates: [],
             modified: false
         };
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(event, key) {
+        var state = { modified: true };
+        state[key] = event.target.value;
+        this.setState(state);
     }
 
     componentDidMount() {
@@ -20,8 +25,7 @@ export default class GrowthRateConfig extends React.Component {
         console.log("Setting up growth_rates config: " + user_config_url);
         fetch(user_config_url)
             .then((res) => res.json())
-            //  .then((res) => this.setState({ road_works: res.road_works }));
-            .then((res) => this.setState({ growth_rates: [] }));
+            .then((res) => { console.log(res); this.setState(res['growth_rates']) });
     }
 
     // floatifyEntries(e) {
@@ -37,8 +41,10 @@ export default class GrowthRateConfig extends React.Component {
     componentWillUnmount() {
 
         // const body = { traffic_levels: this.floatifyArray(this.state.traffic_levels) };
-        const body = { growth_rates: this.state.growth_rates };
+        const { very_low, low, medium, high, very_high } = this.state;
+        const body = { growth_rates: { very_low, low, medium, high, very_high } };
         const request = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
+        console.log(request);
 
         var url = `${config.api}/cba/user_configs/${this.state.config_id}/update`
         fetch(url, request)
@@ -46,30 +52,32 @@ export default class GrowthRateConfig extends React.Component {
             .then(res => { console.log(res); });
     }
 
-    render() {
-        // <TableHeaderColumn row='0' rowSpan='2' dataField='growth-scenario' isKey>Traffic Annual Growth Scenario</TableHeaderColumn>
-        // <TableHeaderColumn row='0' colSpan='11'>Annual Traffic Growth Rate (%/year)</TableHeaderColumn>
-        const columns = [
-            { dataField: 'motor-cycle', text: "Motor Cycle (veh/day)", sort: true },
-            { dataField: 'small-car', text: "Small Car(veh/ day) ", sort: true },
-            { dataField: 'medium-car', text: "Medium Car (veh/day)", sort: true },
-            { dataField: 'delivery', text: "Delivery Vehicle (veh/day)", sort: true },
-            { dataField: '4-whell', text: "4 Wheel Drive (veh/day)", sort: true },
-            { dataField: 'light-truck', text: "Light Truck (veh/day)", sort: true },
-            { dataField: 'medium-truck', text: "Medium Truck (veh/day)", sort: true },
-            { dataField: 'heavy-truck', text: "Heavy Truck (veh/day)", sort: true },
-            { dataField: 'small-bus', text: "Small Bus (veh/day)", sort: true },
-            { dataField: 'medium-bus', text: "Medium Bus (veh/day)", sort: true },
-            { dataField: 'large-bus', text: "Large Bus (veh/day", sort: true },
-        ]
 
-        return <BootstrapTable
-            keyField='volume'
-            data={this.state.growth_rates}
-            columns={columns}
-            bordered={false}
-            cellEdit={cellEditFactory({ mode: 'click' })}
-            striped hover
-        />;
+    render() {
+        return (
+            <div className='menu-con'>
+                <div className='title-con'>Growth Rates</div>
+                <Form.Group as={Row} className="mb-3" controlId="veryLow">
+                    <Form.Label column sm="2">Very Low</Form.Label>
+                    <Form.Control sm="10" value={this.state.very_low} onChange={(e) => this.handleChange(e, 'very_low')} />
+                </Form.Group>
+                <Form.Group as={Row} className="mb-3" controlId="low">
+                    <Form.Label column sm="2">Low</Form.Label>
+                    <Form.Control sm="10" value={this.state.low} onChange={(e) => this.handleChange(e, 'low')} />
+                </Form.Group>
+                <Form.Group as={Row} className="mb-3" controlId="medium">
+                    <Form.Label column sm="2">Medium</Form.Label>
+                    <Form.Control sm="10" value={this.state.medium} onChange={(e) => this.handleChange(e, 'medium')} />
+                </Form.Group>
+                <Form.Group as={Row} className="mb-3" controlId="high">
+                    <Form.Label column sm="2">High</Form.Label>
+                    <Form.Control sm="10" value={this.state.high} onChange={(e) => this.handleChange(e, 'high')} />
+                </Form.Group>
+                <Form.Group as={Row} className="mb-3" controlId="veryHigh">
+                    <Form.Label column sm="2">Very High</Form.Label>
+                    <Form.Control sm="10" value={this.state.very_high} onChange={(e) => this.handleChange(e, 'very_high')} />
+                </Form.Group>
+            </div>
+        )
     }
 }

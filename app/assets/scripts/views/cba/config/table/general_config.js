@@ -1,3 +1,4 @@
+'use strict';
 import React from 'react';
 import { Form, Row } from 'react-bootstrap';
 import config from '../../../../config';
