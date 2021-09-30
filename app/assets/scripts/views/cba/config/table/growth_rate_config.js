@@ -5,10 +5,11 @@ import config from '../../../../config';
 
 export default class GrowthRateConfig extends React.Component {
     constructor(props) {
+        //console.log(`Constructing with ${JSON.stringify(props)}`);
         super(props);
         this.state = {
             config_id: props.config_id,
-            growth_rates: [],
+            very_low: 0.0, low: 0.0, medium: 0.0, high: 0.0, very_high: 0.0,
             modified: false
         };
         this.handleChange = this.handleChange.bind(this);
@@ -21,35 +22,42 @@ export default class GrowthRateConfig extends React.Component {
     }
 
     componentDidMount() {
-        var user_config_url = `${config.api}/cba/user_configs/${this.state.config_id}/growth_rates`
-        console.log("Setting up growth_rates config: " + user_config_url);
-        fetch(user_config_url)
-            .then((res) => res.json())
-            .then((res) => { console.log(res); this.setState(res['growth_rates']) });
+        this.pull_data_from_db();
     }
 
-    // floatifyEntries(e) {
-    //     return Object.fromEntries(
-    //         Object.entries(e).map(([key, val]) => [key, parseFloat(val)])
-    //     );
-    // };
-
-    // floatifyArray(es) {
-    //     return es.map((e) => this.floatifyEntries(e))
-    // }
+    componentDidUpdate(prevProps) {
+        //console.log(`Going from ${JSON.stringify(prevProps)} -> ${JSON.stringify(this.props)}`);
+        // Typical usage (don't forget to compare props):
+        if (this.props.config_id !== prevProps.config_id) {
+            this.push_data_to_db()
+            this.setState({ config_id: this.props.config_id });
+            this.pull_data_from_db()
+        }
+    }
 
     componentWillUnmount() {
+        this.push_data_to_db();
+    }
 
-        // const body = { traffic_levels: this.floatifyArray(this.state.traffic_levels) };
-        const { very_low, low, medium, high, very_high } = this.state;
-        const body = { growth_rates: { very_low, low, medium, high, very_high } };
-        const request = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
-        console.log(request);
+    pull_data_from_db() {
+        var user_config_url = `${config.api}/cba/user_configs/${this.state.config_id}/growth_rates`
+        //console.log("Setting up growth_rates config: " + user_config_url);
+        fetch(user_config_url)
+            .then((res) => res.json())
+            .then((res) => { this.setState({ ...res['growth_rates'], ...{ modified: false } }) });
+    }
 
-        var url = `${config.api}/cba/user_configs/${this.state.config_id}/update`
-        fetch(url, request)
-            .then(res => res.json())
-            .then(res => { console.log(res); });
+    push_data_to_db() {
+        if (this.state.modified) {
+            const { very_low, low, medium, high, very_high } = this.state;
+            const body = { growth_rates: { very_low, low, medium, high, very_high } };
+            const request = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
+            var url = `${config.api}/cba/user_configs/${this.state.config_id}/update`
+
+            fetch(url, request)
+                .then(res => res.json())
+                .then(res => { console.log(res); });
+        }
     }
 
 

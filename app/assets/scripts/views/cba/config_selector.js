@@ -19,7 +19,7 @@ class ConfigSelector extends React.Component {
         this.state = {
             title: 'general',
             availableConfigs: {},
-            configId: 1,
+            configId: -1,
             configName: "Loading"
         }
         this.selectConfig = this.selectConfig.bind(this);
@@ -30,8 +30,15 @@ class ConfigSelector extends React.Component {
         fetch(user_config_url)
             .then((res) => res.json())
             .then((res) => {
-                this.setState({ availableConfigs: Object.fromEntries(res.map(e => [e.id, e])) });
-                if (res.length > 0) { this.setState({ configId: res[0].id, configName: res[0].name }) }
+                var availableConfigs = Object.fromEntries(res.map(e => [e.id, e]));
+                // console.log(`availableConfigs: ${JSON.stringify(availableConfigs)}`);
+                var newState = { availableConfigs: availableConfigs };
+                if (res.length > 0) {
+                    var firstConfig = availableConfigs[Object.keys(availableConfigs)[0]];
+                    //console.log(`firstConfig: ${JSON.stringify(firstConfig)}`);
+                    newState = { ...newState, ...{ configId: firstConfig.id, configName: firstConfig.name } };
+                }
+                this.setState(newState);
             });
     }
 
@@ -70,25 +77,6 @@ class ConfigSelector extends React.Component {
         return <FormDropdown options={Object.values(this.state.availableConfigs)} onChange={this.selectConfig} />
     }
 
-    renderConfigSelector_old(name) {
-        var configItems = Object.entries(this.state.availableConfigs).map((entry) => {
-            const [id, e] = entry;
-            return (<Dropdown.Item key={id} eventKey={id} onSelect={this.selectConfig}> {e.name} </Dropdown.Item>)
-        }
-        );
-
-        return (
-            <Dropdown title="Choose a saved Config">
-                <Dropdown.Toggle id="dropdown-basic" variant='outline-secondary' >
-                    {name}
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                    {configItems}
-                </Dropdown.Menu>
-            </Dropdown>
-        )
-    }
-
     render() {
         let { title, configName, configId } = this.state
 
@@ -100,8 +88,9 @@ class ConfigSelector extends React.Component {
             "recurrent-maintenance": RecurrentMaintenanceConfig,
         };
 
-        var configState = { config_name: configName, config_id: configId };
-        var configContainer = React.createElement(classLookup[title], configState);
+        var configProps = { config_name: configName, config_id: configId, key: `${configId}` };
+        //console.log(`configProps: ${JSON.stringify(configProps)}`)
+        var configContainer = React.createElement(classLookup[title], configProps);
 
         return (
             <div className='content-con'>

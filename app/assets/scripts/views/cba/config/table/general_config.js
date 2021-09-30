@@ -7,13 +7,12 @@ export default class GeneralConfig extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log('this.props.config_id: ' + props.config_id)
+        // console.log('this.props.config_id: ' + props.config_id)
         this.state = {
             config_id: props.config_id,
-            discount_rate: "",
-            economic_factor: "",
             modified: false
         };
+        this.state = { ...this.state, ...{ discount_rate: 0.0, economic_factor: 0.0 } }
         this.handleDiscountChange = this.handleDiscountChange.bind(this);
         this.handleEconFactorChange = this.handleEconFactorChange.bind(this);
     }
@@ -26,10 +25,12 @@ export default class GeneralConfig extends React.Component {
     }
 
     pull_data_from_db() {
-        var user_config_url = `${config.api}/cba/user_configs/${this.props.config_id}`
-        fetch(user_config_url)
-            .then((res) => res.json())
-            .then((res) => this.setState({ discount_rate: res.discount_rate, economic_factor: res.economic_factor, modified: false }));
+        if (this.props.config_id > 0) {
+            var user_config_url = `${config.api}/cba/user_configs/${this.props.config_id}`
+            fetch(user_config_url)
+                .then((res) => res.json())
+                .then((res) => this.setState({ discount_rate: res.discount_rate, economic_factor: res.economic_factor, modified: false }));
+        }
     }
 
     componentDidMount() {
@@ -53,6 +54,7 @@ export default class GeneralConfig extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
+        // console.log(`Going from ${JSON.stringify(prevProps)} -> ${JSON.stringify(this.props)}`);
         // Typical usage (don't forget to compare props):
         if (this.props.config_id !== prevProps.config_id) {
             this.push_data_to_db()
