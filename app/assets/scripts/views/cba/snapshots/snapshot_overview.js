@@ -60,9 +60,7 @@ export default class SnapshotOverview extends React.Component {
         }
     }
 
-
     render() {
-
         return <div>
             {this.renderText()}
             {this.renderPie()}
@@ -71,19 +69,18 @@ export default class SnapshotOverview extends React.Component {
     }
 
     renderText() {
-        return <div>
+        return <div className="snapshot_stats_table">
             {this.renderPair("Name", this.state.stats.name)}
             {this.renderPair("Province", this.state.stats.province_name)}
             {this.renderPair("Num Assets", this.state.stats.num_records)}
             {this.renderPair("Created", this.state.stats.created_at)}
-
         </div>
     }
 
     renderPair(a, b) {
         return <div className="d-flex">
-            <div className='w-25 bg-secondary text-light p-2 border border-secondary fw-bold text-end'>{a}</div>
-            <div className='w-50 bg-transparent p-2 border-secondary'>{b}</div>
+            <div className='w-25 snapshot_stats_label'>{a}</div>
+            <div className='w-50 snapshot_stats_value'>{b}</div>
         </div>
     }
 

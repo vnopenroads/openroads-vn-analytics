@@ -8,7 +8,7 @@ import SnapshotSelector from './snapshot_selector';
 import ConfigSelector from './config_selector';
 import CbaResults from './cba_results';
 
-class CbaAnalysis extends React.Component {
+class CbaMainPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -39,7 +39,6 @@ class CbaAnalysis extends React.Component {
         // console.log("DONE: Creating a new " + configContainer);
 
         return (
-            // <div className='content-con'>
             <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="">
                 <Tab eventKey="RoadAssets" title="Road Assets">
                     <SnapshotSelector selectSnapshotFn={(id) => { this.setState({ selectedSnapshotId: id }) }} />
@@ -60,5 +59,5 @@ class CbaAnalysis extends React.Component {
     }
 };
 
-export default getContext({ language: PropTypes.string })(CbaAnalysis);
+export default getContext({ language: PropTypes.string })(CbaMainPage);
 

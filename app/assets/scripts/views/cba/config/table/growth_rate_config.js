@@ -40,7 +40,7 @@ export default class GrowthRateConfig extends React.Component {
     }
 
     pull_data_from_db() {
-        var user_config_url = `${config.api}/cba/user_configs/${this.state.config_id}/growth_rates`
+        var user_config_url = `${config.api}/cba/user_configs/${this.state.config_id}/sub_config/growth_rates`
         //console.log("Setting up growth_rates config: " + user_config_url);
         fetch(user_config_url)
             .then((res) => res.json())

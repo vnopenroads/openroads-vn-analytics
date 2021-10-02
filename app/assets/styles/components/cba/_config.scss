@@ -5,7 +5,7 @@ $verylight-color: rgba($base-color, 0.28);
 
 .content-con {
     display: flex;
-    // border: 5px solid #ffb9b9;
+    // border: 5px solid red;
     // background-color: #ff000033;
 }
 .content-con-left {
@@ -99,30 +99,6 @@ $verylight-color: rgba($base-color, 0.28);
         }
     }
 }
-
-
-// .table-RW {
-//     height: 742px;
-//     overflow: auto;
-// }
-// .road-work {
-//     width: 100%;
-// }
-// 
-// @media only screen and (max-width: 900px) {
-//     .col-md-12 {
-//         width: 100%;
-//     }
-// }
-// 
-// .title-active {
-//     border-top: 1px solid black;
-//     border-left: 1px solid black;
-//     border-right: 1px solid black;
-//     padding: 15px;
-//     background-color: rgb(245, 136, 136);
-//     cursor: pointer;
-// }
 
 .nav-con-default {
     padding: 5px;

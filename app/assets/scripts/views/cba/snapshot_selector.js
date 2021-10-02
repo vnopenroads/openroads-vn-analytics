@@ -92,7 +92,7 @@ class SnapshotSelector extends React.Component {
 
     renderSnapshotSelect() {
         return (
-            <div className='snapshot-select-con' style={{ "max-width": "300px" }}>
+            <div className='snapshot-select-con'>
                 <div className='title-con'>Road Asset Snapshots</div>
                 {this.getSnapshotItems()}
                 {this.takeSnapshot()}
@@ -105,7 +105,7 @@ class SnapshotSelector extends React.Component {
     }
 
     render() {
-        return (<div className='flex-parent debug' >
+        return (<div className='d-flex debug' >
             {this.renderSnapshotSelect()}
             {this.renderSnapshotOverview()}
         </div>)

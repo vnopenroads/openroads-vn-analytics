@@ -26,7 +26,7 @@ export default class GeneralConfig extends React.Component {
 
     pull_data_from_db() {
         if (this.props.config_id > 0) {
-            var user_config_url = `${config.api}/cba/user_configs/${this.props.config_id}`
+            var user_config_url = `${config.api}/cba/user_configs/${this.props.config_id}/sub_config/general`
             fetch(user_config_url)
                 .then((res) => res.json())
                 .then((res) => this.setState({ discount_rate: res.discount_rate, economic_factor: res.economic_factor, modified: false }));
