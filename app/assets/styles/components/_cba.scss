@@ -2,6 +2,15 @@
 @import "components/cba/config";
 @import "components/cba/snapshots";
 
+.cba_tab_header { 
+    font-size: 1.15rem;
+    color: $base-font-color;
+    &:hover {
+        color: $base-font-color;
+        font-weight: bold;
+    }
+}
+
 .map__media {
     width: 100%;
     background: $base-alpha-color;

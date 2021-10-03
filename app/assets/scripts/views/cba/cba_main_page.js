@@ -40,13 +40,13 @@ class CbaMainPage extends React.Component {
 
         return (
             <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="">
-                <Tab eventKey="RoadAssets" title="Road Assets">
+                <Tab eventKey="RoadAssets" title="Road Assets" tabClassName='cba_tab_header'>
                     <SnapshotSelector selectSnapshotFn={(id) => { this.setState({ selectedSnapshotId: id }) }} />
                 </Tab>
-                <Tab eventKey="Configuration" title="Configuration">
+                <Tab eventKey="Configuration" title="Configuration" tabClassName='cba_tab_header'>
                     <ConfigSelector selectConfigFn={(id) => { this.setState({ selectedConfigId: id }) }} />
                 </Tab>
-                <Tab eventKey="Results" title="Results">
+                <Tab eventKey="Results" title="Results" tabClassName='cba_tab_header'>
                     <CbaResults snapshotId={this.state.selectedSnapshotId} configId={this.state.selectedConfigId} />
                 </Tab>
             </Tabs>

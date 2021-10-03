@@ -29,20 +29,19 @@ export default class ResultsTable extends React.Component {
             var perc = (a) => { return `${(100.0 * a).toFixed(1)}%` }
 
             const columns = [
-                { dataField: 'way_id', text: "way_id", sort: true },
-                { dataField: 'eirr', text: "eirr", sort: true, formatter: round2 },
-                { dataField: 'esa_loading', text: "ESA Loading", sort: true, formatter: round2 },
-                { dataField: 'npv', text: "NPV", sort: true, formatter: round2 },
-                { dataField: 'npv_cost', text: "NPV Cost", sort: true, formatter: round2 },
-                { dataField: 'npv_km', text: "NPV km", sort: true, formatter: round2 },
-                { dataField: 'truck_percent', text: "Truck %", sort: true, formatter: perc },
-                { dataField: 'vehicle_utilization', text: "Vehicle Utilization", sort: true, formatter: perc },
+                { dataField: 'way_id', text: "way_id", align: 'center', sort: true },
+                { dataField: 'eirr', text: "eirr", sort: true, align: 'center', formatter: round2 },
+                { dataField: 'esa_loading', text: "ESA Loading", sort: true, align: 'center', formatter: round2 },
+                { dataField: 'npv', text: "NPV", sort: true, align: 'center', formatter: round2 },
+                { dataField: 'npv_cost', text: "NPV Cost", sort: true, align: 'center', formatter: round2 },
+                { dataField: 'npv_km', text: "NPV km", sort: true, align: 'center', formatter: round2 },
+                { dataField: 'truck_percent', text: "Truck %", sort: true, align: 'center', formatter: perc },
+                { dataField: 'vehicle_utilization', text: "Vehicle Utilization", sort: true, align: 'center', formatter: perc },
                 { dataField: 'work_class', text: "Work Class", sort: true },
-                { dataField: 'work_cost', text: "Work Cost", sort: true, formatter: round1 },
-                { dataField: 'work_cost_km', text: "Work Cost / km", sort: true, formatter: round1 },
+                { dataField: 'work_cost', text: "Work Cost", sort: true, align: 'center', formatter: round1 },
+                { dataField: 'work_cost_km', text: "Work Cost / km", sort: true, align: 'center', formatter: round1 },
                 { dataField: 'work_name', text: "Work Name", sort: true },
-                { dataField: 'work_type', text: "Work Type", sort: true },
-                { dataField: 'work_year', text: "Work Year", sort: true }
+                { dataField: 'work_year', text: "Work Year", align: 'center', sort: true }
             ]
 
             return <BootstrapTable

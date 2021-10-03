@@ -1,3 +1,7 @@
 - name: restart supervisord
   shell: systemctl restart supervisord && killall node
   become: true
+
+- name: restart API
+  shell: supervisorctl restart openroads-vn-api
+  become: true

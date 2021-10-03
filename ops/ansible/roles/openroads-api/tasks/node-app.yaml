@@ -29,21 +29,18 @@
   #     path: "{{ node_app_dir }}"
   #     state: directory
 
-  - name: Deploy the api source 
-    synchronize:
-      src: "{{ api_src_dir }}/{{ item }}"
+  - name: Git checkout the python lib
+    ansible.builtin.git:
+      repo: https://github.com/vnopenroads/openroads-vn-api.git 
       dest: "{{ node_app_dir }}/"
-    with_items: 
-      - src
-      - db
-      - index.js
-      - package.json
-    notify: restart supervisord
+      version: jamiecook/docker-image
+    notify: 
+      - restart API
   
   - name: Yarn Install
     command: 
       cmd: yarn install
       chdir: "{{ node_app_dir }}"
-    notify: restart supervisord
+    notify: restart API
 
   tags: node-app
