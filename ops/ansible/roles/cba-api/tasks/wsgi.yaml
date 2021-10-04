@@ -29,7 +29,7 @@
     ansible.builtin.git:
       repo: https://github.com/vnopenroads/roads-cba-py.git 
       dest: "{{ cba_py_dir }}"
-      version: jamiecook/cba_react 
+      version: jamiecook/tidy_up 
     notify: 
       - restart nginx
       - restart wsgi

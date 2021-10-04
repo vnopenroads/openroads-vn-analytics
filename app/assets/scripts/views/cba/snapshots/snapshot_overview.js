@@ -1,6 +1,6 @@
 'use strict';
 import React from 'react';
-import { PieChart, Pie, Sector, ResponsiveContainer } from 'recharts';
+import { PieChart, Cell, Pie, Sector, ResponsiveContainer } from 'recharts';
 import { CartesianGrid, XAxis, YAxis, Tooltip, LineChart, Line } from 'recharts';
 import { Table, ListGroup, Badge } from 'react-bootstrap';
 import config from '../../../config';
@@ -21,8 +21,8 @@ export default class SnapshotOverview extends React.Component {
                 invalid_reasons: [],
                 num_records: 0,
                 valid_records: 0
-
             },
+            surfaceTypeBreakdown: [],
             snapshotId: this.props.snapshotId
         };
         this.onPieEnter = (_, index) => {
@@ -53,8 +53,8 @@ export default class SnapshotOverview extends React.Component {
             fetch(url)
                 .then((res) => res.json())
                 .then((res) => {
-                    console.log(res);
                     var surfaceType = res.map(x => renameCol(x, 'surface_type', lookup));
+                    // console.log(surfaceType);
                     this.setState({ surfaceTypeBreakdown: surfaceType })
                 });
         }
@@ -69,11 +69,13 @@ export default class SnapshotOverview extends React.Component {
     }
 
     renderText() {
+        var totalKm = this.state.surfaceTypeBreakdown.map((e) => e.length).reduce((a, b) => a + b, 0);
         return <div className="snapshot_stats_table">
             {this.renderPair("Name", this.state.stats.name)}
             {this.renderPair("Province", this.state.stats.province_name)}
             {this.renderPair("Num Assets", this.state.stats.num_records)}
             {this.renderPair("Created", this.state.stats.created_at)}
+            {this.renderPair("Total KM", `${totalKm.toFixed(0)} km`)}
         </div>
     }
 
@@ -85,6 +87,17 @@ export default class SnapshotOverview extends React.Component {
     }
 
     renderPie() {
+
+        var colours = {
+            "Cobblestone": "#fef0d9",
+            "Macadam": "#fdd49e",
+            "Earth": "#fdbb84",
+            "Gravel": "#fc8d59",
+            "Surface Treatment": "#ef6548",
+            "Asphalt Mix": "#d7301f",
+            "Cement Concrete": "#990000"
+        }
+
         return (
             <div className='mt-4' style={{ width: '600px', height: '350px' }}>
                 <div className='text-muted fs-3'>Road Assets by Surface Type</div>
@@ -102,7 +115,11 @@ export default class SnapshotOverview extends React.Component {
                             nameKey="surface_type"
                             dataKey="length"
                             onMouseEnter={this.onPieEnter}
-                        />
+                        >
+                            {this.state.surfaceTypeBreakdown.map((e, i) => (
+                                <Cell key={`cell-${i}`} fill={colours[e.surface_type] || '#dddddd'} />
+                            ))}
+                        </Pie>
                     </PieChart>
                 </ResponsiveContainer>
             </div>
@@ -112,7 +129,7 @@ export default class SnapshotOverview extends React.Component {
     renderErrorTable() {
         var li_reason = (e) => { return (<tr><td>{e[1]}</td><td>{e[0]}</td></tr>) };
         if (Object.keys(this.state.stats.invalid_reasons).length == 0) { return; }
-        console.log("||" + JSON.stringify(this.state.stats.invalid_reasons));
+        // console.log("||" + JSON.stringify(this.state.stats.invalid_reasons));
         return <div className='mt-3'>
             <div className='text-muted fs-3'>Summary of Data Errors</div>
             <Table striped size="sm">
