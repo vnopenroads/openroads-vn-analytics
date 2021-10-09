@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { getContext } from 'recompose';
 
-import { DropdownButton, Form, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 import config from '../../config';
 import { FormDropdown } from './config/dropdown';
@@ -25,7 +25,9 @@ class CbaResults extends React.Component {
         this.selectConfig = this.selectConfig.bind(this);
         this.selectSnapshot = this.selectSnapshot.bind(this);
         this.run = this.run.bind(this);
+        this.download = this.download.bind(this);
         this.clear = this.clear.bind(this);
+        this.tableRef = React.createRef();
     }
 
     componentDidMount() {
@@ -76,6 +78,9 @@ class CbaResults extends React.Component {
             .then((res) => res.json())
             .then((res) => this.pull_from_db());
     }
+    download() {
+        this.tableRef.current.csvRef.current.link.click();
+    }
 
     render() {
         return (
@@ -89,7 +94,8 @@ class CbaResults extends React.Component {
 
     renderDropDowns() {
         const runText = this.resultsAvailable() ? "Re-Run" : "Run";
-        const deleteDisabled = !this.resultsAvailable();
+        const resultsUnavailable = !this.resultsAvailable();
+
         return (<div className='d-flex flex-row justify-content-center'>
             <div className='flex-1'>
                 <FormDropdown
@@ -108,7 +114,8 @@ class CbaResults extends React.Component {
 
             <div className="hstack flex-grow-0 align-self-end">
                 <Button variant="outline-secondary" onClick={this.run}>{runText}</Button>
-                <Button variant="outline-danger" onClick={this.clear} className='ms-1' disabled={deleteDisabled}>Delete</Button>
+                <Button variant="outline-secondary" onClick={this.download} className='ms-1' disabled={resultsUnavailable}>Download as CSV</Button>
+                <Button variant="outline-danger" onClick={this.clear} className='ms-1' disabled={resultsUnavailable}>Delete</Button>
             </div>
         </div>)
     }
@@ -122,7 +129,7 @@ class CbaResults extends React.Component {
             var key = `${this.state.selectedConfigId}-${this.state.selectedSnapshotId}`;
             return (<div>
                 <ResultKpis key={`k-${key}`} configId={this.state.selectedConfigId} snapshotId={this.state.selectedSnapshotId} />
-                <ResultsTable key={`t-${key}`} configId={this.state.selectedConfigId} snapshotId={this.state.selectedSnapshotId} />
+                <ResultsTable key={`t-${key}`} ref={this.tableRef} configId={this.state.selectedConfigId} snapshotId={this.state.selectedSnapshotId} />
             </div>);
         } else {
             return <figure className="text-center">

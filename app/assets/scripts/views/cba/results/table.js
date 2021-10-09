@@ -1,7 +1,8 @@
 'use strict';
 import React from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Label, Tooltip, ResponsiveContainer } from 'recharts';
+import { CSVLink } from 'react-csv';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Label } from 'recharts';
 
 import config from '../../../config';
 
@@ -12,6 +13,7 @@ export default class ResultsTable extends React.Component {
         this.state = {
             data: []
         };
+        this.csvRef = React.createRef();
     }
 
     componentDidMount() {
@@ -27,12 +29,23 @@ export default class ResultsTable extends React.Component {
     render() {
         if (this.state.data.length > 0) {
             return (<div>
+                {this.renderHiddenDownloadButton()}
                 {this.renderChart()}
                 {this.renderTable()}
             </div>);
         } else {
             return <p>Spinner</p>
         }
+    }
+
+    renderHiddenDownloadButton() {
+        return <CSVLink
+            className="btn hidden"
+            target="_blank"
+            ref={this.csvRef}
+            filename={`CBA_results_config-${this.props.configId}_snapshot-${this.props.snapshotId}.csv`}
+            data={this.state.data}
+        />
     }
 
     renderChart() {
