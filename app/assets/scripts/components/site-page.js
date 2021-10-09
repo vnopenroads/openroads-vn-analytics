@@ -12,7 +12,7 @@ class SitePage extends React.Component {
   }
 
   render() {
-    var { pageName, innerPage, noMargins, subPageNav, language } = this.props;
+    var { pageName, innerPage, noMargins, subPageNav, language, pageNameTag } = this.props;
 
     var inpageClasses = "inpage";
     if (noMargins) { inpageClasses += " inpage--alt" }
@@ -34,6 +34,7 @@ class SitePage extends React.Component {
             <div className='inpage__headline'>
               <h1 className='inpage__title'><T>{pageName}</T></h1>
             </div>
+            {pageNameTag}
             <nav className='inpage__nav'>
               <ul className='inpage__menu'>
                 {subPageNav}

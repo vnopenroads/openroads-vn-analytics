@@ -61,7 +61,8 @@ export default class ResultsTable extends React.Component {
                 width={1000}
                 height={300}
                 data={data}
-                margin={{ top: 5, right: 30, left: 50, bottom: 50, }}
+                className="mx-auto mt-3"
+                margin={{ bottom: 50 }}
             >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="cost" type='number' tickCount={10}>
@@ -75,11 +76,9 @@ export default class ResultsTable extends React.Component {
     }
 
     renderTable() {
-        var round2 = (a) => { return `${a.toFixed(2)}` }
+        var round2 = (a) => { return a ? `${a.toFixed(2)}` : 'NaN' }
         var round1 = (a) => { return `${a.toFixed(1)}` }
         var perc = (a) => { return `${(100.0 * a).toFixed(1)}%` }
-
-
 
         const columns = [
             { dataField: 'way_id', text: "way_id", align: 'center', sort: true },

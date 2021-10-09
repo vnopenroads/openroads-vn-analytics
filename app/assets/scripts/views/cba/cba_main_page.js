@@ -7,6 +7,7 @@ import SitePage from '../../components/site-page';
 import SnapshotSelector from './snapshot_selector';
 import ConfigSelector from './config_selector';
 import CbaResults from './cba_results';
+import { CbaVersion } from './cba_version'
 
 class CbaMainPage extends React.Component {
     constructor(props) {
@@ -55,7 +56,8 @@ class CbaMainPage extends React.Component {
     }
 
     render() {
-        return (<SitePage pageName="CBA" innerPage={this.renderInnerPage()} noMargins={false} subPageNav={[]} />);
+        var tag = <h1 className="site__title ms-0"><strong>v{CbaVersion}</strong></h1>;
+        return (<SitePage pageName="CBA" pageNameTag={tag} innerPage={this.renderInnerPage()} noMargins={false} subPageNav={[]} />);
     }
 };
 
