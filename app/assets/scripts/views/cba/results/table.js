@@ -2,7 +2,8 @@
 import React from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import { CSVLink } from 'react-csv';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Label } from 'recharts';
+import { Spinner, Tab, Row, Col, Nav } from 'react-bootstrap';
+import { AssetBreakdownChart, CostByYearChart, CumumlativeNPVChart } from './charts';
 
 import config from '../../../config';
 
@@ -11,7 +12,8 @@ export default class ResultsTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: []
+            data: [],
+            assetBreakdown: {}
         };
         this.csvRef = React.createRef();
     }
@@ -24,17 +26,25 @@ export default class ResultsTable extends React.Component {
         fetch(`${config.api}/cba/results?snapshot_id=${this.props.snapshotId}&config_id=${this.props.configId}`)
             .then((res) => res.json())
             .then((res) => { this.setState({ data: res }); });
+
+        fetch(`${config.api}/cba/results/kpis?snapshot_id=${this.props.snapshotId}&config_id=${this.props.configId}`)
+            .then((res) => res.json())
+            .then((r) => { this.setState({ assetBreakdown: r.assetBreakdown }); });
     }
 
     render() {
         if (this.state.data.length > 0) {
             return (<div>
                 {this.renderHiddenDownloadButton()}
-                {this.renderChart()}
+                {this.renderCharts()}
                 {this.renderTable()}
             </div>);
         } else {
-            return <p>Spinner</p>
+            return <div className='mx-auto text-center'>
+                <Spinner animation="border" role="status" variant='danger'>
+                    <span className="visually-hidden">Table Loading...</span>
+                </Spinner>
+            </div>
         }
     }
 
@@ -48,31 +58,38 @@ export default class ResultsTable extends React.Component {
         />
     }
 
-    renderChart() {
-
-        var npvCumSum = [], costCumSum = [];
-        this.state.data.map((e) => e.npv).reduce(function (a, b, i) { return npvCumSum[i] = a + b; }, 0);
-        this.state.data.map((e) => e.work_cost).reduce(function (a, b, i) { return costCumSum[i] = a + b; }, 0);
-        const zip = rows => rows[0].map((_, c) => rows.map(row => row[c]))
-
-        var data = zip([npvCumSum, costCumSum]).map((e) => { return { npv: e[0], cost: e[1] }; });
-        return (
-            <LineChart
-                width={1000}
-                height={300}
-                data={data}
-                className="mx-auto mt-3"
-                margin={{ bottom: 50 }}
-            >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="cost" type='number' tickCount={10}>
-                    <Label value="Work Cost ($M)" position='bottom' />
-                </XAxis>
-
-                <YAxis label={{ value: 'NPV ($M)', angle: -90, position: 'insideLeft' }} />
-                <Line type="monotone" dataKey="npv" stroke="#8884d8" dot={false} />
-            </LineChart >
-        );
+    renderCharts() {
+        // console.log(this.state.assetBreakdown);
+        return <Tab.Container id="left-tabs-example" defaultActiveKey="first">
+            <Row>
+                <Col sm={2}>
+                    <Nav variant="tabs" className="flex-column mt-5">
+                        <Nav.Item>
+                            <Nav.Link eventKey="first">Asset Breakdown</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link eventKey="second">Cost by Year</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link eventKey="third">Cumulative NPV</Nav.Link>
+                        </Nav.Item>
+                    </Nav>
+                </Col>
+                <Col sm={10}>
+                    <Tab.Content>
+                        <Tab.Pane eventKey="first">
+                            <AssetBreakdownChart data={this.state.assetBreakdown} />
+                        </Tab.Pane>
+                        <Tab.Pane eventKey="second">
+                            <CostByYearChart data={this.state.data} />
+                        </Tab.Pane>
+                        <Tab.Pane eventKey="third">
+                            <CumumlativeNPVChart data={this.state.data} />
+                        </Tab.Pane>
+                    </Tab.Content>
+                </Col>
+            </Row>
+        </Tab.Container>
     }
 
     renderTable() {
@@ -96,8 +113,9 @@ export default class ResultsTable extends React.Component {
             { dataField: 'work_year', text: "Work Year", align: 'center', sort: true }
         ]
 
+        // nconsole.log(this.state.data[0]);
         return <BootstrapTable
-            keyField='way_id'
+            keyField='id'
             data={this.state.data}
             columns={columns}
             bordered={false}

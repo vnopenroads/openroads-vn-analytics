@@ -113,6 +113,7 @@
     "prop-types": "*",
     "react": "^16.14",
     "react-bootstrap": "2.0.0-beta.4",
+    "react-bootstrap-icons": "^1.5.0",
     "react-bootstrap-table-next": "*",
     "react-bootstrap-table2-editor": "*",
     "react-csv": "^2.0.3",

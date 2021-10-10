@@ -4,6 +4,7 @@ import { PieChart, Cell, Pie, Sector, ResponsiveContainer } from 'recharts';
 import { CartesianGrid, XAxis, YAxis, Tooltip, LineChart, Line } from 'recharts';
 import { Table, ListGroup, Badge } from 'react-bootstrap';
 import config from '../../../config';
+import { renderActiveShape } from '../chart_utils'
 
 function renameCol(obj, colName, colNameLu) {
     obj[colName] = colNameLu[obj[colName]] || obj[colName];
@@ -28,14 +29,8 @@ export default class SnapshotOverview extends React.Component {
         this.onPieEnter = (_, index) => {
             this.setState({ activeIndex: index, });
         };
-
-        this.data = [
-            { name: 'Group A', value: (200 * Math.random()) | 0 },
-            { name: 'Group B', value: (200 * Math.random()) | 0 },
-            { name: 'Group C', value: (200 * Math.random()) | 0 },
-            { name: 'Group D', value: (200 * Math.random()) | 0 },
-        ];
     }
+
     componentDidMount() {
         this.pull_data_from_db();
     }
@@ -97,6 +92,14 @@ export default class SnapshotOverview extends React.Component {
             "Asphalt Mix": "#d7301f",
             "Cement Concrete": "#990000"
         }
+        // console.log(this.state.surfaceTypeBreakdown);
+        var data = this.state.surfaceTypeBreakdown.map((e) => {
+            return {
+                valueStr: `${e.value.toFixed(1)} km`,
+                fill: colours[e.surface_type] || '#dddddd',
+                ...e
+            }
+        });
 
         return (
             <div className='mt-4' style={{ width: '600px', height: '350px' }}>
@@ -105,8 +108,8 @@ export default class SnapshotOverview extends React.Component {
                     <PieChart width={400} height={400}>
                         <Pie
                             activeIndex={this.state.activeIndex}
-                            activeShape={this.renderActiveShape}
-                            data={this.state.surfaceTypeBreakdown}
+                            activeShape={renderActiveShape}
+                            data={data}
                             cx="50%"
                             cy="50%"
                             innerRadius={80}
@@ -117,7 +120,7 @@ export default class SnapshotOverview extends React.Component {
                             onMouseEnter={this.onPieEnter}
                         >
                             {this.state.surfaceTypeBreakdown.map((e, i) => (
-                                <Cell key={`cell-${i}`} fill={colours[e.surface_type] || '#dddddd'} />
+                                <Cell key={`cell-${i}`} fill={e.fill} />
                             ))}
                         </Pie>
                     </PieChart>
@@ -147,70 +150,6 @@ export default class SnapshotOverview extends React.Component {
     };
 
 
-    renderActiveShape(props) {
-        const RADIAN = Math.PI / 180;
-        const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
-        const sin = Math.sin(-RADIAN * midAngle);
-        const cos = Math.cos(-RADIAN * midAngle);
-        const sx = cx + (outerRadius + 10) * cos;
-        const sy = cy + (outerRadius + 10) * sin;
-        const mx = cx + (outerRadius + 30) * cos;
-        const my = cy + (outerRadius + 30) * sin;
-        const ex = mx + (cos >= 0 ? 1 : -1) * 22;
-        const ey = my;
-        const textAnchor = cos >= 0 ? 'start' : 'end';
-        // console.log(JSON.stringify(payload));
-        var surface_type = payload.surface_type || "Not Specified"
-
-        return (
-            <g>
-                <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
-                    {surface_type}
-                </text>
-                <Sector
-                    cx={cx}
-                    cy={cy}
-                    innerRadius={innerRadius}
-                    outerRadius={outerRadius}
-                    startAngle={startAngle}
-                    endAngle={endAngle}
-                    fill={fill}
-                />
-                <Sector
-                    cx={cx}
-                    cy={cy}
-                    startAngle={startAngle}
-                    endAngle={endAngle}
-                    innerRadius={outerRadius + 6}
-                    outerRadius={outerRadius + 10}
-                    fill={fill}
-                />
-                <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
-                <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-                <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{`${value.toFixed(1)} km`}</text>
-                <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999">
-                    {`(${(percent * 100).toFixed(2)}%)`}
-                </text>
-            </g>
-        );
-    };
-
 
 
 }
-
-
-// function blah {
-//     import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
-//     const data = [{ name: 'Page A', uv: 400, pv: 2400, amt: 2400 }, ...];
-// 
-//     const renderLineChart = (
-//         <LineChart width={600} height={300} data={data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-//             <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-//             <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-//             <XAxis dataKey="name" />
-//             <YAxis />
-//             <Tooltip />
-//         </LineChart>
-//     );
-// }

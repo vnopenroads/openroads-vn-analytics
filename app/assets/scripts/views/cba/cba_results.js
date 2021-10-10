@@ -127,6 +127,7 @@ class CbaResults extends React.Component {
     renderResults() {
         if (this.resultsAvailable()) {
             var key = `${this.state.selectedConfigId}-${this.state.selectedSnapshotId}`;
+
             return (<div>
                 <ResultKpis key={`k-${key}`} configId={this.state.selectedConfigId} snapshotId={this.state.selectedSnapshotId} />
                 <ResultsTable key={`t-${key}`} ref={this.tableRef} configId={this.state.selectedConfigId} snapshotId={this.state.selectedSnapshotId} />
