@@ -9,7 +9,7 @@ export const FormDropdown = ({ options, label, description, onChange }) => {
     let descriptionC = description ? <Form.Text className="text-muted fw-lighter"> {text} </Form.Text> : "";
 
     return (
-        <div className="pl-5">
+        <div className="pl-5 m-2">
             {labelC}
             <Form.Select aria-label="Select CBA Configuration" onChange={onChange}>
                 {options.map(optFn)}
