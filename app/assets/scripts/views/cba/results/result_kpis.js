@@ -11,7 +11,7 @@ function InfoIcon(props) {
 
     return <div>
         {props.text}
-        <OverlayTrigger trigger="focus" placement="top" overlay={overlay}>
+        <OverlayTrigger trigger="hover" placement="top" overlay={overlay}>
             <InfoCircle className='float-right' />
         </OverlayTrigger>
     </div>
