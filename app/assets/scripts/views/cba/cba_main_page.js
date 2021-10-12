@@ -40,7 +40,7 @@ class CbaMainPage extends React.Component {
         // console.log("DONE: Creating a new " + configContainer);
 
         return (
-            <Tabs defaultActiveKey="Results" id="uncontrolled-tab-example" className="">
+            <Tabs defaultActiveKey="RoadAssets" id="uncontrolled-tab-example" className="">
                 <Tab eventKey="RoadAssets" title="Road Assets" tabClassName='cba_tab_header'>
                     <SnapshotSelector selectSnapshotFn={(id) => { this.setState({ selectedSnapshotId: id }) }} />
                 </Tab>

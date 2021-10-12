@@ -11,7 +11,9 @@ class TakeSnapshotModal extends React.Component {
         this.state = {
             show: props.show,
             provinces: [],
+            districts: [],
             province: 0,
+            district: 0,
             snapshotName: ""
         }
 
@@ -31,6 +33,9 @@ class TakeSnapshotModal extends React.Component {
         if (this.state.province > 0) {
             body.province_id = this.state.province;
         }
+        if (this.state.district > 0) {
+            body.district_id = this.state.district;
+        }
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
@@ -42,6 +47,16 @@ class TakeSnapshotModal extends React.Component {
     }
 
     onValueChange(what, event) {
+        if (what == 'province') {
+            console.log(event.target);
+            fetch(`${config.api}/admin/${event.target.value}/info`)
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    this.setState({ districts: data.children });
+                });
+
+        }
         this.setState({ [what]: event.target.value });
     }
 
@@ -49,16 +64,24 @@ class TakeSnapshotModal extends React.Component {
         fetch(`${config.api}/admin/province/units`)
             .then((res) => res.json())
             .then((res) => this.setProvinceOptions(res));
+        fetch(`${config.api}/admin/district/units`)
+            .then((res) => res.json())
+            .then((res) => this.setDistrictOptions(res));
     }
 
     setProvinceOptions(res) {
         this.setState({ provinces: res.province });
+    }
+    setDistrictOptions(res) {
+        this.setState({ districts: res.district });
     }
 
     render() {
         const processing = false;
         var provinceOptions_ = this.state.provinces.map((e) => { return <option key={e.id} value={e.id}>{e.name_en}</option> });
         var provinceOptions = [<option key={-1} value={- 1}> All</option >, ...provinceOptions_]
+        var districtOptions_ = this.state.districts.map((e) => { return <option key={e.id} value={e.id}>{e.name_en}</option> });
+        var districtOptions = [<option key={-1} value={- 1}> All</option >, ...districtOptions_]
 
         return (
             <Modal show={this.state.show}
@@ -79,6 +102,10 @@ class TakeSnapshotModal extends React.Component {
                                     <label className='form__label' htmlFor='province'>Province</label>
                                     <select id="province" name="province" className='form__control' onChange={this.onValueChange.bind(this, 'province')}>
                                         {provinceOptions}
+                                    </select>
+                                    <label className='form__label' htmlFor='province'>District</label>
+                                    <select id="province" name="province" className='form__control' onChange={this.onValueChange.bind(this, 'district')}>
+                                        {districtOptions}
                                     </select>
                                     <label className='form__label' htmlFor='snapshotName'>Snapshot Name</label>
                                     <input type='text' id='snapshotName' name='snapshotName' className='form__control'

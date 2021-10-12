@@ -95,7 +95,7 @@ export default class SnapshotOverview extends React.Component {
         // console.log(this.state.surfaceTypeBreakdown);
         var data = this.state.surfaceTypeBreakdown.map((e) => {
             return {
-                valueStr: `${e.value.toFixed(1)} km`,
+                valueStr: `${(e.length || 0.0).toFixed(1)} km`,
                 fill: colours[e.surface_type] || '#dddddd',
                 ...e
             }
@@ -119,7 +119,7 @@ export default class SnapshotOverview extends React.Component {
                             dataKey="length"
                             onMouseEnter={this.onPieEnter}
                         >
-                            {this.state.surfaceTypeBreakdown.map((e, i) => (
+                            {data.map((e, i) => (
                                 <Cell key={`cell-${i}`} fill={e.fill} />
                             ))}
                         </Pie>
