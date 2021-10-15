@@ -7,7 +7,7 @@ import { Button } from 'react-bootstrap';
 
 import config from '../../config';
 import { FormDropdown } from './config/dropdown';
-import ResultsTable from './results/table';
+import ResultDetails from './results/detail';
 import ResultKpis from './results/result_kpis';
 
 
@@ -38,7 +38,7 @@ class CbaResults extends React.Component {
         fetch(`${config.api}/cba/user_configs`).then((res) => res.json())
             .then((res) => {
                 this.setState({ availableConfigs: res })
-                if (res.length > 0) {
+                if (res.length > 0 && !this.state.selectedConfigId) {
                     this.setState({ selectedConfigId: res[0].id })
                 }
             });
@@ -46,7 +46,7 @@ class CbaResults extends React.Component {
             .then((res) => res.json())
             .then((res) => {
                 this.setState({ availableSnapshots: res })
-                if (res.length > 0) {
+                if (res.length > 0 && !this.state.selectedSnapshotId) {
                     this.setState({ selectedSnapshotId: res[0].id })
                 }
             });
@@ -54,23 +54,37 @@ class CbaResults extends React.Component {
         fetch(`${config.api}/cba/results`)
             .then((res) => res.json())
             .then((res) => {
-                this.setState({ availableResults: Object.fromEntries(res.map(e => [[e.snapshot_id, e.config_id], true])) });
+                var availableResults = Object.fromEntries(res.map(e => [[e.snapshot_id, e.config_id], true]));
+                console.log(availableResults);
+                this.setState({ availableResults: availableResults });
             });
     }
 
-    selectConfig(e) { this.setState({ selectedConfigId: e.target.value }); }
+    selectConfig(e) {
+        console.log(this.state.availableResults);
+        this.setState({ selectedConfigId: e.target.value });
+    }
 
-    selectSnapshot(e) { this.setState({ selectedSnapshotId: e.target.value }); }
+    selectSnapshot(e) {
+        console.log(this.state.availableResults);
+        this.setState({ selectedSnapshotId: e.target.value });
+    }
 
     resultsAvailable() {
+        console.log(`Checking ${[this.state.selectedSnapshotId, this.state.selectedConfigId]} is in available Results`);
+        console.log(this.state.availableResults);
         return this.state.availableResults[[this.state.selectedSnapshotId, this.state.selectedConfigId]]
     }
 
     run() {
         console.log("RUNNING");
+        this.setState({ runningPair: [this.state.selectedSnapshotId, this.state.selectedConfigId] })
         fetch(`${config.api}/cba/run?snapshot_id=${this.state.selectedSnapshotId}&config_id=${this.state.selectedConfigId}`)
             .then((res) => res.json())
-            .then((res) => this.pull_from_db());
+            .then((res) => {
+                this.setState({ runningPair: undefined })
+                this.pull_from_db()
+            });
     }
     clear() {
         console.log("DELETING");
@@ -121,16 +135,25 @@ class CbaResults extends React.Component {
     }
 
     renderResultsCont() {
-        return <div className='mt-5'>{this.renderResults()}</div>
+        var runAlert;
+        if (this.state.runningPair) {
+            runAlert = <div class="alert alert-primary" role="alert">Results Generating ....</div>;
+        }
+
+        return <div>
+            {runAlert}
+            <div className='mt-5'>{this.renderResults()}</div>
+        </div>
+
     }
 
     renderResults() {
+
         if (this.resultsAvailable()) {
             var key = `${this.state.selectedConfigId}-${this.state.selectedSnapshotId}`;
-
             return (<div>
                 <ResultKpis key={`k-${key}`} configId={this.state.selectedConfigId} snapshotId={this.state.selectedSnapshotId} />
-                <ResultsTable key={`t-${key}`} ref={this.tableRef} configId={this.state.selectedConfigId} snapshotId={this.state.selectedSnapshotId} />
+                <ResultDetails key={`t-${key}`} ref={this.tableRef} configId={this.state.selectedConfigId} snapshotId={this.state.selectedSnapshotId} />
             </div>);
         } else {
             return <figure className="text-center">

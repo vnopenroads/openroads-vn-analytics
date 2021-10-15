@@ -8,7 +8,7 @@ import { AssetBreakdownChart, CostByYearChart, CumumlativeNPVChart } from './cha
 import config from '../../../config';
 
 
-export default class ResultsTable extends React.Component {
+export default class ResultDetails extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -33,11 +33,12 @@ export default class ResultsTable extends React.Component {
     }
 
     render() {
+
+        // {this.renderTable()}
         if (this.state.data.length > 0) {
             return (<div>
                 {this.renderHiddenDownloadButton()}
                 {this.renderCharts()}
-                {this.renderTable()}
             </div>);
         } else {
             return <div className='mx-auto text-center'>

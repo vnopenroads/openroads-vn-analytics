@@ -21,16 +21,6 @@ class CbaMainPage extends React.Component {
     componentDidMount() {
     }
 
-    renderAnalysisBox() {
-        return (
-            <div className='analysis-con'>
-                <p>Select a snapshot from the left to get started</p>
-                <p>This is where the content relating to the results of the selected snapshot will be shown</p>
-                <p> Selected: {this.state.selectedSnapshotId}</p>
-            </div>
-        )
-    }
-
     renderInnerPage() {
         // let { title, config_name, config_id } = this.state
 
@@ -40,15 +30,15 @@ class CbaMainPage extends React.Component {
         // console.log("DONE: Creating a new " + configContainer);
 
         return (
-            <Tabs defaultActiveKey="RoadAssets" id="uncontrolled-tab-example" className="">
+            <Tabs defaultActiveKey="Results" id="uncontrolled-tab-example" className="">
                 <Tab eventKey="RoadAssets" title="Road Assets" tabClassName='cba_tab_header'>
-                    <SnapshotSelector selectSnapshotFn={(id) => { this.setState({ selectedSnapshotId: id }) }} />
+                    <SnapshotSelector />
                 </Tab>
                 <Tab eventKey="Configuration" title="Configuration" tabClassName='cba_tab_header'>
-                    <ConfigSelector selectConfigFn={(id) => { this.setState({ selectedConfigId: id }) }} />
+                    <ConfigSelector />
                 </Tab>
                 <Tab eventKey="Results" title="Results" tabClassName='cba_tab_header'>
-                    <CbaResults snapshotId={this.state.selectedSnapshotId} configId={this.state.selectedConfigId} />
+                    <CbaResults />
                 </Tab>
             </Tabs>
             // </div>

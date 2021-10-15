@@ -1,6 +1,6 @@
 'use strict';
 import React from 'react';
-import Dropdown from 'react-bootstrap/Dropdown'
+import { Button } from 'react-bootstrap'
 import PropTypes from 'prop-types';
 import { getContext } from 'recompose';
 
@@ -20,7 +20,8 @@ class ConfigSelector extends React.Component {
             title: 'general',
             availableConfigs: {},
             configId: -1,
-            configName: "Loading"
+            configName: "Loading",
+            showAlert: false
         }
         this.selectConfig = this.selectConfig.bind(this);
     }
@@ -74,7 +75,18 @@ class ConfigSelector extends React.Component {
 
     }
     renderConfigSelector(name) {
-        return <FormDropdown options={Object.values(this.state.availableConfigs)} onChange={this.selectConfig} />
+        const alertOn = () => this.setState({ showAlert: true })
+        const alertOff = () => this.setState({ showAlert: false })
+        var alertDiv = <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Coming Soon!</strong>
+            <button type="button" class="btn-close" onClick={alertOff} data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        return <div>
+            <FormDropdown options={Object.values(this.state.availableConfigs)} onChange={this.selectConfig} />
+            <Button variant="outline-secondary" onClick={alertOn} className='ms-1' >Rename</Button>
+            <Button variant="outline-secondary" onClick={alertOn} className='ms-1' >Duplicate</Button>
+            {this.state.showAlert ? alertDiv : ""}
+        </div>
     }
 
     render() {
