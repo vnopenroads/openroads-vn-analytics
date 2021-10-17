@@ -12,6 +12,7 @@ export default class LayerSelector extends React.Component {
     }
 
     render() {
+        console.log('layer_selector');
 
         const colors = ['#00441b', '#4d004b', '#41b6c4', '#023858', '#67001f', '#49006a',
             '#feb24c', '#fd8d3c', '#f03b20', '#bd0026'];
@@ -20,7 +21,7 @@ export default class LayerSelector extends React.Component {
             return <button key={`swatch-${c}`} onClick={() => this.props.setColor(c)} style={{ backgroundColor: c }} />
         });
 
-        const attributes = ['work_year', 'npv'].map((e) => {
+        const attributes = ['priority', 'work_year', 'npv'].map((e) => {
             return <button key={e} onClick={() => this.props.setAttribute(e)}>
                 {e}
             </button>

@@ -13,6 +13,7 @@ export default class Legend extends React.Component {
     }
 
     render() {
+        console.log('legend');
 
         if (!this.state.labels) return <div />
 

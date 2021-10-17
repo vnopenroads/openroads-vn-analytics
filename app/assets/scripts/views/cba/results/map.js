@@ -14,11 +14,52 @@ export default function ResultsMap(props) {
     const mapContainer = useRef(null);
     const legendRef = useRef(null);
     const map = useRef(null);
-    const [lng, setLng] = useState(102.1);
-    const [lat, setLat] = useState(45.00);
+    const [lng, setLng] = useState(104.9467516)
+    const [lat, setLat] = useState(22.738768300);
     const [zoom, setZoom] = useState(7);
     const [districtId, setDistrictId] = useState(300);
     const [provinceId, setProvinceId] = useState(294);
+
+    const halfColor = (c) => interpolate([c, 'white'])(0.5);
+    const linear_interp = (x, y, a) => x * (1 - a) + y * a;
+
+    props.labels = []; props.lowValue = 1; props.highValue = 10;
+    props.startColor = 'red'; props.endColor = 'blue';
+
+
+    var updateMap = () => {
+        legendRef.current.setState({ labels: props.labels, lowValue: props.lowValue, highValue: props.highValue, startColor: props.startColor, endColor: props.endColor })
+        map.current.setPaintProperty('layer-roads', 'line-color', [
+            'interpolate', ['linear'], ['get', props.attribute], props.lowValue, props.startColor, props.highValue, props.endColor
+        ]);
+    }
+
+    var setColor_ = (c) => {
+        props.endColor = halfColor(c);
+        props.startColor = c;
+    }
+    var setColor = (c) => { setColor_(c); updateMap(); }
+
+    const npvMax = Math.max(...props.data.map((e) => e.npv));
+
+    var setAttribute_ = (attrib) => {
+        props.attribute = attrib;
+        if (attrib == 'work_year') {
+            props.labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+            props.lowValue = 1; props.highValue = 10;
+        } else if (attrib == 'npv') {
+            props.labels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((e) => Math.round(linear_interp(0, npvMax, e / 9)))
+            props.lowValue = props.labels[0]; props.highValue = npvMax;
+        } else if (attrib == 'priority') {
+            props.labels = ['High', '', '', '', '', '', '', '', '', 'Low']
+            props.lowValue = 1; props.highValue = props.data.length;
+        }
+    }
+    var setAttribute = (attrib) => { setAttribute_(attrib); updateMap(); }
+
+    // Initial Values
+    setColor_('#ae017e');
+    setAttribute_('priority');
 
     useEffect(() => {
         if (map.current) return; // initialize map only once
@@ -32,42 +73,11 @@ export default function ResultsMap(props) {
         map.current.on("load", () => {
             addDistricts(map.current);
             addProvince(map.current);
-
-            var startColor = '#ae017e'; //  '#023858',
-            var endColor = '#fcc5c0';
-
-            addRoads(map.current, props.snapshotId, props.configId, startColor, endColor);
-            legendRef.current.setState({ labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] });
+            addRoads(map.current, props.snapshotId, props.configId, props.lowColor, props.highColor, updateMap);
         });
     });
 
-    var setColor = (c) => {
-        console.log(c);
-        let colormap = interpolate([c, 'white']);
 
-        legendRef.current.setState({ startColor: c, endColor: colormap(0.5) })
-
-        map.current.setPaintProperty('layer-roads', 'line-color', [
-            'interpolate', ['linear'], ['get', 'work_year'], 1, c, 10, 'white'
-        ]);
-    };
-    const linear_interp = (x, y, a) => x * (1 - a) + y * a;
-    console.log(props);
-    const npvMax = Math.max(...props.data.map((e) => e.npv));
-    var setAttribute = (attrib) => {
-
-        var labels = undefined;
-        if (attrib == 'work_year') {
-            labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        } else if (attrib == 'npv') {
-            labels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((e) => Math.round(linear_interp(0, npvMax, e / 9)))
-        }
-        legendRef.current.setState({ labels: labels })
-
-        map.current.setPaintProperty('layer-roads', 'line-color', [
-            'interpolate', ['linear'], ['get', attrib], 1, c, 10, 'white'
-        ]);
-    }
     return (
         <div>
             <div ref={mapContainer} className="map-container">
@@ -128,7 +138,7 @@ function addProvince(map) {
         });
 }
 
-function addRoads(map, snapshotId, configId, startColor, endColor) {
+function addRoads(map, snapshotId, configId, startColor, endColor, updateMap) {
     fetch(`${config.api}/cba/map/road_assets?snapshot_id=${snapshotId}&config_id=${configId}`).then((res) => res.json())
         .then((res) => {
             var result = res['rows'][0]
@@ -141,16 +151,9 @@ function addRoads(map, snapshotId, configId, startColor, endColor) {
                 id: "layer-roads",
                 type: "line",
                 source: "source-roads",
-                paint: {
-                    "line-color": [
-                        'interpolate',
-                        ['linear'],
-                        ['get', 'work_year'],
-                        1, startColor, // '#023858',   // '#00441b',  
-                        10, endColor, // '#74a9cf'   // '#66c2a4'   
-                    ],
-                },
+                paint: { "line-color": 'red' }, // will be overwritten by call to updateMap
             });
+            updateMap();
         });
 
 }
