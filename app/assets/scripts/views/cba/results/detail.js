@@ -4,6 +4,7 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import { CSVLink } from 'react-csv';
 import { Spinner, Tab, Row, Col, Nav } from 'react-bootstrap';
 import { AssetBreakdownChart, CostByYearChart, CumumlativeNPVChart } from './charts';
+import ResultsMap from './map';
 
 import config from '../../../config';
 
@@ -61,7 +62,7 @@ export default class ResultDetails extends React.Component {
 
     renderCharts() {
         // console.log(this.state.assetBreakdown);
-        return <Tab.Container id="left-tabs-example" defaultActiveKey="first">
+        return <Tab.Container id="left-tabs-example" defaultActiveKey="fourth">
             <Row>
                 <Col sm={2}>
                     <Nav variant="tabs" className="flex-column mt-5">
@@ -73,6 +74,9 @@ export default class ResultDetails extends React.Component {
                         </Nav.Item>
                         <Nav.Item>
                             <Nav.Link eventKey="third">Cumulative NPV</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link eventKey="fourth">Map</Nav.Link>
                         </Nav.Item>
                     </Nav>
                 </Col>
@@ -86,6 +90,9 @@ export default class ResultDetails extends React.Component {
                         </Tab.Pane>
                         <Tab.Pane eventKey="third">
                             <CumumlativeNPVChart data={this.state.data} />
+                        </Tab.Pane>
+                        <Tab.Pane eventKey="fourth">
+                            <ResultsMap data={this.state.data} configId={this.props.configId} snapshotId={this.props.snapshotId} />
                         </Tab.Pane>
                     </Tab.Content>
                 </Col>

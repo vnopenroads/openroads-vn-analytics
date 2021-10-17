@@ -15,8 +15,8 @@ class CbaResults extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedSnapshotId: -1,
-            selectedConfigId: -1,
+            selectedSnapshotId: undefined,
+            selectedConfigId: undefined,
             availableSnapshots: [],
             availableConfigs: [],
             availableResults: {},
@@ -39,7 +39,8 @@ class CbaResults extends React.Component {
             .then((res) => {
                 this.setState({ availableConfigs: res })
                 if (res.length > 0 && !this.state.selectedConfigId) {
-                    this.setState({ selectedConfigId: res[0].id })
+                    // this.setState({ selectedConfigId: res[0].id })
+                    this.setState({ selectedConfigId: 1 })
                 }
             });
         fetch(`${config.api}/cba/roads/snapshots`)
@@ -47,7 +48,8 @@ class CbaResults extends React.Component {
             .then((res) => {
                 this.setState({ availableSnapshots: res })
                 if (res.length > 0 && !this.state.selectedSnapshotId) {
-                    this.setState({ selectedSnapshotId: res[0].id })
+                    // this.setState({ selectedSnapshotId: res[0].id })
+                    this.setState({ selectedSnapshotId: 2 })
                 }
             });
 
