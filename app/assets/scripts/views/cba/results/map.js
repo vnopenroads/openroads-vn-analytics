@@ -1,7 +1,6 @@
 'use strict';
 import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
-import { Button } from 'react-bootstrap';
 import parse from 'wellknown';
 import interpolate from 'color-interpolate';
 
@@ -28,7 +27,7 @@ export default function ResultsMap(props) {
 
 
     var updateMap = () => {
-        legendRef.current.setState({ labels: props.labels, lowValue: props.lowValue, highValue: props.highValue, startColor: props.startColor, endColor: props.endColor })
+        legendRef.current.setState({ labels: props.labels, title: props.title, lowValue: props.lowValue, highValue: props.highValue, startColor: props.startColor, endColor: props.endColor })
         map.current.setPaintProperty('layer-roads', 'line-color', [
             'interpolate', ['linear'], ['get', props.attribute], props.lowValue, props.startColor, props.highValue, props.endColor
         ]);
@@ -47,12 +46,15 @@ export default function ResultsMap(props) {
         if (attrib == 'work_year') {
             props.labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
             props.lowValue = 1; props.highValue = 10;
+            props.title = "Work Year"
         } else if (attrib == 'npv') {
             props.labels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((e) => Math.round(linear_interp(0, npvMax, e / 9)))
             props.lowValue = props.labels[0]; props.highValue = npvMax;
+            props.title = "Net Present Value (NPV)"
         } else if (attrib == 'priority') {
             props.labels = ['High', '', '', '', '', '', '', '', '', 'Low']
             props.lowValue = 1; props.highValue = props.data.length;
+            props.title = "Priority Order"
         }
     }
     var setAttribute = (attrib) => { setAttribute_(attrib); updateMap(); }

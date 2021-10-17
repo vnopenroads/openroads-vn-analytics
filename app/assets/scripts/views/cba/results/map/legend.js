@@ -23,7 +23,7 @@ export default class Legend extends React.Component {
         var labels = this.state.labels.map((e, i) => <label key={`label-${i}`}>{e}</label>);
 
         return <div className='legend' id='legend'>
-            <strong>Work Year</strong>
+            <strong>{this.state.title}</strong>
             <nav>
                 {spans}
                 {labels}

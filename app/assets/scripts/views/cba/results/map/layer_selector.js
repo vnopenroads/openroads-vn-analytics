@@ -22,9 +22,9 @@ export default class LayerSelector extends React.Component {
         });
 
         const attributes = ['priority', 'work_year', 'npv'].map((e) => {
-            return <button key={e} onClick={() => this.props.setAttribute(e)}>
+            return <div key={e} onClick={() => this.props.setAttribute(e)} style={{ cursor: 'pointer' }}>
                 {e}
-            </button>
+            </div>
 
         });
 
