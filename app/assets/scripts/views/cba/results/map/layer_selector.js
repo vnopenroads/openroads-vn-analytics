@@ -11,17 +11,22 @@ export default class LayerSelector extends React.Component {
         };
     }
 
+    categoricalColors() {
+
+    }
+
+
     render() {
         console.log('layer_selector');
 
-        const colors = ['#00441b', '#4d004b', '#41b6c4', '#023858', '#67001f', '#49006a',
+        const colors = ['#ae017e', '#00441b', '#4d004b', '#41b6c4', '#023858', '#67001f', '#49006a',
             '#feb24c', '#fd8d3c', '#f03b20', '#bd0026'];
 
         const swatches = colors.map((c) => {
             return <button key={`swatch-${c}`} onClick={() => this.props.setColor(c)} style={{ backgroundColor: c }} />
         });
 
-        const attributes = ['priority', 'work_year', 'npv'].map((e) => {
+        const attributes = ['priority', 'work_year', 'npv', 'work_name'].map((e) => {
             return <div key={e} onClick={() => this.props.setAttribute(e)} style={{ cursor: 'pointer' }}>
                 {e}
             </div>

@@ -14,7 +14,9 @@ export default class ResultDetails extends React.Component {
         super(props);
         this.state = {
             data: [],
-            assetBreakdown: {}
+            assetBreakdown: {},
+            provinceId: -1,
+            districtId: -1
         };
         this.csvRef = React.createRef();
     }
@@ -30,7 +32,14 @@ export default class ResultDetails extends React.Component {
 
         fetch(`${config.api}/cba/results/kpis?snapshot_id=${this.props.snapshotId}&config_id=${this.props.configId}`)
             .then((res) => res.json())
-            .then((r) => { this.setState({ assetBreakdown: r.assetBreakdown }); });
+            .then((r) => {
+                console.log("KPIS: ");
+                console.log(r);
+                this.setState({
+                    provinceId: r.provinceId, districtId: r.districtId,
+                    assetBreakdown: r.assetBreakdown
+                });
+            });
     }
 
     render() {
@@ -44,7 +53,7 @@ export default class ResultDetails extends React.Component {
         } else {
             return <div className='mx-auto text-center'>
                 <Spinner animation="border" role="status" variant='danger'>
-                    <span className="visually-hidden">Table Loading...</span>
+                    <span className="visually-hidden">Results Loading...</span>
                 </Spinner>
             </div>
         }
@@ -92,7 +101,10 @@ export default class ResultDetails extends React.Component {
                             <CumumlativeNPVChart data={this.state.data} />
                         </Tab.Pane>
                         <Tab.Pane eventKey="fourth">
-                            <ResultsMap data={this.state.data} configId={this.props.configId} snapshotId={this.props.snapshotId} />
+                            <ResultsMap data={this.state.data}
+                                configId={this.props.configId} snapshotId={this.props.snapshotId}
+                                provinceId={this.state.provinceId} districtId={this.state.districtId}
+                            />
                         </Tab.Pane>
                     </Tab.Content>
                 </Col>
