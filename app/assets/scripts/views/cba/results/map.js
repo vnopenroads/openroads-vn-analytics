@@ -188,7 +188,7 @@ function addProvince(map, provinceId, districtId) {
                     id: "layer-province-line",
                     type: "line",
                     source: "source-province",
-                    paint: { "line-color": isSelectedThing(provinceId, '#444444', 'white'), "dash-array": [2, 2], "line-opacity": isSelectedThing(provinceId, 0.5, 0.0) },
+                    paint: { "line-color": isSelectedThing(provinceId, '#444444', 'white'), "line-dasharray": [2, 2], "line-opacity": isSelectedThing(provinceId, 0.5, 0.0) },
                 });
             }
             map.addLayer({
