@@ -55,8 +55,8 @@ export default function ResultsMap(props) {
 
     var setColor_ = (c) => {
         if (Array.isArray(c)) {
-            props.color
-            console.log("WOOPS");
+            props.startColor = c[0];
+            props.endColor = c[1]
         } else {
             props.endColor = halfColor(c);
             props.startColor = c;

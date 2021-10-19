@@ -26,6 +26,14 @@ export default class LayerSelector extends React.Component {
             return <button key={`swatch-${c}`} onClick={() => this.props.setColor(c)} style={{ backgroundColor: c }} />
         });
 
+        const biColors = [['#165ca1', '#ffa3c6'], ['#ffa3c6', '#165ca1'], ['#1aa110', '#ffa3c6'], ['#1aa110', '#ffcbb5']];
+        const biSwatches = biColors.map((c) => {
+            return <button key={`swatch-${c[0]}-${c[1]}`} onClick={() => this.props.setColor(c)}>
+                <div style={{ backgroundColor: c[0] }} />
+                <div style={{ backgroundColor: c[1] }} />
+            </button>
+        });
+
         const attributes = ['priority', 'work_year', 'npv', 'work_name'].map((e) => {
             return <div key={e} onClick={() => this.props.setAttribute(e)} style={{ cursor: 'pointer' }}>
                 {e}
@@ -39,6 +47,9 @@ export default class LayerSelector extends React.Component {
                     <label>Choose a color</label>
                     <div id="swatches">
                         {swatches}
+                    </div>
+                    <div id="biSwatches">
+                        {biSwatches}
                     </div>
                 </fieldset>
                 <fieldset>
