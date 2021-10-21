@@ -11,11 +11,6 @@ export default class LayerSelector extends React.Component {
         };
     }
 
-    categoricalColors() {
-
-    }
-
-
     render() {
         console.log('layer_selector');
 

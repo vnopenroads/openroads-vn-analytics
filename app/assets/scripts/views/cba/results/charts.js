@@ -80,8 +80,8 @@ export function CostByYearChart(props) {
         return acc;
     }, {});
 
-    var years = [...Array(10).keys()].map(i => i + 1);
-    var costByYear_ = years.map((y) => ({ work_year: y, work_cost: Math.round((costByYear[y] || 0) * 100) / 100 }));
+    var years = [...Array(10).keys()].map(i => i);
+    var costByYear_ = years.map((y) => ({ work_year: y + 2022, work_cost: Math.round((costByYear[y + 1] || 0) * 100) / 100 }));
 
 
     return (
@@ -93,7 +93,7 @@ export function CostByYearChart(props) {
             margin={{ bottom: 50 }}
         >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="work_year" type='number'>
+            <XAxis dataKey="work_year" type='number' domain={['dataMin-1', 'dataMax+1']}>
                 <Label value="Work Year" position='bottom' />
             </XAxis>
             <YAxis label={{ value: 'Work Cost ($M)', angle: -90, position: 'insideLeft' }} />

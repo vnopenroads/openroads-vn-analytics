@@ -7,11 +7,11 @@
 .map__media {
     width: 100%;
     background: $base-alpha-color;
-    height: 800px;
+    height: 1000px;
 }
 
 .map-container {
-    height: 500px;
+    height: 800px;
 }
 
 // Legend  ----------------------------------------------------------
@@ -115,6 +115,21 @@
     right: 10px;
     z-index: 1;
     min-width: 200px;
+
+    .category-row {
+        display: flex;
+        .circle {
+            height: 15px;
+            width: 15px;
+            margin: auto auto;
+            padding: 0px;
+        }
+        .label {
+            padding: 0px;
+            margin: 0px;
+            width: 80%;
+        }
+    }
 }
      
 .legend h4 {

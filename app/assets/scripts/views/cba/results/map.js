@@ -33,7 +33,7 @@ export default function ResultsMap(props) {
             legendRef.current.setState(props); // { labels: props.labels, title: props.title, lowValue: props.lowValue, highValue: props.highValue, startColor: props.startColor, endColor: props.endColor })
         } else {
             // #5a74a1 #7d76b2 #aa73b6 #d66dab #f96a92 #ff726f #ff8845 #ffa600
-            var colors = {
+            props.categories = {
                 "Periodic Maintenance (Concrete)": "#8dd3c7",
                 "Functional Overlay (<=50mm)": "#ffed6f",
                 "Reconstruction (Cobblestone)": "#bebada",
@@ -45,11 +45,11 @@ export default function ResultsMap(props) {
                 "Thick Overlay (>100mm)": "#bc80bd"
 
             };
-            var x = Object.entries(colors).flat();
+            var x = Object.entries(props.categories).flat();
             var y = ["match", ['get', props.attribute], ...x, 'red'];
             map.current.setPaintProperty('layer-roads', 'line-color', y);
             map.current.setPaintProperty('layer-roads', 'line-width', 2);
-            legendRef.current.setState({ ...props, colors }); // { labels: props.labels, title: props.title, lowValue: props.lowValue, highValue: props.highValue, startColor: props.startColor, endColor: props.endColor })
+            legendRef.current.setState({ ...props });
         }
     }
 
@@ -71,7 +71,8 @@ export default function ResultsMap(props) {
         props.attribute = attrib;
         props.continuous = true;
         if (attrib == 'work_year') {
-            props.labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+            // props.labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(e => e + 2021);
+            props.labels = ['2022', '', '', '', '', '', '', '', '', '2031'];
             props.lowValue = 1; props.highValue = 10;
             props.title = "Work Year"
         } else if (attrib == 'npv') {
@@ -87,6 +88,7 @@ export default function ResultsMap(props) {
             props.lowValue = undefined; props.highValue = undefined;
             props.title = "Work Type"
             props.continuous = false;
+            props.categories = colors;
         }
     }
     var setAttribute = (attrib) => { setAttribute_(attrib); updateMap(); }
