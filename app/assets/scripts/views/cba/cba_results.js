@@ -57,29 +57,23 @@ class CbaResults extends React.Component {
             .then((res) => res.json())
             .then((res) => {
                 var availableResults = Object.fromEntries(res.map(e => [[e.snapshot_id, e.config_id], true]));
-                console.log(availableResults);
                 this.setState({ availableResults: availableResults });
             });
     }
 
     selectConfig(e) {
-        console.log(this.state.availableResults);
         this.setState({ selectedConfigId: e.target.value });
     }
 
     selectSnapshot(e) {
-        console.log(this.state.availableResults);
         this.setState({ selectedSnapshotId: e.target.value });
     }
 
     resultsAvailable() {
-        console.log(`Checking ${[this.state.selectedSnapshotId, this.state.selectedConfigId]} is in available Results`);
-        console.log(this.state.availableResults);
         return this.state.availableResults[[this.state.selectedSnapshotId, this.state.selectedConfigId]]
     }
 
     run() {
-        console.log("RUNNING");
         this.setState({ runningPair: [this.state.selectedSnapshotId, this.state.selectedConfigId] })
         fetch(`${config.api}/cba/run?snapshot_id=${this.state.selectedSnapshotId}&config_id=${this.state.selectedConfigId}`)
             .then((res) => res.json())
@@ -89,7 +83,6 @@ class CbaResults extends React.Component {
             });
     }
     clear() {
-        console.log("DELETING");
         fetch(`${config.api}/cba/results/delete?snapshot_id=${this.state.selectedSnapshotId}&config_id=${this.state.selectedConfigId}`)
             .then((res) => res.json())
             .then((res) => this.pull_from_db());

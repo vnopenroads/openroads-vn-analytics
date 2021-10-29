@@ -1,7 +1,25 @@
+$cba-color: rgb(245, 136, 136);
+
 @import "components/cba/analysis";
 @import "components/cba/config";
 @import "components/cba/snapshots";
 
+// Nav stuff
+.nav-pills  {
+    .nav-link {
+        background-color: #00000000;
+        border: 1px solid #6c757d55;
+        margin-top: 5px;
+        color: #6c757d;
+        &.active {
+            background-color: rgba($cba-color, 1.0);
+            font-weight: bold;
+        }
+        &:hover {
+            background-color: rgba($cba-color, 0.3);
+        }
+    }
+}
 
 // Mapping Stuff
 .map__media {

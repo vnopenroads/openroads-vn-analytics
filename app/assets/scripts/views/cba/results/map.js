@@ -135,18 +135,15 @@ const isSelectedThing = (id, is, isnt) => ["case", ['==', ['get', 'id'], id], is
 
 function addDistricts(map, provinceId, districtId) {
     if (!districtId || districtId <= 0) { return; }
-    console.log(provinceId, districtId);
     var url = `${config.api}/cba/map/districts?`;
 
     var params = []
     if (districtId && districtId > 0) { params = [...params, `district_id=${districtId}`] }
     if (provinceId && provinceId > 0) { params = [...params, `province_id=${provinceId}`] }
     if (params.length > 0) { url += "?" + params.join("&") }
-    console.log(url);
 
     fetch(url).then((res) => res.json())
         .then((res) => {
-            console.log(res);
             map.addSource("source-districts", {
                 type: "geojson",
                 data: res['rows'][0]['json_build_object']
@@ -207,7 +204,6 @@ function addRoads(map, snapshotId, configId, startColor, endColor, updateMap) {
         .then((res) => {
             var result = res['rows'][0]
             var widthFn = ["interpolate", ["linear"], ["zoom"], 6, 1, 10, 2];
-            console.log(res);
             map.addSource("source-roads", {
                 type: "geojson",
                 data: result['json_build_object']

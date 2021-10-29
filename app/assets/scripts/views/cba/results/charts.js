@@ -65,7 +65,7 @@ export function CumumlativeNPVChart(props) {
             </XAxis>
 
             <YAxis label={{ value: 'NPV ($M)', angle: -90, position: 'insideLeft' }} />
-            <Line type="monotone" dataKey="npv" stroke="#8884d8" dot={false} />
+            <Line type="monotone" dataKey="npv" stroke="#f58888" dot={false} />
         </LineChart >
     );
 }
@@ -98,8 +98,43 @@ export function CostByYearChart(props) {
             </XAxis>
             <YAxis label={{ value: 'Work Cost ($M)', angle: -90, position: 'insideLeft' }} />
             <Tooltip />
-            <Bar dataKey="work_cost" fill="#8884d8" />
+            <Bar dataKey="work_cost" fill="#f58888" />
         </BarChart>
     );
 
 }
+
+export function WorkByTypeChart(props) {
+
+
+    var resultsWithBenefit = props.data.filter(e => e.npv > 0);
+
+    var workByType = resultsWithBenefit.reduce((acc, e) => {
+        acc[e.work_name] = (acc[e.work_name] || 0) + e.length;
+        return acc;
+    }, {});
+    console.log(workByType);
+    var data = Object.entries(workByType).map(([k, v]) => ({ work_type: k, length: v }));
+    console.log(data);
+
+
+    return (
+        <BarChart
+            width={1000}
+            height={400}
+            data={data}
+            className="mx-auto mt-3"
+            margin={{ bottom: 50 }}
+        >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="work_type" >
+                <Label value="Work Year" position='bottom' />
+            </XAxis>
+            <YAxis label={{ value: 'KM', angle: -90, position: 'insideLeft' }} />
+            <Tooltip />
+            <Bar dataKey="length" fill="#f58888" />
+        </BarChart>
+    );
+
+}
+

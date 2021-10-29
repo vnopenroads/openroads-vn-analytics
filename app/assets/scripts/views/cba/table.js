@@ -17,7 +17,6 @@ const CbaTable = () => {
         onRowClick: function (row) {
             for (var i = 0; i < dataList.length; i++) {
                 if (`${row.road_section_id}` === dataList[i]['road_section_id']) {
-                    console.log(i);
                     self.setState({ rowId: i });
                 }
             }

@@ -1,7 +1,7 @@
 // $base-color: #c6538c;
-$base-color: rgb(245, 136, 136);
-$highlight-color: rgba($base-color, 0.38);
-$verylight-color: rgba($base-color, 0.28);
+// $highlight-color: rgba($base-color, 0.38);
+// $verylight-color: rgba($base-color, 0.28);
+
 
 .content-con {
     display: flex;
@@ -32,28 +32,6 @@ $verylight-color: rgba($base-color, 0.28);
     text-align: center;
     .dropdown {
         border: 0px solid #ff0000;
-        button { 
-            border: 0px;
-            &:hover {
-                background-color: $verylight-color !important;
-            }
-        }
-        &.show {
-            button {
-                background-color: $verylight-color !important;
-                border: 0px;
-            }
-        }
-        //     color: #aaa;
-        //     // color: #ffffff;
-
-        //     &:active {
-        //         background-color: $highlight-color;
-        //     }
-
-        //     &.btn-primary { 
-        //         background-color: $highlight-color;
-        //     }
     }
 }
 .menu-con {
@@ -105,13 +83,12 @@ $verylight-color: rgba($base-color, 0.28);
 }
 
 .nav-con-active {
-    background-color: $base-color;
+    background-color: rgba($cba-color, 1.0);
     cursor: pointer;
     padding: 5px;
 }
 
 .nav-con-default:hover {
-    // background-color: rgb(245, 136, 136);
-    background-color: $highlight-color;
+    background-color: rgba($cba-color, 0.3);
     cursor: pointer;
 }

@@ -27,7 +27,6 @@ class TakeSnapshotModal extends React.Component {
 
     onSaveClick() {
         this.setState({ show: false });
-        console.log(this.state);
 
         var body = { name: this.state.snapshotName };
         if (this.state.province > 0) {
@@ -43,16 +42,14 @@ class TakeSnapshotModal extends React.Component {
         };
         fetch(`${config.api}/cba/roads/snapshots/take`, requestOptions)
             .then(response => response.json())
-            .then(data => { console.log(data); this.props.onSnapshotTaken(); });
+            .then(data => { this.props.onSnapshotTaken(); });
     }
 
     onValueChange(what, event) {
         if (what == 'province') {
-            console.log(event.target);
             fetch(`${config.api}/admin/${event.target.value}/info`)
                 .then(res => res.json())
                 .then(data => {
-                    console.log(data);
                     this.setState({ districts: data.children });
                 });
 

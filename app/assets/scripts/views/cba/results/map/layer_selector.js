@@ -12,8 +12,6 @@ export default class LayerSelector extends React.Component {
     }
 
     render() {
-        console.log('layer_selector');
-
         const colors = ['#ae017e', '#00441b', '#4d004b', '#41b6c4', '#023858', '#67001f', '#49006a',
             '#feb24c', '#fd8d3c', '#f03b20', '#bd0026'];
 
@@ -39,7 +37,7 @@ export default class LayerSelector extends React.Component {
         return <div className="map-overlay top">
             <div className="map-overlay-inner">
                 <fieldset>
-                    <label>Choose a color</label>
+                    <label> Choose a color </label>
                     <div id="swatches">
                         {swatches}
                     </div>

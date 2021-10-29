@@ -15,6 +15,7 @@ export default class GeneralConfig extends React.Component {
         this.state = { ...this.state, ...{ discount_rate: 0.0, economic_factor: 0.0 } }
         this.handleDiscountChange = this.handleDiscountChange.bind(this);
         this.handleEconFactorChange = this.handleEconFactorChange.bind(this);
+        this.handleStartingYearChange = this.handleStartingYearChange.bind(this);
     }
 
     handleDiscountChange(event) {
@@ -23,13 +24,16 @@ export default class GeneralConfig extends React.Component {
     handleEconFactorChange(event) {
         this.setState({ economic_factor: event.target.value, modified: true });
     }
+    handleStartingYearChange(event) {
+        this.setState({ starting_year: event.target.value, modified: true });
+    }
 
     pull_data_from_db() {
         if (this.props.config_id > 0) {
             var user_config_url = `${config.api}/cba/user_configs/${this.props.config_id}/sub_config/general`
             fetch(user_config_url)
                 .then((res) => res.json())
-                .then((res) => this.setState({ discount_rate: res.discount_rate, economic_factor: res.economic_factor, modified: false }));
+                .then((res) => this.setState({ ...res, modified: false }));
         }
     }
 
@@ -43,7 +47,8 @@ export default class GeneralConfig extends React.Component {
 
     push_data_to_db() {
         if (this.state.modified) {
-            const body = { discount_rate: this.state.discount_rate, economic_factor: this.state.economic_factor };
+            const pick = ({ discount_rate, economic_factor, starting_year }) => ({ discount_rate, economic_factor, starting_year });
+            const body = pick(this.state);
             const request = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
 
             var url = `${config.api}/cba/user_configs/${this.state.config_id}/update`
@@ -74,6 +79,10 @@ export default class GeneralConfig extends React.Component {
                 <Form.Group as={Row} className="mb-3" controlId="economicFactor">
                     <Form.Label column>Economic Factor</Form.Label>
                     <Form.Control sm="10" value={this.state.economic_factor} onChange={this.handleEconFactorChange} />
+                </Form.Group>
+                <Form.Group as={Row} className="mb-3" controlId="startingYear">
+                    <Form.Label column sm="2">Starting Year</Form.Label>
+                    <Form.Control sm="10" value={this.state.starting_year} onChange={this.handleStartingYearChange} />
                 </Form.Group>
             </div>
         )

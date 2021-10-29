@@ -3,7 +3,8 @@ import React from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import { CSVLink } from 'react-csv';
 import { Spinner, Tab, Row, Col, Nav } from 'react-bootstrap';
-import { AssetBreakdownChart, CostByYearChart, CumumlativeNPVChart } from './charts';
+import { AssetBreakdownChart, CostByYearChart, CumumlativeNPVChart, WorkByTypeChart } from './charts';
+import RoadConditions from './road_condition';
 import ResultsMap from './map';
 
 import config from '../../../config';
@@ -33,8 +34,6 @@ export default class ResultDetails extends React.Component {
         fetch(`${config.api}/cba/results/kpis?snapshot_id=${this.props.snapshotId}&config_id=${this.props.configId}`)
             .then((res) => res.json())
             .then((r) => {
-                console.log("KPIS: ");
-                console.log(r);
                 this.setState({
                     provinceId: r.provinceId, districtId: r.districtId,
                     assetBreakdown: r.assetBreakdown
@@ -71,36 +70,48 @@ export default class ResultDetails extends React.Component {
 
     renderCharts() {
         // console.log(this.state.assetBreakdown);
-        return <Tab.Container id="left-tabs-example" defaultActiveKey="fourth">
+        return <Tab.Container id="left-tabs-example" defaultActiveKey="map">
             <Row>
                 <Col sm={2}>
-                    <Nav variant="tabs" className="flex-column mt-5">
+                    <Nav fill variant="pills" className="flex-column mt-5">
                         <Nav.Item>
-                            <Nav.Link eventKey="first">Asset Breakdown</Nav.Link>
+                            <Nav.Link eventKey="assets">Asset Breakdown</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link eventKey="second">Cost by Year</Nav.Link>
+                            <Nav.Link eventKey="work_type">Program Breakdown</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link eventKey="third">Cumulative NPV</Nav.Link>
+                            <Nav.Link eventKey="road_condition">Road Condition</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link eventKey="fourth">Map</Nav.Link>
+                            <Nav.Link eventKey="cost_by_year">Cost by Year</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link eventKey="cum_npv">Cumulative NPV</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link eventKey="map">Map</Nav.Link>
                         </Nav.Item>
                     </Nav>
                 </Col>
                 <Col sm={10}>
                     <Tab.Content>
-                        <Tab.Pane eventKey="first">
+                        <Tab.Pane eventKey="assets">
                             <AssetBreakdownChart data={this.state.assetBreakdown} />
                         </Tab.Pane>
-                        <Tab.Pane eventKey="second">
+                        <Tab.Pane eventKey="work_type">
+                            <WorkByTypeChart data={this.state.data} />
+                        </Tab.Pane>
+                        <Tab.Pane eventKey="road_condition">
+                            <RoadConditions data={this.state.data} />
+                        </Tab.Pane>
+                        <Tab.Pane eventKey="cost_by_year">
                             <CostByYearChart data={this.state.data} />
                         </Tab.Pane>
-                        <Tab.Pane eventKey="third">
+                        <Tab.Pane eventKey="cum_npv">
                             <CumumlativeNPVChart data={this.state.data} />
                         </Tab.Pane>
-                        <Tab.Pane eventKey="fourth">
+                        <Tab.Pane eventKey="map">
                             <ResultsMap data={this.state.data}
                                 configId={this.props.configId} snapshotId={this.props.snapshotId}
                                 provinceId={this.state.provinceId} districtId={this.state.districtId}

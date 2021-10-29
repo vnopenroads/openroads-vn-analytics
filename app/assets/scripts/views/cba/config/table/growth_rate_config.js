@@ -54,9 +54,9 @@ export default class GrowthRateConfig extends React.Component {
             const request = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
             var url = `${config.api}/cba/user_configs/${this.state.config_id}/update`
 
-            fetch(url, request)
-                .then(res => res.json())
-                .then(res => { console.log(res); });
+            fetch(url, request);
+            // .then(res => res.json())
+            // .then(res => { console.log(res); });
         }
     }
 
