@@ -70,23 +70,23 @@ export default function ResultsMap(props) {
     var setAttribute_ = (attrib, colors) => {
         props.attribute = attrib;
         props.continuous = true;
+        var num_years = 5;
         if (attrib == 'work_year') {
-            // props.labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(e => e + 2021);
-            props.labels = ['2022', '', '', '', '', '', '', '', '', '2031'];
-            props.lowValue = 1; props.highValue = 10;
-            props.title = "Work Year"
+            props.labels = [props.startingYear, ...Array(num_years - 2).fill(''), props.startingYear + num_years - 1];
+            props.lowValue = 1; props.highValue = num_years;
+            props.title = "Work Year";
         } else if (attrib == 'npv') {
-            props.labels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((e) => Math.round(linear_interp(0, npvMax, e / 9)))
+            props.labels = Array.from(Array(num_years).keys(), (e) => Math.round(linear_interp(0, npvMax, e / (num_years - 1))));
             props.lowValue = props.labels[0]; props.highValue = npvMax;
-            props.title = "Net Present Value (NPV)"
+            props.title = "Net Present Value (NPV)";
         } else if (attrib == 'priority') {
-            props.labels = ['High', '', '', '', '', '', '', '', '', 'Low']
+            props.labels = ['High', ...Array(num_years - 2).fill(''), 'Low'];
             props.lowValue = 1; props.highValue = props.data.length;
-            props.title = "Priority Order"
+            props.title = "Priority Order";
         } else if (attrib == 'work_name') {
             props.labels = undefined; //  Object.keys(colors)
             props.lowValue = undefined; props.highValue = undefined;
-            props.title = "Work Type"
+            props.title = "Work Type";
             props.continuous = false;
             props.categories = colors;
         }

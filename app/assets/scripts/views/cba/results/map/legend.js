@@ -24,9 +24,14 @@ export default class Legend extends React.Component {
 
     renderContinuousLegend() {
         let colormap = interpolate([this.state.startColor, this.state.endColor]);
+        console.log(this.state);
         var numLabels = this.state.labels.length
-        var spans = this.state.labels.map((e, i) => <span key={`span-${i}`} style={{ backgroundColor: colormap((i + 1) / numLabels) }} />);
-        var labels = this.state.labels.map((e, i) => <label key={`label-${i}`}>{e}</label>);
+        const width = `${100.0 / numLabels}%`;
+        var spans = this.state.labels.map((e, i) => {
+            const backgroundColor = colormap((i + 1) / numLabels);
+            return <span key={`span-${i}`} style={{ backgroundColor, width }} />
+        });
+        var labels = this.state.labels.map((e, i) => <label key={`label-${i}`} style={{ width }}>{e}</label>);
 
         return <div className='legend' id='legend'>
             <strong>{this.state.title}</strong>

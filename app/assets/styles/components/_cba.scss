@@ -83,6 +83,43 @@ $cba-color: rgb(245, 136, 136);
     font-weight: bold;
     margin: 0 0 5px;
 }
+
+.map-overlay-inner {
+    #biSwatches, #swatches {
+        div {
+            display: flex;
+            width: 25%;
+            height: 20px;
+            padding-left: 1px;
+            padding-right: 1px;
+            div {
+                width: 50%;
+            }
+            &:hover {
+                opacity: 0.5;
+                // border:1px solid rgb(245, 136, 136);
+            }
+        }
+    }
+
+    #attributes { 
+        div {
+            background-color: royalblue;
+            color: white;
+            border-radius: 3px;
+            margin: 2px;
+            padding: 3px 6px 3px 6px;
+            width: auto;
+            &:hover {
+                background-color: rgb(99, 134, 240);
+            }
+
+            &.active { 
+                background-color: rgb(99, 134, 240);
+            }
+        }
+    }
+}
     
 .map-overlay-inner button {
     // display: block;

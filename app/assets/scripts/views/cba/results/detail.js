@@ -17,7 +17,8 @@ export default class ResultDetails extends React.Component {
             data: [],
             assetBreakdown: {},
             provinceId: -1,
-            districtId: -1
+            districtId: -1,
+            startingYear: 1990
         };
         this.csvRef = React.createRef();
     }
@@ -35,7 +36,7 @@ export default class ResultDetails extends React.Component {
             .then((res) => res.json())
             .then((r) => {
                 this.setState({
-                    provinceId: r.provinceId, districtId: r.districtId,
+                    provinceId: r.provinceId, districtId: r.districtId, startingYear: r.startingYear,
                     assetBreakdown: r.assetBreakdown
                 });
             });
@@ -113,6 +114,7 @@ export default class ResultDetails extends React.Component {
                         </Tab.Pane>
                         <Tab.Pane eventKey="map">
                             <ResultsMap data={this.state.data}
+                                startingYear={this.state.startingYear}
                                 configId={this.props.configId} snapshotId={this.props.snapshotId}
                                 provinceId={this.state.provinceId} districtId={this.state.districtId}
                             />

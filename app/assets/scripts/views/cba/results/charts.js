@@ -80,8 +80,8 @@ export function CostByYearChart(props) {
         return acc;
     }, {});
 
-    var years = [...Array(10).keys()].map(i => i);
-    var costByYear_ = years.map((y) => ({ work_year: y + 2022, work_cost: Math.round((costByYear[y + 1] || 0) * 100) / 100 }));
+    var years = [...Array(5).keys()].map(i => i);
+    var costByYear_ = years.map((y) => ({ work_year: y + props.starting_year, work_cost: Math.round((costByYear[y + 1] || 0) * 100) / 100 }));
 
 
     return (
