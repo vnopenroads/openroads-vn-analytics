@@ -75,6 +75,7 @@ export default class ResultDetails extends React.Component {
         var roadCondHelpText = "What are the implications of not following the work program";
         var cbyHelpText = "The program costs laid out by year.";
         var npvHelpText = "Visualisation of the benefits of the recommended program";
+        console.log(this.setState.data);
         return <Tab.Container id="left-tabs-example" defaultActiveKey="map">
             <Row>
                 <Col sm={2}>

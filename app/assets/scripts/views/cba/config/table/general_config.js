@@ -69,20 +69,21 @@ export default class GeneralConfig extends React.Component {
     }
 
     render() {
+        var isDefault = this.state.config_id == 1;
         return (
             <div className='menu-con'>
                 <div className='title-con'>General Configuration </div>
                 <Form.Group as={Row} className="mb-3" controlId="discountRate">
                     <Form.Label column sm="2">Discount Rate</Form.Label>
-                    <Form.Control sm="10" value={this.state.discount_rate} onChange={this.handleDiscountChange} />
+                    <Form.Control sm="10" value={this.state.discount_rate} onChange={this.handleDiscountChange} readOnly={isDefault} />
                 </Form.Group>
                 <Form.Group as={Row} className="mb-3" controlId="economicFactor">
                     <Form.Label column>Economic Factor</Form.Label>
-                    <Form.Control sm="10" value={this.state.economic_factor} onChange={this.handleEconFactorChange} />
+                    <Form.Control sm="10" value={this.state.economic_factor} onChange={this.handleEconFactorChange} readOnly={isDefault} />
                 </Form.Group>
                 <Form.Group as={Row} className="mb-3" controlId="startingYear">
                     <Form.Label column sm="2">Starting Year</Form.Label>
-                    <Form.Control sm="10" value={this.state.starting_year} onChange={this.handleStartingYearChange} />
+                    <Form.Control sm="10" value={this.state.starting_year} onChange={this.handleStartingYearChange} readOnly={isDefault} />
                 </Form.Group>
             </div>
         )

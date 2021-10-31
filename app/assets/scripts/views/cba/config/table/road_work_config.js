@@ -78,13 +78,13 @@ export default class RoadWorks extends React.Component {
             { dataField: 'repair_period', text: "Interval (years)", sort: true }
         ];
 
-
+        var cellEdit = this.props.config_id != 1 ? cellEditFactory({ mode: 'click' }) : undefined;
         return <BootstrapTable
             keyField='code'
             data={this.state.road_works}
             columns={columns}
             bordered={false}
-            cellEdit={cellEditFactory({ mode: 'click' })}
+            cellEdit={cellEdit}
             striped hover
         />;
     }

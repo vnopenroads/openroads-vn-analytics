@@ -23,7 +23,6 @@ export function AssetBreakdownChart(props) {
         { name: 'Long Term Priority', count: props.data.long_term, fill: '#cae9c6' },
         { name: 'No Recommendation', count: props.data.negative_npv, fill: '#c6e2e9' }
     ];
-    console.log(props);
     data = data.map((e) => { return { valueStr: `${e.count} assets`, ...e } });
     return <PieChart width={600} height={400} className='mx-auto mt-3'>
         <Pie
@@ -84,7 +83,6 @@ export function CostByYearChart(props) {
 
     var years = [...Array(5).keys()].map(i => i);
     var costByYear_ = years.map((y) => ({ work_year: y + props.startingYear + 1, work_cost: Math.round((costByYear[y + 1] || 0) * 100) / 100 }));
-    console.log(costByYear);
 
     // type='number' domain={['dataMin-1', 'dataMax+1']}>
     return (

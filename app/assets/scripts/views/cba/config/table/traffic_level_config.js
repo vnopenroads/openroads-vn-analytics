@@ -85,12 +85,15 @@ export default class TrafficLevels extends React.Component {
             { dataField: 'large_bus', text: "Large Bus", sort: true }
         ]
 
+        var cellEdit = this.props.config_id != 1 ? cellEditFactory({ mode: 'click' }) : undefined;
+
         return <BootstrapTable
             keyField='aadt'
             data={this.data_array}
             columns={columns}
             bordered={false}
-            cellEdit={cellEditFactory({ mode: 'click' })}
+            cellEdit={cellEdit}
+            onClick={() => alert("Default is not editable")}
             striped hover
         />;
     }

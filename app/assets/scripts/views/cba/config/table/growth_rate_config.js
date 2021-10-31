@@ -62,28 +62,30 @@ export default class GrowthRateConfig extends React.Component {
 
 
     render() {
+        var isDefault = this.state.config_id == 1;
+        console.log(isDefault);
         return (
             <div className='menu-con'>
                 <div className='title-con'>Growth Rates</div>
                 <Form.Group as={Row} className="mb-3" controlId="veryLow">
                     <Form.Label column sm="2">Very Low</Form.Label>
-                    <Form.Control sm="10" value={this.state.very_low} onChange={(e) => this.handleChange(e, 'very_low')} />
+                    <Form.Control sm="10" readOnly={isDefault} value={this.state.very_low} onChange={(e) => this.handleChange(e, 'very_low')} />
                 </Form.Group>
                 <Form.Group as={Row} className="mb-3" controlId="low">
                     <Form.Label column sm="2">Low</Form.Label>
-                    <Form.Control sm="10" value={this.state.low} onChange={(e) => this.handleChange(e, 'low')} />
+                    <Form.Control sm="10" readOnly={isDefault} value={this.state.low} onChange={(e) => this.handleChange(e, 'low')} />
                 </Form.Group>
                 <Form.Group as={Row} className="mb-3" controlId="medium">
                     <Form.Label column sm="2">Medium</Form.Label>
-                    <Form.Control sm="10" value={this.state.medium} onChange={(e) => this.handleChange(e, 'medium')} />
+                    <Form.Control sm="10" readOnly={isDefault} value={this.state.medium} onChange={(e) => this.handleChange(e, 'medium')} />
                 </Form.Group>
                 <Form.Group as={Row} className="mb-3" controlId="high">
                     <Form.Label column sm="2">High</Form.Label>
-                    <Form.Control sm="10" value={this.state.high} onChange={(e) => this.handleChange(e, 'high')} />
+                    <Form.Control sm="10" readOnly={isDefault} value={this.state.high} onChange={(e) => this.handleChange(e, 'high')} />
                 </Form.Group>
                 <Form.Group as={Row} className="mb-3" controlId="veryHigh">
                     <Form.Label column sm="2">Very High</Form.Label>
-                    <Form.Control sm="10" value={this.state.very_high} onChange={(e) => this.handleChange(e, 'very_high')} />
+                    <Form.Control sm="10" readOnly={isDefault} value={this.state.very_high} onChange={(e) => this.handleChange(e, 'very_high')} />
                 </Form.Group>
             </div>
         )

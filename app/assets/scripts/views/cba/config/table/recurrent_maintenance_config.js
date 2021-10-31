@@ -8,7 +8,7 @@ import _ from 'lodash';
 export default class RecurrentMaintenanceConfig extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { recurrent_maintenance: {} };
+        this.state = { recurrent_maintenance: undefined };
         this.data_array = [];
     }
 
@@ -32,9 +32,9 @@ export default class RecurrentMaintenanceConfig extends React.Component {
     pull_data_from_db() {
         var user_config_url = `${config.api}/cba/user_configs/${this.props.config_id}/sub_config/recurrent_maintenance`
         console.log("Setting up recurr maint config: " + user_config_url);
-        fetch(user_config_url);
-        // .then((res) => res.json())
-        // .then((res) => this.update_data(res.recurrent_maintenance));
+        fetch(user_config_url)
+            .then((res) => res.json())
+            .then((res) => this.update_data(res.recurrent_maintenance));
     }
 
     componentDidMount() {
@@ -46,6 +46,7 @@ export default class RecurrentMaintenanceConfig extends React.Component {
     }
 
     push_data_to_db() {
+        if (!this.state.recurrent_maintenance) { return; }
         console.log("PUSHING");
 
         const body = { recurrent_maintenance: this.arrayToJson(this.data_array) };
@@ -76,13 +77,13 @@ export default class RecurrentMaintenanceConfig extends React.Component {
         ]
 
 
-        console.log(this.state);
+        var cellEdit = this.props.config_id != 1 ? cellEditFactory({ mode: 'click' }) : undefined;
         return <BootstrapTable
             keyField='surface_type'
             data={this.data_array}
             columns={columns}
             bordered={false}
-            cellEdit={cellEditFactory({ mode: 'click' })}
+            cellEdit={cellEdit}
             striped hover
         />;
     }
