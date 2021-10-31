@@ -13,8 +13,7 @@ export default class LayerSelector extends React.Component {
     }
 
     render() {
-        const colors = ['#ae017e', '#00441b', '#4d004b', '#41b6c4', '#023858', '#67001f', '#49006a',
-            '#feb24c', '#fd8d3c', '#f03b20', '#bd0026'];
+        const colors = ['#4d004b', '#023858', '#00441b', '#67001f', '#49006a', '#41b6c4', '#ae017e', '#feb24c', '#fd8d3c', '#f03b20', '#bd0026'];
 
         const swatches = colors.map((c) => {
             return <div key={`swatch-${c}`} onClick={() => this.props.setColor(c)} style={{ backgroundColor: c }} />

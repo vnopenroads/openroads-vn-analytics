@@ -18,10 +18,12 @@ export function AssetBreakdownChart(props) {
     const [activeIndex, setActiveIndex] = React.useState(0);
 
     var data = [
-        { name: 'Insufficient Data', count: props.data.invalid_assets, fill: '#dddddd' },
-        { name: 'Positive NPV', count: props.data.positive_npv, fill: '#97ff8a' },
-        { name: 'Negative NPV', count: props.data.negative_npv, fill: '#ff8a8e' }
+        { name: 'Insufficient Data', count: props.data.invalid_assets, fill: '#da251d88' },
+        { name: 'Medium Term Priority', count: props.data.medium_term, fill: '#81dd75' },
+        { name: 'Long Term Priority', count: props.data.long_term, fill: '#cae9c6' },
+        { name: 'No Recommendation', count: props.data.negative_npv, fill: '#c6e2e9' }
     ];
+    console.log(props);
     data = data.map((e) => { return { valueStr: `${e.count} assets`, ...e } });
     return <PieChart width={600} height={400} className='mx-auto mt-3'>
         <Pie
@@ -64,7 +66,7 @@ export function CumumlativeNPVChart(props) {
                 <Label value="Work Cost ($M)" position='bottom' />
             </XAxis>
 
-            <YAxis label={{ value: 'NPV ($M)', angle: -90, position: 'insideLeft' }} />
+            <YAxis label={{ value: 'NPV ($M)', angle: -90 }} />
             <Line type="monotone" dataKey="npv" stroke="#f58888" dot={false} />
         </LineChart >
     );
@@ -81,9 +83,10 @@ export function CostByYearChart(props) {
     }, {});
 
     var years = [...Array(5).keys()].map(i => i);
-    var costByYear_ = years.map((y) => ({ work_year: y + props.starting_year, work_cost: Math.round((costByYear[y + 1] || 0) * 100) / 100 }));
+    var costByYear_ = years.map((y) => ({ work_year: y + props.startingYear + 1, work_cost: Math.round((costByYear[y + 1] || 0) * 100) / 100 }));
+    console.log(costByYear);
 
-
+    // type='number' domain={['dataMin-1', 'dataMax+1']}>
     return (
         <BarChart
             width={1000}
@@ -93,12 +96,12 @@ export function CostByYearChart(props) {
             margin={{ bottom: 50 }}
         >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="work_year" type='number' domain={['dataMin-1', 'dataMax+1']}>
+            <XAxis dataKey="work_year" >
                 <Label value="Work Year" position='bottom' />
             </XAxis>
-            <YAxis label={{ value: 'Work Cost ($M)', angle: -90, position: 'insideLeft' }} />
+            <YAxis label={{ value: 'Work Cost ($M)', angle: -90 }} />
             <Tooltip />
-            <Bar dataKey="work_cost" fill="#f58888" />
+            <Bar dataKey="work_cost" fill="#f58888" formatter={(a) => `$${parseFloat(a).toFixed(1)}M`} />
         </BarChart>
     );
 
@@ -106,17 +109,16 @@ export function CostByYearChart(props) {
 
 export function WorkByTypeChart(props) {
 
-
-    var resultsWithBenefit = props.data.filter(e => e.npv > 0);
-
-    var workByType = resultsWithBenefit.reduce((acc, e) => {
-        acc[e.work_name] = (acc[e.work_name] || 0) + e.length;
+    var accumulateField = (f) => resultsWithBenefit.reduce((acc, e) => {
+        acc[e.work_name] = (acc[e.work_name] || 0) + e[f];
         return acc;
     }, {});
-    console.log(workByType);
-    var data = Object.entries(workByType).map(([k, v]) => ({ work_type: k, length: v }));
-    console.log(data);
 
+    var resultsWithBenefit = props.data.filter(e => e.npv > 0 && e.work_year <= 5);
+
+    var lengthByType = accumulateField('length');
+    var costByType = accumulateField('work_cost');
+    var data = Object.entries(lengthByType).map(([k, v]) => ({ work_type: k, length: v, work_cost: costByType[k] }));
 
     return (
         <BarChart
@@ -128,11 +130,13 @@ export function WorkByTypeChart(props) {
         >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="work_type" >
-                <Label value="Work Year" position='bottom' />
+                <Label value="Work Type" position='bottom' />
             </XAxis>
-            <YAxis label={{ value: 'KM', angle: -90, position: 'insideLeft' }} />
+            <YAxis label={{ value: 'KM', angle: -90 }} yAxisId="1" />
+            <YAxis key='work_cost' type='number' orientation='right' yAxisId="2" label={{ value: 'USD (M)', angle: -90 }} />
             <Tooltip />
-            <Bar dataKey="length" fill="#f58888" />
+            <Bar dataKey="length" yAxisId="1" fill="#f58888" formatter={(a) => `${parseFloat(a).toFixed(1)} km`} />
+            <Bar dataKey="work_cost" yAxisId="2" fill="#f7c0c0" formatter={(a) => `$${parseFloat(a).toFixed(1)}M`} />
         </BarChart>
     );
 

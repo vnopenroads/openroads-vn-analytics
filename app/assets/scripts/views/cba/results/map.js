@@ -26,10 +26,10 @@ export default function ResultsMap(props) {
 
 
     var updateMap = () => {
+        var innerCondition = undefined;
         if (props.continuous) {
-            map.current.setPaintProperty('layer-roads', 'line-color', [
-                'interpolate', ['linear'], ['get', props.attribute], props.lowValue, props.startColor, props.highValue, props.endColor
-            ]);
+            innerCondition = ['interpolate', ['linear'], ['get', props.attribute], props.lowValue, props.startColor, props.highValue, props.endColor];
+            map.current.setPaintProperty('layer-roads', 'line-color', outerCondition);
             legendRef.current.setState(props); // { labels: props.labels, title: props.title, lowValue: props.lowValue, highValue: props.highValue, startColor: props.startColor, endColor: props.endColor })
         } else {
             // #5a74a1 #7d76b2 #aa73b6 #d66dab #f96a92 #ff726f #ff8845 #ffa600
@@ -46,11 +46,12 @@ export default function ResultsMap(props) {
 
             };
             var x = Object.entries(props.categories).flat();
-            var y = ["match", ['get', props.attribute], ...x, 'red'];
-            map.current.setPaintProperty('layer-roads', 'line-color', y);
-            map.current.setPaintProperty('layer-roads', 'line-width', 2);
+            innerCondition = ["match", ['get', props.attribute], ...x, 'red'];
+            // map.current.setPaintProperty('layer-roads', 'line-width', 2);
             legendRef.current.setState({ ...props });
         }
+        var outerCondition = ["case", ['>', ['get', 'work_year'], 5], '#dddddd', innerCondition];
+        map.current.setPaintProperty('layer-roads', 'line-color', outerCondition);
     }
 
     var setColor_ = (c) => {
@@ -81,7 +82,8 @@ export default function ResultsMap(props) {
             props.title = "Net Present Value (NPV)";
         } else if (attrib == 'priority') {
             props.labels = ['High', ...Array(num_years - 2).fill(''), 'Low'];
-            props.lowValue = 1; props.highValue = props.data.length;
+            props.lowValue = 1;
+            props.highValue = props.data.filter(x => x.work_year <= 5).length;
             props.title = "Priority Order";
         } else if (attrib == 'work_name') {
             props.labels = undefined; //  Object.keys(colors)
@@ -115,7 +117,7 @@ export default function ResultsMap(props) {
 
                     addDistricts(map.current, props.provinceId, props.districtId);
                     addProvince(map.current, props.provinceId, props.districtId);
-                    addRoads(map.current, props.snapshotId, props.configId, props.lowColor, props.highColor, updateMap);
+                    addRoads(map.current, props.snapshotId, props.configId, updateMap);
                 });
         });
     });
@@ -199,7 +201,7 @@ function addProvince(map, provinceId, districtId) {
         });
 }
 
-function addRoads(map, snapshotId, configId, startColor, endColor, updateMap) {
+function addRoads(map, snapshotId, configId, updateMap) {
     fetch(`${config.api}/cba/map/road_assets?snapshot_id=${snapshotId}&config_id=${configId}`).then((res) => res.json())
         .then((res) => {
             var result = res['rows'][0]

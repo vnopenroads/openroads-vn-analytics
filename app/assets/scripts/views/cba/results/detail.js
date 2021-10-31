@@ -6,7 +6,7 @@ import { Spinner, Tab, Row, Col, Nav } from 'react-bootstrap';
 import { AssetBreakdownChart, CostByYearChart, CumumlativeNPVChart, WorkByTypeChart } from './charts';
 import RoadConditions from './road_condition';
 import ResultsMap from './map';
-
+import HelpOverlay from '../../help_overlay';
 import config from '../../../config';
 
 
@@ -70,28 +70,44 @@ export default class ResultDetails extends React.Component {
     }
 
     renderCharts() {
-        // console.log(this.state.assetBreakdown);
+        var assetHelpText = "An overview of the assets which were evaluated.";
+        var workTypeHelpText = "Which types of work are recommended";
+        var roadCondHelpText = "What are the implications of not following the work program";
+        var cbyHelpText = "The program costs laid out by year.";
+        var npvHelpText = "Visualisation of the benefits of the recommended program";
         return <Tab.Container id="left-tabs-example" defaultActiveKey="map">
             <Row>
                 <Col sm={2}>
                     <Nav fill variant="pills" className="flex-column mt-5">
                         <Nav.Item>
-                            <Nav.Link eventKey="assets">Asset Breakdown</Nav.Link>
+                            <Nav.Link eventKey="assets" >
+                                <HelpOverlay helpText={assetHelpText} children={<div>Asset Overview</div>} />
+                            </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link eventKey="work_type">Program Breakdown</Nav.Link>
+                            <Nav.Link eventKey="work_type">
+                                <HelpOverlay helpText={workTypeHelpText} children={<div>Program Overview </div>} />
+                            </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link eventKey="road_condition">Road Condition</Nav.Link>
+                            <Nav.Link eventKey="road_condition">
+                                <HelpOverlay helpText={roadCondHelpText} children={<div>Road Condition</div>} />
+                            </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link eventKey="cost_by_year">Cost by Year</Nav.Link>
+                            <Nav.Link eventKey="cost_by_year">
+                                <HelpOverlay helpText={cbyHelpText} children={<div>Cost by Year</div>} />
+                            </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link eventKey="cum_npv">Cumulative NPV</Nav.Link>
+                            <Nav.Link eventKey="cum_npv">
+                                <HelpOverlay helpText={npvHelpText}><div>Cumulative NPV</div></HelpOverlay>
+                            </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link eventKey="map">Map</Nav.Link>
+                            <Nav.Link eventKey="map">
+                                <HelpOverlay helpText="View asset information geographically." placement='right'><div>Map</div></HelpOverlay>
+                            </Nav.Link>
                         </Nav.Item>
                     </Nav>
                 </Col>
@@ -104,10 +120,10 @@ export default class ResultDetails extends React.Component {
                             <WorkByTypeChart data={this.state.data} />
                         </Tab.Pane>
                         <Tab.Pane eventKey="road_condition">
-                            <RoadConditions data={this.state.data} />
+                            <RoadConditions data={this.state.data} startingYear={this.state.startingYear} />
                         </Tab.Pane>
                         <Tab.Pane eventKey="cost_by_year">
-                            <CostByYearChart data={this.state.data} />
+                            <CostByYearChart data={this.state.data} startingYear={this.state.startingYear} />
                         </Tab.Pane>
                         <Tab.Pane eventKey="cum_npv">
                             <CumumlativeNPVChart data={this.state.data} />
