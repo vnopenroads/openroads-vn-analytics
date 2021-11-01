@@ -16,10 +16,10 @@ export default class RoadWorks extends React.Component {
 
     pull_data_from_db() {
         var user_config_url = `${config.api}/cba/user_configs/${this.props.config_id}/sub_config/road_works`
-        console.log("Setting up road_works config: " + user_config_url);
+        // console.log("Setting up road_works config: " + user_config_url);
         fetch(user_config_url)
             .then((res) => res.json())
-            .then((res) => { console.log(res); this.setState({ road_works: res.road_works.alternatives }) });
+            .then((res) => this.setState({ road_works: res.road_works.alternatives }));
     }
 
     push_data_to_db() {
@@ -29,8 +29,8 @@ export default class RoadWorks extends React.Component {
         const request = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
         var url = `${config.api}/cba/user_configs/${this.props.config_id}/update`
         fetch(url, request)
-            .then(res => res.json())
-            .then(res => { console.log(res); });
+        //     .then(res => res.json())
+        //     .then(res => { console.log(res); });
     }
 
     componentDidUpdate(prevProps) {

@@ -46,8 +46,6 @@ export default class RoadConditions extends React.Component {
         var iriProj = this.props.data.map(e => e.iri_projection);
         // var avgIriBase = avgByYear(iriBase);
         // var avgIriProjection = avgByYear(iriProj);
-        console.log(this.props.data);
-        console.log(iriBase);
         var goodBase = percGoodByYear(iriBase);
         var goodProjection = percGoodByYear(iriProj);
         var x = _.zip(goodBase, goodProjection).map(([b, p], i) => ({ year: i + this.props.startingYear, iriBase: b, iriProjection: p }));

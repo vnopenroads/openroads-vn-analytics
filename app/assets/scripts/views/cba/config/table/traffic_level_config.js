@@ -43,7 +43,7 @@ export default class TrafficLevels extends React.Component {
 
     pull_data_from_db() {
         var user_config_url = `${config.api}/cba/user_configs/${this.props.config_id}/sub_config/traffic_levels`
-        console.log("Setting up traffic_level config: " + user_config_url);
+        // console.log("Setting up traffic_level config: " + user_config_url);
         fetch(user_config_url)
             .then((res) => res.json())
             .then((res) => this.update_data(res.traffic_levels));
@@ -55,8 +55,8 @@ export default class TrafficLevels extends React.Component {
 
         var url = `${config.api}/cba/user_configs/${this.props.config_id}/update`
         fetch(url, request)
-            .then(res => res.json())
-            .then(res => { console.log(res); });
+        //     .then(res => res.json())
+        //     .then(res => { console.log(res); });
     }
 
     componentDidUpdate(prevProps) {

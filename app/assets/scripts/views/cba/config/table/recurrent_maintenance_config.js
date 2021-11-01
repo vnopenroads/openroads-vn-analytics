@@ -31,7 +31,6 @@ export default class RecurrentMaintenanceConfig extends React.Component {
 
     pull_data_from_db() {
         var user_config_url = `${config.api}/cba/user_configs/${this.props.config_id}/sub_config/recurrent_maintenance`
-        console.log("Setting up recurr maint config: " + user_config_url);
         fetch(user_config_url)
             .then((res) => res.json())
             .then((res) => this.update_data(res.recurrent_maintenance));
