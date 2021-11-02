@@ -10,6 +10,7 @@ import config from '../../../config';
 
 
 export default function ResultsMap(props) {
+    var props = Object.assign({}, props);
     const mapContainer = useRef(null);
     const legendRef = useRef(null);
     const map = useRef(null);

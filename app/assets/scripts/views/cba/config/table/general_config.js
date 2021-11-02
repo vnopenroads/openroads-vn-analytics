@@ -12,7 +12,7 @@ export default class GeneralConfig extends React.Component {
             config_id: props.config_id,
             modified: false
         };
-        this.state = { ...this.state, ...{ discount_rate: 0.0, economic_factor: 0.0 } }
+        this.state = { ...this.state, ...{ discount_rate: 0.0, economic_factor: 0.0, starting_year: 2022 } }
         this.handleDiscountChange = this.handleDiscountChange.bind(this);
         this.handleEconFactorChange = this.handleEconFactorChange.bind(this);
         this.handleStartingYearChange = this.handleStartingYearChange.bind(this);
@@ -70,6 +70,7 @@ export default class GeneralConfig extends React.Component {
 
     render() {
         var isDefault = this.state.config_id == 1;
+
         return (
             <div className='menu-con'>
                 <div className='title-con'>General Configuration </div>
