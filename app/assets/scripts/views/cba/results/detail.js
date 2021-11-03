@@ -72,7 +72,7 @@ export default class ResultDetails extends React.Component {
     renderCharts() {
         var assetHelpText = "An overview of the assets which were evaluated.";
         var workTypeHelpText = "Which types of work are recommended";
-        var roadCondHelpText = "What are the implications of not following the work program";
+        var roadCondHelpText = "What are the implications of not following the work program? Chart shows the % of the road network that is in a Good-Fair condition under varying investment scenarios";
         var cbyHelpText = "The program costs laid out by year.";
         var npvHelpText = "Visualisation of the benefits of the recommended program";
         return <Tab.Container id="left-tabs-example" defaultActiveKey="map">
