@@ -1,6 +1,6 @@
 'use strict';
 import React from 'react';
-import { Card, Spinner } from 'react-bootstrap';
+import { Card, Spinner, Table } from 'react-bootstrap';
 import HelpOverlay from '../../help_overlay';
 import config from '../../../config';
 
@@ -36,26 +36,29 @@ export default class ResultKpis extends React.Component {
             .then((r) => { this.setState({ ...r, loaded: true }); });
     }
 
+
     render() {
-        var totalCost3HelpText = `The total Capital costs of the recommended maintenance schedule across a 3 year horizon.`;
-        var totalCost5HelpText = `The total Capital costs of the recommended maintenance schedule across a 5 year horizon.`;
-        var totalNPVHelpText = `The total Net Present Value (NPV) across all assets in the recommended maintenance
-                                schedule (where the NPV > 0)`;
-
-        if (this.state.loaded) {
-            // <KpiCard title="Budget Required (Year 1)" value={`${this.state.cost1yr.toFixed(2)}M USD`} helpText={totalCostHelpText} />
-            return <div className="d-flex justify-content-around mb-4">
-                <KpiCard title="Assets Evaluated" value={`${this.state.assetBreakdown.num_assets} Road Sections`} helpText={totalCost5HelpText} />
-                <KpiCard title="3 Year Capital Budget" value={`${this.state.cost3yr.toFixed(2)}M USD`} helpText={totalCost3HelpText} />
-                <KpiCard title="5 Year Capital Budget" value={`${this.state.cost5yr.toFixed(2)}M USD`} helpText={totalCost5HelpText} placement='left' />
-
-
-            </div>;
-        } else {
+        console.log(this.state.assetBreakdown);
+        if (!this.state.loaded) {
             return <Spinner animation="border" role="status">
                 <span className="visually-hidden">Loading...</span>
             </Spinner>
         }
+
+        var assetCountText = `The total number of assets evaluated by the model. An additional ${this.state.assetBreakdown.invalid_assets} were not evaluated due to insufficient data.`
+        var totalCost1HelpText = `The total Capital costs of the recommended maintenance schedule across a 1 year horizon.`;
+        var totalCost3HelpText = `The total Capital costs of the recommended maintenance schedule across a 3 year horizon.`;
+        var totalCost5HelpText = `The total Capital costs of the recommended maintenance schedule across a 5 year horizon.`;
+        var totalNPVHelpText = `The total Net Present Value (NPV) across all assets in the recommended maintenance
+                                schedule (where the NPV > 0)`;
+        return <div className="d-flex justify-content-around mb-4">
+            <KpiCard title="Assets Evaluated" value={`${this.state.assetBreakdown.valid_assets} Road Sections`} helpText={assetCountText} />
+            <KpiCard title="1 Year Capital Budget" value={`${this.state.cost1yr.toFixed(2)}M USD`} helpText={totalCost1HelpText} />
+            <KpiCard title="3 Year Capital Budget" value={`${this.state.cost3yr.toFixed(2)}M USD`} helpText={totalCost3HelpText} />
+            <KpiCard title="5 Year Capital Budget" value={`${this.state.cost5yr.toFixed(2)}M USD`} helpText={totalCost5HelpText} placement='left' />
+
+
+        </div>;
     }
 
 }

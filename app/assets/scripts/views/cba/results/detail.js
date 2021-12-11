@@ -75,6 +75,7 @@ export default class ResultDetails extends React.Component {
         var roadCondHelpText = "What are the implications of not following the work program? Chart shows the % of the road network that is in a Good-Fair condition under varying investment scenarios";
         var cbyHelpText = "The program costs laid out by year.";
         var npvHelpText = "Visualisation of the benefits of the recommended program";
+
         return <Tab.Container id="left-tabs-example" defaultActiveKey="map">
             <Row>
                 <Col sm={2}>
@@ -85,23 +86,23 @@ export default class ResultDetails extends React.Component {
                             </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
+                            <Nav.Link eventKey="cost_by_year">
+                                <HelpOverlay helpText={cbyHelpText} children={<div>Recommended Budget</div>} />
+                            </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
                             <Nav.Link eventKey="work_type">
-                                <HelpOverlay helpText={workTypeHelpText} children={<div>Program Overview </div>} />
+                                <HelpOverlay helpText={workTypeHelpText} children={<div>Recommended Work Type</div>} />
                             </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                             <Nav.Link eventKey="road_condition">
-                                <HelpOverlay helpText={roadCondHelpText} children={<div>Road Condition</div>} />
-                            </Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="cost_by_year">
-                                <HelpOverlay helpText={cbyHelpText} children={<div>Cost by Year</div>} />
+                                <HelpOverlay helpText={roadCondHelpText} children={<div>Road Condition Analysis</div>} />
                             </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                             <Nav.Link eventKey="cum_npv">
-                                <HelpOverlay helpText={npvHelpText}><div>Cumulative NPV</div></HelpOverlay>
+                                <HelpOverlay helpText={npvHelpText}><div>Benefits</div></HelpOverlay>
                             </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
@@ -116,18 +117,19 @@ export default class ResultDetails extends React.Component {
                         <Tab.Pane eventKey="assets">
                             <AssetBreakdownChart data={this.state.assetBreakdown} />
                         </Tab.Pane>
+                        <Tab.Pane eventKey="cost_by_year">
+                            <CostByYearChart data={this.state.data} startingYear={this.state.startingYear} />
+                        </Tab.Pane>
                         <Tab.Pane eventKey="work_type">
                             <WorkByTypeChart data={this.state.data} />
                         </Tab.Pane>
                         <Tab.Pane eventKey="road_condition">
                             <RoadConditions data={this.state.data} startingYear={this.state.startingYear} />
                         </Tab.Pane>
-                        <Tab.Pane eventKey="cost_by_year">
-                            <CostByYearChart data={this.state.data} startingYear={this.state.startingYear} />
-                        </Tab.Pane>
                         <Tab.Pane eventKey="cum_npv">
                             <CumumlativeNPVChart data={this.state.data} />
                         </Tab.Pane>
+
                         <Tab.Pane eventKey="map">
                             <ResultsMap data={this.state.data}
                                 startingYear={this.state.startingYear}

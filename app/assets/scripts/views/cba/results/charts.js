@@ -1,6 +1,6 @@
 'use strict';
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Label } from 'recharts';
+import { LineChart, AreaChart, Area, Line, XAxis, YAxis, CartesianGrid, Label } from 'recharts';
 import { PieChart, Cell, Pie, Sector, ResponsiveContainer } from 'recharts';
 import { BarChart, Bar, Tooltip, Legend } from 'recharts';
 import { Spinner } from 'react-bootstrap';
@@ -46,28 +46,35 @@ export function AssetBreakdownChart(props) {
 export function CumumlativeNPVChart(props) {
 
     var npvCumSum = [], costCumSum = [];
-    var resultsWithBenefit = props.data.filter(e => e.npv > 0);
-    resultsWithBenefit.map((e) => e.npv).reduce(function (a, b, i) { return npvCumSum[i] = a + b; }, 0);
+    console.log(props.data)
+    var resultsWithBenefit = props.data.filter(e => e.npv > 0 && e.work_year < 6);
     resultsWithBenefit.map((e) => e.work_cost).reduce(function (a, b, i) { return costCumSum[i] = a + b; }, 0);
+    resultsWithBenefit.map((e) => e.npv).reduce(function (a, b, i) { return npvCumSum[i] = a + b; }, 0);
     const zip = rows => rows[0].map((_, c) => rows.map(row => row[c]))
 
     var data = zip([npvCumSum, costCumSum]).map((e) => { return { npv: e[0], cost: e[1] }; });
+
+    // <Line type="monotone" dataKey="npv" stroke="#f58888" dot={false} />
     return (
-        <LineChart
+        <AreaChart
             width={1000}
             height={400}
             data={data}
             className="mx-auto mt-3"
-            margin={{ bottom: 50 }}
+            margin={{ left: 20, bottom: 50 }}
         >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="cost" type='number' tickCount={10}>
-                <Label value="Work Cost ($M)" position='bottom' />
+                <Label value="Recommended Investment ($M)" position='bottom' />
             </XAxis>
 
-            <YAxis label={{ value: 'NPV ($M)', angle: -90 }} />
-            <Line type="monotone" dataKey="npv" stroke="#f58888" dot={false} />
-        </LineChart >
+            <YAxis>
+                <Label value='Social and Economic Benefits ($M)' position='insideBottomLeft' angle={-90} />
+            </YAxis>
+            <Area type="monotone" dataKey="cost" stroke="#cccccc" fill="#cccccc" stackId="1" />
+            <Area type="monotone" dataKey="npv" stroke="#b4fec5" fill="#b4fec5" stackId="1" />
+
+        </AreaChart >
     );
 }
 
@@ -82,7 +89,7 @@ export function CostByYearChart(props) {
     }, {});
 
     var years = [...Array(5).keys()].map(i => i);
-    var costByYear_ = years.map((y) => ({ work_year: y + props.startingYear + 1, work_cost: Math.round((costByYear[y + 1] || 0) * 100) / 100 }));
+    var costByYear_ = years.map((y) => ({ work_year: y + props.startingYear, work_cost: Math.round((costByYear[y + 1] || 0) * 100) / 100 }));
 
     // type='number' domain={['dataMin-1', 'dataMax+1']}>
     return (
@@ -113,6 +120,7 @@ export function WorkByTypeChart(props) {
     }, {});
 
     var resultsWithBenefit = props.data.filter(e => e.npv > 0 && e.work_year <= 5);
+    console.log(resultsWithBenefit);
 
     var lengthByType = accumulateField('length');
     var costByType = accumulateField('work_cost');
