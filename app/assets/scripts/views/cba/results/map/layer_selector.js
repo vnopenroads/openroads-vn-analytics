@@ -27,7 +27,8 @@ export default class LayerSelector extends React.Component {
             </div>
         });
 
-        const pairs = [['priority', 'Priority'], ['work_year', 'Work Year'], ['work_name', 'Work Type'], ['npv', 'Net Present Value']];
+        const pairs = [['priority', 'Priority'], ['work_year', 'Work Year'], ['work_name', 'Work Type']];
+        // , ['npv', 'Net Present Value']];
         const attributes = pairs.map(([e, label]) => {
             const cName = e == this.state.attribute ? "active" : "";
             return <div key={e}

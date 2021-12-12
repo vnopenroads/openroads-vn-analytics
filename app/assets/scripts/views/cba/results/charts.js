@@ -18,7 +18,7 @@ export function AssetBreakdownChart(props) {
     const [activeIndex, setActiveIndex] = React.useState(0);
 
     var data = [
-        { name: 'Insufficient Data', count: props.data.invalid_assets, fill: '#da251d88' },
+        // { name: 'Insufficient Data', count: props.data.invalid_assets, fill: '#da251d88' },
         { name: 'Medium Term Priority', count: props.data.medium_term, fill: '#81dd75' },
         { name: 'Long Term Priority', count: props.data.long_term, fill: '#cae9c6' },
         { name: 'No Recommendation', count: props.data.negative_npv, fill: '#c6e2e9' }
@@ -52,11 +52,14 @@ export function CumumlativeNPVChart(props) {
     resultsWithBenefit.map((e) => e.npv).reduce(function (a, b, i) { return npvCumSum[i] = a + b; }, 0);
     const zip = rows => rows[0].map((_, c) => rows.map(row => row[c]))
 
-    var data = zip([npvCumSum, costCumSum]).map((e) => { return { npv: e[0], cost: e[1] }; });
+    const round = (value) => Math.round(value * 10) / 10;
+    var data = zip([npvCumSum, costCumSum]).map((e) => { return { npv: round(e[0]), cost: round(e[1]) }; });
 
-    // <Line type="monotone" dataKey="npv" stroke="#f58888" dot={false} />
+    //        <Area type="monotone" dataKey="cost" stroke="#cccccc" fill="#cccccc" stackId="1" />
+    // <Area type="monotone" dataKey="npv" stroke="#b4fec5" fill="#b4fec5" stackId="1" />
+
     return (
-        <AreaChart
+        <LineChart
             width={1000}
             height={400}
             data={data}
@@ -65,16 +68,17 @@ export function CumumlativeNPVChart(props) {
         >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="cost" type='number' tickCount={10}>
-                <Label value="Recommended Investment ($M)" position='bottom' />
+                <Label value="Recommended Maintenance ($M)" position='bottom' offset={50} />
             </XAxis>
 
             <YAxis>
                 <Label value='Social and Economic Benefits ($M)' position='insideBottomLeft' angle={-90} />
             </YAxis>
-            <Area type="monotone" dataKey="cost" stroke="#cccccc" fill="#cccccc" stackId="1" />
-            <Area type="monotone" dataKey="npv" stroke="#b4fec5" fill="#b4fec5" stackId="1" />
+            <Line type="monotone" dataKey="npv" stroke="#f58888" />
+            <Tooltip />
+            <Legend />
 
-        </AreaChart >
+        </LineChart >
     );
 }
 

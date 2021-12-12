@@ -96,13 +96,13 @@ export default class ResultDetails extends React.Component {
                             </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link eventKey="road_condition">
-                                <HelpOverlay helpText={roadCondHelpText} children={<div>Road Condition Analysis</div>} />
+                            <Nav.Link eventKey="cum_npv">
+                                <HelpOverlay helpText={npvHelpText}><div>Benefits - Financial</div></HelpOverlay>
                             </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link eventKey="cum_npv">
-                                <HelpOverlay helpText={npvHelpText}><div>Benefits</div></HelpOverlay>
+                            <Nav.Link eventKey="road_condition">
+                                <HelpOverlay helpText={roadCondHelpText} children={<div>Benefits - Physical</div>} />
                             </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
@@ -123,11 +123,11 @@ export default class ResultDetails extends React.Component {
                         <Tab.Pane eventKey="work_type">
                             <WorkByTypeChart data={this.state.data} />
                         </Tab.Pane>
-                        <Tab.Pane eventKey="road_condition">
-                            <RoadConditions data={this.state.data} startingYear={this.state.startingYear} />
-                        </Tab.Pane>
                         <Tab.Pane eventKey="cum_npv">
                             <CumumlativeNPVChart data={this.state.data} />
+                        </Tab.Pane>
+                        <Tab.Pane eventKey="road_condition">
+                            <RoadConditions data={this.state.data} startingYear={this.state.startingYear} />
                         </Tab.Pane>
 
                         <Tab.Pane eventKey="map">

@@ -15,7 +15,7 @@ function KpiTitle(props) {
 function KpiCard(props) {
     return <Card border="dark" style={{ width: '18rem' }} className="text-center">
         <KpiTitle title={props.title} helpText={props.helpText} placement={props.placement} />
-        <Card.Body> <Card.Title>{props.value}</Card.Title> </Card.Body>
+        <Card.Body> <Card.Title>{props.value}</Card.Title> <Card.Text>{props.text}</Card.Text></Card.Body>
     </Card>
 }
 export default class ResultKpis extends React.Component {
@@ -53,9 +53,18 @@ export default class ResultKpis extends React.Component {
                                 schedule (where the NPV > 0)`;
         return <div className="d-flex justify-content-around mb-4">
             <KpiCard title="Assets Evaluated" value={`${this.state.assetBreakdown.valid_assets} Road Sections`} helpText={assetCountText} />
-            <KpiCard title="1 Year Capital Budget" value={`${this.state.cost1yr.toFixed(2)}M USD`} helpText={totalCost1HelpText} />
-            <KpiCard title="3 Year Capital Budget" value={`${this.state.cost3yr.toFixed(2)}M USD`} helpText={totalCost3HelpText} />
-            <KpiCard title="5 Year Capital Budget" value={`${this.state.cost5yr.toFixed(2)}M USD`} helpText={totalCost5HelpText} placement='left' />
+            <KpiCard
+                title="1 Year Maintenance Budget"
+                value={`${this.state.cost1yr.toFixed(2)}M USD`}
+                text={`${this.state.count1yr} assets`}
+                helpText={totalCost1HelpText}
+            />
+            <KpiCard title="3 Year Maintenance Budget"
+                text={`${this.state.count3yr} assets`}
+                value={`${this.state.cost3yr.toFixed(2)}M USD`} helpText={totalCost3HelpText} />
+            <KpiCard title="5 Year Maintenance Budget"
+                text={`${this.state.count5yr} assets`}
+                value={`${this.state.cost5yr.toFixed(2)}M USD`} helpText={totalCost5HelpText} placement='left' />
 
 
         </div>;
