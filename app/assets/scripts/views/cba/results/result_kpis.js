@@ -55,16 +55,16 @@ export default class ResultKpis extends React.Component {
             <KpiCard title="Assets Evaluated" value={`${this.state.assetBreakdown.valid_assets} Road Sections`} helpText={assetCountText} />
             <KpiCard
                 title="1 Year Maintenance Budget"
-                value={`${this.state.cost1yr.toFixed(2)}M USD`}
+                value={`${this.state.cost1yr.toFixed(2)}B VND`}
                 text={`${this.state.count1yr} assets`}
                 helpText={totalCost1HelpText}
             />
             <KpiCard title="3 Year Maintenance Budget"
                 text={`${this.state.count3yr} assets`}
-                value={`${this.state.cost3yr.toFixed(2)}M USD`} helpText={totalCost3HelpText} />
+                value={`${this.state.cost3yr.toFixed(2)}B VND`} helpText={totalCost3HelpText} />
             <KpiCard title="5 Year Maintenance Budget"
                 text={`${this.state.count5yr} assets`}
-                value={`${this.state.cost5yr.toFixed(2)}M USD`} helpText={totalCost5HelpText} placement='left' />
+                value={`${this.state.cost5yr.toFixed(2)}B VND`} helpText={totalCost5HelpText} placement='left' />
 
 
         </div>;

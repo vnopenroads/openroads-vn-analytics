@@ -88,7 +88,7 @@ export default class RoadConditions extends React.Component {
 
         console.log(closest);
         this.sliderRef.current.value = closest;
-        this.budgetRef.current.value = `$${closest}M`;
+        this.budgetRef.current.value = `₫${closest}B`;
 
         var numElem = iriBase.length;
         var iriBudget = iriProj.slice(0, n).concat(iriBase.slice(-(numElem - n)));
@@ -135,9 +135,9 @@ export default class RoadConditions extends React.Component {
 
             <Form.Group className="d-flex road-condition-form-group justify-content-center">
                 <Form.Label>Budget Required</Form.Label>
-                <Form.Control type="text" readOnly placeholder={`$${this.state.totalBudget}M`} />
+                <Form.Control type="text" readOnly placeholder={`₫${this.state.totalBudget}B`} />
                 <Form.Label>Budget Available</Form.Label>
-                <Form.Control type="text" readOnly ref={this.budgetRef} placeholder={`$${this.state.totalBudget / 2}M`} />
+                <Form.Control type="text" readOnly ref={this.budgetRef} placeholder={`₫${this.state.totalBudget / 2}B`} />
             </Form.Group>
             <Form.Control type="range" min="0" max={this.state.totalBudget} step="0.1"
                 className="mx-auto" id="range-slider" onChange={debouncedChangeHandler} ref={this.sliderRef} />

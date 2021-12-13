@@ -68,11 +68,11 @@ export function CumumlativeNPVChart(props) {
         >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="cost" type='number' tickCount={10}>
-                <Label value="Recommended Maintenance ($M)" position='bottom' offset={50} />
+                <Label value="Recommended Maintenance (B₫)" position='bottom' offset={50} />
             </XAxis>
 
             <YAxis>
-                <Label value='Social and Economic Benefits ($M)' position='insideBottomLeft' angle={-90} />
+                <Label value='Social and Economic Benefits (B₫)' position='insideBottomLeft' angle={-90} />
             </YAxis>
             <Line type="monotone" dataKey="npv" stroke="#f58888" />
             <Tooltip />
@@ -108,7 +108,7 @@ export function CostByYearChart(props) {
             <XAxis dataKey="work_year" >
                 <Label value="Work Year" position='bottom' />
             </XAxis>
-            <YAxis label={{ value: 'Work Cost ($M)', angle: -90 }} />
+            <YAxis label={{ value: 'Work Cost (B₫)', angle: -90 }} />
             <Tooltip />
             <Bar dataKey="work_cost" fill="#f58888" formatter={(a) => `$${parseFloat(a).toFixed(1)}M`} />
         </BarChart>
@@ -143,7 +143,7 @@ export function WorkByTypeChart(props) {
                 <Label value="Work Type" position='bottom' />
             </XAxis>
             <YAxis label={{ value: 'KM', angle: -90 }} yAxisId="1" />
-            <YAxis key='work_cost' type='number' orientation='right' yAxisId="2" label={{ value: 'USD (M)', angle: -90 }} />
+            <YAxis key='work_cost' type='number' orientation='right' yAxisId="2" label={{ value: 'VND (B)', angle: -90 }} />
             <Tooltip />
             <Bar dataKey="length" yAxisId="1" fill="#f58888" formatter={(a) => `${parseFloat(a).toFixed(1)} km`} />
             <Bar dataKey="work_cost" yAxisId="2" fill="#f7c0c0" formatter={(a) => `$${parseFloat(a).toFixed(1)}M`} />
