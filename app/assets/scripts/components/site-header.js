@@ -1,19 +1,10 @@
 'use strict';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  compose,
-  getContext,
-  mapProps
-} from 'recompose';
-import {
-  Link,
-  withRouter
-} from 'react-router';
+import { compose, getContext, mapProps } from 'recompose';
+import { Link, withRouter } from 'react-router';
 import c from 'classnames';
-import T, {
-  translate
-} from './t';
+import T, { translate } from './t';
 import Dropdown from './dropdown';
 
 const classForLanguage = (current, lang) => c('drop__menu-item', { 'drop__menu-item--active': current === lang });

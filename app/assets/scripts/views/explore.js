@@ -59,7 +59,7 @@ class Explore extends React.Component {
     this.map.on('load', () => {
       this.map.addSource("conflated-map", {
         type: "vector",
-        tiles: ["http://orma.drvn.gov.vn/vertor-tiles/{z}/{x}/{y}.vector.pbf"],
+        tiles: ["http://orma.drvn.gov.vn/tilemap/{z}/{x}/{y}.vector.pbf"],
         minzoom: 6,
         maxzoom: 14,
       });
@@ -222,16 +222,16 @@ class Explore extends React.Component {
       );
   }
 
-  UNSAFE_componentWillReceiveProps({ layer, lng, lat, zoom, activeRoad }) {
-    if (this.props.layer !== layer) {
-      this.switchLayerTo(layer);
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.layer !== prevProps.layer) {
+      this.switchLayerTo(this.props.layer);
     }
-    if (lng !== this.props.lng || lat !== this.props.lat || zoom !== this.props.zoom) {
-      this.map.flyTo({ center: [lng, lat], zoom });
+    if (prevProps.lng !== this.props.lng || prevProps.lat !== this.props.lat || prevProps.zoom !== this.props.zoom) {
+      this.map.flyTo({ center: [this.props.lng, this.props.lat], zoom: this.props.zoom });
     }
-    if (activeRoad !== this.props.activeRoad) {
-      this.map.setFilter('active_road', ['==', 'vpromm_id', activeRoad]);
-      this.props.fetchActiveRoad(activeRoad);
+    if (prevProps.activeRoad !== this.props.activeRoad) {
+      this.map.setFilter('active_road', ['==', 'vpromm_id', this.props.activeRoad]);
+      this.props.fetchActiveRoad(this.props.activeRoad);
     }
   }
 
@@ -280,8 +280,8 @@ class Explore extends React.Component {
             <figure className='explore_map'>
               <div className='map__media' id='explore_map'></div>
               <MapOptions layer={this.props.layer}
-                handleLayerChange={this.handleLayerChange}
-                handleShowNoVpromms={this.handleShowNoVpromms} />
+                handleLayerChange={this.handleLayerChange.bind(this)}
+                handleShowNoVpromms={this.handleShowNoVpromms.bind(this)} />
               <MapLegend layer={this.props.layer} />
             </figure>
           </div>

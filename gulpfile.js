@@ -33,6 +33,7 @@ if (!process.env.DS_ENV) {
   if (!process.env.CIRCLE_BRANCH || process.env.CIRCLE_BRANCH !== process.env.PRODUCTION_BRANCH) {
     process.env.DS_ENV = 'uat';
   } else {
+    throw "You must set the DS_ENV environment variable to {production,uat,local}"
     process.env.DS_ENV = 'production';
   }
 }
