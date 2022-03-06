@@ -1,4 +1,4 @@
-- hosts: openroads-analytics
+- hosts: cba_server
   gather_facts: false
   roles:
     - cba-api

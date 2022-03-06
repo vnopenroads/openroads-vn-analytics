@@ -1,4 +1,4 @@
-- hosts: openroads-analytics
+- hosts: api_server
   gather_facts: false
   roles:
     # - common

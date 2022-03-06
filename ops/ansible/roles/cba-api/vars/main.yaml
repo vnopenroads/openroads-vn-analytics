@@ -1,5 +1,3 @@
 ansible_become_pass: "{{ lookup('env', 'CBA_PASSWORD') }}"
-cba_api_dir: "/home/ubuntu/cba-api"
-cba_py_dir: "/home/ubuntu/roads-cba-py"
 env: uat
 domain: "localhost"

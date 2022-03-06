@@ -2,12 +2,14 @@
 Description=uWSGI instance to serve cba-api
 After=network.target
 
+
 [Service]
-User=ubuntu
+User={{ www_user }} ubuntu
 Group=www-data
-WorkingDirectory=/home/ubuntu/cba-api/flask_version
-Environment="PATH=/home/ubuntu/cba-api/flask_version/venv/bin"
-ExecStart=/home/ubuntu/cba-api/flask_version/venv/bin/uwsgi --ini cba-api.ini
+WorkingDirectory={{ cba_api_dir }}
+Environment="PATH={{ cba_api_dir }}/venv/bin"
+ExecStart={{ cba_api_dir }}/venv/bin/uwsgi --ini cba-api.ini
+
 
 [Install]
 WantedBy=multi-user.target

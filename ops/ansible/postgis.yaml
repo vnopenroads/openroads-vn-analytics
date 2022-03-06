@@ -1,4 +1,4 @@
-- hosts: openroads-analytics
+- hosts: db_server
   gather_facts: false
   vars:
     ansible_os_family: Debian

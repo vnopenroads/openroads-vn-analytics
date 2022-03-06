@@ -1,11 +1,25 @@
-all:
+cba_server:
   children:
-    openroads-analytics:
+    uat:
       hosts:
         cba-worldbank
       vars:
         app_env: uat
         ansible_python_interpreter: /usr/bin/python3
+        ansible_ssh_user: ubuntu
+        cba_api_dir: "/home/ubuntu/cba-api"
+        cba_py_dir: "/home/ubuntu/roads-cba-py"
+        www_user: "ubuntu"
+    production:
+      hosts:
+        orma-api # root@103.160.88.198
+      vars:
+        app_env: production
+        ansible_python_interpreter: /usr/bin/python3
+        ansible_ssh_user: root
+        cba_api_dir: "/var/www/cba-api"
+        cba_py_dir: "/var/www/roads-cba-py"
+        www_user: "www-data"
     localhost:
       hosts:
         127.0.0.1
@@ -13,5 +27,3 @@ all:
         ansible_connection: local
         ansible_python_interpreter: '{{ ansible_playbook_python }}' 
 
-  vars:
-    ansible_ssh_user: ubuntu

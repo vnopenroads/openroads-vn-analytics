@@ -12,11 +12,6 @@
   #     - virtualenv
   #   become: true
 
-  # - name: Create app directory
-  #   ansible.builtin.file:
-  #     path: "{{ cba_api_dir }}"
-  #     state: directory
-
   - name: Git checkout the flask app
     ansible.builtin.git:
       repo: https://github.com/vnopenroads/cba-server.git
@@ -40,39 +35,60 @@
   #     executable: pip3
   #   become: true
 
-  # - name: Install wsgi requirements
-  #   pip:
-  #     name:
-  #       - wheel
-  #       - uwsgi
-  #       - flask
-  #     virtualenv: "{{ cba_api_dir }}/flask_version/venv"
-  #     virtualenv_python: /usr/bin/python3
+  - name: Install wsgi requirements
+    pip:
+      name:
+        - wheel
+        - uwsgi
+        - flask
+      virtualenv: "{{ cba_api_dir }}/venv"
+      virtualenv_python: /usr/bin/python3
 
-  # - name: Install app requirements
-  #   pip:
-  #     requirements: "{{ cba_api_dir }}/flask_version/requirements.txt"
-  #     virtualenv: "{{ cba_api_dir }}/flask_version/venv"
-  #     virtualenv_python: /usr/bin/python3
+  - name: Install app requirements
+    pip:
+      requirements: "{{ cba_api_dir }}/requirements.txt"
+      virtualenv: "{{ cba_api_dir }}/venv"
+      virtualenv_python: /usr/bin/python3
+      chdir: "{{ cba_api_dir }}"
 
-  # - name: Template out the systemd service for uwsgi
-  #   ansible.builtin.template:
-  #     src: uwsgi.service
-  #     dest: /etc/systemd/system/cba-api.uwsgi.service
-  #   become: true
+  - name: Template out the systemd service for uwsgi
+    ansible.builtin.template:
+      src: uwsgi.service
+      dest: /etc/systemd/system/cba-api.uwsgi.service
+    become: true
+    notify: 
+      - restart wsgi
+      - restart nginx
 
-  # - name: Start and enable the service
-  #   ansible.builtin.systemd:
-  #     name: cba-api.uwsgi
-  #     state: started
-  #     enabled: yes
-  #   become: true
+  - name: Template out the wsgi ini file
+    ansible.builtin.template:
+      src: uwsgi.ini
+      dest: "{{ cba_api_dir }}/cba-api.ini"
+    become: true
+    notify: 
+      - restart wsgi
 
-  # - name: Template out the nginx vhost config
-  #   ansible.builtin.template:
-  #     src: nginx-cba-api.conf
-  #     dest: /etc/nginx/sites-available/cba-api.conf
-  #   become: true
+
+  - name: "foo"
+    command: cat /etc/systemd/system/cba-api.uwsgi.service
+    register: hello
+
+  - debug: msg="{{ hello.stdout_lines }}"
+
+  - name: Start and enable the service
+    ansible.builtin.systemd:
+      name: cba-api.uwsgi
+      state: started
+      enabled: yes
+      daemon_reload: yes
+    become: true
+
+  - name: Template out the nginx vhost config
+    ansible.builtin.template:
+      src: nginx-cba-api.conf
+      dest: /etc/nginx/sites-available/cba-api.conf
+    become: true
+    notify: restart nginx
 
   # - name: Symlink the vhost config from available to enabled
   #   ansible.builtin.file:
