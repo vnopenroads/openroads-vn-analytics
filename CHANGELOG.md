@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+#### [v3.5.0](https://github.com/vnopenroads/openroads-vn-analytics/compare/v3.4.0...v3.5.0)
+
+> 6 March 2022
+
+- Adds new Cost Benefit Analysis functionality as a major tab in the main interface [`#18`](https://github.com/vnopenroads/openroads-vn-analytics/pull/18)
+
+
 #### [v3.4.0](https://github.com/orma/openroads-vn-analytics/compare/v3.3.1...v3.4.0)
 
 > 27 March 2019

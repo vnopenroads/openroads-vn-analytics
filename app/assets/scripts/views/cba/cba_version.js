@@ -1,1 +1,1 @@
-export const CbaVersion = '0.9.0';
+export const CbaVersion = '1.0.0';
