@@ -18,14 +18,26 @@ class SitePage extends React.Component {
     if (noMargins) { inpageClasses += " inpage--alt" }
     var urlPrefix = `/${language.toLowerCase()}/${pageName.toLowerCase()}`;
 
-    var subPageNav = subPageNav.map((subPageName) => {
-      return (
-        <li key={subPageName}>
-          <Link to={`${urlPrefix}/${subPageName.toLowerCase()}`} className='inpage__menu-link' activeClassName='inpage__menu-link--active' title={subPageName}>
-            <span><T>{subPageName}</T></span>
-          </Link>
-        </li>);
-    });
+
+    // If this is a page with sub-sections, create a nav pane for these
+    if (subPageNav) {
+      var subPageNav = subPageNav.map((subPageName) => {
+        return (
+          <li key={subPageName}>
+            <Link to={`${urlPrefix}/${subPageName.toLowerCase()}`} className='inpage__menu-link' activeClassName='inpage__menu-link--active' title={subPageName}>
+              <span><T>{subPageName}</T></span>
+            </Link>
+          </li>);
+      });
+      subPageNav = (
+        <nav className='inpage__nav'>
+          <ul className='inpage__menu'>
+            {subPageNav}
+          </ul>
+        </nav>);
+
+    }
+
 
     return (
       <section className={inpageClasses}>
@@ -35,11 +47,7 @@ class SitePage extends React.Component {
               <h1 className='inpage__title'><T>{pageName}</T></h1>
             </div>
             {pageNameTag}
-            <nav className='inpage__nav'>
-              <ul className='inpage__menu'>
-                {subPageNav}
-              </ul>
-            </nav>
+            {subPageNav}
             <div className='inpage__actions'>
             </div>
           </div>
