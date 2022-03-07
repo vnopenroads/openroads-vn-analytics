@@ -410,7 +410,7 @@ class AssetsDetail extends React.Component {
       return (<UhOh />);
     }
 
-    if (roadGeo.fetched) {
+    if (roadGeo.fetched && roadGeo.hasGeometry) {
       featCenter = center(roadGeo.data).geometry.coordinates;
     }
 
