@@ -19,7 +19,7 @@ export default class SnapshotOverview extends React.Component {
             activeIndex: 0,
             stats: {
                 name: "",
-                invalid_reasons: [],
+                invalid_reasons: { "reasons": [], "way_ids": [] },
                 num_records: 0,
                 valid_records: 0
             },
@@ -131,9 +131,11 @@ export default class SnapshotOverview extends React.Component {
 
     renderErrorTable() {
         var li_reason = (e) => { return (<tr><td>{e[1]}</td><td>{e[0]}</td></tr>) };
-        if (Object.keys(this.state.stats.invalid_reasons).length == 0) { return; }
-        // console.log("||" + JSON.stringify(this.state.stats.invalid_reasons));
-        return <div className='mt-3'>
+        var li_way_id = (e) => { return (<tr><td>{e}</td></tr>) };
+        if (Object.keys(this.state.stats.invalid_reasons.reasons).length == 0) { return; }
+        console.log(">|" + JSON.stringify(this.state.stats.invalid_reasons));
+        console.log("||" + JSON.stringify(this.state.stats.invalid_reasons.reasons));
+        var table = <div className='mt-3'>
             <div className='text-muted fs-3'>Summary of Data Errors</div>
             <Table striped size="sm">
                 <thead>
@@ -143,10 +145,24 @@ export default class SnapshotOverview extends React.Component {
                     </tr>
                 </thead>
                 <tbody>
-                    {Object.entries(this.state.stats.invalid_reasons).map(li_reason)}
+                    {Object.entries(this.state.stats.invalid_reasons.reasons).map(li_reason)}
                 </tbody>
             </Table>
         </div>
+
+        var ids = <div className='mt-3'>
+            <div className='text-muted fs-3'>List of Invalid Way IDs</div>
+            <Table striped size="sm">
+                <thead>
+                    <tr> <th># of Assets</th> </tr>
+                </thead>
+                <tbody>
+                    {this.state.stats.invalid_reasons.way_ids.map(li_way_id)}
+                </tbody>
+            </Table>
+        </div>
+
+        return [table, ids]
     };
 
 

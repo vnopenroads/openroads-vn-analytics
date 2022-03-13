@@ -225,7 +225,7 @@ export default class BaseSearch extends React.Component {
         <div className='form__group'>
           <label className='form__label' htmlFor='search-field'><T>Search</T></label>
           <div className='form__input-group form__input-group--medium'>
-            <select className='form__control' onChange={this.onSearchTypeChange} value={searchType}>
+            <select className='form__control' onChange={this.onSearchTypeChange.bind(this)} value={searchType}>
               <option value='Admin'>{translate(language, 'Admin')}</option>
               <option value='VProMMs'>VProMMs</option>
             </select>
@@ -236,7 +236,7 @@ export default class BaseSearch extends React.Component {
               className='form__control'
               placeholder={translate(language, 'Search')}
               value={this.state.searchVal}
-              onChange={this.onSearchQueryChange} />
+              onChange={this.onSearchQueryChange.bind(this)} />
             <button
               type='button'
               className='search__button'
