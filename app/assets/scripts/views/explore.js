@@ -59,7 +59,7 @@ class Explore extends React.Component {
     this.map.on('load', () => {
       this.map.addSource("conflated-map", {
         type: "vector",
-        tiles: ["http://orma.drvn.gov.vn/tilemap/{z}/{x}/{y}.vector.pbf"],
+        tiles: ["http://orma.drvn.gov.vn/vector-tiles/{z}/{x}/{y}.vector.pbf"],
         minzoom: 6,
         maxzoom: 14,
       });
