@@ -131,7 +131,6 @@ const layerIds = layers.map(layer => layer.id);
 class Tasks extends React.Component {
   constructor(props) {
     super(props);
-    this.selectVpromm = this.selectVpromm.bind(this);
     this.handleChangeMode = this.handleChangeMode.bind(this);
     this.handleSelectVprommid = this.handleSelectVprommid.bind(this);
     this.handleProvinceChange = this.handleProvinceChange.bind(this);
@@ -623,7 +622,7 @@ class Tasks extends React.Component {
               <form className='form task-group__actions'>
                 <div className='form__group'>
                   <label className='form__label visually-hidden'><T>VPROMMIDs</T></label>
-                  <select className='form__control' onChange={this.selectVpromm}>
+                  <select className='form__control' onChange={this.handleSelectVprommid}>
                     {vpromms.map(id => <option key={id} value={id}>{id}</option>)}
                   </select>
                 </div>
