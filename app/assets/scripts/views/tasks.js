@@ -131,6 +131,8 @@ const layerIds = layers.map(layer => layer.id);
 class Tasks extends React.Component {
   constructor(props) {
     super(props);
+    this.onSave = this.onSave.bind(this);
+
     this.state = {
       renderedFeatures: null,
       mode: 'dedupe',
@@ -413,7 +415,7 @@ class Tasks extends React.Component {
             <form className='form task-group__actions'>
               <div className='form__group'>
                 <label className='form__label visually-hidden'><T>Actions</T></label>
-                <select className='form__control' value={mode} onChange={this.handleChangeMode}>
+                <select className='form__control' value={mode} onChange={this.handleChangeMode.bind(this)}>
                   <option value='dedupe'>{removeDuplicatesT}</option>
                   <option value='join'>{createIntersectionT}</option>
                 </select>
@@ -617,7 +619,7 @@ class Tasks extends React.Component {
               <form className='form task-group__actions'>
                 <div className='form__group'>
                   <label className='form__label visually-hidden'><T>VPROMMIDs</T></label>
-                  <select className='form__control' onChange={this.selectVpromm}>
+                  <select className='form__control' onChange={this.selectVpromm.bind(this)}>
                     {vpromms.map(id =>
                       <option key={id} value={id}>{id}</option>
                     )
@@ -775,10 +777,11 @@ class Tasks extends React.Component {
       <Select
         name="form-province-select"
         value={value}
-        onChange={this.handleProvinceChange}
+        onChange={this.handleProvinceChange.bind(this)}
         options={options}
         placeholder={translate(language, 'Filter by province or district')}
       />
+
     );
   }
 
@@ -814,7 +817,7 @@ class Tasks extends React.Component {
             <figure className='map'>
               <div className='map__media' id='map'>
                 <form className='satellite-toggle mapboxgl-ctrl-top-left'>
-                  <input type='checkbox' value='satellite' onChange={this.showSatellite}></input>
+                  <input type='checkbox' value='satellite' onChange={this.showSatellite.bind(this)}></input>
                   <label> Show Bing Satellite</label>
                 </form>
               </div>
