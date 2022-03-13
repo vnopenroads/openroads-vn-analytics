@@ -32,7 +32,7 @@ export default class TaskListItem extends React.Component {
           name={`road-${_id}--checkbox`}
           id={`road-${_id}--checkbox`}
           value={`road-${_id}`}
-          onChange={this.toggleSelect}
+          onChange={this.toggleSelect.bind(this)}
           checked={selected}
         />
         <span className='form__option__ui'></span>
@@ -50,7 +50,7 @@ export default class TaskListItem extends React.Component {
           name='road-group--radio'
           id={`road-${_id}--radio`}
           value={`road-${_id}`}
-          onChange={this.toggleSelect}
+          onChange={this.toggleSelect.bind(this)}
           checked={selected}
         />
         <span className='form__option__ui'></span>
